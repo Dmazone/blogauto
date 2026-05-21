@@ -111,9 +111,27 @@ export class GeminiSession {
   }
 
   async _ensureLoggedIn() {
-    await wait(2500);
+    await wait(3000);
     const url = this.page.url();
-    if (url.includes('accounts.google.com') || url.includes('/signin')) {
+
+    // 로그인 페이지로 리다이렉트된 경우
+    const needsLogin =
+      url.includes('accounts.google.com') ||
+      url.includes('/signin') ||
+      // Gemini가 로그인 없이 랜딩 페이지를 보여주는 경우도 감지
+      (await this.page.evaluate(() => {
+        // "로그인" 또는 "Sign in" 버튼이 있으면 미로그인
+        const signInEl = document.querySelector(
+          'a[href*="accounts.google.com"], button[aria-label*="sign in"], button[aria-label*="Sign in"], a[aria-label*="sign in"]'
+        );
+        // 계정 아바타(사용자 메뉴)가 없으면 미로그인
+        const avatar = document.querySelector(
+          'img[alt*="profile"], img[alt*="Profile"], [aria-label*="Google Account"]'
+        );
+        return !!signInEl || !avatar;
+      }).catch(() => false));
+
+    if (needsLogin) {
       console.log('\n');
       log('🔐', '구글 계정 로그인이 필요합니다.');
       log('📋', 'paydma 계정으로 로그인한 뒤 Enter를 누르세요.\n');

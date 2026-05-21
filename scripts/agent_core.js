@@ -690,7 +690,7 @@ export async function runForSection(section, options = {}) {
   log('📂', `섹션: [${section.name}]`);
   log('📂', `${'─'.repeat(50)}`);
 
-  let topic, outline, final, prompts;
+  let topic, outline, final, prompts, validated = null;
 
   // ── 브라우저 모드: 제미나이 Gem 멀티턴 파이프라인 ──────────────────────────
   if (_geminiImpl?._session) {
@@ -705,7 +705,7 @@ export async function runForSection(section, options = {}) {
     const topicObj  = await pickTodayTopic(section, subtopic);    // STEP 1
     topic = topicObj;
     const trendData = await searchTrends(section, topic);          // STEP 2
-    const validated = await validateTrends(topic, trendData);      // STEP 3
+    validated       = await validateTrends(topic, trendData);      // STEP 3
     outline         = await generateOutline(section, topic, validated); // STEP 4
     const draft     = await writeArticle(section, topic, outline, validated); // STEP 5
     const refined   = await geminiRefineLoop(topic, outline, draft);    // STEP 6
