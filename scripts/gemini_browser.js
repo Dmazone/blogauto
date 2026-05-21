@@ -58,6 +58,7 @@ const SEL = {
   ],
   // 모델 응답 컨테이너 (마지막 것만 추출)
   response: [
+    'message-content',
     '.model-response-text',
     'model-response .response-content',
     'message-content .markdown',
@@ -86,10 +87,25 @@ export class GeminiSession {
     });
     this.page = await this.context.newPage();
 
-    // Gem URL이 있으면 Gem으로, 없으면 일반 Gemini로 이동
-    const target = this.gemUrl ?? GEMINI_HOME;
-    await this.page.goto(target, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    // 먼저 홈으로 이동해서 로그인 확인
+    await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await this._ensureLoggedIn();
+
+    // 로그인 후 현재 URL에서 계정 인덱스 추출 → Gem URL 재구성
+    if (this.gemUrl) {
+      const currentUrl = this.page.url();
+      const accountMatch = currentUrl.match(/\/u\/(\d+)\//);
+      const gemIdMatch   = this.gemUrl.match(/\/gem\/([a-z0-9]+)/i);
+      if (accountMatch && gemIdMatch) {
+        const newUrl = `https://gemini.google.com/u/${accountMatch[1]}/gem/${gemIdMatch[1]}`;
+        if (newUrl !== this.gemUrl) {
+          log('🔄', `Gem URL 재구성: ${newUrl}`);
+          this.gemUrl = newUrl;
+        }
+      }
+      await this.page.goto(this.gemUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    }
+
     this._turnCount = 0;
     log('✅', `제미나이 세션 준비 완료${this.gemUrl ? ' (Gem 모드)' : ''}`);
   }
