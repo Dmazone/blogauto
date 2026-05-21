@@ -84,3 +84,19 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+
+      # 텔레그램 완료 알림 (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID 시크릿 설정 시 활성화)
+      - name: Notify Telegram
+        if: always() && env.TELEGRAM_BOT_TOKEN != ''
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            MSG="✅ 트렌드줌 블로그 자동화 완료!\n오늘 포스팅이 성공적으로 배포됐어요."
+          else
+            MSG="❌ 블로그 자동화 실패. GitHub Actions 로그를 확인하세요."
+          fi
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\": \"${TELEGRAM_CHAT_ID}\", \"text\": \"${MSG}\"}"
