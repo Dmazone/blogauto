@@ -4,8 +4,8 @@
 
 | 회차 | 슬러그 | 제목 | 핵심 키워드 | 상태 |
 |------|--------|------|------------|------|
-| A-01 | what-is-claude-code | Claude Code란? 5분 만에 이해하기 | claude code 뜻 | 예정 |
-| A-02 | claude-code-install | Claude Code 설치 방법 (Mac/Windows) | claude code 설치 | 예정 |
+| A-01 | what-is-claude-code | Claude Code란? 5분 만에 이해하기 | claude code 뜻 | 완료 |
+| A-02 | claude-code-install | Claude Code 설치 방법 (Mac/Windows) | claude code 설치 | 완료 |
 | A-03 | claude-md-guide | CLAUDE.md 작성법 완벽 가이드 | claude.md 사용법 | 예정 |
 | A-04 | claude-code-skills | Skills 만들기 — 나만의 작업 레시피 | claude code skills | 예정 |
 | A-05 | claude-code-mcp | MCP 연결하기 — GitHub·Google Drive | claude code mcp | 예정 |
