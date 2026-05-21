@@ -57,7 +57,7 @@ async function main() {
     : SECTIONS.slice(fromIdx);
 
   log('🚀', `daily_runner 시작 — ${targetSections.length}개 섹션 처리`);
-  log('⏱️', `섹션 간 대기: 5분`);
+  log('📅', `발행 시각: 09:00~09:45 KST (5분 간격 예약, publishDate 기반)`);
   console.log('');
 
   const healthSubtopic = getHealthSubtopic();

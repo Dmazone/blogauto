@@ -42,20 +42,26 @@ const BASE_URL   = (process.env.BLOG_BASE_URL ?? '').replace(/\/$/, '');
 // ── 유틸 ─────────────────────────────────────────────────────────────────────
 const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
 
-async function withRetry(fn, retries = 4, baseDelay = 6000) {
+async function withRetry(fn, retries = 4, baseDelay = 15000) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       return await fn();
     } catch (err) {
+      const msg = err?.message ?? '';
       const retryable =
-        err?.message?.includes('503') ||
-        err?.message?.includes('UNAVAILABLE') ||
-        err?.message?.includes('high demand') ||
-        err?.message?.includes('429') ||
-        err?.message?.includes('RESOURCE_EXHAUSTED');
+        msg.includes('503') ||
+        msg.includes('UNAVAILABLE') ||
+        msg.includes('high demand') ||
+        msg.includes('429') ||
+        msg.includes('RESOURCE_EXHAUSTED');
+
       if (retryable && attempt < retries) {
-        const delay = baseDelay * attempt;
-        log('⏳', `API 과부하 → ${delay / 1000}초 후 재시도 (${attempt}/${retries - 1})...`);
+        // API가 알려주는 retryDelay 파싱 (예: "50s" → 50000ms)
+        let delay = baseDelay * attempt;
+        const retryMatch = msg.match(/"retryDelay":"(\d+)s"/);
+        if (retryMatch) delay = Math.max(delay, (parseInt(retryMatch[1]) + 5) * 1000);
+
+        log('⏳', `API 과부하 → ${Math.round(delay / 1000)}초 후 재시도 (${attempt}/${retries - 1})...`);
         await new Promise((r) => setTimeout(r, delay));
       } else {
         throw err;
