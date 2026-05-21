@@ -1,4 +1,4 @@
-baseURL = "http://localhost/"
+baseURL = "https://dmazone.github.io/blogauto/"
 languageCode = "ko-KR"
 title = "Claude Code 블로그 | 한국어 완전 가이드"
 theme = "PaperMod"
@@ -21,7 +21,8 @@ buildFuture = false
   ShowCodeCopyButtons = true
   ShowToc = true
   TocOpen = false
-  ShowWordCount = true
+  ShowWordCount = false
+  firebaseDbUrl = ""
   comments = false
 
   [params.homeInfoParams]

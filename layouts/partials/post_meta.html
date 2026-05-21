@@ -1,0 +1,47 @@
+{{- $scratch := newScratch }}
+
+{{- if not .Date.IsZero -}}
+{{- $scratch.Add "meta" (slice (printf "<span title='%s'>%s</span>" (.Date) (.Date | time.Format (default ":date_long" site.Params.DateFormat)))) }}
+{{- end }}
+
+{{- if (.Param "ShowReadingTime") -}}
+{{- $scratch.Add "meta" (slice (printf "<span>%s</span>" (i18n "read_time" .ReadingTime | default (printf "%d min" .ReadingTime)))) }}
+{{- end }}
+
+{{- if not (.Param "hideAuthor") -}}
+{{- with (partial "author.html" .) }}
+{{- $scratch.Add "meta" (slice (printf "<span>%s</span>" .)) }}
+{{- end }}
+{{- end }}
+
+{{- /* 조회수 — Firebase Realtime Database 미설정 시 숨김 */ -}}
+{{- if site.Params.firebaseDbUrl }}
+{{- $scratch.Add "meta" (slice "<span class=\"post-views\">👁 <span id=\"vc-num\">-</span></span>") }}
+{{- end }}
+
+{{- with ($scratch.Get "meta") }}
+{{- delimit . "&nbsp;·&nbsp;" | safeHTML -}}
+{{- end }}
+
+{{- if site.Params.firebaseDbUrl }}
+<script>
+(function () {
+  var slug = {{ .Slug | jsonify }};
+  var db   = {{ site.Params.firebaseDbUrl | jsonify }}.replace(/\/$/, "");
+  var url  = db + "/views/" + slug + ".json";
+
+  fetch(url)
+    .then(function (r) { return r.json(); })
+    .then(function (n) {
+      n = (n || 0) + 1;
+      fetch(url, { method: "PUT", body: JSON.stringify(n) });
+      var el = document.getElementById("vc-num");
+      if (el) el.textContent = n.toLocaleString("ko-KR");
+    })
+    .catch(function () {
+      var el = document.getElementById("vc-num");
+      if (el) el.textContent = "?";
+    });
+})();
+</script>
+{{- end }}
