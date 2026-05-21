@@ -1,14 +1,24 @@
-name: Auto Post Generator
+name: Daily Blog Auto Publisher
 
 on:
   schedule:
-    # 매일 한국시간 오전 9시 (UTC 0:00)
+    # 매일 한국시간 오전 9시 (UTC 00:00)
     - cron: "0 0 * * *"
   workflow_dispatch:
+    inputs:
+      sections:
+        description: "특정 섹션만 실행 (쉼표 구분, 예: economy,health) — 비우면 전체"
+        required: false
+        default: ""
+      from_index:
+        description: "N번째 섹션부터 재개 (1-based, 기본 1)"
+        required: false
+        default: "1"
 
 jobs:
   generate:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     permissions:
       contents: write
 
@@ -32,7 +42,25 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Generate post
+      - name: Run daily runner (all sections, 5-min gaps)
         env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/generate-post.js
+          BLOG_BASE_URL: ${{ secrets.BLOG_BASE_URL }}
+          SNS_DEPLOY_WAIT_SEC: ${{ secrets.SNS_DEPLOY_WAIT_SEC }}
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+          META_THREADS_USER_ID: ${{ secrets.META_THREADS_USER_ID }}
+          PINTEREST_ACCESS_TOKEN: ${{ secrets.PINTEREST_ACCESS_TOKEN }}
+          PINTEREST_BOARD_ID: ${{ secrets.PINTEREST_BOARD_ID }}
+        run: |
+          SECTIONS="${{ github.event.inputs.sections }}"
+          FROM="${{ github.event.inputs.from_index }}"
+
+          if [ -n "$SECTIONS" ]; then
+            node scripts/daily_runner.js --only "$SECTIONS"
+          elif [ -n "$FROM" ] && [ "$FROM" != "1" ]; then
+            node scripts/daily_runner.js --from "$FROM"
+          else
+            node scripts/daily_runner.js
+          fi
