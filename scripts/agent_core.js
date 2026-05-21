@@ -32,7 +32,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 dotenv.config({ path: path.join(ROOT, '.env') });
 
-const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY ?? 'placeholder' });
 const claude  = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const POSTS_DIR  = path.join(ROOT, 'content', 'posts');
@@ -41,6 +41,15 @@ const BASE_URL   = (process.env.BLOG_BASE_URL ?? '').replace(/\/$/, '');
 
 // ── 유틸 ─────────────────────────────────────────────────────────────────────
 const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
+
+// ── Gemini 호출 구현체 (기본: API / 교체 가능: 브라우저) ───────────────────
+let _geminiImpl = null; // null = API 모드, GeminiSession.call = 브라우저 모드
+
+/** daily_runner.js에서 브라우저 세션을 주입 */
+export function setGeminiBrowserSession(session) {
+  _geminiImpl = session ? (prompt) => session.call(prompt) : null;
+  log('🌐', _geminiImpl ? '브라우저 모드 활성화 (제미나이 웹 사용)' : 'API 모드 활성화');
+}
 
 async function withRetry(fn, retries = 4, baseDelay = 15000) {
   for (let attempt = 1; attempt <= retries; attempt++) {
@@ -71,6 +80,11 @@ async function withRetry(fn, retries = 4, baseDelay = 15000) {
 }
 
 async function geminiCall(prompt, opts = {}) {
+  // 브라우저 모드: 제미나이 웹 UI 사용
+  if (_geminiImpl) {
+    return await withRetry(() => _geminiImpl(prompt), 3, 5000);
+  }
+  // API 모드: Gemini API 직접 호출
   const response = await withRetry(() =>
     gemini.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -147,30 +161,34 @@ async function pickTodayTopic(section, subtopic) {
 // STEP 2: Gemini + Google Search → 최신 트렌드 수집
 // ────────────────────────────────────────────────────────────────────────────
 async function searchTrends(section, topic) {
-  log('🔍', `[STEP 2] Gemini Google Search — "${topic.keyword}" 트렌드 수집 중...`);
+  log('🔍', `[STEP 2] Gemini Search — "${topic.keyword}" 트렌드 수집 중...`);
 
-  const response = await withRetry(() =>
-    gemini.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents:
-        `2026년 현재 기준 "${topic.keyword}" 최신 동향·트렌드·실제 사례·주요 이슈를 ` +
-        `한국 독자 관점에서 구체적으로 조사해줘.\n` +
-        `섹션 컨텍스트: ${section.searchContext}\n` +
-        `글의 핵심 관점: ${section.toneHint}`,
-      config: {
-        tools: [{ googleSearch: {} }],
-        temperature: 0.3,
-      },
-    })
-  );
+  const searchPrompt =
+    `[구글 검색 필수] 2026년 현재 기준 "${topic.keyword}" 최신 동향·트렌드·실제 사례·주요 이슈를 ` +
+    `한국 독자 관점에서 구체적으로 조사해줘. 반드시 최신 뉴스와 실제 데이터를 인용해.\n` +
+    `섹션 컨텍스트: ${section.searchContext}\n` +
+    `글의 핵심 관점: ${section.toneHint}`;
 
-  const rawText = response.text;
-  const sources =
-    response.candidates?.[0]?.groundingMetadata?.groundingChunks
-      ?.map((c) => c.web?.uri)
-      .filter(Boolean) ?? [];
+  let rawText, sources = [];
 
-  log('✅', `트렌드 수집 완료 (출처 ${sources.length}개)`);
+  if (_geminiImpl) {
+    // 브라우저 모드: 제미나이 웹이 자동으로 구글 검색 수행
+    rawText = await withRetry(() => _geminiImpl(searchPrompt), 3, 5000);
+  } else {
+    // API 모드: Google Search 도구 명시
+    const response = await withRetry(() =>
+      gemini.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: searchPrompt,
+        config: { tools: [{ googleSearch: {} }], temperature: 0.3 },
+      })
+    );
+    rawText  = response.text;
+    sources  = response.candidates?.[0]?.groundingMetadata?.groundingChunks
+      ?.map((c) => c.web?.uri).filter(Boolean) ?? [];
+  }
+
+  log('✅', `트렌드 수집 완료${sources.length ? ` (출처 ${sources.length}개)` : ''}`);
   return { rawText, sources };
 }
 
