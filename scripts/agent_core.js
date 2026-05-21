@@ -14,6 +14,7 @@
 
 import { GoogleGenAI } from '@google/genai';
 import Anthropic from '@anthropic-ai/sdk';
+import { promoteAll } from './sns_promoter.js';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
@@ -385,7 +386,7 @@ async function generateImage(prompt, slug, index) {
       const imgRes = await axios.get(imageUrl, { responseType: 'arraybuffer', timeout: 60000 });
       fs.writeFileSync(destPath, Buffer.from(imgRes.data));
       log('✅', `  NanoBanana 저장 완료: ${filename}`);
-      return `/images/${filename}`;
+      return { localPath: `/images/${filename}`, sourceUrl: imageUrl };
     } catch (err) {
       log('⚠️', `  NanoBanana 실패 (${err.message}) → Pollinations fallback`);
     }
@@ -399,7 +400,7 @@ async function generateImage(prompt, slug, index) {
   const imgRes = await axios.get(polUrl, { responseType: 'arraybuffer', timeout: 90000 });
   fs.writeFileSync(destPath, Buffer.from(imgRes.data));
   log('✅', `  Pollinations 저장 완료: ${filename}`);
-  return `/images/${filename}`;
+  return { localPath: `/images/${filename}`, sourceUrl: polUrl };
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -476,8 +477,8 @@ async function main() {
 
     // STEP 7 — 이미지 생성
     log('🖼️', '[STEP 7] 이미지 생성 중...');
-    const prompts = extractImagePrompts(post, final);
-    await generateImage(prompts[0], post.slug, 1);
+    const prompts   = extractImagePrompts(post, final);
+    const img1      = await generateImage(prompts[0], post.slug, 1);
     await generateImage(prompts[1], post.slug, 2);
 
     // 파일 저장
@@ -494,6 +495,16 @@ async function main() {
     console.log('\n' + '─'.repeat(60));
     log('🎉', `완료! [${post.id}] "${post.title}" 배포 성공`);
     console.log('─'.repeat(60));
+
+    // STEP 8 — SNS 자동 홍보
+    log('📣', '[STEP 8] SNS 자동 홍보 시작...');
+    await promoteAll({
+      post,
+      outline,
+      validated,
+      imageUrl: img1.sourceUrl,
+      deployWaitSec: Number(process.env.SNS_DEPLOY_WAIT_SEC ?? 90),
+    });
   } catch (err) {
     console.error(`\n❌ 오류 발생: ${err.message}`);
     if (process.env.DEBUG) console.error(err.stack);
