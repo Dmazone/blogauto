@@ -278,13 +278,19 @@ async function writeArticle(section, topic, outline, validated) {
 
   const body = await geminiCall(
     `너는 한국어 블로그 전문 작가야. 아래 지침을 100% 지켜서 Hugo 블로그 포스팅 본문(front matter 제외)을 작성해줘.\n\n` +
+    `[Technical SEO 구조 — 반드시 준수]\n` +
+    `- 도입부 첫 문단: 핵심 키워드 자연스럽게 포함\n` +
+    `- 헤딩: ## (H2) 4개, 각 H2 아래 ### (H3) 2~3개 — # (H1) 본문 금지, 숫자 번호 방식 금지\n` +
+    `- 이미지: 도입부 직후 1장, 두 번째 ## 섹션 직후 1장 (지정 URL 정확히 삽입)\n` +
+    `- 내부 링크: 본문 적절한 위치에 1개 이상\n` +
+    `- 맨 마지막 줄: 해시태그 7개 이상 (#키워드1 #키워드2 ...)\n\n` +
     `[블로그 운영 지침]\n` +
     `- 구어체+문어체 중간 톤, 독자에게 직접 말하기 (~해보세요, ~할 수 있어요)\n` +
     `- 비교 분석·장단점·경험적 어조 반드시 포함\n` +
     `- 터미널 명령어는 \`\`\`bash 블록\n` +
     `- 출처 없는 수치 사용 금지\n` +
     `- 영어 직역체 금지, 자연스러운 한국어\n` +
-    `- H2/H3 헤딩 적극 활용, 인용구(>), 불릿, 볼드체로 가독성 최대화\n` +
+    `- **볼드**, 인용구(>), 불릿(-) 적극 활용\n` +
     `- 금지 표현: "다양한", "중요합니다", "살펴보겠습니다", "마지막으로", "~드립니다"\n` +
     `- 글자수 목표: 1,500~2,500자\n\n` +
     `[포스팅 정보]\n` +
@@ -299,7 +305,7 @@ async function writeArticle(section, topic, outline, validated) {
     `[이미지 삽입 — 반드시 아래 마크다운을 본문에 포함]\n` +
     `1. 도입부 직후: ![${topic.title} 대표 이미지](${BASE_URL}/images/${topic.slug}-01.webp)\n` +
     `2. 2번째 H2 직후: ![${topic.keyword} 관련 이미지](${BASE_URL}/images/${topic.slug}-02.webp)\n\n` +
-    `마크다운 본문만 출력해줘. front matter 없이.`,
+    `마크다운 본문만 출력해줘. front matter 없이.\n맨 마지막 줄에 반드시 #해시태그 7개 이상 포함.`,
     { temperature: 0.7 }
   );
 
@@ -501,18 +507,23 @@ async function generateImage(prompt, slug, index) {
 // Hugo front matter 조립
 // ────────────────────────────────────────────────────────────────────────────
 function buildFrontMatter(section, topic, outline, dateOverride) {
-  const date = dateOverride ?? new Date().toISOString().replace('T', 'T').split('.')[0] + '+09:00';
+  const date = dateOverride ?? new Date().toISOString().split('.')[0] + '+09:00';
   const description = (
-    outline.meta_description ??
-    `${topic.keyword}에 대한 2026년 최신 정보와 분석을 알아보세요.`
+    outline.meta_description ||
+    topic.description ||
+    `${topic.keyword}에 대한 2026년 최신 정보와 트렌드를 알아보세요.`
   ).slice(0, 160);
+
+  // 중복 제거 및 섹션명·키워드 기반 태그
+  const rawTags = [topic.keyword, section.name, ...(topic.tags ?? [])];
+  const tags = [...new Set(rawTags.filter(Boolean))].slice(0, 6);
 
   return (
     `---\n` +
     `title: "${topic.title.replace(/"/g, '\\"')}"\n` +
     `date: ${date}\n` +
     `slug: ${topic.slug}\n` +
-    `tags: ["${section.name}", "${topic.keyword}"]\n` +
+    `tags: [${tags.map((t) => `"${t}"`).join(', ')}]\n` +
     `categories: ["${section.name}"]\n` +
     `series: ["${section.name}"]\n` +
     `description: "${description.replace(/"/g, '\\"')}"\n` +
@@ -595,26 +606,40 @@ ${subtopicLine}
   await session.send(
     `아웃라인대로 Hugo 마크다운 본문을 작성해줘. front matter 없이.
 
-[필수 포함]
-- 도입부 직후: ![${topic.title} 대표이미지](${img1Url})
-- 2번째 H2 직후: ![${topic.keyword} 관련이미지](${img2Url})
-- 내부 링크: [관련 글 보기](/posts/${section.dir}/)
-- 분량: 1,500~2,500자
-- 출처 없는 수치 사용 금지, 구체적 사례 포함`
+[Technical SEO 구조 — 100% 준수 필수]
+① 도입부 2~3문장: 첫 문단 안에 핵심 키워드 자연스럽게 포함
+② 도입부 바로 아래 (빈 줄 없이):
+   ![${topic.title} 대표이미지](${img1Url})
+③ 헤딩 규칙 — 절대 준수:
+   - ## (H2) 4개, 각 H2 아래 ### (H3) 2~3개
+   - # (H1) 본문에 절대 금지 (제목이 H1)
+   - "1. 제목", "2. 제목" 같은 숫자 번호 방식 금지 — 반드시 ## ### 마크다운 문법만
+④ 두 번째 ## 섹션 바로 아래 (빈 줄 없이):
+   ![${topic.keyword} 관련이미지](${img2Url})
+⑤ 본문 안 적절한 위치에: [관련 글 보기](/posts/${section.dir}/)
+⑥ 분량: 1,500~2,500자 (공백 제외)
+⑦ **볼드**, > 인용구, - 불릿 적극 활용 (가독성·체류시간 향상)
+⑧ 출처 없는 수치·통계 금지, 구체적 사례 반드시 포함
+⑨ 맨 마지막 줄: 해시태그 7개 이상 (예: #키워드1 #키워드2 #키워드3 ...)
+
+[금지 표현]
+"다양한" "중요합니다" "살펴보겠습니다" "마지막으로" "~드립니다" 영어 직역체`
   );
 
   // ── TURN 4: 애드센스 품질 자체검토 ───────────────────────────────────────
   log('🔍', '[Turn 4] 애드센스 품질 자체검토 중...');
   await session.send(
-    `방금 쓴 글을 다시 읽고, 다음 항목을 검토해서 수정해줘:
+    `방금 쓴 글을 다시 읽고, 아래 항목을 모두 점검해서 수정해줘:
 
 1. **AI 냄새** — "다양한", "중요합니다", "살펴보겠습니다", "마지막으로" 등 금지 표현 제거
 2. **뻔한 문장** — 교과서적이거나 누구나 아는 정보는 더 생생하고 독창적으로
 3. **애드센스 위험 요소** — 광고성 표현, 근거 없는 주장, 얕은 정보 수정
-4. **이미지 마크다운** — 두 이미지 URL이 그대로 있는지 확인
+4. **이미지 마크다운** — ![...](${img1Url}) 와 ![...](${img2Url}) 두 개 모두 본문에 있는지 확인, 없으면 추가
 5. **한국어 자연스러움** — 번역체 표현 제거
+6. **헤딩 구조** — ## H2 4개와 ### H3가 올바른 마크다운 문법으로 사용됐는지 확인 (숫자 번호 방식이면 ## 문법으로 교체)
+7. **해시태그** — 글 맨 마지막 줄에 #태그 7개 이상 있는지 확인, 없으면 반드시 추가
 
-수정 후 어떤 부분을 어떻게 바꿨는지 2~3줄로 요약해줘.`
+수정 후 어떤 부분을 바꿨는지 2~3줄로 요약해줘.`
   );
 
   // ── TURN 5: 최종 마크다운 추출 ────────────────────────────────────────────
