@@ -240,8 +240,8 @@ async function writeArticle(post, outline, validated) {
     `[SEO 아웃라인]\n${sectionsText}\n` +
     `내부 링크: [${outline.internal_link?.anchor}](${outline.internal_link?.path})\n\n` +
     `[이미지 삽입 — 반드시 아래 마크다운을 본문에 포함]\n` +
-    `1. 도입부 직후: ![${post.title} 대표 이미지](/images/${post.slug}-01.webp)\n` +
-    `2. 2번째 H2 직후: ![${post.keyword} 개념 설명](/images/${post.slug}-02.webp)\n\n` +
+    `1. 도입부 직후: ![${post.title} 대표 이미지](${process.env.BLOG_BASE_URL?.replace(/\/$/, '') ?? ''}/images/${post.slug}-01.webp)\n` +
+    `2. 2번째 H2 직후: ![${post.keyword} 개념 설명](${process.env.BLOG_BASE_URL?.replace(/\/$/, '') ?? ''}/images/${post.slug}-02.webp)\n\n` +
     `마크다운 본문만 출력해줘. front matter 없이.`,
     { temperature: 0.7 }
   );

@@ -11,7 +11,7 @@ draft: false
 
 'Claude Code가 도대체 뭔가요?' — 이 질문, 한 번쯤 해보셨을 거예요. **claude code 뜻**을 검색해봤더니 영어 문서만 잔뜩 나오고, 나한테 맞는 도구인지조차 감이 안 잡히는 분들을 위해 이 글을 씁니다. 5분 안에 핵심만 정리해드릴게요.
 
-![Claude Code 터미널 화면 예시 — AI가 코드를 직접 수정하는 모습](/images/what-is-claude-code-01.webp)
+![Claude Code 터미널 화면 예시 — AI가 코드를 직접 수정하는 모습](https://dmazone.github.io/blogauto/images/what-is-claude-code-01.webp)
 
 ---
 
@@ -25,7 +25,7 @@ Claude Code는 Anthropic이 만든 **AI 기반 CLI(명령줄 인터페이스) �
 
 ## 일반 AI 챗봇과 무엇이 다른가요?
 
-![일반 AI 챗봇과 Claude Code의 차이점 비교 표](/images/what-is-claude-code-02.webp)
+![일반 AI 챗봇과 Claude Code의 차이점 비교 표](https://dmazone.github.io/blogauto/images/what-is-claude-code-02.webp)
 
 | 비교 항목 | 일반 AI 챗봇 | Claude Code |
 |-----------|:-----------:|:-----------:|

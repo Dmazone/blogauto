@@ -11,7 +11,7 @@ draft: false
 
 안녕하세요! 개발 워크플로우를 혁신할 강력한 AI 에이전트, Claude Code에 대한 소식을 들으셨나요? 단순한 코드 어시스턴트를 넘어, 2026년 현재 Claude Code는 여러분의 개발 팀에 자율적인 소프트웨어 엔지니어로 합류할 준비를 마쳤습니다. 오늘은 Mac과 Windows 환경에서 Claude Code를 어떻게 설치하고, 그 잠재력을 최대한 끌어낼 수 있는지 자세히 알려드릴게요.
 
-![Claude Code 설치 방법 (Mac/Windows) 대표 이미지](/images/claude-code-install-01.webp)
+![Claude Code 설치 방법 (Mac/Windows) 대표 이미지](https://dmazone.github.io/blogauto/images/claude-code-install-01.webp)
 
 ## Claude Code, 단순한 코딩 도우미를 넘어선 진화
 
@@ -27,7 +27,7 @@ draft: false
 
 이제 Claude Code의 강력한 기능들을 맛볼 준비가 되셨나요? Mac과 Windows 환경에서 각각 어떻게 설치하고 기본적인 설정을 하는지 차근차근 따라 해보세요.
 
-![claude code 설치 개념 설명](/images/claude-code-install-02.webp)
+![claude code 설치 개념 설명](https://dmazone.github.io/blogauto/images/claude-code-install-02.webp)
 
 ### Mac 사용자: 터미널 기반 설치와 IDE 확장 연동
 

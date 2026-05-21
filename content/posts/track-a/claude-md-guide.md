@@ -13,7 +13,7 @@ AI 에이전트와 함께 개발하는 시대, 혹시 이런 고민을 해보셨
 
 이런 문제들로 머리를 싸매고 있다면, 오늘 포스팅이 해결책을 제시해 줄 겁니다. 바로 Claude Code의 핵심인 **`CLAUDE.md`** 파일이죠. `CLAUDE.md`는 AI 개발 동료를 우리 팀의 일원으로 완벽하게 훈련시키는 마스터 플랜과 같습니다. 이 가이드를 통해 `CLAUDE.md`를 어떻게 작성하고, 관리하며, 활용하는지 완벽하게 알려드릴게요.
 
-![CLAUDE.md 작성법 완벽 가이드 대표 이미지](/images/claude-md-guide-01.webp)
+![CLAUDE.md 작성법 완벽 가이드 대표 이미지](https://dmazone.github.io/blogauto/images/claude-md-guide-01.webp)
 
 ## Claude.md, 왜 필요한가? AI 개발 동료 훈련의 시작
 
@@ -34,7 +34,7 @@ AI 개발 동료와 작업하면서 혹시 이런 불편함을 느껴보셨나�
 
 이제 본격적으로 `CLAUDE.md`를 작성하고 관리하는 방법을 알아볼까요?
 
-![claude.md 사용법 개념 설명](/images/claude-md-guide-02.webp)
+![claude.md 사용법 개념 설명](https://dmazone.github.io/blogauto/images/claude-md-guide-02.webp)
 
 ### `/init` 명령어로 Claude.md 초안 자동 생성하기
 
