@@ -42,6 +42,17 @@ const BASE_URL   = (process.env.BLOG_BASE_URL ?? '').replace(/\/$/, '');
 // ── 유틸 ─────────────────────────────────────────────────────────────────────
 const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
 
+/** Gemini가 Python/코드블록으로 응답을 감쌀 때 마크다운 본문만 추출 */
+function extractFinalMarkdown(text) {
+  // Python: content = """---\n...\n---\n..."""
+  const pyMatch = text.match(/content\s*=\s*"""\s*([\s\S]*?)"""/);
+  if (pyMatch) return pyMatch[1].trim();
+  // ```markdown / ```md / ``` 코드블록
+  const mdMatch = text.match(/```(?:markdown|md|plaintext)?\s*([\s\S]*?)```/s);
+  if (mdMatch) return mdMatch[1].trim();
+  return text.trim();
+}
+
 // ── Gemini 호출 구현체 (기본: API / 교체 가능: 브라우저) ───────────────────
 let _geminiImpl = null; // null = API 모드, fn._session = GeminiSession
 
@@ -375,13 +386,13 @@ async function claudeFinalReviewAndApply(topic, body) {
   }
 
   log('✏️', '[STEP 7b] Gemini가 Claude 피드백 반영 중...');
-  const final = await geminiCall(
+  const final = extractFinalMarkdown(await geminiCall(
     `아래 피드백을 반영해 블로그 본문을 수정해줘.\n` +
     `이미지 마크다운과 내부 링크는 반드시 그대로 유지해.\n\n` +
     `[Claude 피드백]\n${feedback}\n\n` +
     `[현재 본문]\n${body}\n\n수정된 본문만 출력해줘.`,
     { temperature: 0.5 }
-  );
+  ));
 
   log('✅', '최종본 완성');
   return final;
@@ -608,10 +619,11 @@ ${subtopicLine}
 
   // ── TURN 5: 최종 마크다운 추출 ────────────────────────────────────────────
   log('📝', '[Turn 5] 최종 마크다운 추출 중...');
-  const finalBody = await session.send(
+  const _t5Raw = await session.send(
     `최종 완성된 본문을 마크다운 형식으로만 출력해줘.
 추가 설명·요약·앞말 없이 마크다운 본문 코드만. front matter 없이.`
   );
+  const finalBody = extractFinalMarkdown(_t5Raw);
 
   // ── TURN 6: 이미지 프롬프트 생성 ─────────────────────────────────────────
   log('🎨', '[Turn 6] 이미지 프롬프트 생성 중...');
