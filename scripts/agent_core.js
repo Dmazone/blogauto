@@ -454,14 +454,18 @@ async function generateImage(prompt, slug, index) {
     }
   }
 
+  // Pollinations.ai fallback (타임아웃 150초, 최대 2회 재시도)
   log('🖼️', `  Pollinations fallback: ${filename}`);
   const polUrl =
     `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}` +
     `?width=1200&height=630&nologo=true&model=flux`;
-  const imgRes = await axios.get(polUrl, { responseType: 'arraybuffer', timeout: 90000 });
-  fs.writeFileSync(destPath, Buffer.from(imgRes.data));
-  log('✅', `  Pollinations 저장: ${filename}`);
-  return { localPath: `/images/${filename}`, sourceUrl: polUrl };
+
+  return await withRetry(async () => {
+    const imgRes = await axios.get(polUrl, { responseType: 'arraybuffer', timeout: 150000 });
+    fs.writeFileSync(destPath, Buffer.from(imgRes.data));
+    log('✅', `  Pollinations 저장: ${filename}`);
+    return { localPath: `/images/${filename}`, sourceUrl: polUrl };
+  }, 2, 5000);
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -528,13 +532,23 @@ export async function runForSection(section, options = {}) {
   const refined    = await geminiRefineLoop(topic, outline, draft);    // STEP 6
   const final      = await claudeFinalReviewAndApply(topic, refined);  // STEP 7
 
-  // STEP 8 — 이미지 생성
+  // STEP 8 — 이미지 생성 (실패해도 글 저장은 계속)
   log('🖼️', '[STEP 8] 이미지 생성 중...');
   const prompts = await generateContextualImagePrompts(section, topic, final);
-  const img1    = await generateImage(prompts[0], topic.slug, 1);
-  await generateImage(prompts[1], topic.slug, 2);
 
-  // 파일 저장
+  let img1 = { localPath: '', sourceUrl: '' };
+  try {
+    img1 = await generateImage(prompts[0], topic.slug, 1);
+  } catch (err) {
+    log('⚠️', `  이미지 1 생성 실패 (${err.message}) → 스킵`);
+  }
+  try {
+    await generateImage(prompts[1], topic.slug, 2);
+  } catch (err) {
+    log('⚠️', `  이미지 2 생성 실패 (${err.message}) → 스킵`);
+  }
+
+  // 파일 저장 (이미지 성공 여부와 무관하게 항상 저장)
   const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + final;
   fs.mkdirSync(path.dirname(postPath), { recursive: true });
   fs.writeFileSync(postPath, fullContent, 'utf-8');
@@ -596,4 +610,7 @@ async function main() {
   }
 }
 
-main();
+// ESM 가드: 직접 실행 시에만 main() 호출 (import 시 실행 방지)
+const isMain = process.argv[1] &&
+  path.resolve(fileURLToPath(import.meta.url)) === path.resolve(process.argv[1]);
+if (isMain) main();

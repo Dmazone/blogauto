@@ -21,6 +21,8 @@ jobs:
     timeout-minutes: 120
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -42,7 +44,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Run daily runner (all sections, 5-min gaps)
+      - name: Generate all 10 sections (no delay — publishDate handles staggering)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -64,3 +66,21 @@ jobs:
           else
             node scripts/daily_runner.js
           fi
+
+      # 생성 완료 후 즉시 Pages 첫 배포 (09:00 글 공개)
+      - name: Setup Hugo for initial deploy
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "latest"
+          extended: true
+
+      - name: Build Hugo (09:00 기사 공개)
+        run: hugo --minify
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

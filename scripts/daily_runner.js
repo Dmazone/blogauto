@@ -17,13 +17,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-const DELAY_MS = 5 * 60 * 1000; // 5분
-
 const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
-
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
 
 /** 오늘 KST 09:00 기준으로 섹션 index * 5분 오프셋 적용한 ISO 날짜 반환 */
 function getPublishDate(sectionIndex) {
@@ -92,11 +86,6 @@ async function main() {
       if (process.env.DEBUG) console.error(err.stack);
     }
 
-    // 마지막 섹션이 아니면 5분 대기
-    if (i < targetSections.length - 1) {
-      log('⏳', `다음 섹션까지 5분 대기... (${new Date().toLocaleTimeString('ko-KR')})`);
-      await sleep(DELAY_MS);
-    }
   }
 
   console.log('\n' + '='.repeat(60));
