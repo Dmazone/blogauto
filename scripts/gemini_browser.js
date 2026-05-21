@@ -1,30 +1,37 @@
 /**
- * gemini_browser.js — Playwright로 Gemini 웹 UI 자동화
+ * gemini_browser.js — Playwright로 Gemini 웹/Gem 멀티턴 대화 자동화
  *
- * - chromium.launchPersistentContext() 사용 → 로그인 세션 자동 저장
- * - 첫 실행 시 브라우저에서 구글 계정 로그인 → 이후 자동
- * - 매 프롬프트마다 새 대화(New Chat) 시작
+ * GeminiSession:
+ *   init()             — 브라우저 시작, 로그인 확인, Gem 이동
+ *   send(text)         — 새 대화 시작 or 현재 대화에 메시지 추가
+ *   newConversation()  — 명시적으로 새 대화 시작
+ *   close()            — 브라우저 종료
+ *
+ * 세션 저장: ~/.gemini-blog-session/  (로그인 자동 유지)
  */
 
 import { chromium } from 'playwright';
-import path from 'path';
 import os from 'os';
+import path from 'path';
 import readline from 'readline';
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname   = path.dirname(fileURLToPath(import.meta.url));
 const SESSION_DIR = path.join(os.homedir(), '.gemini-blog-session');
-const GEMINI_URL  = 'https://gemini.google.com/app';
-const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
+const GEMINI_HOME = 'https://gemini.google.com/app';
 
-// Gemini 웹 UI 셀렉터 (구조 변경 시 여기만 수정)
+const log  = (e, m) => console.log(`${e}  ${m}`);
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// ── DOM 셀렉터 ────────────────────────────────────────────────────────────────
 const SEL = {
-  // 입력창 — rich-textarea 안의 Quill 에디터
+  // 입력창 (여러 버전 대응)
   input: [
     'rich-textarea .ql-editor',
     'div.ql-editor[contenteditable="true"]',
     '[contenteditable="true"][aria-multiline="true"]',
     'div[role="textbox"][contenteditable="true"]',
+    'textarea.input-area',
   ],
   // 전송 버튼
   send: [
@@ -32,233 +39,234 @@ const SEL = {
     'button[mattooltip="Send message"]',
     '[data-test-id="send-button"]',
     'button.send-button',
+    'button[aria-label="메시지 보내기"]',
   ],
-  // 생성 중단 버튼 (스트리밍 중에만 보임)
+  // 생성 중단 버튼 (스트리밍 중에만 표시됨)
   stop: [
     'button[aria-label="Stop generating"]',
     'button[aria-label="Stop response"]',
+    'button[aria-label="생성 중지"]',
     '[data-test-id="stop-button"]',
   ],
   // 새 대화 버튼
   newChat: [
     'a[href="/app"]',
     'button[aria-label="New chat"]',
+    'button[aria-label="새 채팅"]',
     '[data-test-id="new-chat-button"]',
-    'span:has-text("New chat")',
+    'a[href*="/app"]:not([href*="gem"])',
   ],
-  // 응답 텍스트 컨테이너
+  // 모델 응답 컨테이너 (마지막 것만 추출)
   response: [
     '.model-response-text',
     'model-response .response-content',
+    'message-content .markdown',
     '[data-message-author-role="model"] .markdown-container',
-    '.conversation-turn:last-of-type .model-response',
-    'message-content model-response',
+    '.response-container .markdown',
   ],
 };
 
 export class GeminiSession {
-  constructor({ headless = false } = {}) {
-    this.headless = headless;
-    this.context  = null;
-    this.page     = null;
+  constructor({ headless = false, gemUrl = null } = {}) {
+    this.headless  = headless;
+    this.gemUrl    = gemUrl;     // 특정 Gem URL (없으면 일반 채팅)
+    this.context   = null;
+    this.page      = null;
+    this._turnCount = 0;         // 현재 대화 턴 수
   }
 
-  // ── 초기화 ────────────────────────────────────────────────────────────────
+  // ── 초기화 ──────────────────────────────────────────────────────────────────
   async init() {
-    log('🌐', '브라우저 초기화 중...');
+    log('🌐', '브라우저 시작 중...');
     this.context = await chromium.launchPersistentContext(SESSION_DIR, {
-      headless:      this.headless,
-      viewport:      { width: 1280, height: 900 },
-      locale:        'ko-KR',
-      timezoneId:    'Asia/Seoul',
+      headless:   this.headless,
+      viewport:   { width: 1280, height: 900 },
+      locale:     'ko-KR',
+      timezoneId: 'Asia/Seoul',
     });
-
     this.page = await this.context.newPage();
-    await this.page.goto(GEMINI_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+
+    // Gem URL이 있으면 Gem으로, 없으면 일반 Gemini로 이동
+    const target = this.gemUrl ?? GEMINI_HOME;
+    await this.page.goto(target, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await this._ensureLoggedIn();
-    log('✅', '제미나이 세션 준비 완료');
+    this._turnCount = 0;
+    log('✅', `제미나이 세션 준비 완료${this.gemUrl ? ' (Gem 모드)' : ''}`);
   }
 
   async _ensureLoggedIn() {
-    // 로그인 페이지로 리다이렉트됐는지 확인
-    await this.page.waitForTimeout(2500);
+    await wait(2500);
     const url = this.page.url();
-
     if (url.includes('accounts.google.com') || url.includes('/signin')) {
       console.log('\n');
-      log('🔐', '제미나이 로그인이 필요합니다.');
-      log('📋', `열린 브라우저에서 구글 계정으로 로그인하세요.`);
-      log('⌨️', `로그인 완료 후 이 터미널에서 Enter를 누르세요.\n`);
+      log('🔐', '구글 계정 로그인이 필요합니다.');
+      log('📋', 'paydma 계정으로 로그인한 뒤 Enter를 누르세요.\n');
       await this._waitForEnter();
-      await this.page.goto(GEMINI_URL, { waitUntil: 'domcontentloaded' });
-      await this.page.waitForTimeout(3000);
+      const target = this.gemUrl ?? GEMINI_HOME;
+      await this.page.goto(target, { waitUntil: 'domcontentloaded' });
+      await wait(3000);
     }
   }
 
   async _waitForEnter() {
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-    return new Promise((resolve) => {
-      rl.question('  → Enter를 누르면 계속합니다... ', () => {
-        rl.close();
-        resolve();
-      });
-    });
+    return new Promise((resolve) => rl.question('  → Enter를 누르면 계속합니다... ', () => {
+      rl.close(); resolve();
+    }));
   }
 
-  // ── 핵심: 프롬프트 전송 → 응답 반환 ─────────────────────────────────────
-  async call(prompt, opts = {}) {
-    const { timeout = 240000 } = opts; // 4분 기본 타임아웃
+  // ── 새 대화 시작 ─────────────────────────────────────────────────────────────
+  async newConversation() {
+    if (this.gemUrl) {
+      // Gem: 해당 Gem URL로 재이동 (새 대화 시작)
+      await this.page.goto(this.gemUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    } else {
+      // 일반: 새 채팅 버튼 or 홈으로
+      const btn = await this._tryFind(SEL.newChat);
+      if (btn) {
+        await btn.click();
+      } else {
+        await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded' });
+      }
+    }
+    await wait(2000);
+    this._turnCount = 0;
+    log('💬', '새 대화 시작');
+  }
 
-    // 새 대화 시작
-    await this._startNewChat();
+  // ── 메시지 전송 (새 대화 or 이어서) ─────────────────────────────────────────
+  async send(text, opts = {}) {
+    const { timeout = 300000 } = opts; // 5분 기본 타임아웃
+
+    // 첫 턴이면 새 대화부터 시작
+    if (this._turnCount === 0) {
+      await this.newConversation();
+    }
+
+    this._turnCount++;
+    log('📤', `Turn ${this._turnCount} 전송 중... (${text.slice(0, 60).replace(/\n/g, ' ')}...)`);
 
     // 입력창 찾기
-    const inputEl = await this._findElement(SEL.input, '입력창');
+    const inputEl = await this._findEl(SEL.input, '입력창');
     await inputEl.click();
-    await this.page.waitForTimeout(300);
+    await wait(300);
 
-    // 긴 프롬프트는 클립보드 붙여넣기 (keyboard.type은 느림)
-    await this.page.evaluate((text) => {
-      const item = new ClipboardItem({ 'text/plain': new Blob([text], { type: 'text/plain' }) });
-      return navigator.clipboard.write([item]);
-    }, prompt).catch(async () => {
-      // 클립보드 API 실패 시 타입으로 대체
-      await inputEl.fill('');
-      await inputEl.type(prompt, { delay: 0 });
-    });
-
-    // Ctrl+V 붙여넣기
-    await this.page.keyboard.press('Control+v');
-    await this.page.waitForTimeout(400);
+    // 클립보드로 붙여넣기 (긴 프롬프트)
+    try {
+      await this.page.evaluate((t) => navigator.clipboard.writeText(t), text);
+      await this.page.keyboard.press('Control+v');
+    } catch {
+      // 클립보드 실패 시 직접 입력
+      await inputEl.fill(text);
+    }
+    await wait(400);
 
     // 전송
-    const sendEl = await this._tryFindElement(SEL.send);
-    if (sendEl) {
-      await sendEl.click();
+    const sendBtn = await this._tryFind(SEL.send);
+    if (sendBtn) {
+      await sendBtn.click();
     } else {
       await this.page.keyboard.press('Enter');
     }
 
-    // 스트리밍 완료 대기
-    await this._waitForResponseComplete(timeout);
+    // 응답 대기
+    await this._waitForCompletion(timeout);
 
     // 응답 추출
-    const text = await this._extractResponse();
-    if (!text || text.length < 30) {
-      throw new Error(`제미나이 응답이 너무 짧습니다 (${text?.length ?? 0}자)`);
-    }
-    return text;
+    const response = await this._extractLatestResponse();
+    log('📥', `Turn ${this._turnCount} 응답 완료 (${response.length}자)`);
+    return response;
   }
 
-  async _startNewChat() {
-    try {
-      const btn = await this._tryFindElement(SEL.newChat);
-      if (btn) {
-        await btn.click();
-        await this.page.waitForTimeout(1500);
-      } else {
-        await this.page.goto(GEMINI_URL, { waitUntil: 'domcontentloaded' });
-        await this.page.waitForTimeout(1500);
-      }
-    } catch {
-      await this.page.goto(GEMINI_URL, { waitUntil: 'domcontentloaded' });
-      await this.page.waitForTimeout(1500);
-    }
-  }
+  // ── 응답 완료 대기 ───────────────────────────────────────────────────────────
+  async _waitForCompletion(timeout) {
+    // 1) 약간 기다려서 스트리밍 시작 확인
+    await wait(2500);
 
-  async _waitForResponseComplete(timeout) {
-    // 1) 응답 시작 대기 (최대 15초)
-    await this.page.waitForTimeout(2000);
-
-    // 2) 정지 버튼이 나타날 때까지 잠시 대기
-    let stopVisible = false;
-    try {
-      for (const sel of SEL.stop) {
-        const el = this.page.locator(sel).first();
-        if (await el.isVisible({ timeout: 5000 })) {
-          stopVisible = true;
+    // 2) 정지 버튼이 보이면 사라질 때까지 대기
+    let stopFound = false;
+    for (const sel of SEL.stop) {
+      try {
+        if (await this.page.locator(sel).first().isVisible({ timeout: 5000 })) {
+          stopFound = true;
+          await this.page.waitForFunction(
+            (selectors) => !selectors.some((s) => document.querySelector(s)),
+            SEL.stop,
+            { timeout, polling: 1500 }
+          );
           break;
         }
-      }
-    } catch {}
+      } catch {}
+    }
 
-    // 3) 정지 버튼이 사라질 때까지 대기 (= 스트리밍 완료)
-    if (stopVisible) {
-      await this.page.waitForFunction(
-        (selectors) => {
-          for (const s of selectors) {
-            if (document.querySelector(s)) return false; // 아직 생성 중
-          }
-          return true;
-        },
-        SEL.stop,
-        { timeout, polling: 1000 }
-      );
-    } else {
-      // 정지 버튼을 못 찾은 경우 — 응답 길이 안정화 대기
-      let prevLen = 0, stableCount = 0;
+    if (!stopFound) {
+      // 정지 버튼 못 찾으면 응답 길이 안정화로 판단
+      let prev = 0, stable = 0;
       const deadline = Date.now() + timeout;
-      while (Date.now() < deadline && stableCount < 3) {
-        await this.page.waitForTimeout(3000);
-        const curLen = await this._getResponseLength();
-        if (curLen === prevLen && curLen > 50) {
-          stableCount++;
-        } else {
-          stableCount = 0;
-          prevLen = curLen;
-        }
+      while (Date.now() < deadline && stable < 4) {
+        await wait(3000);
+        const cur = await this._getLatestResponseLength();
+        stable = (cur === prev && cur > 50) ? stable + 1 : 0;
+        prev = cur;
       }
     }
 
-    await this.page.waitForTimeout(1200); // 최종 렌더링 여유
+    await wait(1500); // 렌더링 여유
   }
 
-  async _getResponseLength() {
-    return await this.page.evaluate((selectors) => {
-      for (const s of selectors) {
-        const el = document.querySelector(s);
-        if (el) return el.innerText.length;
+  async _getLatestResponseLength() {
+    return await this.page.evaluate((sels) => {
+      for (const s of sels) {
+        const all = document.querySelectorAll(s);
+        const last = all[all.length - 1];
+        if (last) return last.innerText?.length ?? 0;
       }
       return 0;
     }, SEL.response);
   }
 
-  async _extractResponse() {
-    // 여러 셀렉터 순서대로 시도
+  // ── 마지막 응답 추출 ─────────────────────────────────────────────────────────
+  async _extractLatestResponse() {
+    // 셀렉터 순서대로 시도, 마지막 요소만 추출
     for (const sel of SEL.response) {
       try {
-        const els = await this.page.locator(sel).all();
-        if (els.length > 0) {
-          const texts = await Promise.all(els.map((e) => e.innerText().catch(() => '')));
-          const joined = texts.join('\n').trim();
-          if (joined.length > 30) return joined;
+        const all = await this.page.locator(sel).all();
+        if (all.length > 0) {
+          const last = all[all.length - 1];
+          const text = await last.innerText({ timeout: 5000 });
+          if (text.trim().length > 20) return text.trim();
         }
       } catch {}
     }
 
-    // 최후 수단: 페이지 전체에서 마지막 모델 응답 블록 추출
+    // 최후 수단: JS로 추출
     return await this.page.evaluate(() => {
-      // 코드블록 보존을 위해 markdown 컨테이너 우선
-      const all = document.querySelectorAll(
-        '[data-message-author-role="model"], .model-response, .response-container'
-      );
-      if (all.length === 0) return '';
-      return all[all.length - 1]?.innerText?.trim() ?? '';
+      const candidates = [
+        '[data-message-author-role="model"]',
+        '.model-response',
+        '.response-container',
+      ];
+      for (const s of candidates) {
+        const all = document.querySelectorAll(s);
+        const last = all[all.length - 1];
+        if (last?.innerText?.trim().length > 20) return last.innerText.trim();
+      }
+      return '';
     });
   }
 
-  // ── 헬퍼 ─────────────────────────────────────────────────────────────────
-  async _findElement(selectors, label = '요소') {
+  // ── 내부 유틸 ────────────────────────────────────────────────────────────────
+  async _findEl(selectors, label) {
     for (const sel of selectors) {
       try {
         const el = this.page.locator(sel).first();
-        if (await el.isVisible({ timeout: 4000 })) return el;
+        if (await el.isVisible({ timeout: 5000 })) return el;
       } catch {}
     }
-    throw new Error(`${label}을(를) 찾지 못했습니다. 셀렉터: ${selectors.join(' | ')}`);
+    throw new Error(`${label} 찾기 실패: ${selectors.join(', ')}`);
   }
 
-  async _tryFindElement(selectors) {
+  async _tryFind(selectors) {
     for (const sel of selectors) {
       try {
         const el = this.page.locator(sel).first();
@@ -268,8 +276,8 @@ export class GeminiSession {
     return null;
   }
 
-  // ── 종료 ─────────────────────────────────────────────────────────────────
   async close() {
     try { await this.context?.close(); } catch {}
+    log('🔒', '브라우저 세션 종료');
   }
 }

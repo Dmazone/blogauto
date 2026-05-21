@@ -43,13 +43,7 @@ const BASE_URL   = (process.env.BLOG_BASE_URL ?? '').replace(/\/$/, '');
 const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
 
 // ── Gemini 호출 구현체 (기본: API / 교체 가능: 브라우저) ───────────────────
-let _geminiImpl = null; // null = API 모드, GeminiSession.call = 브라우저 모드
-
-/** daily_runner.js에서 브라우저 세션을 주입 */
-export function setGeminiBrowserSession(session) {
-  _geminiImpl = session ? (prompt) => session.call(prompt) : null;
-  log('🌐', _geminiImpl ? '브라우저 모드 활성화 (제미나이 웹 사용)' : 'API 모드 활성화');
-}
+let _geminiImpl = null; // null = API 모드, fn._session = GeminiSession
 
 async function withRetry(fn, retries = 4, baseDelay = 15000) {
   for (let attempt = 1; attempt <= retries; attempt++) {
@@ -528,6 +522,149 @@ function gitPush(title) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// 웹 파이프라인 (브라우저 모드 전용) — 6턴 멀티턴 대화
+// ────────────────────────────────────────────────────────────────────────────
+async function runWebPipeline(section, dateOverride) {
+  const session = _geminiImpl._session; // GeminiSession 객체
+  const existing = existingSlugsForSection(section).join(', ') || '없음';
+  const subtopicLine = section.subtopics
+    ? `오늘 서브토픽: ${section.subtopics[Math.floor(Date.now() / 86400000) % section.subtopics.length]}`
+    : '';
+
+  // ── TURN 1: 트렌드 조사 ────────────────────────────────────────────────────
+  log('🔍', '[Turn 1] 트렌드 조사 중...');
+  session._turnCount = 0; // 새 대화
+  await session.send(
+    `[섹션: ${section.name}] 오늘 날짜: 2026-05-21
+${subtopicLine}
+
+구글 검색으로 이 섹션에서 현재 가장 화제가 되는 트렌드 주제를 3개 조사해줘.
+각 주제별로: ① 왜 지금 핫한지 ② 독자 관심도 ③ 구글 애드센스 노출 가능성 평가
+이미 발행된 슬러그(중복 금지): ${existing}`
+  );
+
+  // ── TURN 2: 주제 확정 + 아웃라인 ──────────────────────────────────────────
+  log('📐', '[Turn 2] 주제 확정 + 아웃라인...');
+  const t2 = await session.send(
+    `가장 잠재력 있는 주제 1개를 선택하고, 아래 형식으로 출력해줘.
+
+[JSON 블록]
+\`\`\`json
+{"title":"제목(30자이내)","slug":"english-slug-here","keyword":"핵심키워드","description":"메타설명 160자이내"}
+\`\`\`
+
+[SEO 아웃라인]
+## H2 섹션 4개, 각 H2 아래 ### H3 2~3개
+각 섹션의 톤: 비교분석/장단점/경험담/튜토리얼 중 명시`
+  );
+
+  // JSON 파싱
+  let topic = { title: '', slug: '', keyword: '', description: '' };
+  try {
+    const m = t2.match(/```json\s*([\s\S]*?)```/);
+    if (m) topic = { ...topic, ...JSON.parse(m[1]) };
+  } catch {}
+
+  // 슬러그 중복 방지
+  const existing2 = existingSlugsForSection(section);
+  if (!topic.slug || existing2.includes(topic.slug)) {
+    topic.slug = `${section.dir}-${Date.now()}`;
+  }
+  if (!topic.title) topic.title = `${section.name} 트렌드 분석`;
+  if (!topic.keyword) topic.keyword = section.name;
+
+  log('✅', `확정 주제: "${topic.title}" / slug: ${topic.slug}`);
+
+  // 이미지 URL 삽입용
+  const img1Url = `${BASE_URL}/images/${topic.slug}-01.webp`;
+  const img2Url = `${BASE_URL}/images/${topic.slug}-02.webp`;
+
+  // ── TURN 3: 본문 집필 ──────────────────────────────────────────────────────
+  log('✍️', '[Turn 3] 본문 집필 중...');
+  await session.send(
+    `아웃라인대로 Hugo 마크다운 본문을 작성해줘. front matter 없이.
+
+[필수 포함]
+- 도입부 직후: ![${topic.title} 대표이미지](${img1Url})
+- 2번째 H2 직후: ![${topic.keyword} 관련이미지](${img2Url})
+- 내부 링크: [관련 글 보기](/posts/${section.dir}/)
+- 분량: 1,500~2,500자
+- 출처 없는 수치 사용 금지, 구체적 사례 포함`
+  );
+
+  // ── TURN 4: 애드센스 품질 자체검토 ───────────────────────────────────────
+  log('🔍', '[Turn 4] 애드센스 품질 자체검토 중...');
+  await session.send(
+    `방금 쓴 글을 다시 읽고, 다음 항목을 검토해서 수정해줘:
+
+1. **AI 냄새** — "다양한", "중요합니다", "살펴보겠습니다", "마지막으로" 등 금지 표현 제거
+2. **뻔한 문장** — 교과서적이거나 누구나 아는 정보는 더 생생하고 독창적으로
+3. **애드센스 위험 요소** — 광고성 표현, 근거 없는 주장, 얕은 정보 수정
+4. **이미지 마크다운** — 두 이미지 URL이 그대로 있는지 확인
+5. **한국어 자연스러움** — 번역체 표현 제거
+
+수정 후 어떤 부분을 어떻게 바꿨는지 2~3줄로 요약해줘.`
+  );
+
+  // ── TURN 5: 최종 마크다운 추출 ────────────────────────────────────────────
+  log('📝', '[Turn 5] 최종 마크다운 추출 중...');
+  const finalBody = await session.send(
+    `최종 완성된 본문을 마크다운 형식으로만 출력해줘.
+추가 설명·요약·앞말 없이 마크다운 본문 코드만. front matter 없이.`
+  );
+
+  // ── TURN 6: 이미지 프롬프트 생성 ─────────────────────────────────────────
+  log('🎨', '[Turn 6] 이미지 프롬프트 생성 중...');
+  const t6 = await session.send(
+    `글에 삽입된 이미지 2개를 위한 AI 이미지 생성 프롬프트를 영어로 만들어줘.
+
+이미지 스타일 고정: ${section.imageStyle}
+각 이미지 삽입 위치의 앞뒤 글 내용을 참고해서 구체적 장면을 묘사해.
+"a developer doing X", "diagram showing Y" 처럼 구체적으로.
+
+JSON만 출력:
+\`\`\`json
+{"prompts":["프롬프트1","프롬프트2"]}
+\`\`\``
+  );
+
+  let imgPrompts = [`${topic.title} concept, ${section.imageStyle}`, `${topic.keyword} visual, ${section.imageStyle}`];
+  try {
+    const m = t6.match(/```json\s*([\s\S]*?)```/);
+    if (m) {
+      const p = JSON.parse(m[1]).prompts ?? [];
+      if (p.length >= 2) imgPrompts = p;
+    }
+  } catch {}
+
+  // Claude 최종 검토 (선택)
+  const finalValidated = await claudeFinalReviewAndApply(topic, finalBody).catch(() => finalBody);
+
+  // Front matter에 필요한 outline 형태 조립
+  const outline = { meta_description: topic.description, sections: [], internal_link: { anchor: '관련 글', path: `/posts/${section.dir}/` } };
+
+  return {
+    topic:        { ...topic, track: section.dir },
+    outline,
+    finalBody:    finalValidated,
+    imgPrompts,
+  };
+}
+
+// ── 브라우저 세션에 _session 참조 저장용 래퍼 ─────────────────────────────
+export function setGeminiBrowserSession(session) {
+  if (session) {
+    const callFn = (prompt) => session.send(prompt);
+    callFn._session = session;
+    _geminiImpl = callFn;
+    log('🌐', '브라우저 모드 활성화 (제미나이 웹 Gem)');
+  } else {
+    _geminiImpl = null;
+    log('🔑', 'API 모드 활성화');
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // 핵심 공개 함수: 특정 섹션에 대해 글 1개 생성·발행
 // ────────────────────────────────────────────────────────────────────────────
 export async function runForSection(section, options = {}) {
@@ -541,25 +678,37 @@ export async function runForSection(section, options = {}) {
   log('📂', `섹션: [${section.name}]`);
   log('📂', `${'─'.repeat(50)}`);
 
-  const topic     = await pickTodayTopic(section, subtopic);  // STEP 1
-  const postPath  = path.join(POSTS_DIR, section.dir, `${topic.slug}.md`);
+  let topic, outline, final, prompts;
 
+  // ── 브라우저 모드: 제미나이 Gem 멀티턴 파이프라인 ──────────────────────────
+  if (_geminiImpl?._session) {
+    const result = await runWebPipeline(section, dateOverride);
+    topic   = result.topic;
+    outline = result.outline;
+    final   = result.finalBody;
+    prompts = result.imgPrompts;
+
+  // ── API 모드: 기존 단계별 파이프라인 ─────────────────────────────────────
+  } else {
+    const topicObj  = await pickTodayTopic(section, subtopic);    // STEP 1
+    topic = topicObj;
+    const trendData = await searchTrends(section, topic);          // STEP 2
+    const validated = await validateTrends(topic, trendData);      // STEP 3
+    outline         = await generateOutline(section, topic, validated); // STEP 4
+    const draft     = await writeArticle(section, topic, outline, validated); // STEP 5
+    const refined   = await geminiRefineLoop(topic, outline, draft);    // STEP 6
+    final           = await claudeFinalReviewAndApply(topic, refined);  // STEP 7
+    prompts         = await generateContextualImagePrompts(section, topic, final);
+  }
+
+  const postPath = path.join(POSTS_DIR, section.dir, `${topic.slug}.md`);
   if (fs.existsSync(postPath)) {
     log('⚠️', `이미 존재: ${postPath} → 스킵`);
     return;
   }
 
-  const trendData  = await searchTrends(section, topic);          // STEP 2
-  const validated  = await validateTrends(topic, trendData);      // STEP 3
-  const outline    = await generateOutline(section, topic, validated); // STEP 4
-  const draft      = await writeArticle(section, topic, outline, validated); // STEP 5
-  const refined    = await geminiRefineLoop(topic, outline, draft);    // STEP 6
-  const final      = await claudeFinalReviewAndApply(topic, refined);  // STEP 7
-
-  // STEP 8 — 이미지 생성 (실패해도 글 저장은 계속)
-  log('🖼️', '[STEP 8] 이미지 생성 중...');
-  const prompts = await generateContextualImagePrompts(section, topic, final);
-
+  // 이미지 생성 (실패해도 글 저장은 계속)
+  log('🖼️', '이미지 생성 중...');
   let img1 = { localPath: '', sourceUrl: '' };
   try {
     img1 = await generateImage(prompts[0], topic.slug, 1);
@@ -572,7 +721,7 @@ export async function runForSection(section, options = {}) {
     log('⚠️', `  이미지 2 생성 실패 (${err.message}) → 스킵`);
   }
 
-  // 파일 저장 (이미지 성공 여부와 무관하게 항상 저장)
+  // 파일 저장
   const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + final;
   fs.mkdirSync(path.dirname(postPath), { recursive: true });
   fs.writeFileSync(postPath, fullContent, 'utf-8');

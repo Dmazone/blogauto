@@ -64,9 +64,15 @@ async function main() {
 
   if (!useApi) {
     const { GeminiSession } = await import('./gemini_browser.js');
-    geminiSession = new GeminiSession({ headless: false });
+    const gemUrl = process.env.GEMINI_GEM_URL || null;
+    geminiSession = new GeminiSession({ headless: false, gemUrl });
     await geminiSession.init();
     setGeminiBrowserSession(geminiSession);
+    if (gemUrl) {
+      log('💎', `Gem 모드: ${gemUrl}`);
+    } else {
+      log('⚠️', 'GEMINI_GEM_URL 미설정 → 일반 채팅 사용 (node scripts/setup_gem.js 로 Gem 생성 권장)');
+    }
   } else {
     log('🔑', 'API 모드 — Gemini API 키 사용');
   }
