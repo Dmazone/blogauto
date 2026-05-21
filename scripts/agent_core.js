@@ -348,15 +348,68 @@ async function claudeFinalReviewAndApply(post, body) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// STEP 7a: 이미지 프롬프트 추출
+// STEP 7a: 이미지 삽입 위치 맥락 분석 → Gemini가 연관 프롬프트 생성
 // ────────────────────────────────────────────────────────────────────────────
-function extractImagePrompts(post, body) {
-  const h2Titles = [...body.matchAll(/^## (.+)$/gm)].map((m) => m[1]);
-  const base = 'minimalist tech blog illustration, clean white background, flat design, Korean developer theme, ultra HD';
-  return [
-    `${post.title} — Claude Code AI terminal interface glowing blue, futuristic workspace, ${base}`,
-    `${post.keyword} concept — ${h2Titles[1] ?? post.keyword} workflow diagram with arrows, ${base}`,
-  ];
+async function generateContextualImagePrompts(post, body) {
+  const style = 'minimalist tech blog illustration, clean white background, flat design, ultra HD quality, no text overlay';
+
+  // 이미지 마크다운 위치 찾기
+  const matches = [...body.matchAll(/!\[([^\]]*)\]\(([^)]*)\)/g)].slice(0, 2);
+
+  // 각 이미지 전후 텍스트 추출 (마크다운 기호 제거)
+  const clean = (s) => s.replace(/[#*`>_~]/g, '').replace(/\s+/g, ' ').trim();
+  const contexts = matches.map((m, i) => {
+    const pos = m.index;
+    const before = clean(body.slice(Math.max(0, pos - 500), pos)).slice(-300);
+    const after  = clean(body.slice(pos + m[0].length, pos + m[0].length + 300)).slice(0, 200);
+    return { idx: i + 1, alt: m[1], before, after };
+  });
+
+  // 맥락이 없으면 기본 프롬프트 반환
+  if (!contexts.length) {
+    return [
+      `${post.title} concept illustration, developer workspace, ${style}`,
+      `${post.keyword} workflow diagram, step by step process, ${style}`,
+    ];
+  }
+
+  log('🎨', '  Gemini 맥락 기반 이미지 프롬프트 생성 중...');
+
+  const raw = await geminiCall(
+    `아래 블로그 글의 이미지 삽입 위치 앞뒤 내용을 분석해서, 각 위치에 딱 맞는 구체적인 이미지 생성 프롬프트를 영어로 만들어줘.\n\n` +
+    `블로그 주제: "${post.title}" (키워드: ${post.keyword})\n\n` +
+    contexts.map((c) =>
+      `[이미지 ${c.idx}]\n` +
+      `alt 텍스트: ${c.alt}\n` +
+      `삽입 위치 앞 내용: ${c.before}\n` +
+      `삽입 위치 뒤 내용: ${c.after}`
+    ).join('\n\n---\n\n') +
+    `\n\n[조건]\n` +
+    `- 앞뒤 내용에서 핵심 개념·장면을 파악해 그것을 시각화하는 구체적인 장면을 묘사\n` +
+    `- 추상적 표현 금지. "a developer doing X", "diagram showing Y" 처럼 구체적으로\n` +
+    `- 스타일 고정: ${style}\n` +
+    `- 각 프롬프트는 영어 1~2문장\n\n` +
+    `JSON만 출력: {"prompts": ["프롬프트1", "프롬프트2"]}`,
+    { temperature: 0.6 }
+  );
+
+  try {
+    const jsonStr = raw.match(/\{[\s\S]*\}/)?.[0] ?? '{}';
+    const result  = JSON.parse(jsonStr);
+    const prompts = result.prompts ?? [];
+    // 프롬프트가 부족하면 기본값으로 채움
+    while (prompts.length < 2) {
+      prompts.push(`${post.keyword} concept, ${style}`);
+    }
+    log('✅', `  프롬프트 생성 완료 (${prompts.length}개)`);
+    return prompts;
+  } catch {
+    log('⚠️', '  프롬프트 JSON 파싱 실패 → 기본 프롬프트 사용');
+    return [
+      `${post.title} concept illustration, developer workspace, ${style}`,
+      `${post.keyword} workflow diagram, step by step process, ${style}`,
+    ];
+  }
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -477,7 +530,7 @@ async function main() {
 
     // STEP 7 — 이미지 생성
     log('🖼️', '[STEP 7] 이미지 생성 중...');
-    const prompts   = extractImagePrompts(post, final);
+    const prompts   = await generateContextualImagePrompts(post, final);
     const img1      = await generateImage(prompts[0], post.slug, 1);
     await generateImage(prompts[1], post.slug, 2);
 
