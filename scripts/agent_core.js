@@ -827,8 +827,8 @@ JSON만 출력:
     }
   } catch {}
 
-  // Claude 최종 검토 (선택)
-  const finalValidated = await claudeFinalReviewAndApply(topic, finalBody).catch(() => finalBody);
+  // Claude 완전 검수 & 직접 수정
+  const finalValidated = await claudeFullReviewAndFix(topic, finalBody).catch(() => finalBody);
 
   // Front matter에 필요한 outline 형태 조립
   const outline = { meta_description: topic.description, sections: [], internal_link: { anchor: '관련 글', path: `/posts/${section.dir}/` } };

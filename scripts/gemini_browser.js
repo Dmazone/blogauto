@@ -13,7 +13,6 @@
 import { chromium } from 'playwright';
 import os from 'os';
 import path from 'path';
-import readline from 'readline';
 import { fileURLToPath } from 'url';
 
 const __dirname   = path.dirname(fileURLToPath(import.meta.url));
@@ -111,42 +110,41 @@ export class GeminiSession {
   }
 
   async _ensureLoggedIn() {
-    await wait(3000);
-    const url = this.page.url();
+    // 페이지 로딩 여유 시간
+    await wait(5000);
 
-    // 로그인 페이지로 리다이렉트된 경우
-    const needsLogin =
-      url.includes('accounts.google.com') ||
-      url.includes('/signin') ||
-      // Gemini가 로그인 없이 랜딩 페이지를 보여주는 경우도 감지
-      (await this.page.evaluate(() => {
-        // "로그인" 또는 "Sign in" 버튼이 있으면 미로그인
+    const isLoggedIn = async () => {
+      const url = this.page.url();
+      if (url.includes('accounts.google.com') || url.includes('/signin')) return false;
+      return await this.page.evaluate(() => {
         const signInEl = document.querySelector(
           'a[href*="accounts.google.com"], button[aria-label*="sign in"], button[aria-label*="Sign in"], a[aria-label*="sign in"]'
         );
-        // 계정 아바타(사용자 메뉴)가 없으면 미로그인
         const avatar = document.querySelector(
           'img[alt*="profile"], img[alt*="Profile"], [aria-label*="Google Account"]'
         );
-        return !!signInEl || !avatar;
-      }).catch(() => false));
+        return !signInEl && !!avatar;
+      }).catch(() => false);
+    };
 
-    if (needsLogin) {
-      console.log('\n');
-      log('🔐', '구글 계정 로그인이 필요합니다.');
-      log('📋', 'paydma 계정으로 로그인한 뒤 Enter를 누르세요.\n');
-      await this._waitForEnter();
-      const target = this.gemUrl ?? GEMINI_HOME;
-      await this.page.goto(target, { waitUntil: 'domcontentloaded' });
-      await wait(3000);
+    if (await isLoggedIn()) return; // 세션 유효 → 바로 통과
+
+    // 로그인 필요 — Chrome 창에서 paydma 계정으로 로그인 후 자동 감지 (최대 180초 대기)
+    log('🔐', '구글 계정 로그인이 필요합니다. Chrome 창에서 paydma 계정으로 로그인해 주세요.');
+    log('⏳', '로그인 완료를 자동으로 감지합니다 (최대 3분)...');
+
+    const deadline = Date.now() + 180_000;
+    while (Date.now() < deadline) {
+      await wait(4000);
+      if (await isLoggedIn()) {
+        log('✅', '로그인 확인 완료');
+        const target = this.gemUrl ?? GEMINI_HOME;
+        await this.page.goto(target, { waitUntil: 'domcontentloaded', timeout: 20000 });
+        await wait(3000);
+        return;
+      }
     }
-  }
-
-  async _waitForEnter() {
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-    return new Promise((resolve) => rl.question('  → Enter를 누르면 계속합니다... ', () => {
-      rl.close(); resolve();
-    }));
+    log('⚠️', '로그인 감지 시간 초과 — 계속 시도합니다');
   }
 
   // ── 새 대화 시작 ─────────────────────────────────────────────────────────────

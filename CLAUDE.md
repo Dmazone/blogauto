@@ -135,6 +135,61 @@ front matter (YAML)
 
 ---
 
+## Gemini Pro 브라우저 모드 ★ (Claude가 직접 조작)
+
+### 개요
+- **Claude Code가 `claude-in-chrome` MCP로 사용자 Chrome을 직접 조작**하여 Gemini와 대화
+- Playwright 별도 브라우저 불필요 — 사용자의 실제 Chrome에서 paydma 계정이 이미 로그인된 상태 사용
+- 로그인 문제 없음: 사용자 Chrome에 paydma 세션이 유지되므로 Claude가 바로 조작 가능
+- API 호출 없이 Gemini 2.5 Pro의 구글 실시간 검색 기능 그대로 활용
+
+### 계정 및 Gem 정보
+| 항목 | 값 |
+|---|---|
+| Google 계정 | `paydma` (DmA 01 · Gemini Pro 구독) |
+| Gem URL | `https://gemini.google.com/u/2/gem/cca9fca55f60` (블로그포스팅 Gem) |
+| `.env` 키 | `GEMINI_GEM_URL=https://gemini.google.com/u/2/gem/cca9fca55f60` |
+
+### Claude의 포스팅 실행 절차 (claude-in-chrome 사용)
+
+Claude가 포스팅 10개를 직접 실행할 때:
+
+1. **`mcp__claude-in-chrome__tabs_context_mcp`** 로 Chrome 탭 확인
+2. Gem URL(`/u/2/gem/cca9fca55f60`)로 이동 — paydma 계정으로 자동 로그인 상태
+3. 섹션마다 **새 채팅 시작** (좌측 상단 "새 채팅" 클릭 또는 Gem URL 재이동)
+4. **6턴 멀티턴 대화**로 포스팅 생성:
+   - Turn 1: 트렌드 조사 (구글 검색 포함)
+   - Turn 2: 주제 확정 + SEO 아웃라인 (JSON 포함)
+   - Turn 3: 본문 집필
+   - Turn 4: 품질 자체검토
+   - Turn 5: 최종 마크다운 추출
+   - Turn 6: 이미지 프롬프트 생성 (JSON)
+5. **`scripts/save_post.js`**에 JSON(stdin)으로 전달 → 이미지 생성 + Claude 검수 + git push
+
+### save_post.js 호출 방법
+```bash
+echo '{"sectionId":"economy","topic":{...},"outline":{...},"body":"...","imgPrompts":["..."],"dateOverride":"2026-05-23T07:10:00+09:00"}' | node scripts/save_post.js
+```
+
+### Gemini 응답 추출 방법 (claude-in-chrome)
+- `mcp__claude-in-chrome__get_page_text` 로 전체 텍스트 추출
+- 또는 `mcp__claude-in-chrome__javascript_tool` 로 마지막 응답만 추출:
+```javascript
+const all = document.querySelectorAll('message-content, .model-response-text');
+all[all.length - 1]?.innerText ?? ''
+```
+
+### API 모드 (fallback)
+- `node scripts/daily_runner.js --api` → GEMINI_API_KEY 사용 (구글 실시간 검색 제한적)
+- Playwright 브라우저 모드: `node scripts/daily_runner.js` (Playwright 세션 필요)
+
+### 중요: 로그인 이슈 발생 시
+- Gemini가 로그인 페이지로 리다이렉트되면 Claude가 `claude-in-chrome`으로 직접 처리
+- `https://accounts.google.com` 감지 시 → `/u/2/` URL로 재이동하면 paydma 자동 선택
+- Claude가 로그인 과정 전체를 브라우저 자동화로 처리 (사용자 개입 불필요)
+
+---
+
 ## 자동화 파이프라인 (9단계)
 
 ### 역할 분담 원칙
