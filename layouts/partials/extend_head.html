@@ -1,0 +1,40 @@
+{{- if .IsPage -}}
+{{- $baseURL := strings.TrimSuffix "/" .Site.BaseURL -}}
+{{- $title := .Title -}}
+{{- $desc := .Description | default (printf "%s 관련 2026년 최신 정보와 트렌드를 알아보세요." .Title) -}}
+{{- $date := .Date.Format "2006-01-02T15:04:05+09:00" -}}
+{{- $modified := .Lastmod.Format "2006-01-02T15:04:05+09:00" -}}
+{{- $url := .Permalink -}}
+{{- $image := "" -}}
+{{- with .Params.cover -}}{{- with .image -}}{{- $image = . -}}{{- end -}}{{- end -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": {{ $title | jsonify }},
+  "description": {{ $desc | jsonify }},
+  "datePublished": {{ $date | jsonify }},
+  "dateModified": {{ $modified | jsonify }},
+  "url": {{ $url | jsonify }},
+  "inLanguage": "ko-KR",
+  "author": {
+    "@type": "Organization",
+    "name": "트렌드줌",
+    "url": {{ $baseURL | jsonify }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "트렌드줌",
+    "url": {{ $baseURL | jsonify }},
+    "logo": {
+      "@type": "ImageObject",
+      "url": {{ (printf "%s/favicon.ico" $baseURL) | jsonify }}
+    }
+  }{{- if $image -}},
+  "image": {
+    "@type": "ImageObject",
+    "url": {{ $image | jsonify }}
+  }{{- end -}}
+}
+</script>
+{{- end -}}
