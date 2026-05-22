@@ -137,11 +137,14 @@ front matter (YAML)
 
 ## Gemini Pro 브라우저 모드 ★ (Claude가 직접 조작)
 
+> **절대 원칙: 포스팅 요청 시 항상 Chrome 브라우저(claude-in-chrome) 사용. Gemini API 모드 금지.**
+> Gemini Pro 구독으로 2.5 Pro + 구글 실시간 검색 활용 — API(Flash)보다 품질이 훨씬 높음.
+
 ### 개요
-- **Claude Code가 `claude-in-chrome` MCP로 사용자 Chrome을 직접 조작**하여 Gemini와 대화
-- Playwright 별도 브라우저 불필요 — 사용자의 실제 Chrome에서 paydma 계정이 이미 로그인된 상태 사용
-- 로그인 문제 없음: 사용자 Chrome에 paydma 세션이 유지되므로 Claude가 바로 조작 가능
+- **Claude Code가 `claude-in-chrome` MCP로 사용자 Chrome을 직접 조작**하여 Gemini Pro와 대화
+- 사용자의 실제 Chrome에서 paydma 계정이 이미 로그인된 상태 사용 (Playwright 불필요)
 - API 호출 없이 Gemini 2.5 Pro의 구글 실시간 검색 기능 그대로 활용
+- **Gemini가 쓴 본문은 반드시 Claude Code가 이 대화에서 직접 검수·수정**
 
 ### 계정 및 Gem 정보
 | 항목 | 값 |
@@ -152,39 +155,50 @@ front matter (YAML)
 
 ### Claude의 포스팅 실행 절차 (claude-in-chrome 사용)
 
-Claude가 포스팅 10개를 직접 실행할 때:
+Claude가 포스팅 10개를 직접 실행할 때 **섹션마다 아래 흐름 반복**:
 
 1. **`mcp__claude-in-chrome__tabs_context_mcp`** 로 Chrome 탭 확인
-2. Gem URL(`/u/2/gem/cca9fca55f60`)로 이동 — paydma 계정으로 자동 로그인 상태
-3. 섹션마다 **새 채팅 시작** (좌측 상단 "새 채팅" 클릭 또는 Gem URL 재이동)
-4. **6턴 멀티턴 대화**로 포스팅 생성:
-   - Turn 1: 트렌드 조사 (구글 검색 포함)
-   - Turn 2: 주제 확정 + SEO 아웃라인 (JSON 포함)
-   - Turn 3: 본문 집필
-   - Turn 4: 품질 자체검토
-   - Turn 5: 최종 마크다운 추출
-   - Turn 6: 이미지 프롬프트 생성 (JSON)
-5. **`scripts/save_post.js`**에 JSON(stdin)으로 전달 → 이미지 생성 + Claude 검수 + git push
+2. **Gem URL로 새로 이동** (`navigate` → `https://gemini.google.com/u/2/gem/cca9fca55f60`)
+   - 반드시 매 섹션마다 새로 이동 (버튼 상태 초기화)
+   - Gem 로드 후 버튼 레이블이 "메시지 보내기"인지 확인
+3. **단일 종합 메시지 전송** (트렌드 조사 + 주제 + 본문 + 이미지 프롬프트를 한 번에 요청)
+   - 입력창 `rich-textarea .ql-editor`에 `document.execCommand('insertText', false, text)` 삽입
+   - `gem-icon-button.send-button button` (label="메시지 보내기") 클릭으로 전송
+   - ⚠️ 전송 후 버튼이 "대답 생성 중지"로 바뀌면 정상 — 절대 다시 클릭하지 않음
+4. **응답 대기** (30초 간격으로 폴링, 최대 10분)
+   - 버튼이 "메시지 보내기"로 돌아오고 `message-content` 길이가 안정되면 완료
+5. **응답 추출** (`document.querySelectorAll('message-content')[0]?.innerText`)
+6. **Claude Code가 직접 본문 검수·수정** (이 대화 내에서, 별도 API 호출 없음)
+   - AI 상투어 제거, 제목·키워드 일치, 1500자+, H1 금지, 헤딩 구조 확인
+7. **`scripts/save_post.js`** stdin JSON으로 전달 → 이미지 생성 + git push
 
-### save_post.js 호출 방법
-```bash
-echo '{"sectionId":"economy","topic":{...},"outline":{...},"body":"...","imgPrompts":["..."],"dateOverride":"2026-05-23T07:10:00+09:00"}' | node scripts/save_post.js
+### 단일 종합 메시지 포맷 (섹션별 적용)
+```
+[섹션: {섹션명}] 날짜: {UTC 날짜}
+기존 슬러그(중복금지): {slug1, slug2, ...}
+
+구글 검색으로 지금 이 섹션에서 가장 화제인 최신 이슈를 조사하고,
+아래 형식으로 블로그 포스팅을 **한 번에** 완성해줘.
+
+출력 형식 (순서 엄수):
+===TOPIC===
+{"title":"...","slug":"...","keyword":"...","description":"..."}
+===BODY===
+(마크다운 본문, front matter 없이, 1500자+)
+(이미지1: ![alt](https://dmazone.github.io/blogauto/images/{slug}-01.webp))
+(H2 4개, H3 각 2~3개, 마지막 H2에 내부링크, 두번째 H2 직후 이미지2)
+(이미지2: ![alt](https://dmazone.github.io/blogauto/images/{slug}-02.webp))
+(마지막 줄 해시태그 7개+)
+===PROMPTS===
+{"imgPrompts":["본문이미지1 프롬프트","본문이미지2 프롬프트","썸네일 프롬프트"]}
 ```
 
 ### Gemini 응답 추출 방법 (claude-in-chrome)
-- `mcp__claude-in-chrome__get_page_text` 로 전체 텍스트 추출
-- 또는 `mcp__claude-in-chrome__javascript_tool` 로 마지막 응답만 추출:
 ```javascript
-const all = document.querySelectorAll('message-content, .model-response-text');
-all[all.length - 1]?.innerText ?? ''
+document.querySelectorAll('message-content')[0]?.innerText ?? ''
 ```
 
-### API 모드 (fallback)
-- `node scripts/daily_runner.js --api` → GEMINI_API_KEY 사용 (구글 실시간 검색 제한적)
-- Playwright 브라우저 모드: `node scripts/daily_runner.js` (Playwright 세션 필요)
-
-### 중요: 로그인 이슈 발생 시
-- Gemini가 로그인 페이지로 리다이렉트되면 Claude가 `claude-in-chrome`으로 직접 처리
+### 로그인 이슈 발생 시
 - `https://accounts.google.com` 감지 시 → `/u/2/` URL로 재이동하면 paydma 자동 선택
 - Claude가 로그인 과정 전체를 브라우저 자동화로 처리 (사용자 개입 불필요)
 
@@ -193,9 +207,9 @@ all[all.length - 1]?.innerText ?? ''
 ## 자동화 파이프라인 (9단계)
 
 ### 역할 분담 원칙
-- **Gemini 2.5 Flash**: 트렌드 수집·검증·집필·SEO 루프 담당
-- **Claude Sonnet**: 이미지 생성 완료 후 본문 완전 검수 & 직접 수정 (토큰 제한 없음)
-- **Claude Haiku**: 생성된 이미지 3장 비전 검수 (주제 적합성·품질·왜곡 판단)
+- **Gemini 2.5 Pro (Chrome 브라우저)**: 트렌드 수집·검증·집필·SEO 루프 담당 (API 사용 금지)
+- **Claude Code (이 대화)**: Gemini 본문 완전 검수 & 직접 수정 — 별도 API 호출 없이 대화 내에서 처리
+- **Claude Haiku**: 생성된 이미지 3장 비전 검수 (save_post.js 내부, API 크레딧 필요 시)
 - **Claude에 본문 초안 집필 맡기는 코드 절대 작성 금지** (집필은 Gemini 전담)
 
 ### 파이프라인 순서 (1개 포스팅 기준)
