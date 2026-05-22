@@ -26,12 +26,19 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
 
-/** 오늘 KST 09:00 기준 + index * 5분 오프셋 ISO 날짜 */
+/**
+ * 다음날 KST 07:10 기준 + index * 10분 오프셋 ISO 날짜
+ * 10개 기준: 07:10, 07:20, ..., 08:40
+ */
 function getPublishDate(sectionIndex) {
-  const now  = new Date();
-  const base = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0));
-  base.setMinutes(base.getMinutes() + sectionIndex * 5);
-  const kst = new Date(base.getTime() + 9 * 60 * 60 * 1000);
+  const now = new Date();
+  // 다음날 UTC 자정 (= KST 다음날 09:00) 기준으로 계산
+  const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
+  // KST 07:10 = UTC 전날 22:10 → 다음날 UTC 기준으로는 -1h50m = -110분
+  // UTC 00:00 + (-110분 + index*10분) + 9h(KST) = KST 07:10 + index*10분
+  const offsetMinutes = -110 + sectionIndex * 10; // 07:10 KST 시작, 10분 간격
+  tomorrow.setMinutes(tomorrow.getMinutes() + offsetMinutes);
+  const kst = new Date(tomorrow.getTime() + 9 * 60 * 60 * 1000);
   const p   = (n) => String(n).padStart(2, '0');
   return (
     `${kst.getUTCFullYear()}-${p(kst.getUTCMonth() + 1)}-${p(kst.getUTCDate())}` +
@@ -78,7 +85,7 @@ async function main() {
   }
 
   log('🚀', `daily_runner 시작 — ${targetSections.length}개 섹션`);
-  log('📅', `예약 발행: 09:00~09:${String((targetSections.length - 1) * 5).padStart(2, '0')} KST`);
+  log('📅', `예약 발행: 07:10~08:40 KST (다음날, 10분 간격)`);
   console.log('');
 
   const healthSubtopic = getHealthSubtopic();
@@ -104,6 +111,12 @@ async function main() {
       failCount++;
       log('❌', `${section.name} 실패: ${err.message}`);
       if (process.env.DEBUG) console.error(err.stack);
+    }
+
+    // 마지막 섹션이 아니면 1분 대기 (글마다 개성 부여)
+    if (i < targetSections.length - 1) {
+      log('⏸️', '다음 섹션까지 1분 대기...');
+      await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
     }
   }
 
