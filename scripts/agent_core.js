@@ -113,11 +113,64 @@ function existingSlugsForSection(section) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────────────────────
+// STEP 7.5: 마크다운 렌더링 검증 (취소선·따옴표·괄호 오류)
+// ────────────────────────────────────────────────────────────────────────────
+async function validateAndFixMarkdown(body, topic) {
+  const issues = [];
+
+  // 의도치 않은 취소선 (~~텍스트~~)
+  const strikeMatches = body.match(/~~[^~\n]{1,100}~~/g);
+  if (strikeMatches) {
+    issues.push(`의도치 않은 취소선(가운데 줄) 발견: ${strikeMatches.slice(0, 3).join(', ')}`);
+  }
+
+  // 짝이 맞지 않는 마크다운 링크 괄호
+  const linkBroken = body.match(/\[[^\]]*\]\s*\([^)]*$/m);
+  if (linkBroken) issues.push('닫히지 않은 링크 괄호 발견');
+
+  // YAML front matter 내 따옴표 없는 콜론 값 (본문에서는 무시)
+  const curlyUnmatched = (body.match(/\{/g) || []).length !== (body.match(/\}/g) || []).length;
+  if (curlyUnmatched) issues.push('중괄호 { } 짝 불일치');
+
+  // 연속 빈 줄 3개 이상 (모바일 가독성 저해)
+  if (/\n{4,}/.test(body)) issues.push('연속 빈 줄 3개 이상 (모바일 가독성 저해) — 최대 1개 빈 줄만 허용');
+
+  // H1 본문 사용 금지
+  if (/^#\s+[^#]/m.test(body)) issues.push('본문에 # H1 사용 금지');
+
+  if (issues.length === 0) {
+    log('✅', '[STEP 7.5] 마크다운 검증 통과');
+    return body;
+  }
+
+  log('⚠️', `[STEP 7.5] 마크다운 이슈 ${issues.length}개 발견 → Gemini 수정 요청`);
+  issues.forEach((i) => log('  ·', i));
+
+  const fixed = extractFinalMarkdown(await geminiCall(
+    `아래 마크다운 본문에서 발견된 렌더링 오류를 수정해줘.\n` +
+    `이미지 마크다운, 내부 링크, 해시태그는 반드시 그대로 유지해.\n\n` +
+    `[수정 필요 항목]\n${issues.map((i, n) => `${n + 1}. ${i}`).join('\n')}\n\n` +
+    `[수정 규칙]\n` +
+    `- 취소선(~~): 완전히 제거하고 일반 텍스트로 변환\n` +
+    `- 닫히지 않은 괄호: 올바르게 닫기\n` +
+    `- 연속 빈 줄: 최대 빈 줄 1개로 줄이기\n` +
+    `- H1 (#): ## 또는 ### 으로 변경\n\n` +
+    `[현재 본문]\n${body}\n\n수정된 본문만 출력해줘.`,
+    { temperature: 0.3 }
+  ));
+
+  log('✅', '[STEP 7.5] 마크다운 수정 완료');
+  return fixed;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // STEP 1: Gemini → 오늘의 토픽 자동 선정
 // ────────────────────────────────────────────────────────────────────────────
 async function pickTodayTopic(section, subtopic) {
   log('💡', `[STEP 1] "${section.name}" 오늘의 토픽 선정 중...`);
 
+  const utcNow = new Date().toUTCString();
   const existing = existingSlugsForSection(section);
   const subtopicHint = subtopic ? `서브토픽: ${subtopic} (오늘은 이 주제로 한정해서 선정)` : '';
   const avoidList = existing.length
@@ -125,7 +178,9 @@ async function pickTodayTopic(section, subtopic) {
     : '';
 
   const raw = await geminiCall(
-    `한국어 블로그 "${section.name}" 섹션의 오늘(2026-05-21) 포스팅 주제를 1개 선정해줘.\n\n` +
+    `현재 UTC 시간: ${utcNow}\n` +
+    `한국어 블로그 "${section.name}" 섹션 포스팅 주제를 1개 선정해줘.\n` +
+    `위 UTC 시간 기준 최근 24~48시간 내 가장 화제가 된 이슈를 구글 검색으로 파악하여 선정.\n\n` +
     `섹션 컨텍스트: ${section.searchContext}\n` +
     `${subtopicHint}${avoidList}\n\n` +
     `조건:\n` +
@@ -425,27 +480,33 @@ async function generateContextualImagePrompts(section, topic, body) {
     return { idx: i + 1, alt: m[1], before, after };
   });
 
+  const thumbStyle = 'editorial magazine cover thumbnail, bold colors, no text overlay, 16:9 ratio';
+
   if (!contexts.length) {
     return [
       `${topic.title} concept illustration, ${style}`,
       `${topic.keyword} visual representation, ${style}`,
+      `${topic.title} cover image, ${thumbStyle}`,
     ];
   }
 
   log('🎨', '  Gemini 맥락 기반 이미지 프롬프트 생성 중...');
 
   const raw = await geminiCall(
-    `아래 블로그 글의 이미지 삽입 위치 앞뒤 내용을 분석해서, 각 위치에 딱 맞는 구체적인 이미지 생성 프롬프트를 영어로 만들어줘.\n\n` +
+    `아래 블로그 글의 이미지 삽입 위치 앞뒤 내용을 분석해서, 각 위치에 딱 맞는 구체적인 이미지 생성 프롬프트를 영어로 만들어줘.\n` +
+    `추가로 블로그 글 전체를 대표하는 썸네일 프롬프트도 만들어줘.\n\n` +
     `블로그 주제: "${topic.title}" (키워드: ${topic.keyword})\n` +
-    `이미지 스타일 고정: ${style}\n\n` +
+    `본문 이미지 스타일: ${style}\n` +
+    `썸네일 스타일: ${thumbStyle}\n\n` +
     contexts.map((c) =>
-      `[이미지 ${c.idx}]\nalt: ${c.alt}\n앞 내용: ${c.before}\n뒤 내용: ${c.after}`
+      `[본문 이미지 ${c.idx}]\nalt: ${c.alt}\n앞 내용: ${c.before}\n뒤 내용: ${c.after}`
     ).join('\n\n---\n\n') +
     `\n\n[조건]\n` +
     `- 앞뒤 내용에서 핵심 개념·장면을 파악해 구체적으로 묘사\n` +
     `- "a developer doing X", "diagram showing Y" 처럼 구체적으로\n` +
-    `- 각 프롬프트는 영어 1~2문장\n\n` +
-    `JSON만: {"prompts":["프롬프트1","프롬프트2"]}`,
+    `- 각 프롬프트는 영어 1~2문장\n` +
+    `- 썸네일은 주제를 한눈에 알 수 있도록 상징적으로 표현\n\n` +
+    `JSON만: {"prompts":["본문이미지1","본문이미지2","썸네일"]}`,
     { temperature: 0.6 }
   );
 
@@ -454,12 +515,14 @@ async function generateContextualImagePrompts(section, topic, body) {
     const result  = JSON.parse(jsonStr);
     const prompts = result.prompts ?? [];
     while (prompts.length < 2) prompts.push(`${topic.keyword} concept, ${style}`);
-    log('✅', `  프롬프트 생성 완료 (${prompts.length}개)`);
+    if (prompts.length < 3) prompts.push(`${topic.title} cover image, ${thumbStyle}`);
+    log('✅', `  프롬프트 생성 완료 (본문 2장 + 썸네일 1장)`);
     return prompts;
   } catch {
     return [
       `${topic.title} concept illustration, ${style}`,
       `${topic.keyword} visual representation, ${style}`,
+      `${topic.title} cover image, ${thumbStyle}`,
     ];
   }
 }
@@ -470,7 +533,8 @@ async function generateContextualImagePrompts(section, topic, body) {
 const FLOW_SESSION_FILE = path.join(__dirname, '..', '.flow-session', 'session.json');
 
 async function generateImage(prompt, slug, index) {
-  const filename = `${slug}-0${index}.webp`;
+  // index가 'thumb'이면 slug-thumb.webp, 숫자면 slug-01.webp 형태
+  const filename = index === 'thumb' ? `${slug}-thumb.webp` : `${slug}-0${index}.webp`;
   const destPath = path.join(IMAGES_DIR, filename);
   fs.mkdirSync(IMAGES_DIR, { recursive: true });
 
@@ -540,6 +604,9 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
   const rawTags = [topic.keyword, section.name, ...(topic.tags ?? [])];
   const tags = [...new Set(rawTags.filter(Boolean))].slice(0, 6);
 
+  const thumbUrl = `${BASE_URL}/images/${topic.slug}-thumb.webp`;
+  const coverAlt = `${topic.title} 썸네일`;
+
   return (
     `---\n` +
     `title: "${topic.title.replace(/"/g, '\\"')}"\n` +
@@ -550,6 +617,10 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
     `series: ["${section.name}"]\n` +
     `description: "${description.replace(/"/g, '\\"')}"\n` +
     `draft: false\n` +
+    `cover:\n` +
+    `  image: "${thumbUrl}"\n` +
+    `  alt: "${coverAlt}"\n` +
+    `  hiddenInSingle: true\n` +
     `---\n\n`
   );
 }
@@ -762,7 +833,8 @@ export async function runForSection(section, options = {}) {
     outline         = await generateOutline(section, topic, validated); // STEP 4
     const draft     = await writeArticle(section, topic, outline, validated); // STEP 5
     const refined   = await geminiRefineLoop(topic, outline, draft);    // STEP 6
-    final           = await claudeFinalReviewAndApply(topic, refined);  // STEP 7
+    const reviewed  = await claudeFinalReviewAndApply(topic, refined);  // STEP 7
+    final           = await validateAndFixMarkdown(reviewed, topic);    // STEP 7.5
     prompts         = await generateContextualImagePrompts(section, topic, final);
   }
 
@@ -772,18 +844,33 @@ export async function runForSection(section, options = {}) {
     return;
   }
 
-  // 이미지 생성 (실패해도 글 저장은 계속)
-  log('🖼️', '이미지 생성 중...');
+  // STEP 8: 이미지 생성 — 썸네일 + 본문 2장 (포스팅 1개 완료 직후 즉시)
+  log('🖼️', '[STEP 8] 이미지 생성 중 (썸네일 1장 + 본문 2장)...');
   let img1 = { localPath: '', sourceUrl: '' };
+
+  // 본문 이미지 1
   try {
     img1 = await generateImage(prompts[0], topic.slug, 1);
   } catch (err) {
-    log('⚠️', `  이미지 1 생성 실패 (${err.message}) → 스킵`);
+    log('⚠️', `  본문 이미지 1 생성 실패 (${err.message}) → 스킵`);
   }
+
+  // 본문 이미지 2
   try {
     await generateImage(prompts[1], topic.slug, 2);
   } catch (err) {
-    log('⚠️', `  이미지 2 생성 실패 (${err.message}) → 스킵`);
+    log('⚠️', `  본문 이미지 2 생성 실패 (${err.message}) → 스킵`);
+  }
+
+  // 썸네일 이미지 (커버 전용 — 주제 직관적으로 표현)
+  const thumbPath = path.join(IMAGES_DIR, `${topic.slug}-thumb.webp`);
+  const thumbPrompt = prompts[2] ??
+    `${topic.title} concept, editorial magazine thumbnail style, bold colors, Korean blog cover image, no text`;
+  try {
+    await generateImage(thumbPrompt, topic.slug, 'thumb');
+    log('✅', `  썸네일 생성 완료: ${topic.slug}-thumb.webp`);
+  } catch (err) {
+    log('⚠️', `  썸네일 생성 실패 (${err.message}) → 스킵`);
   }
 
   // 파일 저장
