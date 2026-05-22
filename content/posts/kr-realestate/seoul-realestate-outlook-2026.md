@@ -7,8 +7,10 @@ description: "2026년 서울 아파트 시장이 다시 꿈틀거리고 있다. 
 categories: ["한국부동산"]
 tags: ["서울부동산", "아파트시장", "부동산전망", "수도권부동산", "실수요자"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/seoul-realestate-outlook-2026-01.webp"
-  alt: "서울 강남 아파트 단지 전경과 부동산 시장 지표"
+  image: "https://dmazone.github.io/blogauto/images/seoul-realestate-outlook-2026-thumb.webp"
+  alt: "서울 부동산 썸네일"
+  hiddenInSingle: true
+
 ---
 
 2025년 하반기 잠시 숨을 고르던 서울 아파트 시장이 2026년 들어 다시 상승 조짐을 보이고 있습니다. 한국은행의 기준금리 인하 사이클 진입, 입주 물량 감소, 재건축·재개발 규제 완화가 한꺼번에 겹치면서 **공급 절벽**과 **수요 반등**이 동시에 찾아오는 구조입니다. 지금 이 시장에서 실수요자와 투자자가 어떤 판단을 내려야 하는지 짚어볼게요.

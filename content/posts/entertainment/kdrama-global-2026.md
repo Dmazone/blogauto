@@ -7,8 +7,10 @@ description: "2026년 K-드라마가 넷플릭스 글로벌 차트를 다시 장
 categories: ["연예이슈"]
 tags: ["K드라마", "넷플릭스", "한류", "2026드라마", "연예트렌드"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/kdrama-global-2026-01.webp"
-  alt: "한국 드라마 촬영 세트장과 글로벌 지도"
+  image: "https://dmazone.github.io/blogauto/images/kdrama-global-2026-thumb.webp"
+  alt: "K드라마 글로벌 썸네일"
+  hiddenInSingle: true
+
 ---
 
 오징어 게임이 쏘아 올린 신호탄 이후, K-드라마는 단순한 한류 콘텐츠를 넘어 글로벌 OTT의 핵심 콘텐츠 전략이 됐습니다. 2026년에도 한국 드라마는 넷플릭스, 디즈니+, 애플TV+ 차트 상위권을 꾸준히 점령하고 있어요. 왜 한국 드라마가 이토록 강한지, 올해는 어떤 흐름이 이어지는지 짚어볼게요.

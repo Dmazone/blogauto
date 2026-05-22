@@ -7,8 +7,10 @@ description: "마르쿠스 아우렐리우스의 명상록이 글로벌 베스�
 categories: ["인문"]
 tags: ["스토아철학", "마르쿠스아우렐리우스", "인문학", "자기계발", "철학트렌드"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/stoicism-modern-life-2026-01.webp"
-  alt: "고대 로마 철학자 동상과 현대 도시 배경"
+  image: "https://dmazone.github.io/blogauto/images/stoicism-modern-life-2026-thumb.webp"
+  alt: "스토아철학 썸네일"
+  hiddenInSingle: true
+
 ---
 
 틱톡에서 '#stoicism' 해시태그가 수십억 뷰를 넘어섰고, 마르쿠스 아우렐리우스의 『명상록』이 2년 연속 글로벌 베스트셀러 목록에 올라 있습니다. 2000년 전 로마 황제가 쓴 철학 일기가 왜 지금 2026년에 이토록 강하게 공명하는 걸까요? 답은 의외로 단순합니다. 우리가 마주한 혼란이, 그가 마주한 혼란과 본질적으로 닮아 있기 때문이에요.

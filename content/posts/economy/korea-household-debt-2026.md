@@ -7,8 +7,10 @@ description: "2026년 한국 가계부채 문제가 임계점에 다가서고 �
 categories: ["경제"]
 tags: ["가계부채", "한국경제", "금리인하", "부동산대출", "재테크"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/korea-household-debt-2026-01.webp"
-  alt: "2026년 한국 가계부채 현황 인포그래픽"
+  image: "https://dmazone.github.io/blogauto/images/korea-household-debt-2026-thumb.webp"
+  alt: "한국 가계부채 썸네일"
+  hiddenInSingle: true
+
 ---
 
 반도체 수출 호조로 거시경제 지표는 올라가는데 왜 내 통장은 점점 얇아질까요? 그 답의 절반은 **가계부채**에 있습니다. 2026년 현재 한국의 가계부채 총액은 GDP 대비 세계 최고 수준을 유지하고 있고, 금리 변동과 부동산 시장의 불확실성이 겹치면서 서민 경제를 압박하고 있어요. 숫자 너머에 있는 구조적 문제를 직접 짚어볼게요.

@@ -83,6 +83,7 @@ async function main() {
 
   const healthSubtopic = getHealthSubtopic();
   let successCount = 0, failCount = 0;
+  const publishedPosts = []; // 성공한 포스트 목록 (텔레그램 알림용)
 
   for (let i = 0; i < targetSections.length; i++) {
     const section   = targetSections[i];
@@ -94,8 +95,11 @@ async function main() {
     log('📅', `발행 예약: ${dateStr}`);
 
     try {
-      await runForSection(section, { subtopic, dateOverride: dateStr, skipSns: false });
+      const result = await runForSection(section, { subtopic, dateOverride: dateStr, skipSns: false });
       successCount++;
+      if (result?.title && result?.slug) {
+        publishedPosts.push({ ...result, sectionId: section.id });
+      }
     } catch (err) {
       failCount++;
       log('❌', `${section.name} 실패: ${err.message}`);
@@ -112,6 +116,59 @@ async function main() {
   console.log('\n' + '='.repeat(60));
   log('🎉', `완료 — 성공 ${successCount}개 / 실패 ${failCount}개`);
   console.log('='.repeat(60));
+
+  // ── 텔레그램 완료 알림 ──────────────────────────────────────────────────
+  await sendTelegramDailyReport(publishedPosts, successCount, failCount);
+}
+
+async function sendTelegramDailyReport(posts, successCount, failCount) {
+  const token  = process.env.TELEGRAM_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return;
+
+  const baseUrl = process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto';
+  const today   = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
+
+  const lines = [
+    `📝 트렌드줌 ${today} 포스팅 완료!`,
+    `✅ 성공 ${successCount}개 / ❌ 실패 ${failCount}개`,
+    '',
+  ];
+
+  posts.forEach((p, i) => {
+    const url = `${baseUrl}/posts/${p.sectionDir}/${p.slug}/`;
+    lines.push(`${i + 1}. ${p.title}`);
+    lines.push(`   ${url}`);
+  });
+
+  lines.push('', `🔗 블로그: ${baseUrl}/`);
+
+  const msg = lines.join('\n');
+  const apiUrl = `https://api.telegram.org/bot${token}/sendMessage`;
+  const body = JSON.stringify({ chat_id: chatId, text: msg });
+
+  try {
+    const { default: https } = await import('https');
+    await new Promise((resolve, reject) => {
+      const req = https.request(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+      }, (res) => {
+        let data = '';
+        res.on('data', c => data += c);
+        res.on('end', () => {
+          const j = JSON.parse(data);
+          if (j.ok) { log('📱', '텔레그램 알림 전송 완료'); resolve(); }
+          else reject(new Error(j.description));
+        });
+      });
+      req.on('error', reject);
+      req.write(body);
+      req.end();
+    });
+  } catch (err) {
+    log('⚠️', `텔레그램 전송 실패: ${err.message}`);
+  }
 }
 
 main().catch((err) => {

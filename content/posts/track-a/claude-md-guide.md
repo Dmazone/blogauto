@@ -7,6 +7,10 @@ categories: ["기초편"]
 series: ["Track A — 기초편"]
 description: "Claude.md 사용법을 완벽 가이드합니다. AI 에이전트를 나만의 개발 동료로 훈련시켜 코드 스타일, 팀 규칙을 일관되게 유지하고, 반복 작업을 줄여 개발 생산성을 극대화하는 실전 노하우를 경험해보세요. `/init` 자동 생성부터 컨텍스트 관리, 워크플로우 자동화까지."
 draft: false
+cover:
+  image: "https://dmazone.github.io/blogauto/images/claude-md-guide-thumb.webp"
+  alt: "CLAUDE.md 가이드 썸네일"
+  hiddenInSingle: true
 ---
 
 AI 에이전트와 함께 개발하는 시대, 혹시 이런 고민을 해보셨나요? "왜 AI는 매번 다른 결과물을 내놓을까?", "반복적으로 같은 지시를 내려야만 할까?", "우리 팀의 코딩 스타일을 AI에게 어떻게 가르치지?"

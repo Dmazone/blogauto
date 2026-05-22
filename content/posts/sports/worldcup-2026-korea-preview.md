@@ -7,8 +7,10 @@ description: "2026 FIFA 월드컵이 미국·캐나다·멕시코에서 열린�
 categories: ["스포츠"]
 tags: ["월드컵2026", "한국축구", "FIFA월드컵", "손흥민", "축구대표팀"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/worldcup-2026-korea-preview-01.webp"
-  alt: "2026 FIFA 월드컵 트로피와 한국 대표팀 유니폼"
+  image: "https://dmazone.github.io/blogauto/images/worldcup-2026-korea-preview-thumb.webp"
+  alt: "2026 월드컵 한국 썸네일"
+  hiddenInSingle: true
+
 ---
 
 2026 FIFA 월드컵이 6월부터 미국·캐나다·멕시코 3개국에서 동시 개최됩니다. 참가국이 기존 32개에서 48개국으로 확대된 사상 최대 규모 대회예요. 조별 리그도 12개 조 4팀 체제로 바뀌면서 **16강 진출 경우의 수가 늘어났습니다**. 한국은 어떤 전력으로 임하는지, 현실적으로 어디까지 갈 수 있는지 냉정하게 살펴볼게요.

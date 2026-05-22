@@ -797,6 +797,8 @@ export async function runForSection(section, options = {}) {
       deployWaitSec: Number(process.env.SNS_DEPLOY_WAIT_SEC ?? 90),
     });
   }
+
+  return { title: topic.title, slug: topic.slug, sectionDir: section.dir };
 }
 
 // ────────────────────────────────────────────────────────────────────────────

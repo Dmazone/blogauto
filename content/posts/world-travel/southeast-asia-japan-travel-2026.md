@@ -7,8 +7,10 @@ description: "엔저 효과가 지속되는 일본, 비용 대비 최고인 동�
 categories: ["세계여행지"]
 tags: ["동남아여행", "일본여행", "해외여행2026", "여행트렌드", "배낭여행"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/southeast-asia-japan-travel-2026-01.webp"
-  alt: "동남아시아와 일본의 대표 여행지 콜라주"
+  image: "https://dmazone.github.io/blogauto/images/southeast-asia-japan-travel-2026-thumb.webp"
+  alt: "동남아 일본 여행 썸네일"
+  hiddenInSingle: true
+
 ---
 
 2026년 한국인 해외여행 시장은 코로나 이전 수준을 완전히 회복했습니다. 그런데 목적지 선택 패턴이 확연히 달라졌어요. **엔저 지속으로 일본은 여전히 가성비 1위**, 동남아는 '럭셔리 저예산' 여행지로 재발견되고 있습니다. 여행 목적도 단순 관광에서 미식·웰니스·로컬 경험으로 빠르게 이동하고 있어요. 2026년 해외여행을 계획 중이라면 이 트렌드를 먼저 파악하고 떠나세요.

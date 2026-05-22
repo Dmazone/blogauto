@@ -156,6 +156,30 @@ node scripts/daily_runner.js --from 4
 
 ---
 
+## 텔레그램 완료 알림 (필수 지침)
+**장기 작업(이미지 생성, 배포, 자동화 파이프라인 등)이 완료될 때마다 반드시 텔레그램으로 결과를 전송한다.**
+
+```js
+// 알림 전송 예시
+node -e "
+const https = require('https');
+const msg = encodeURIComponent('작업명 완료!\n결과: 성공 N개\n블로그: https://dmazone.github.io/blogauto/');
+https.get('https://api.telegram.org/bot8995151494:AAGUWIxj5PKma_2gr_HoJTHslXSCpNpqkNg/sendMessage?chat_id=7724357585&text=' + msg, r => {});
+"
+```
+- TOKEN: `8995151494:AAGUWIxj5PKma_2gr_HoJTHslXSCpNpqkNg`
+- CHAT_ID: `7724357585`
+- 알림 내용: 작업명, 성공/실패 수, 블로그 URL, 다음 단계
+- **포스팅 10개 완료 시 추가**: 각 포스트 제목 + URL을 목록으로 함께 전송
+  ```
+  📝 오늘의 포스팅 10개 완료!
+  1. 제목 — https://dmazone.github.io/blogauto/posts/slug/
+  2. 제목 — ...
+  ...
+  ```
+
+---
+
 ## 개발 원칙
 - 사장님은 코드를 직접 수정하지 않는다. 모든 변경은 Claude Code가 직접 수행한다
 - API Key는 반드시 환경변수(`process.env`)로 처리

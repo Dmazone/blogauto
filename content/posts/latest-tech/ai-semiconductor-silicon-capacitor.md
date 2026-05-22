@@ -7,6 +7,10 @@ categories: ["최신기술동향"]
 series: ["최신기술동향"]
 description: "AI 전력 부족을 해결할 구원투수, 실리콘 커패시터의 기술적 분석과 삼성전기 공급 계약 모멘텀 기반 한국 반도체 전·후공정 장비 및 수혜주 밸류체인 총정리."
 draft: false
+cover:
+  image: "https://dmazone.github.io/blogauto/images/ai-semiconductor-silicon-capacitor-thumb.webp"
+  alt: "AI 반도체 실리콘 커패시터 썸네일"
+  hiddenInSingle: true
 ---
 
 1. 2026년 AI 인프라의 최대 암초 '전력 부족', 그리고 실리콘 커패시터의 등장

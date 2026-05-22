@@ -7,8 +7,10 @@ description: "스마트폰 평균 사용 시간이 하루 7시간을 넘어선 2
 categories: ["사회"]
 tags: ["디지털피로", "스마트폰중독", "디지털디톡스", "사회트렌드", "정신건강"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/digital-fatigue-disconnection-2026-01.webp"
-  alt: "스마트폰을 내려놓고 자연을 바라보는 사람"
+  image: "https://dmazone.github.io/blogauto/images/digital-fatigue-disconnection-2026-thumb.webp"
+  alt: "디지털 피로 썸네일"
+  hiddenInSingle: true
+
 ---
 
 알림 소리에 반사적으로 손이 가고, 5분만 쉬어도 SNS를 확인하게 되는 요즘. 한국인의 스마트폰 하루 평균 사용 시간이 7시간을 넘어섰습니다. 그런데 역설적으로 지금 가장 빠르게 성장하는 트렌드 중 하나가 **디지털 단절**이에요. 폰 없는 여행, 소셜미디어 탈퇴, 아날로그 다이어리로의 회귀 — 이 흐름이 왜 지금 이토록 강해지고 있는지 들여다봅니다.

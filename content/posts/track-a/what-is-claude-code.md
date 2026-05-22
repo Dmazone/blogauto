@@ -7,6 +7,10 @@ categories: ["기초편"]
 series: ["Track A — 기초편"]
 description: "claude code 뜻이 궁금하신가요? 일반 AI 챗봇과 무엇이 다른지, 실제로 무엇을 할 수 있는지 핵심만 5분 안에 정리해드립니다."
 draft: false
+cover:
+  image: "https://dmazone.github.io/blogauto/images/what-is-claude-code-thumb.webp"
+  alt: "Claude Code 소개 썸네일"
+  hiddenInSingle: true
 ---
 
 'Claude Code가 도대체 뭔가요?' — 이 질문, 한 번쯤 해보셨을 거예요. **claude code 뜻**을 검색해봤더니 영어 문서만 잔뜩 나오고, 나한테 맞는 도구인지조차 감이 안 잡히는 분들을 위해 이 글을 씁니다. 5분 안에 핵심만 정리해드릴게요.

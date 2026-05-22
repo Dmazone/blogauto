@@ -7,8 +7,10 @@ description: "운동할 시간이 없다는 말은 핑계다. 2026년 가장 효
 categories: ["건강"]
 tags: ["직장인운동", "틈새운동", "운동루틴", "건강관리", "홈트레이닝"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/office-workout-routine-2026-01.webp"
-  alt: "사무실 환경에서 스트레칭하는 직장인"
+  image: "https://dmazone.github.io/blogauto/images/office-workout-routine-2026-thumb.webp"
+  alt: "직장인 운동 썸네일"
+  hiddenInSingle: true
+
 ---
 
 "운동할 시간이 없어요" — 가장 흔한 변명이지만, 사실은 **어떻게 쪼갤지 모르는 것**에 가깝습니다. 2026년 운동 과학 연구들이 공통적으로 말하는 메시지는 명확해요. 1시간짜리 운동 한 번보다 하루 10~15분씩 세 번이 심혈관 건강과 근력 유지에 더 효과적일 수 있다는 것. 오늘부터 바로 시작할 수 있는 직장인 틈새 운동 루틴을 시간대별로 알려드릴게요.

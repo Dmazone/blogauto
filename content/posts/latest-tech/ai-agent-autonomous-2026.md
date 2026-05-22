@@ -7,8 +7,10 @@ description: "2026년 AI 에이전트 기술이 단순 대화를 넘어 자율 �
 categories: ["최신기술동향"]
 tags: ["AI에이전트", "자율형AI", "2026AI트렌드", "인공지능", "업무자동화"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/ai-agent-autonomous-2026-01.webp"
-  alt: "2026년 자율형 AI 에이전트 개념도"
+  image: "https://dmazone.github.io/blogauto/images/ai-agent-autonomous-2026-thumb.webp"
+  alt: "2026 자율형 AI 에이전트 썸네일"
+  hiddenInSingle: true
+
 ---
 
 단 한 줄의 지시로 항공권을 예약하고, 회의록을 정리하고, 쇼핑까지 완결 짓는 AI가 이미 현실에 들어와 있습니다. 질문에 답변을 내놓던 챗봇 시대가 저물고, 스스로 판단하고 행동하는 **2026년 AI 에이전트** 시대가 본격적으로 열리고 있어요. 이 기술이 우리 삶과 비즈니스를 어떻게 재편하고 있는지 지금부터 살펴볼게요.

@@ -7,6 +7,10 @@ categories: ["기초편"]
 series: ["Track A — 기초편"]
 description: "Claude Code Mac/Windows 설치 가이드. 단순 설치를 넘어 자율 에이전트 환경 구축, 워크플로우 자동화 전략과 실제 활용 팁까지. 개발 생산성을 극대화하세요."
 draft: false
+cover:
+  image: "https://dmazone.github.io/blogauto/images/claude-code-install-thumb.webp"
+  alt: "Claude Code 설치 썸네일"
+  hiddenInSingle: true
 ---
 
 안녕하세요! 개발 워크플로우를 혁신할 강력한 AI 에이전트, Claude Code에 대한 소식을 들으셨나요? 단순한 코드 어시스턴트를 넘어, 2026년 현재 Claude Code는 여러분의 개발 팀에 자율적인 소프트웨어 엔지니어로 합류할 준비를 마쳤습니다. 오늘은 Mac과 Windows 환경에서 Claude Code를 어떻게 설치하고, 그 잠재력을 최대한 끌어낼 수 있는지 자세히 알려드릴게요.

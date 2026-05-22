@@ -7,8 +7,10 @@ description: "NPU 탑재 AI PC가 대세가 된 2026년, 노트북 구매 기준
 categories: ["IT기기"]
 tags: ["AIPC", "노트북추천", "코어울트라", "애플M4", "2026노트북"]
 cover:
-  image: "https://dmazone.github.io/blogauto/images/ai-pc-laptop-guide-2026-01.webp"
-  alt: "2026년 최신 AI PC 노트북 라인업"
+  image: "https://dmazone.github.io/blogauto/images/ai-pc-laptop-guide-2026-thumb.webp"
+  alt: "AI PC 가이드 썸네일"
+  hiddenInSingle: true
+
 ---
 
 CPU 클록 속도와 RAM 용량만 보던 노트북 구매 시대가 끝났습니다. 2026년 노트북 시장의 핵심 키워드는 **NPU(신경망 처리 장치)** 와 **온디바이스 AI** 예요. 인텔 코어 울트라, 퀄컴 스냅드래곤 X, 애플 M4 — 주요 플레이어들이 AI 연산을 로컬에서 처리하는 칩을 탑재하면서 노트북 선택 기준이 근본부터 달라졌어요. 무엇을 봐야 하는지, 용도별로 어떤 선택이 맞는지 정리해드릴게요.
