@@ -420,48 +420,102 @@ async function geminiRefineLoop(topic, outline, draft, maxRounds = 2) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// STEP 7: Claude 최종 품질 피드백 (1회 · max 800 토큰)
+// STEP 7: Claude 본문 완전 검수 & 직접 수정 (이미지 생성 완료 후 실행)
 // ────────────────────────────────────────────────────────────────────────────
-async function claudeFinalReviewAndApply(topic, body) {
-  log('🎯', '[STEP 7] Claude 최종 품질 검토 중 (800 토큰)...');
+async function claudeFullReviewAndFix(topic, body) {
+  log('🎯', '[STEP 7] Claude 완전 검수 & 직접 수정 (토큰 제한 없음)...');
 
-  let feedback = '';
   try {
     const msg = await claude.messages.create({
-      model:      'claude-haiku-4-5-20251001',
-      max_tokens: 800,
+      model:      'claude-sonnet-4-6',
+      max_tokens: 8000,
       messages: [{
         role: 'user',
         content:
-          `아래 한국어 블로그 초안의 문제점을 짧게 번호 목록으로만 나열해줘 (최대 5개).\n` +
-          `검토 항목: ① AI 냄새 나는 상투적 표현 ② 어색한 한국어 ③ 애드센스 저품질 위험 요소 ④ 영어 직역체\n` +
-          `문제가 없으면 "통과"라고만 써줘.\n\n` +
-          `--- 본문 (앞 1500자) ---\n${body.slice(0, 1500)}`,
+          `아래 한국어 블로그 포스팅을 꼼꼼히 검수하고, 문제가 있는 부분은 직접 수정해서 완성된 본문을 출력해줘.\n\n` +
+          `[검수 기준 — 전부 적용]\n` +
+          `1. 제목·키워드 일치: 제목 "${topic.title}", 키워드 "${topic.keyword}"와 내용이 완전히 부합해야 함\n` +
+          `2. 맥락·논리 일관성: 글의 흐름이 자연스럽고 앞뒤가 맞아야 함\n` +
+          `3. 오타·문법: 한국어 맞춤법·띄어쓰기 전면 교정\n` +
+          `4. AI 상투어 완전 제거: "다양한" "중요합니다" "살펴보겠습니다" "마지막으로" "~드립니다" 영어 직역체\n` +
+          `5. 출처 없는 수치·통계: 삭제 후 정성적 설명으로 대체\n` +
+          `6. 애드센스 위험 요소: 광고성·스팸·과장·선정적 표현 제거\n` +
+          `7. 헤딩 구조: ## H2 4개, ### H3 2~3개, # H1 본문 금지, 숫자번호 방식 금지\n` +
+          `8. 단락 여백: 문단 사이 빈 줄 1개, 연속 2개 이상 금지\n` +
+          `9. 가독성: **볼드**, > 인용구, - 불릿 적절히 활용\n` +
+          `10. 분량: 최소 1,500자 — 부족하면 해당 섹션 내용을 구체적으로 보강\n\n` +
+          `[절대 유지 항목 — 건드리지 말 것]\n` +
+          `- 이미지 마크다운 (![...](...)): 절대 삭제·수정 금지\n` +
+          `- 내부 링크 ([텍스트](/posts/...)): 절대 삭제 금지\n` +
+          `- 마지막 줄 해시태그 (#태그): 절대 삭제 금지\n\n` +
+          `수정이 없으면 원본 그대로 출력, 수정이 있으면 전체 수정본 출력.\n` +
+          `마크다운 본문만 출력 (front matter, 코드블록 감싸기 없이).\n\n` +
+          `--- 본문 ---\n${body}\n--- 끝 ---`,
       }],
     });
-    feedback = msg.content[0].text.trim();
-    log('✅', `Claude 피드백: ${feedback.slice(0, 60)}...`);
+
+    const result = extractFinalMarkdown(msg.content[0].text.trim());
+    log('✅', `[STEP 7] 검수 완료 (${result.length}자)`);
+    return result;
   } catch (err) {
-    log('⚠️', `Claude 검토 실패 (${err.message}) → Gemini 단독 최종본 사용`);
+    log('⚠️', `[STEP 7] Claude 검수 실패 (${err.message}) → 원본 사용`);
     return body;
   }
+}
 
-  if (feedback === '통과' || feedback.startsWith('통과')) {
-    log('✅', 'Claude: 통과 → 수정 없이 최종본 확정');
-    return body;
+// ────────────────────────────────────────────────────────────────────────────
+// STEP 8c: Claude 비전으로 이미지 품질·주제 적합성 검토 및 재생성
+// ────────────────────────────────────────────────────────────────────────────
+async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index) {
+  if (!fs.existsSync(imagePath)) {
+    log('⚠️', `  [이미지 검수] 파일 없음: ${imagePath}`);
+    return;
   }
 
-  log('✏️', '[STEP 7b] Gemini가 Claude 피드백 반영 중...');
-  const final = extractFinalMarkdown(await geminiCall(
-    `아래 피드백을 반영해 블로그 본문을 수정해줘.\n` +
-    `이미지 마크다운과 내부 링크는 반드시 그대로 유지해.\n\n` +
-    `[Claude 피드백]\n${feedback}\n\n` +
-    `[현재 본문]\n${body}\n\n수정된 본문만 출력해줘.`,
-    { temperature: 0.5 }
-  ));
+  const stat = fs.statSync(imagePath);
+  if (stat.size < 15000) {
+    log('⚠️', `  [이미지 검수] 파일 너무 작음 (${stat.size}B) → 재생성`);
+    await generateImage(prompt, slug, index);
+    return;
+  }
 
-  log('✅', '최종본 완성');
-  return final;
+  try {
+    const imageData = fs.readFileSync(imagePath).toString('base64');
+    const msg = await claude.messages.create({
+      model:      'claude-haiku-4-5-20251001',
+      max_tokens: 400,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/webp', data: imageData } },
+          {
+            type: 'text',
+            text:
+              `이 이미지가 블로그 포스팅 이미지로 적합한지 판단해줘.\n` +
+              `포스팅 주제: "${postTitle}"\n` +
+              `이미지 용도: ${label}\n\n` +
+              `불합격 기준 (하나라도 해당하면 불합격):\n` +
+              `- 포스팅 주제와 전혀 다른 내용 (예: 경제 글에 운동 사진)\n` +
+              `- 심하게 왜곡되거나 강제로 늘어진 비율\n` +
+              `- 극도로 흐릿하거나 저화질\n` +
+              `- 혐오스럽거나 불쾌한 내용\n` +
+              `- 아무 의미 없는 단색·노이즈 이미지\n\n` +
+              `JSON만: {"ok":true/false,"reason":"불합격이면 이유, 합격이면 빈 문자열"}`,
+          },
+        ],
+      }],
+    });
+
+    const result = JSON.parse(msg.content[0].text.match(/\{[\s\S]*?\}/)?.[0] ?? '{"ok":true}');
+    if (result.ok) {
+      log('✅', `  [이미지 검수] ${label} — 합격`);
+    } else {
+      log('⚠️', `  [이미지 검수] ${label} — 불합격 (${result.reason}) → 재생성`);
+      await generateImage(prompt, slug, index);
+    }
+  } catch (err) {
+    log('⚠️', `  [이미지 검수] API 오류 (${err.message}) → 통과`);
+  }
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -826,16 +880,16 @@ export async function runForSection(section, options = {}) {
 
   // ── API 모드: 기존 단계별 파이프라인 ─────────────────────────────────────
   } else {
-    const topicObj  = await pickTodayTopic(section, subtopic);    // STEP 1
+    const topicObj  = await pickTodayTopic(section, subtopic);         // STEP 1
     topic = topicObj;
-    const trendData = await searchTrends(section, topic);          // STEP 2
-    validated       = await validateTrends(topic, trendData);      // STEP 3
+    const trendData = await searchTrends(section, topic);              // STEP 2
+    validated       = await validateTrends(topic, trendData);          // STEP 3
     outline         = await generateOutline(section, topic, validated); // STEP 4
     const draft     = await writeArticle(section, topic, outline, validated); // STEP 5
-    const refined   = await geminiRefineLoop(topic, outline, draft);    // STEP 6
-    const reviewed  = await claudeFinalReviewAndApply(topic, refined);  // STEP 7
-    final           = await validateAndFixMarkdown(reviewed, topic);    // STEP 7.5
+    const refined   = await geminiRefineLoop(topic, outline, draft);   // STEP 6
+    final           = await validateAndFixMarkdown(refined, topic);    // STEP 7.5 (MD 검증)
     prompts         = await generateContextualImagePrompts(section, topic, final);
+    // STEP 7 (Claude 완전 검수)는 이미지 생성 완료 후 실행
   }
 
   const postPath = path.join(POSTS_DIR, section.dir, `${topic.slug}.md`);
@@ -844,34 +898,45 @@ export async function runForSection(section, options = {}) {
     return;
   }
 
-  // STEP 8: 이미지 생성 — 썸네일 + 본문 2장 (포스팅 1개 완료 직후 즉시)
-  log('🖼️', '[STEP 8] 이미지 생성 중 (썸네일 1장 + 본문 2장)...');
+  // STEP 8: 이미지 생성 — 본문 2장 + 썸네일 1장 (포스팅 완료 직후 즉시)
+  log('🖼️', '[STEP 8] 이미지 생성 중 (본문 2장 + 썸네일 1장)...');
   let img1 = { localPath: '', sourceUrl: '' };
+  const p1 = prompts[0] ?? `${topic.title} concept illustration, blog editorial style`;
+  const p2 = prompts[1] ?? `${topic.keyword} visual representation, blog editorial style`;
+  const pThumb = prompts[2] ??
+    `${topic.title} editorial magazine thumbnail, bold colors, no text, Korean blog cover`;
 
   // 본문 이미지 1
   try {
-    img1 = await generateImage(prompts[0], topic.slug, 1);
+    img1 = await generateImage(p1, topic.slug, 1);
   } catch (err) {
-    log('⚠️', `  본문 이미지 1 생성 실패 (${err.message}) → 스킵`);
+    log('⚠️', `  본문 이미지 1 생성 실패 (${err.message})`);
   }
-
   // 본문 이미지 2
   try {
-    await generateImage(prompts[1], topic.slug, 2);
+    await generateImage(p2, topic.slug, 2);
   } catch (err) {
-    log('⚠️', `  본문 이미지 2 생성 실패 (${err.message}) → 스킵`);
+    log('⚠️', `  본문 이미지 2 생성 실패 (${err.message})`);
+  }
+  // 썸네일
+  try {
+    await generateImage(pThumb, topic.slug, 'thumb');
+    log('✅', `  썸네일 생성 완료`);
+  } catch (err) {
+    log('⚠️', `  썸네일 생성 실패 (${err.message})`);
   }
 
-  // 썸네일 이미지 (커버 전용 — 주제 직관적으로 표현)
-  const thumbPath = path.join(IMAGES_DIR, `${topic.slug}-thumb.webp`);
-  const thumbPrompt = prompts[2] ??
-    `${topic.title} concept, editorial magazine thumbnail style, bold colors, Korean blog cover image, no text`;
-  try {
-    await generateImage(thumbPrompt, topic.slug, 'thumb');
-    log('✅', `  썸네일 생성 완료: ${topic.slug}-thumb.webp`);
-  } catch (err) {
-    log('⚠️', `  썸네일 생성 실패 (${err.message}) → 스킵`);
-  }
+  // STEP 8c: Claude 비전으로 각 이미지 검수 → 불합격 시 재생성
+  log('🔍', '[STEP 8c] Claude 이미지 품질·주제 적합성 검수...');
+  const img1Path    = path.join(IMAGES_DIR, `${topic.slug}-01.webp`);
+  const img2Path    = path.join(IMAGES_DIR, `${topic.slug}-02.webp`);
+  const thumbPath   = path.join(IMAGES_DIR, `${topic.slug}-thumb.webp`);
+  await claudeCheckAndRegenImage(img1Path,   topic.title, '본문 이미지 1', p1,     topic.slug, 1);
+  await claudeCheckAndRegenImage(img2Path,   topic.title, '본문 이미지 2', p2,     topic.slug, 2);
+  await claudeCheckAndRegenImage(thumbPath,  topic.title, '썸네일',       pThumb, topic.slug, 'thumb');
+
+  // STEP 7: Claude 본문 완전 검수 & 직접 수정 (이미지 완료 후)
+  final = await claudeFullReviewAndFix(topic, final);
 
   // 파일 저장
   const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + final;
