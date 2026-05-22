@@ -19,3 +19,6 @@ node_modules/
 # Environment
 .env
 .env.local
+
+# Flow 세션 (Google 쿠키 포함, 절대 커밋 금지)
+.flow-session/

@@ -460,13 +460,30 @@ async function generateContextualImagePrompts(section, topic, body) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// STEP 8b: NanoBanana / Pollinations 이미지 생성
+// STEP 8b: Flow(ImageFX) → NanoBanana → Pollinations 순서 이미지 생성
 // ────────────────────────────────────────────────────────────────────────────
+const FLOW_SESSION_FILE = path.join(__dirname, '..', '.flow-session', 'session.json');
+
 async function generateImage(prompt, slug, index) {
   const filename = `${slug}-0${index}.webp`;
   const destPath = path.join(IMAGES_DIR, filename);
   fs.mkdirSync(IMAGES_DIR, { recursive: true });
 
+  // 1) Google Flow (세션 파일 있을 때만 시도)
+  const useFlow = process.env.USE_FLOW !== 'false' && fs.existsSync(FLOW_SESSION_FILE);
+  if (useFlow) {
+    log('🎨', `  Flow 이미지 생성 중: ${filename}`);
+    try {
+      const { generateFlowImage } = await import('./flow_image_gen.mjs');
+      await generateFlowImage(prompt, destPath);
+      log('✅', `  Flow 저장: ${filename}`);
+      return { localPath: `/images/${filename}`, sourceUrl: 'flow' };
+    } catch (err) {
+      log('⚠️', `  Flow 실패 (${err.message}) → NanoBanana/Pollinations fallback`);
+    }
+  }
+
+  // 2) NanoBanana
   const nanoBananaKey = process.env.NANOBANANA_API_KEY;
   const nanoBananaUrl = process.env.NANOBANANA_API_URL ?? 'https://api.nanobanana.io/v1/generate';
 
@@ -489,7 +506,7 @@ async function generateImage(prompt, slug, index) {
     }
   }
 
-  // Pollinations.ai fallback (타임아웃 150초, 최대 2회 재시도)
+  // 3) Pollinations.ai fallback (타임아웃 150초, 최대 2회 재시도)
   log('🖼️', `  Pollinations fallback: ${filename}`);
   const polUrl =
     `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}` +
