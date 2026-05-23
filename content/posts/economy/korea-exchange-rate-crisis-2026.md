@@ -1,11 +1,19 @@
-// 섹션2(경제) save_post.js 입력 생성 및 실행
-import { createRequire } from 'module';
-import { spawn } from 'child_process';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+title: "환율 1500원대 돌파! 내 지갑 지키는 생존 재테크 전략 3가지"
+date: 2026-05-24T07:20:00+09:00
+slug: korea-exchange-rate-crisis-2026
+tags: ["환율 1500원", "경제"]
+categories: ["경제"]
+series: ["경제"]
+description: "2026년 5월 고환율 쇼크로 원달러 환율이 1500원 선을 돌파했습니다. 중동 분쟁 장기화와 유가 상승 속에서 내 자산을 안전하게 지켜낼 현실적인 재테크 액션 플랜을 제안합니다."
+draft: false
+cover:
+  image: "https://dmazone.github.io/blogauto/images/korea-exchange-rate-crisis-2026-thumb.webp"
+  alt: "환율 1500원대 돌파! 내 지갑 지키는 생존 재테크 전략 3가지 썸네일"
+  hiddenInSingle: true
+---
 
-const body = `최근 뉴스 헤드라인을 보면 한숨부터 나옵니다. 2026년 5월 현재 외환시장이 요동치며 원달러 환율 1500원 벽이 마침내 깨졌기 때문입니다. 해외 직구를 즐기거나 해외 여행을 계획하던 분들은 벌써부터 결제 창을 닫고 있다는 소리가 들립니다. 단순한 일시적 출렁임으로 치부하기에는 우리 지갑에 미치는 타격이 꽤나 묵직합니다. 도대체 무엇이 원화 가치를 이토록 끌어내리고 있을까요?
+최근 뉴스 헤드라인을 보면 한숨부터 나옵니다. 2026년 5월 현재 외환시장이 요동치며 원달러 환율 1500원 벽이 마침내 깨졌기 때문입니다. 해외 직구를 즐기거나 해외 여행을 계획하던 분들은 벌써부터 결제 창을 닫고 있다는 소리가 들립니다. 단순한 일시적 출렁임으로 치부하기에는 우리 지갑에 미치는 타격이 꽤나 묵직합니다. 도대체 무엇이 원화 가치를 이토록 끌어내리고 있을까요?
 
 ![고환율 쇼크 원달러 환율 1500원 외환딜링룸](https://dmazone.github.io/blogauto/images/korea-exchange-rate-crisis-2026-01.webp)
 
@@ -61,32 +69,4 @@ const body = `최근 뉴스 헤드라인을 보면 한숨부터 나옵니다. 20
 
 결국 원화 가치가 제자리를 찾으려면 우리가 물건을 많이 팔아서 달러를 벌어와야 합니다. 다행히 반도체와 IT 기기를 중심으로 한 수출 지표는 견조한 흐름을 유지하고 있습니다. 하반기 무역수지 흑자 폭이 본격적으로 확대된다면 외환 수급에 숨통이 트이면서 1500원 선 아래로 안착할 가능성도 열려 있습니다. 위기 속에서도 냉정하게 시장을 바라보며 내 자산을 지키는 영리한 재테크 행동이 필요한 때입니다.
 
-#환율1500원 #고환율시대 #재테크전략 #달러투자 #미국주식 #인플레이션 #수입물가 #한국경제전망`;
-
-const input = {
-  sectionId: "economy",
-  topic: {
-    title: "환율 1500원대 돌파! 내 지갑 지키는 생존 재테크 전략 3가지",
-    slug: "korea-exchange-rate-crisis-2026",
-    keyword: "환율 1500원",
-    description: "2026년 5월 고환율 쇼크로 원달러 환율이 1500원 선을 돌파했습니다. 중동 분쟁 장기화와 유가 상승 속에서 내 자산을 안전하게 지켜낼 현실적인 재테크 액션 플랜을 제안합니다."
-  },
-  outline: {
-    meta_description: "2026년 5월 고환율 쇼크로 원달러 환율이 1500원 선을 돌파했습니다. 중동 분쟁 장기화와 유가 상승 속에서 내 자산을 안전하게 지켜낼 현실적인 재테크 액션 플랜을 제안합니다.",
-    sections: [],
-    internal_link: { anchor: "서울 아파트 시장 전망", path: "/posts/kr-realestate/seoul-apartment-timing-2026/" }
-  },
-  body,
-  imgPrompts: [
-    "Korean foreign exchange trading room with overlapping won and dollar currency charts on multiple monitors, red upward surge graph showing exchange rate crisis at 1500 won, digital 3D render style, dramatic cinematic lighting",
-    "Supermarket shelves with imported fruits and groceries, price tags visibly inflated, holographic 1500 won number and upward arrows floating in background, cinematic lighting, photorealistic",
-    "Smartphone screen displaying dollar investment portfolio and gold bars beside it, clean modern fintech concept 3D illustration, business blue and gold color tone, premium product photography"
-  ],
-  dateOverride: "2026-05-24T07:20:00+09:00"
-};
-
-const savePostPath = path.join(__dirname, 'save_post.js');
-const proc = spawn('node', [savePostPath], { cwd: path.join(__dirname, '..'), stdio: ['pipe','inherit','inherit'] });
-proc.stdin.write(JSON.stringify(input));
-proc.stdin.end();
-proc.on('close', code => { console.log('save_post 종료:', code); process.exit(code); });
+#환율1500원 #고환율시대 #재테크전략 #달러투자 #미국주식 #인플레이션 #수입물가 #한국경제전망
