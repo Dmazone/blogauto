@@ -22,3 +22,6 @@ node_modules/
 
 # Flow 세션 (Google 쿠키 포함, 절대 커밋 금지)
 .flow-session/
+
+# 로컬 자동화 로그 (verify_posts.js가 읽는 파일, 커밋 불필요)
+data/posts_log.json

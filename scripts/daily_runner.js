@@ -17,9 +17,11 @@
 
 import { runForSection, setGeminiBrowserSession } from './agent_core.js';
 import { SECTIONS, getSectionById, getHealthSubtopic } from './sections.js';
+import { sendTelegram } from './telegram.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { writeFileSync, mkdirSync } from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
@@ -88,6 +90,19 @@ async function main() {
   log('📅', `예약 발행: 07:10~08:40 KST (다음날, 10분 간격)`);
   console.log('');
 
+  // ── 텔레그램 시작 알림 ──────────────────────────────────────────────────
+  const startDate = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+  const tomorrowStr = (() => {
+    const t = new Date(); t.setDate(t.getDate() + 1);
+    return t.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
+  })();
+  await sendTelegram(
+    `🚀 트렌드줌 예약발행 작업 시작!\n` +
+    `📅 작업일: ${startDate}\n` +
+    `⏰ 발행 예정: ${tomorrowStr} 07:10~08:40 KST\n` +
+    `📝 총 ${targetSections.length}개 섹션 순서대로 진행합니다.`
+  );
+
   const healthSubtopic = getHealthSubtopic();
   let successCount = 0, failCount = 0;
   const publishedPosts = []; // 성공한 포스트 목록 (텔레그램 알림용)
@@ -130,21 +145,47 @@ async function main() {
   log('🎉', `완료 — 성공 ${successCount}개 / 실패 ${failCount}개`);
   console.log('='.repeat(60));
 
+  // ── posts_log.json 저장 (verify_posts.js가 다음날 읽음) ─────────────────
+  savePostsLog(publishedPosts, targetSections.length);
+
   // ── 텔레그램 완료 알림 ──────────────────────────────────────────────────
   await sendTelegramDailyReport(publishedPosts, successCount, failCount);
 }
 
-async function sendTelegramDailyReport(posts, successCount, failCount) {
-  const token  = process.env.TELEGRAM_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) return;
+function savePostsLog(posts, totalCount) {
+  try {
+    const baseUrl  = (process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto').replace(/\/$/, '');
+    const tomorrow = (() => { const t = new Date(); t.setDate(t.getDate() + 1); return t.toISOString().slice(0, 10); })();
+    const dataDir  = path.join(__dirname, '..', 'data');
+    mkdirSync(dataDir, { recursive: true });
+    const logData = {
+      date:         tomorrow,
+      generatedAt:  new Date().toISOString(),
+      publishWindow: `${tomorrow} 07:10~08:40 KST`,
+      totalCount,
+      posts: posts.map((p, i) => ({
+        title:      p.title,
+        slug:       p.slug,
+        sectionDir: p.sectionDir,
+        url:        `${baseUrl}/posts/${p.sectionDir}/${p.slug}/`,
+        publishTime: `07:${String(10 + i * 10).padStart(2, '0')} KST`,
+      })),
+    };
+    writeFileSync(path.join(dataDir, 'posts_log.json'), JSON.stringify(logData, null, 2), 'utf8');
+    log('💾', 'posts_log.json 저장 완료');
+  } catch (err) {
+    log('⚠️', `posts_log 저장 실패: ${err.message}`);
+  }
+}
 
-  const baseUrl = process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto';
-  const today   = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
+async function sendTelegramDailyReport(posts, successCount, failCount) {
+  const baseUrl  = (process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto').replace(/\/$/, '');
+  const tomorrow = (() => { const t = new Date(); t.setDate(t.getDate() + 1); return t.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' }); })();
 
   const lines = [
-    `📝 트렌드줌 ${today} 포스팅 완료!`,
-    `✅ 성공 ${successCount}개 / ❌ 실패 ${failCount}개`,
+    `✅ 트렌드줌 예약발행 완료!`,
+    `📅 발행 예정: ${tomorrow} 07:10~08:40 KST`,
+    `성공 ${successCount}개 / 실패 ${failCount}개`,
     '',
   ];
 
@@ -156,32 +197,8 @@ async function sendTelegramDailyReport(posts, successCount, failCount) {
 
   lines.push('', `🔗 블로그: ${baseUrl}/`);
 
-  const msg = lines.join('\n');
-  const apiUrl = `https://api.telegram.org/bot${token}/sendMessage`;
-  const body = JSON.stringify({ chat_id: chatId, text: msg });
-
-  try {
-    const { default: https } = await import('https');
-    await new Promise((resolve, reject) => {
-      const req = https.request(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
-      }, (res) => {
-        let data = '';
-        res.on('data', c => data += c);
-        res.on('end', () => {
-          const j = JSON.parse(data);
-          if (j.ok) { log('📱', '텔레그램 알림 전송 완료'); resolve(); }
-          else reject(new Error(j.description));
-        });
-      });
-      req.on('error', reject);
-      req.write(body);
-      req.end();
-    });
-  } catch (err) {
-    log('⚠️', `텔레그램 전송 실패: ${err.message}`);
-  }
+  await sendTelegram(lines.join('\n'));
+  log('📱', '텔레그램 완료 알림 전송');
 }
 
 main().catch((err) => {

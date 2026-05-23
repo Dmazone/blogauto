@@ -305,10 +305,62 @@ BlogAuto/
 
 ---
 
+## 일일 자동화 워크플로우 (매일 반복)
+
+### 타임라인 (KST 기준)
+
+| 시각 | 담당 | 내용 |
+|------|------|------|
+| 22:00 | Windows 작업 스케줄러 | `BlogAuto-Generate` 실행 → daily_runner.js 시작 |
+| 22:00 | 텔레그램 | **알림 1: 작업 시작** — 날짜·섹션 수·발행 예정 시각 |
+| 22:00~24:00 | daily_runner.js | Gemini Pro(Chrome)로 10개 섹션 순차 생성 |
+| ~24:00 | 텔레그램 | **알림 2: 예약발행 완료** — 성공/실패 수 + 10개 링크 |
+| 07:10~08:40 | GitHub Actions (scheduled-deploy.yml) | 10분 간격 Hugo 재빌드 → 포스팅 순차 공개 |
+| 09:20 | Windows 작업 스케줄러 | `BlogAuto-Verify` 실행 → verify_posts.js 시작 |
+| 09:20 | verify_posts.js | `gh workflow run deploy.yml` 강제 트리거 (백업 배포) |
+| 09:22 | verify_posts.js | 10개 URL 각각 HTTP 200 확인 (실패 시 30초 후 재시도) |
+| 09:22 | 텔레그램 | **알림 3: 발행 확인 완료** — 정상/미게재 수 + 세부 결과 |
+
+### 텔레그램 3대 알림
+
+```
+알림1 (22:00): 🚀 트렌드줌 예약발행 작업 시작!
+알림2 (~24:00): ✅ 트렌드줌 예약발행 완료! (10개 링크 포함)
+알림3 (09:22): 📊 트렌드줌 발행 확인 완료 (✅N개 / ❌N개)
+```
+
+### 관련 스크립트
+
+| 파일 | 역할 |
+|------|------|
+| `scripts/daily_runner.js` | 10개 포스팅 생성 + 알림1·2 전송 + posts_log.json 저장 |
+| `scripts/verify_posts.js` | 배포 트리거 + URL 확인 + 알림3 전송 |
+| `scripts/telegram.js` | 텔레그램 전송 공통 헬퍼 |
+| `data/posts_log.json` | 어제 생성된 포스팅 목록 (verify_posts가 읽음, git 제외) |
+
+### Windows 작업 스케줄러 초기 등록 (1회)
+
+```powershell
+# 관리자 PowerShell에서 실행
+powershell -ExecutionPolicy Bypass -File scripts\setup_scheduler.ps1
+```
+
+### GitHub Actions 배포 워크플로우
+
+| 파일 | 트리거 | 역할 |
+|------|--------|------|
+| `deploy.yml` | push to main / workflow_dispatch | 즉시 Hugo 빌드 + Pages 배포 |
+| `scheduled-deploy.yml` | UTC 22:10~00:20 매 10분 | 포스팅 시간대 전체 커버, 순차 공개 |
+
+> **배포 신뢰성**: scheduled-deploy.yml이 GitHub 스케줄 지연으로 누락되더라도
+> verify_posts.js(09:20 KST)가 `gh workflow run deploy.yml`을 강제 트리거하여 보완.
+
+---
+
 ## GitHub Actions 스케줄
 
-- 매일 UTC 00:00 (KST 09:00) 자동 실행
-- 예약 발행: 다음날 07:10~08:40 KST (10분 간격, 10개)
+- `scheduled-deploy.yml`: UTC 22:10~00:20, 10분 간격 Hugo 재빌드 (KST 07:10~09:20)
+- `deploy.yml`: push 시 즉시 빌드 / 수동 트리거 가능
 - GitHub Secrets 필요: `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, `BLOG_BASE_URL`
 
 ---
