@@ -1,10 +1,19 @@
-// 섹션3(사회) save_post.js 입력 생성 및 실행
-import { spawn } from 'child_process';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+title: "3가지 사례로 본 1.5가구 트렌드와 외로움 해소법"
+date: 2026-05-24T07:30:00+09:00
+slug: one-half-household-lifestyle-2026
+tags: ["1.5가구", "사회"]
+categories: ["사회"]
+series: ["사회"]
+description: "혼자 살지만 느슨하게 연결되기를 원하는 2026년 새로운 주거 및 관계 트렌드인 1.5가구의 등장 배경과 실제 사례, 장단점을 분석합니다."
+draft: false
+cover:
+  image: "https://dmazone.github.io/blogauto/images/one-half-household-lifestyle-2026-thumb.webp"
+  alt: "3가지 사례로 본 1.5가구 트렌드와 외로움 해소법 썸네일"
+  hiddenInSingle: true
+---
 
-const body = `매달 내는 월세는 아깝고, 그렇다고 누군가와 완벽히 공간을 공유하자니 사생활이 침해될까 봐 망설여진 적 있으신가요? 혼자 살면 외롭고 둘이 살면 괴로운 현대인들의 모순적인 심리가 2026년 현재 새로운 거주 형태로 나타나고 있습니다. 바로 혼자만의 독립된 방을 가지면서도 거실이나 주방은 공유하며 이웃과 적당한 거리를 유지하는 이른바 1.5가구 라이프스타일입니다. 극단적인 고립 대신 완충 지대를 찾는 청년들의 주거 실험이 본격화되는 추세입니다.
+매달 내는 월세는 아깝고, 그렇다고 누군가와 완벽히 공간을 공유하자니 사생활이 침해될까 봐 망설여진 적 있으신가요? 혼자 살면 외롭고 둘이 살면 괴로운 현대인들의 모순적인 심리가 2026년 현재 새로운 거주 형태로 나타나고 있습니다. 바로 혼자만의 독립된 방을 가지면서도 거실이나 주방은 공유하며 이웃과 적당한 거리를 유지하는 이른바 1.5가구 라이프스타일입니다. 극단적인 고립 대신 완충 지대를 찾는 청년들의 주거 실험이 본격화되는 추세입니다.
 
 ![1.5가구 코리빙 하우스 개인 침실 인테리어](https://dmazone.github.io/blogauto/images/one-half-household-lifestyle-2026-01.webp)
 
@@ -58,32 +67,4 @@ const body = `매달 내는 월세는 아깝고, 그렇다고 누군가와 완�
 
 공유 주거를 선택할 때는 커뮤니티 관리자가 상주하는지, 청소 대행 서비스가 포함되어 있는지, 방음 시설이 철저한지 반드시 현장에서 확인해야 합니다. 입주 계약서에 공용 공간 이용 규칙과 분쟁 조절 조항이 명확히 기재되어 있는지도 놓치지 말아야 할 대목입니다. 이 대안적 삶의 방식이 단순한 유행을 넘어 미래 주거의 표준으로 자리 잡을 수 있을지는 [서울 부동산 시장의 흐름](/posts/kr-realestate/seoul-realestate-outlook-2026/)과도 맞물려 있습니다. 주거 안정을 고민하는 청년이라면 두 관점을 함께 살펴보는 것을 권합니다.
 
-#1점5가구 #코리빙하우스 #셰어하우스 #청년주거 #1인가구 #외로움해소 #주거트렌드 #공유경제 #2026트렌드`;
-
-const input = {
-  sectionId: "society",
-  topic: {
-    title: "3가지 사례로 본 1.5가구 트렌드와 외로움 해소법",
-    slug: "one-half-household-lifestyle-2026",
-    keyword: "1.5가구",
-    description: "혼자 살지만 느슨하게 연결되기를 원하는 2026년 새로운 주거 및 관계 트렌드인 1.5가구의 등장 배경과 실제 사례, 장단점을 분석합니다."
-  },
-  outline: {
-    meta_description: "혼자 살지만 느슨하게 연결되기를 원하는 2026년 새로운 주거 및 관계 트렌드인 1.5가구의 등장 배경과 실제 사례, 장단점을 분석합니다.",
-    sections: [],
-    internal_link: { anchor: "서울 부동산 시장의 흐름", path: "/posts/kr-realestate/seoul-realestate-outlook-2026/" }
-  },
-  body,
-  imgPrompts: [
-    "A cozy modern co-living private bedroom with stylish interior design, big window with warm sunlight, minimalistic furniture, high quality, realistic photography",
-    "A large vibrant shared community kitchen and lounge area in a premium co-living space, young diverse professionals networking, warm and friendly atmosphere, architectural digest style, realistic photography",
-    "A cinematic close up of a key card unlocking a modern apartment door with a cozy shared lounge visible in the background, warm depth of field, photorealistic"
-  ],
-  dateOverride: "2026-05-24T07:30:00+09:00"
-};
-
-const savePostPath = path.join(__dirname, 'save_post.js');
-const proc = spawn('node', [savePostPath], { cwd: path.join(__dirname, '..'), stdio: ['pipe','inherit','inherit'] });
-proc.stdin.write(JSON.stringify(input));
-proc.stdin.end();
-proc.on('close', code => { console.log('save_post 종료:', code); process.exit(code); });
+#1점5가구 #코리빙하우스 #셰어하우스 #청년주거 #1인가구 #외로움해소 #주거트렌드 #공유경제 #2026트렌드
