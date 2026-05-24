@@ -3,7 +3,7 @@ title: "2026 청약 당첨 전략, 핵심만 정리"
 date: 2026-05-24T08:20:00+09:00
 slug: "apartment-subscription-guide-2026"
 tags: ["청약전략", "아파트청약", "주택청약", "분양", "부동산2026", "청약가점"]
-categories: ["kr-realestate"]
+categories: ["한국부동산"]
 description: "2026년 달라진 청약 제도와 당첨 확률을 높이는 실전 전략을 정리합니다. 청약 가점 계산법부터 지역별 공략 포인트까지 핵심만 담았습니다."
 cover:
   image: "https://dmazone.github.io/blogauto/images/apartment-subscription-guide-2026-thumb.webp"

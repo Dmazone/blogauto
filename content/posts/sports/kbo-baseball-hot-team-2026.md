@@ -3,7 +3,7 @@ title: "KBO 2026, 지금 가장 뜨거운 팀은"
 date: 2026-05-24T08:40:00+09:00
 slug: "kbo-baseball-hot-team-2026"
 tags: ["KBO", "한국야구", "프로야구2026", "KBO리그", "야구팀순위", "야구시즌"]
-categories: ["sports"]
+categories: ["스포츠"]
 description: "2026 KBO 리그 시즌 중반전, 선두권 경쟁과 다크호스 팀들의 활약을 분석합니다. 관전 포인트와 핵심 선수들까지 정리했습니다."
 cover:
   image: "https://dmazone.github.io/blogauto/images/kbo-baseball-hot-team-2026-thumb.webp"

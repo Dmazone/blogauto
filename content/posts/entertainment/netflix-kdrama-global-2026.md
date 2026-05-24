@@ -3,7 +3,7 @@ title: "넷플릭스 K-드라마, 2026 흥행 비결"
 date: 2026-05-24T07:50:00+09:00
 slug: "netflix-kdrama-global-2026"
 tags: ["K드라마", "넷플릭스", "한국드라마", "K컬처", "글로벌흥행", "OTT"]
-categories: ["entertainment"]
+categories: ["연예이슈"]
 description: "2026년 넷플릭스 글로벌 차트를 장악한 K-드라마의 흥행 공식과 문화적 파급력을 분석합니다. 전 세계가 K-드라마에 빠지는 진짜 이유를 짚어봅니다."
 cover:
   image: "https://dmazone.github.io/blogauto/images/netflix-kdrama-global-2026-thumb.webp"

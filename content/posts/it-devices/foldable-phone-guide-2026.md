@@ -3,7 +3,7 @@ title: "2026 폴더블폰 완벽 구매 가이드"
 date: 2026-05-24T08:10:00+09:00
 slug: "foldable-phone-guide-2026"
 tags: ["폴더블폰", "갤럭시Z폴드", "스마트폰추천", "IT기기2026", "폴더블스마트폰", "구매가이드"]
-categories: ["it-devices"]
+categories: ["IT기기"]
 description: "2026년 폴더블폰 시장의 최신 트렌드와 주요 제품을 비교 분석합니다. 구매 전 반드시 알아야 할 핵심 체크포인트를 정리했습니다."
 cover:
   image: "https://dmazone.github.io/blogauto/images/foldable-phone-guide-2026-thumb.webp"

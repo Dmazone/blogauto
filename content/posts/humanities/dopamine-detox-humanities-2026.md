@@ -3,7 +3,7 @@ title: "도파민 디톡스 시대의 위버멘쉬와 느린 독서"
 date: 2026-05-24T07:40:00+09:00
 slug: "dopamine-detox-humanities-2026"
 tags: ["인문학트렌드", "도파민디톡스", "니체", "위버멘쉬", "느린독서", "AI시대"]
-categories: ["humanities"]
+categories: ["인문"]
 description: "2026년 5월 대한민국을 뒤흔드는 인문학 트렌드를 분석합니다. 도파민 디톡스와 니체의 위버멘쉬 철학, 그리고 AI 시대에 부활한 느린 독서 열풍의 배경과 삶의 적용 방식을 탐구합니다."
 cover:
   image: "https://dmazone.github.io/blogauto/images/dopamine-detox-humanities-2026-thumb.webp"

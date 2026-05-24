@@ -3,7 +3,7 @@ title: "유럽 여름 여행 2026, 지금 준비 시작"
 date: 2026-05-24T08:30:00+09:00
 slug: "europe-summer-travel-guide-2026"
 tags: ["유럽여행", "여름여행", "유럽여행준비", "해외여행2026", "배낭여행", "유럽자유여행"]
-categories: ["world-travel"]
+categories: ["세계여행지"]
 description: "2026년 유럽 여름 여행을 준비하는 분들을 위한 완벽 가이드입니다. 비자, 항공, 숙소, 경비까지 핵심 정보를 정리했습니다."
 cover:
   image: "https://dmazone.github.io/blogauto/images/europe-summer-travel-guide-2026-thumb.webp"

@@ -3,7 +3,7 @@ title: "봄철 알레르기 증상과 원인, 완벽 대처법"
 date: 2026-05-24T08:00:00+09:00
 slug: "spring-allergy-symptoms-2026"
 tags: ["봄철알레르기", "알레르기비염", "황사", "미세먼지", "알레르기증상", "면역건강"]
-categories: ["health"]
+categories: ["건강"]
 description: "봄마다 괴롭히는 알레르기 비염과 피부 트러블의 원인과 증상, 그리고 일상에서 실천할 수 있는 효과적인 대처법을 정리했습니다."
 cover:
   image: "https://dmazone.github.io/blogauto/images/spring-allergy-symptoms-2026-thumb.webp"
