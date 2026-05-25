@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "generate": "node scripts/generate-post.js",
-    "agent": "node scripts/agent_core.js"
+    "agent": "node scripts/agent_core.js",
+    "bot": "node scripts/claude_telegram_bot.js",
+    "localbot": "node scripts/local_bot.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.55.0",
