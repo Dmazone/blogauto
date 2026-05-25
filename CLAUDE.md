@@ -6,7 +6,7 @@
 - **플랫폼**: GitHub Pages + Hugo (PaperMod 테마)
 - **목적**: 구글 애드센스 수익화 + 제휴마케팅
 - **언어**: 한국어 (기술 용어는 영어 병기)
-- **자동화**: 하루 10편, 섹션별 1편, 다음날 07:10~08:40 KST 예약 발행
+- **자동화**: 하루 5편 (2그룹 교대), 다음날 07:10~07:50 KST 예약 발행
 
 ---
 
@@ -54,7 +54,7 @@
 - 검증 실패 시 Gemini에게 수정 요청 후 재검증
 
 ### 4. 포스팅 1개 완료 후 이미지 즉시 생성 (개별 처리)
-- **절대 10개 포스팅 후 이미지 일괄 생성 금지** → 이미지 혼용·중복 오류 발생
+- **절대 일괄 생성 금지** — 포스팅별 이미지 혼용·중복 오류 발생
 - 포스팅 1개 완료 직후, 해당 포스팅의 이미지만 즉시 생성:
   1. **썸네일 이미지** (`slug-thumb.webp`) — 커버용, 본문에는 미표시
   2. **본문 이미지 1** (`slug-01.webp`) — 도입부 직후 삽입
@@ -62,10 +62,10 @@
 - 각 이미지 파일명은 **SEO 최적화**: 포스팅 슬러그 기반, 주제를 명확히 반영
 - 이미지·포스팅에 문제 발생 시 해당 포스팅 1개만 수정
 
-### 5. 10개 완료 시 텔레그램 링크 전송
-- 10개 포스팅 완료 후 각 포스팅 제목 + URL을 텔레그램으로 전송:
+### 5. 5개 완료 시 텔레그램 링크 전송
+- 5개 포스팅 완료 후 각 포스팅 제목 + URL을 텔레그램으로 전송:
   ```
-  📝 트렌드줌 오늘의 포스팅 10개 완료!
+  📝 트렌드줌 오늘의 포스팅 5개 완료!
   1. 제목 — https://dmazone.github.io/blogauto/posts/섹션/slug/
   2. 제목 — ...
   ```
@@ -75,7 +75,7 @@
 ### 6. 구글 애드센스 승인 기준 콘텐츠
 - **독창적 내용 필수**: 다른 사이트 문장 복붙 절대 금지, 반드시 재해석
 - **읽을 가치**: 독자가 실제로 유용한 정보·인사이트를 얻어야 함
-- **1,500자 이상**: 너무 짧은 글은 애드센스 저품질 판정
+- **2,500자 이상**: 너무 짧은 글은 애드센스 저품질 판정 (최소 2,000자 유지)
 - **출처 없는 수치·통계 사용 금지**
 - **광고성·스팸 느낌 금지**: 제품 강요, 과장 표현 지양
 - 문체는 구어체+문어체 중간 톤, 독자에게 직접 말하기 (~해보세요, ~할 수 있어요)
@@ -84,7 +84,7 @@
 ### 7. 헤딩 계층 + 단락 여백 최적화
 - 헤딩 계층 엄수:
   - `# H1` — **본문에 절대 사용 금지** (front matter title이 H1 역할)
-  - `## H2` — 주요 섹션 4개
+  - `## H2` — 주요 섹션 **5~6개**
   - `### H3` — 각 H2 아래 2~3개 소주제
   - `"1. 제목"` 숫자 번호 방식 절대 금지 — 마크다운 `##` `###`만 사용
 - 단락 여백: 각 문단 사이 빈 줄 1개로 분리 (2개 이상 연속 빈 줄 금지 — 모바일 가독성)
@@ -101,14 +101,14 @@ front matter (YAML)
 ---
 
 [도입부 2~3문장] ← 핵심 키워드 자연 포함
-![도입부 이미지](BASE_URL/images/slug-01.webp)
+![도입부 이미지](slug-01.webp)
 
 ## H2 첫 번째 섹션
 ### H3 소주제
 ### H3 소주제
 
 ## H2 두 번째 섹션
-![섹션 이미지](BASE_URL/images/slug-02.webp)
+![섹션 이미지](slug-02.webp)
 ### H3 소주제
 ### H3 소주제
 
@@ -116,20 +116,24 @@ front matter (YAML)
 ### H3 소주제
 
 ## H2 네 번째 섹션
+### H3 소주제
+
+## H2 다섯 번째 섹션
 [내부 링크 1개 이상]
 
 #해시태그1 #해시태그2 ... (7개 이상, 맨 마지막 줄)
 ```
 
-**이미지 규칙**:
-- 절대 URL: `https://dmazone.github.io/blogauto/images/slug-N.webp`
+**이미지 규칙 (Hugo Page Bundle — 상대 경로)**:
+- 본문 이미지: `![alt](slug-01.webp)` — 번들 디렉토리 내 상대 경로
+- 저장 위치: `content/posts/섹션/slug/slug-01.webp` (static/images/ 아님)
 - alt 태그: 한국어로 작성
 - AI 생성 이미지만 사용 (저작권 없음)
 
 **SEO front matter 규칙**:
 - `description`: 160자 이내, 핵심 키워드 + 독자 혜택 중심, 빈값 금지
 - `tags`: 키워드 기반 3~6개, 중복 없이
-- `cover.image`: 썸네일 URL (`slug-thumb.webp`)
+- `cover.image`: `"slug-thumb.webp"` (상대 경로, Hugo Page Bundle이 자동 해석)
 - `cover.hiddenInSingle: true` — 본문에 썸네일 미표시 (커버 전용)
 - `cover.alt`: 한국어 alt 텍스트
 
@@ -155,7 +159,7 @@ front matter (YAML)
 
 ### Claude의 포스팅 실행 절차 (claude-in-chrome 사용)
 
-Claude가 포스팅 10개를 직접 실행할 때 **섹션마다 아래 흐름 반복**:
+Claude가 포스팅 5개를 직접 실행할 때 **섹션마다 아래 흐름 반복**:
 
 1. **`mcp__claude-in-chrome__tabs_context_mcp`** 로 Chrome 탭 확인
 2. **Gem URL로 새로 이동** (`navigate` → `https://gemini.google.com/u/2/gem/cca9fca55f60`)
@@ -169,7 +173,7 @@ Claude가 포스팅 10개를 직접 실행할 때 **섹션마다 아래 흐름 �
    - 버튼이 "메시지 보내기"로 돌아오고 `message-content` 길이가 안정되면 완료
 5. **응답 추출** (`document.querySelectorAll('message-content')[0]?.innerText`)
 6. **Claude Code가 직접 본문 검수·수정** (이 대화 내에서, 별도 API 호출 없음)
-   - AI 상투어 제거, 제목·키워드 일치, 1500자+, H1 금지, 헤딩 구조 확인
+   - AI 상투어 제거, 제목·키워드 일치, 2500자+, H1 금지, H2 5~6개 헤딩 구조 확인
 7. **`scripts/save_post.js`** stdin JSON으로 전달 → 이미지 생성 + git push
 
 ### 단일 종합 메시지 포맷 (섹션별 적용)
@@ -184,10 +188,10 @@ Claude가 포스팅 10개를 직접 실행할 때 **섹션마다 아래 흐름 �
 ===TOPIC===
 {"title":"...","slug":"...","keyword":"...","description":"..."}
 ===BODY===
-(마크다운 본문, front matter 없이, 1500자+)
-(이미지1: ![alt](https://dmazone.github.io/blogauto/images/{slug}-01.webp))
-(H2 4개, H3 각 2~3개, 마지막 H2에 내부링크, 두번째 H2 직후 이미지2)
-(이미지2: ![alt](https://dmazone.github.io/blogauto/images/{slug}-02.webp))
+(마크다운 본문, front matter 없이, 2500자+)
+(이미지1: ![alt]({slug}-01.webp))  ← 상대 경로, Hugo Page Bundle
+(H2 5~6개, H3 각 2~3개, 마지막 H2에 내부링크, 두번째 H2 직후 이미지2)
+(이미지2: ![alt]({slug}-02.webp))  ← 상대 경로
 (마지막 줄 해시태그 7개+)
 ===PROMPTS===
 {"imgPrompts":["본문이미지1 프롬프트","본문이미지2 프롬프트","썸네일 프롬프트"]}
@@ -220,7 +224,7 @@ document.querySelectorAll('message-content')[0]?.innerText ?? ''
 | STEP 2 | Gemini + Google Search | 최신 웹 데이터 수집 |
 | STEP 3 | Gemini | 신뢰성·최신성·중복 여부 교차 검증 |
 | STEP 4 | Gemini | H2/H3 SEO 아웃라인 + 메타 디스크립션 설계 |
-| STEP 5 | Gemini | 본문 전체 집필 (1,500~2,500자) |
+| STEP 5 | Gemini | 본문 전체 집필 (2,500자 이상) |
 | STEP 6 | Gemini (최대 2회) | SEO 자체 검토 & 수정 루프 |
 | STEP 7.5 | Claude Code | **마크다운 렌더링 검증** (취소선·따옴표·괄호·H1 오류 자동 수정) |
 | STEP 8 | Pollinations / Flow | **본문 이미지 2장 + 썸네일 1장** 즉시 생성 |
@@ -236,7 +240,7 @@ document.querySelectorAll('message-content')[0]?.innerText ?? ''
 - 오타·문법·맞춤법 전면 교정
 - AI 상투어·영어 직역체 완전 제거
 - 출처 없는 수치 삭제 후 정성적 설명으로 대체
-- 분량 부족 시 직접 보강 (최소 1,500자)
+- 분량 부족 시 직접 보강 (최소 2,500자)
 - 이미지 마크다운·내부링크·해시태그는 절대 유지
 
 ### Claude 이미지 검수 기준 (STEP 8c)
@@ -276,26 +280,20 @@ BlogAuto/
 ├── config.toml                    ← Hugo 설정 (10개 메뉴)
 ├── content/
 │   └── posts/
-│       ├── latest-tech/
-│       ├── economy/
-│       ├── society/
-│       ├── humanities/
-│       ├── entertainment/
-│       ├── health/
-│       ├── it-devices/
-│       ├── kr-realestate/
-│       ├── world-travel/
-│       └── sports/
+│       └── 섹션/                  ← 예: economy/
+│           └── slug/              ← Hugo Page Bundle
+│               ├── index.md       ← 포스팅 본문
+│               ├── slug-01.webp   ← 본문 이미지 1
+│               ├── slug-02.webp   ← 본문 이미지 2
+│               └── slug-thumb.webp ← 썸네일
 ├── scripts/
-│   ├── sections.js                ← 10개 섹션 정의
+│   ├── sections.js                ← 10개 섹션 정의 (2그룹 교대)
 │   ├── agent_core.js              ← 9단계 파이프라인
-│   ├── daily_runner.js            ← 10개 섹션 순차 실행
+│   ├── daily_runner.js            ← 5개 섹션 순차 실행 (그룹별)
+│   ├── migrate_page_bundles.mjs   ← 이미지 번들 마이그레이션 (1회 실행)
 │   └── sns_promoter.js            ← SNS 자동 홍보
 ├── static/
-│   └── images/                    ← AI 생성 이미지
-│       ├── slug-01.webp           ← 본문 이미지 1
-│       ├── slug-02.webp           ← 본문 이미지 2
-│       └── slug-thumb.webp        ← 썸네일 (커버 전용)
+│   └── images/                    ← 고아 이미지만 남음 (신규는 번들에 저장)
 ├── layouts/
 │   └── partials/
 │       └── extend_head.html       ← JSON-LD Article 스키마 자동 삽입
@@ -313,19 +311,19 @@ BlogAuto/
 |------|------|------|
 | 22:00 | Windows 작업 스케줄러 | `BlogAuto-Generate` 실행 → daily_runner.js 시작 |
 | 22:00 | 텔레그램 | **알림 1: 작업 시작** — 날짜·섹션 수·발행 예정 시각 |
-| 22:00~24:00 | daily_runner.js | Gemini Pro(Chrome)로 10개 섹션 순차 생성 |
-| ~24:00 | 텔레그램 | **알림 2: 예약발행 완료** — 성공/실패 수 + 10개 링크 |
-| 07:10~08:40 | GitHub Actions (scheduled-deploy.yml) | 10분 간격 Hugo 재빌드 → 포스팅 순차 공개 |
+| 22:00~23:30 | daily_runner.js | Gemini Pro(Chrome)로 5개 섹션 순차 생성 (그룹별) |
+| ~23:30 | 텔레그램 | **알림 2: 예약발행 완료** — 성공/실패 수 + 5개 링크 |
+| 07:10~07:50 | GitHub Actions (scheduled-deploy.yml) | 10분 간격 Hugo 재빌드 → 포스팅 순차 공개 |
 | 09:20 | Windows 작업 스케줄러 | `BlogAuto-Verify` 실행 → verify_posts.js 시작 |
 | 09:20 | verify_posts.js | `gh workflow run deploy.yml` 강제 트리거 (백업 배포) |
-| 09:22 | verify_posts.js | 10개 URL 각각 HTTP 200 확인 (실패 시 30초 후 재시도) |
+| 09:22 | verify_posts.js | 5개 URL 각각 HTTP 200 확인 (실패 시 30초 후 재시도) |
 | 09:22 | 텔레그램 | **알림 3: 발행 확인 완료** — 정상/미게재 수 + 세부 결과 |
 
 ### 텔레그램 3대 알림
 
 ```
-알림1 (22:00): 🚀 트렌드줌 예약발행 작업 시작!
-알림2 (~24:00): ✅ 트렌드줌 예약발행 완료! (10개 링크 포함)
+알림1 (22:00): 🚀 트렌드줌 예약발행 작업 시작! (그룹N, 5개)
+알림2 (~23:30): ✅ 트렌드줌 예약발행 완료! (5개 링크 포함)
 알림3 (09:22): 📊 트렌드줌 발행 확인 완료 (✅N개 / ❌N개)
 ```
 
@@ -333,7 +331,7 @@ BlogAuto/
 
 | 파일 | 역할 |
 |------|------|
-| `scripts/daily_runner.js` | 10개 포스팅 생성 + 알림1·2 전송 + posts_log.json 저장 |
+| `scripts/daily_runner.js` | 5개 포스팅 생성 (그룹별 교대) + 알림1·2 전송 + posts_log.json 저장 |
 | `scripts/verify_posts.js` | 배포 트리거 + URL 확인 + 알림3 전송 |
 | `scripts/telegram.js` | 텔레그램 전송 공통 헬퍼 |
 | `data/posts_log.json` | 어제 생성된 포스팅 목록 (verify_posts가 읽음, git 제외) |
@@ -350,7 +348,7 @@ powershell -ExecutionPolicy Bypass -File scripts\setup_scheduler.ps1
 | 파일 | 트리거 | 역할 |
 |------|--------|------|
 | `deploy.yml` | push to main / workflow_dispatch | 즉시 Hugo 빌드 + Pages 배포 |
-| `scheduled-deploy.yml` | UTC 22:10~00:20 매 10분 | 포스팅 시간대 전체 커버, 순차 공개 |
+| `scheduled-deploy.yml` | UTC 22:10~22:50 + 00:10 | 5개 포스팅 순차 공개 (KST 07:10~07:50) |
 
 > **배포 신뢰성**: scheduled-deploy.yml이 GitHub 스케줄 지연으로 누락되더라도
 > verify_posts.js(09:20 KST)가 `gh workflow run deploy.yml`을 강제 트리거하여 보완.
@@ -359,7 +357,7 @@ powershell -ExecutionPolicy Bypass -File scripts\setup_scheduler.ps1
 
 ## GitHub Actions 스케줄
 
-- `scheduled-deploy.yml`: UTC 22:10~00:20, 10분 간격 Hugo 재빌드 (KST 07:10~09:20)
+- `scheduled-deploy.yml`: UTC 22:10~22:50 + 00:10, 10분 간격 Hugo 재빌드 (KST 07:10~07:50)
 - `deploy.yml`: push 시 즉시 빌드 / 수동 트리거 가능
 - GitHub Secrets 필요: `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, `BLOG_BASE_URL`
 
@@ -405,4 +403,5 @@ https.get('https://api.telegram.org/bot8995151494:AAGUWIxj5PKma_2gr_HoJTHslXSCpN
 - 영어 원문 직역체 (자연스러운 한국어 재작성)
 - 이미지 저작권 있는 스크린샷 무단 사용
 - Claude에 본문 집필 맡기는 코드 작성
-- 10개 포스팅 후 이미지 일괄 생성 (개별 즉시 생성 필수)
+- 포스팅 후 이미지 일괄 생성 (개별 즉시 생성 필수)
+- `static/images/`에 이미지 저장 (Hugo Page Bundle 상대 경로 사용 필수)
