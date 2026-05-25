@@ -66,7 +66,7 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
   ).slice(0, 160);
   const rawTags = [topic.keyword, section.name, ...(topic.tags ?? [])];
   const tags = [...new Set(rawTags.filter(Boolean))].slice(0, 6);
-  const thumbUrl = `${BASE_URL}/images/${topic.slug}-thumb.webp`;
+  const thumbUrl = `${topic.slug}-thumb.webp`;
   return (
     `---\n` +
     `title: "${topic.title.replace(/"/g, '\\"')}"\n` +
@@ -86,10 +86,11 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
 }
 
 // ── 이미지 생성 ───────────────────────────────────────────────────────────────
-async function generateImage(prompt, slug, index) {
+async function generateImage(prompt, slug, index, bundleDir) {
   const filename = index === 'thumb' ? `${slug}-thumb.webp` : `${slug}-0${index}.webp`;
-  const destPath = path.join(IMAGES_DIR, filename);
-  fs.mkdirSync(IMAGES_DIR, { recursive: true });
+  const dir = bundleDir ?? IMAGES_DIR;
+  const destPath = path.join(dir, filename);
+  fs.mkdirSync(dir, { recursive: true });
 
   const useFlow = process.env.USE_FLOW !== 'false' && fs.existsSync(FLOW_SESSION_FILE);
   if (useFlow) {
@@ -110,10 +111,10 @@ async function generateImage(prompt, slug, index) {
 }
 
 // ── Claude 이미지 검수 ────────────────────────────────────────────────────────
-async function checkAndRegenImage(imagePath, title, label, prompt, slug, index) {
+async function checkAndRegenImage(imagePath, title, label, prompt, slug, index, bundleDir) {
   if (!fs.existsSync(imagePath)) return;
   const stat = fs.statSync(imagePath);
-  if (stat.size < 15000) { await generateImage(prompt, slug, index); return; }
+  if (stat.size < 15000) { await generateImage(prompt, slug, index, bundleDir); return; }
 
   try {
     const imageData = fs.readFileSync(imagePath).toString('base64');
@@ -127,7 +128,7 @@ async function checkAndRegenImage(imagePath, title, label, prompt, slug, index) 
     const result = JSON.parse(msg.content[0].text.match(/\{[\s\S]*?\}/)?.[0] ?? '{"ok":true}');
     if (!result.ok) {
       log('⚠️', `  ${label} 불합격 (${result.reason}) → 재생성`);
-      await generateImage(prompt, slug, index);
+      await generateImage(prompt, slug, index, bundleDir);
     } else {
       log('✅', `  ${label} 합격`);
     }
@@ -170,7 +171,8 @@ async function main() {
   const section = getSectionById(sectionId);
   if (!section) throw new Error(`알 수 없는 섹션: ${sectionId}`);
 
-  const postPath = path.join(POSTS_DIR, section.dir, `${topic.slug}.md`);
+  const bundleDir = path.join(POSTS_DIR, section.dir, topic.slug);
+  const postPath  = path.join(bundleDir, 'index.md');
   if (fs.existsSync(postPath)) {
     log('⚠️', `이미 존재: ${postPath}`);
     console.log(JSON.stringify({ ok: false, reason: 'already_exists', postPath }));
@@ -185,22 +187,22 @@ async function main() {
   const pT = imgPrompts[2] ?? `${topic.title} magazine cover thumbnail, bold colors, no text, 16:9`;
 
   for (const [prompt, idx] of [[p1,1],[p2,2],[pT,'thumb']]) {
-    try { await generateImage(prompt, topic.slug, idx); }
+    try { await generateImage(prompt, topic.slug, idx, bundleDir); }
     catch (err) { log('⚠️', `이미지 ${idx} 실패: ${err.message}`); }
   }
 
   // 이미지 검수
   log('🔍', 'Claude 이미지 검수...');
-  await checkAndRegenImage(path.join(IMAGES_DIR,`${topic.slug}-01.webp`), topic.title,'본문1',p1,topic.slug,1);
-  await checkAndRegenImage(path.join(IMAGES_DIR,`${topic.slug}-02.webp`), topic.title,'본문2',p2,topic.slug,2);
-  await checkAndRegenImage(path.join(IMAGES_DIR,`${topic.slug}-thumb.webp`), topic.title,'썸네일',pT,topic.slug,'thumb');
+  await checkAndRegenImage(path.join(bundleDir,`${topic.slug}-01.webp`), topic.title,'본문1',p1,topic.slug,1,bundleDir);
+  await checkAndRegenImage(path.join(bundleDir,`${topic.slug}-02.webp`), topic.title,'본문2',p2,topic.slug,2,bundleDir);
+  await checkAndRegenImage(path.join(bundleDir,`${topic.slug}-thumb.webp`), topic.title,'썸네일',pT,topic.slug,'thumb',bundleDir);
 
   // Claude 본문 검수
   const finalBody = await claudeReview(topic, body);
 
   // 파일 저장
   const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + finalBody;
-  fs.mkdirSync(path.dirname(postPath), { recursive: true });
+  fs.mkdirSync(bundleDir, { recursive: true });
   fs.writeFileSync(postPath, fullContent, 'utf-8');
   log('✅', `저장: ${postPath}`);
 

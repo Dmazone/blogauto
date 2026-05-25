@@ -103,13 +103,20 @@ async function geminiCall(prompt, opts = {}) {
   return response.text;
 }
 
-/** 해당 섹션에 이미 존재하는 슬러그 목록 */
+/** 해당 섹션에 이미 존재하는 슬러그 목록 (.md 파일 + 페이지 번들 디렉토리 모두 포함) */
 function existingSlugsForSection(section) {
   const dir = path.join(POSTS_DIR, section.dir);
   if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir)
-    .filter((f) => f.endsWith('.md') && f !== '_index.md')
-    .map((f) => f.replace(/\.md$/, ''));
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const slugs = [];
+  for (const entry of entries) {
+    if (entry.isFile() && entry.name.endsWith('.md') && entry.name !== '_index.md') {
+      slugs.push(entry.name.replace(/\.md$/, ''));
+    } else if (entry.isDirectory() && fs.existsSync(path.join(dir, entry.name, 'index.md'))) {
+      slugs.push(entry.name);
+    }
+  }
+  return slugs;
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -303,7 +310,7 @@ async function generateOutline(section, topic, validated) {
     `조건:\n` +
     `- 구글 애드센스 고품질 승인 기준 충족\n` +
     `- 비교 분석, 장단점, 경험적 어조(리뷰 형태) 반드시 포함\n` +
-    `- H2 섹션 4개, 각 H2 아래 H3 2~3개\n` +
+    `- H2 섹션 5~6개, 각 H2 아래 H3 2~3개\n` +
     `- 메타 디스크립션 160자 이내\n` +
     `- 동일 섹션 내 내부 링크 anchor 1개\n\n` +
     `유효한 JSON만:\n` +
@@ -340,7 +347,7 @@ async function writeArticle(section, topic, outline, validated) {
     `너는 한국어 블로그 전문 작가야. 아래 지침을 100% 지켜서 Hugo 블로그 포스팅 본문(front matter 제외)을 작성해줘.\n\n` +
     `[Technical SEO 구조 — 반드시 준수]\n` +
     `- 도입부 첫 문단: 핵심 키워드 자연스럽게 포함\n` +
-    `- 헤딩: ## (H2) 4개, 각 H2 아래 ### (H3) 2~3개 — # (H1) 본문 금지, 숫자 번호 방식 금지\n` +
+    `- 헤딩: ## (H2) 5~6개, 각 H2 아래 ### (H3) 2~3개 — # (H1) 본문 금지, 숫자 번호 방식 금지\n` +
     `- 이미지: 도입부 직후 1장, 두 번째 ## 섹션 직후 1장 (지정 URL 정확히 삽입)\n` +
     `- 내부 링크: 본문 적절한 위치에 1개 이상\n` +
     `- 맨 마지막 줄: 해시태그 7개 이상 (#키워드1 #키워드2 ...)\n\n` +
@@ -352,7 +359,7 @@ async function writeArticle(section, topic, outline, validated) {
     `- 영어 직역체 금지, 자연스러운 한국어\n` +
     `- **볼드**, 인용구(>), 불릿(-) 적극 활용\n` +
     `- 금지 표현: "다양한", "중요합니다", "살펴보겠습니다", "마지막으로", "~드립니다"\n` +
-    `- 글자수 목표: 1,500~2,500자\n\n` +
+    `- 글자수 목표: 2,500자 이상 (최소 2,000자)\n\n` +
     `[포스팅 정보]\n` +
     `- 섹션: ${section.name}\n` +
     `- 제목: ${topic.title}\n` +
@@ -363,8 +370,8 @@ async function writeArticle(section, topic, outline, validated) {
     `[SEO 아웃라인]\n${sectionsText}\n` +
     `내부 링크: [${outline.internal_link?.anchor}](${outline.internal_link?.path})\n\n` +
     `[이미지 삽입 — 반드시 아래 마크다운을 본문에 포함]\n` +
-    `1. 도입부 직후: ![${topic.title} 대표 이미지](${BASE_URL}/images/${topic.slug}-01.webp)\n` +
-    `2. 2번째 H2 직후: ![${topic.keyword} 관련 이미지](${BASE_URL}/images/${topic.slug}-02.webp)\n\n` +
+    `1. 도입부 직후: ![${topic.title} 대표 이미지](${topic.slug}-01.webp)\n` +
+    `2. 2번째 H2 직후: ![${topic.keyword} 관련 이미지](${topic.slug}-02.webp)\n\n` +
     `마크다운 본문만 출력해줘. front matter 없이.\n맨 마지막 줄에 반드시 #해시태그 7개 이상 포함.`,
     { temperature: 0.7 }
   );
@@ -440,7 +447,7 @@ async function claudeFullReviewAndFix(topic, body) {
           `4. AI 상투어 완전 제거: "다양한" "중요합니다" "살펴보겠습니다" "마지막으로" "~드립니다" 영어 직역체\n` +
           `5. 출처 없는 수치·통계: 삭제 후 정성적 설명으로 대체\n` +
           `6. 애드센스 위험 요소: 광고성·스팸·과장·선정적 표현 제거\n` +
-          `7. 헤딩 구조: ## H2 4개, ### H3 2~3개, # H1 본문 금지, 숫자번호 방식 금지\n` +
+          `7. 헤딩 구조: ## H2 5~6개, ### H3 2~3개, # H1 본문 금지, 숫자번호 방식 금지\n` +
           `8. 단락 여백: 문단 사이 빈 줄 1개, 연속 2개 이상 금지\n` +
           `9. 가독성: **볼드**, > 인용구, - 불릿 적절히 활용\n` +
           `10. 분량: 최소 1,500자 — 부족하면 해당 섹션 내용을 구체적으로 보강\n\n` +
@@ -466,7 +473,7 @@ async function claudeFullReviewAndFix(topic, body) {
 // ────────────────────────────────────────────────────────────────────────────
 // STEP 8c: Claude 비전으로 이미지 품질·주제 적합성 검토 및 재생성
 // ────────────────────────────────────────────────────────────────────────────
-async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index) {
+async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir) {
   if (!fs.existsSync(imagePath)) {
     log('⚠️', `  [이미지 검수] 파일 없음: ${imagePath}`);
     return;
@@ -475,7 +482,7 @@ async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slu
   const stat = fs.statSync(imagePath);
   if (stat.size < 15000) {
     log('⚠️', `  [이미지 검수] 파일 너무 작음 (${stat.size}B) → 재생성`);
-    await generateImage(prompt, slug, index);
+    await generateImage(prompt, slug, index, bundleDir);
     return;
   }
 
@@ -511,7 +518,7 @@ async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slu
       log('✅', `  [이미지 검수] ${label} — 합격`);
     } else {
       log('⚠️', `  [이미지 검수] ${label} — 불합격 (${result.reason}) → 재생성`);
-      await generateImage(prompt, slug, index);
+      await generateImage(prompt, slug, index, bundleDir);
     }
   } catch (err) {
     log('⚠️', `  [이미지 검수] API 오류 (${err.message}) → 통과`);
@@ -586,11 +593,12 @@ async function generateContextualImagePrompts(section, topic, body) {
 // ────────────────────────────────────────────────────────────────────────────
 const FLOW_SESSION_FILE = path.join(__dirname, '..', '.flow-session', 'session.json');
 
-async function generateImage(prompt, slug, index) {
+async function generateImage(prompt, slug, index, bundleDir) {
   // index가 'thumb'이면 slug-thumb.webp, 숫자면 slug-01.webp 형태
   const filename = index === 'thumb' ? `${slug}-thumb.webp` : `${slug}-0${index}.webp`;
-  const destPath = path.join(IMAGES_DIR, filename);
-  fs.mkdirSync(IMAGES_DIR, { recursive: true });
+  const dir = bundleDir ?? IMAGES_DIR;
+  const destPath = path.join(dir, filename);
+  fs.mkdirSync(dir, { recursive: true });
 
   // 1) Google Flow (세션 파일 있을 때만 시도)
   const useFlow = process.env.USE_FLOW !== 'false' && fs.existsSync(FLOW_SESSION_FILE);
@@ -658,7 +666,7 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
   const rawTags = [topic.keyword, section.name, ...(topic.tags ?? [])];
   const tags = [...new Set(rawTags.filter(Boolean))].slice(0, 6);
 
-  const thumbUrl = `${BASE_URL}/images/${topic.slug}-thumb.webp`;
+  const thumbUrl = `${topic.slug}-thumb.webp`;
   const coverAlt = `${topic.title} 썸네일`;
 
   return (
@@ -750,9 +758,9 @@ ${subtopicLine}
 
   log('✅', `확정 주제: "${topic.title}" / slug: ${topic.slug}`);
 
-  // 이미지 URL 삽입용
-  const img1Url = `${BASE_URL}/images/${topic.slug}-01.webp`;
-  const img2Url = `${BASE_URL}/images/${topic.slug}-02.webp`;
+  // 이미지 URL 삽입용 (page bundle — 상대 경로)
+  const img1Url = `${topic.slug}-01.webp`;
+  const img2Url = `${topic.slug}-02.webp`;
 
   // ── TURN 3: 본문 집필 ──────────────────────────────────────────────────────
   log('✍️', '[Turn 3] 본문 집필 중...');
@@ -892,7 +900,8 @@ export async function runForSection(section, options = {}) {
     // STEP 7 (Claude 완전 검수)는 이미지 생성 완료 후 실행
   }
 
-  const postPath = path.join(POSTS_DIR, section.dir, `${topic.slug}.md`);
+  const bundleDir = path.join(POSTS_DIR, section.dir, topic.slug);
+  const postPath  = path.join(bundleDir, 'index.md');
   if (fs.existsSync(postPath)) {
     log('⚠️', `이미 존재: ${postPath} → 스킵`);
     return;
@@ -908,19 +917,19 @@ export async function runForSection(section, options = {}) {
 
   // 본문 이미지 1
   try {
-    img1 = await generateImage(p1, topic.slug, 1);
+    img1 = await generateImage(p1, topic.slug, 1, bundleDir);
   } catch (err) {
     log('⚠️', `  본문 이미지 1 생성 실패 (${err.message})`);
   }
   // 본문 이미지 2
   try {
-    await generateImage(p2, topic.slug, 2);
+    await generateImage(p2, topic.slug, 2, bundleDir);
   } catch (err) {
     log('⚠️', `  본문 이미지 2 생성 실패 (${err.message})`);
   }
   // 썸네일
   try {
-    await generateImage(pThumb, topic.slug, 'thumb');
+    await generateImage(pThumb, topic.slug, 'thumb', bundleDir);
     log('✅', `  썸네일 생성 완료`);
   } catch (err) {
     log('⚠️', `  썸네일 생성 실패 (${err.message})`);
@@ -928,19 +937,19 @@ export async function runForSection(section, options = {}) {
 
   // STEP 8c: Claude 비전으로 각 이미지 검수 → 불합격 시 재생성
   log('🔍', '[STEP 8c] Claude 이미지 품질·주제 적합성 검수...');
-  const img1Path    = path.join(IMAGES_DIR, `${topic.slug}-01.webp`);
-  const img2Path    = path.join(IMAGES_DIR, `${topic.slug}-02.webp`);
-  const thumbPath   = path.join(IMAGES_DIR, `${topic.slug}-thumb.webp`);
-  await claudeCheckAndRegenImage(img1Path,   topic.title, '본문 이미지 1', p1,     topic.slug, 1);
-  await claudeCheckAndRegenImage(img2Path,   topic.title, '본문 이미지 2', p2,     topic.slug, 2);
-  await claudeCheckAndRegenImage(thumbPath,  topic.title, '썸네일',       pThumb, topic.slug, 'thumb');
+  const img1Path    = path.join(bundleDir, `${topic.slug}-01.webp`);
+  const img2Path    = path.join(bundleDir, `${topic.slug}-02.webp`);
+  const thumbPath   = path.join(bundleDir, `${topic.slug}-thumb.webp`);
+  await claudeCheckAndRegenImage(img1Path,   topic.title, '본문 이미지 1', p1,     topic.slug, 1,       bundleDir);
+  await claudeCheckAndRegenImage(img2Path,   topic.title, '본문 이미지 2', p2,     topic.slug, 2,       bundleDir);
+  await claudeCheckAndRegenImage(thumbPath,  topic.title, '썸네일',       pThumb, topic.slug, 'thumb', bundleDir);
 
   // STEP 7: Claude 본문 완전 검수 & 직접 수정 (이미지 완료 후)
   final = await claudeFullReviewAndFix(topic, final);
 
   // 파일 저장
   const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + final;
-  fs.mkdirSync(path.dirname(postPath), { recursive: true });
+  fs.mkdirSync(bundleDir, { recursive: true });
   fs.writeFileSync(postPath, fullContent, 'utf-8');
   log('✅', `포스팅 저장: ${postPath}`);
 

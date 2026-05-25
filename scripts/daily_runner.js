@@ -29,16 +29,25 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
 
 /**
+ * 오늘 날짜 기준 홀/짝으로 발행 그룹 결정
+ * 홀수 날 → 그룹 1 (latest-tech, economy, society, humanities, entertainment)
+ * 짝수 날 → 그룹 2 (health, it-devices, kr-realestate, world-travel, sports)
+ */
+function getTodayGroup() {
+  const kstDate = new Date(Date.now() + 9 * 60 * 60 * 1000);
+  const day = kstDate.getUTCDate();
+  return day % 2 === 1 ? 1 : 2;
+}
+
+/**
  * 다음날 KST 07:10 기준 + index * 10분 오프셋 ISO 날짜
- * 10개 기준: 07:10, 07:20, ..., 08:40
+ * 5개 기준: 07:10, 07:20, 07:30, 07:40, 07:50
  */
 function getPublishDate(sectionIndex) {
   const now = new Date();
-  // 다음날 UTC 자정 (= KST 다음날 09:00) 기준으로 계산
   const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
-  // KST 07:10 = UTC 전날 22:10 → 다음날 UTC 기준으로는 -1h50m = -110분
-  // UTC 00:00 + (-110분 + index*10분) + 9h(KST) = KST 07:10 + index*10분
-  const offsetMinutes = -110 + sectionIndex * 10; // 07:10 KST 시작, 10분 간격
+  // KST 07:10 = UTC 전날 22:10 → UTC 00:00 기준 -110분
+  const offsetMinutes = -110 + sectionIndex * 10;
   tomorrow.setMinutes(tomorrow.getMinutes() + offsetMinutes);
   const kst = new Date(tomorrow.getTime() + 9 * 60 * 60 * 1000);
   const p   = (n) => String(n).padStart(2, '0');
@@ -64,9 +73,13 @@ async function main() {
     return i >= 0 ? args[i + 1].split(',').map((s) => s.trim()) : null;
   })();
 
+  // 그룹 자동 선택 (홀수 날=1, 짝수 날=2) — --only 또는 --from 시 무시
+  const todayGroup = getTodayGroup();
   const targetSections = onlyIds
     ? onlyIds.map((id) => getSectionById(id)).filter(Boolean)
-    : SECTIONS.slice(fromIdx);
+    : fromIdx > 0
+      ? SECTIONS.filter(s => s.group === todayGroup).slice(fromIdx)
+      : SECTIONS.filter(s => s.group === todayGroup);
 
   // ── 브라우저 모드 초기화 ────────────────────────────────────────────────
   let geminiSession = null;
@@ -86,8 +99,8 @@ async function main() {
     log('🔑', 'API 모드 — Gemini API 키 사용');
   }
 
-  log('🚀', `daily_runner 시작 — ${targetSections.length}개 섹션`);
-  log('📅', `예약 발행: 07:10~08:40 KST (다음날, 10분 간격)`);
+  log('🚀', `daily_runner 시작 — 그룹 ${todayGroup} / ${targetSections.length}개 섹션`);
+  log('📅', `예약 발행: 07:10~07:50 KST (다음날, 10분 간격)`);
   console.log('');
 
   // ── 텔레그램 시작 알림 ──────────────────────────────────────────────────
@@ -99,8 +112,9 @@ async function main() {
   await sendTelegram(
     `🚀 트렌드줌 예약발행 작업 시작!\n` +
     `📅 작업일: ${startDate}\n` +
-    `⏰ 발행 예정: ${tomorrowStr} 07:10~08:40 KST\n` +
-    `📝 총 ${targetSections.length}개 섹션 순서대로 진행합니다.`
+    `📂 그룹 ${todayGroup} (${targetSections.map(s=>s.name).join(', ')})\n` +
+    `⏰ 발행 예정: ${tomorrowStr} 07:10~07:50 KST\n` +
+    `📝 총 ${targetSections.length}개 고품질 포스팅 진행합니다.`
   );
 
   const healthSubtopic = getHealthSubtopic();
@@ -109,7 +123,7 @@ async function main() {
 
   for (let i = 0; i < targetSections.length; i++) {
     const section   = targetSections[i];
-    const globalIdx = SECTIONS.findIndex((s) => s.id === section.id);
+    const globalIdx = targetSections.findIndex((s) => s.id === section.id);
     const dateStr   = getPublishDate(globalIdx);
     const subtopic  = section.id === 'health' ? healthSubtopic : null;
 
@@ -161,7 +175,7 @@ function savePostsLog(posts, totalCount) {
     const logData = {
       date:         tomorrow,
       generatedAt:  new Date().toISOString(),
-      publishWindow: `${tomorrow} 07:10~08:40 KST`,
+      publishWindow: `${tomorrow} 07:10~07:50 KST`,
       totalCount,
       posts: posts.map((p, i) => ({
         title:      p.title,
@@ -184,7 +198,7 @@ async function sendTelegramDailyReport(posts, successCount, failCount) {
 
   const lines = [
     `✅ 트렌드줌 예약발행 완료!`,
-    `📅 발행 예정: ${tomorrow} 07:10~08:40 KST`,
+    `📅 발행 예정: ${tomorrow} 07:10~07:50 KST`,
     `성공 ${successCount}개 / 실패 ${failCount}개`,
     '',
   ];
