@@ -167,7 +167,10 @@ async function main() {
   process.stdin.setEncoding('utf-8');
   for await (const chunk of process.stdin) input += chunk;
 
-  const { sectionId, topic, outline, body, imgPrompts = [], dateOverride } = JSON.parse(input);
+  const parsed = JSON.parse(input);
+  // 한국어 범위 표기 ~ 자동 이스케이프 (goldmark 취소선 오인식 방지)
+  parsed.body = (parsed.body ?? '').replace(/(?<!\\)(?<!~)~(?!~)/g, '\\~');
+  const { sectionId, topic, outline, body, imgPrompts = [], dateOverride } = parsed;
   const section = getSectionById(sectionId);
   if (!section) throw new Error(`알 수 없는 섹션: ${sectionId}`);
 

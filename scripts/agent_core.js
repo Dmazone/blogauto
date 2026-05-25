@@ -126,6 +126,10 @@ function existingSlugsForSection(section) {
 async function validateAndFixMarkdown(body, topic) {
   const issues = [];
 
+  // 한국어 범위 표기 ~ 자동 이스케이프 (goldmark 취소선 오인식 방지)
+  // 이미 이스케이프된 \~ 와 이중 ~~ 는 건드리지 않음
+  body = body.replace(/(?<!\\)(?<!~)~(?!~)/g, '\\~');
+
   // 의도치 않은 취소선 (~~텍스트~~)
   const strikeMatches = body.match(/~~[^~\n]{1,100}~~/g);
   if (strikeMatches) {
