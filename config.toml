@@ -11,7 +11,7 @@ buildFuture = false
 
 [services]
   [services.googleAnalytics]
-    ID = "G-2HL16N8SHS"
+    ID = "G-Y39GG6G0N2"
 
 [params]
   author = "트렌드줌"
