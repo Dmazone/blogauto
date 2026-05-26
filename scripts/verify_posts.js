@@ -12,7 +12,7 @@
 
 import https from 'https';
 import { readFileSync, existsSync } from 'fs';
-import { execSync } from 'child_process';
+import { execSync, spawn } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -107,6 +107,18 @@ async function main() {
 
   await sendTelegram(lines.join('\n'));
   console.log('📱 텔레그램 발행 확인 보고 전송 완료');
+
+  // 포스팅이 1개 이상 정상이면 Threads 홍보 자동 시작
+  if (okCount > 0) {
+    console.log('🧵 Threads 홍보 자동 시작...');
+    const child = spawn(
+      process.execPath,
+      [path.join(__dirname, 'threads_poster.js')],
+      { detached: true, stdio: 'ignore', cwd: ROOT }
+    );
+    child.unref();
+    console.log(`🧵 threads_poster.js 실행됨 (PID: ${child.pid})`);
+  }
 }
 
 main().catch(async (err) => {
