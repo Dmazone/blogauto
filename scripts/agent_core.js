@@ -715,8 +715,9 @@ async function runWebPipeline(section, dateOverride) {
   // ── TURN 1: 트렌드 조사 ────────────────────────────────────────────────────
   log('🔍', '[Turn 1] 트렌드 조사 중...');
   session._turnCount = 0; // 새 대화
+  const todayKst = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
   await session.send(
-    `[섹션: ${section.name}] 오늘 날짜: 2026-05-21
+    `[섹션: ${section.name}] 오늘 날짜: ${todayKst}
 ${subtopicLine}
 
 구글 검색으로 이 섹션에서 현재 가장 화제가 되는 트렌드 주제를 3개 조사해줘.
@@ -965,13 +966,17 @@ export async function runForSection(section, options = {}) {
 
   if (!skipSns) {
     log('📣', '[STEP 9] SNS 자동 홍보 시작...');
-    await promoteAll({
-      post:    { ...topic, track: section.dir },
-      outline,
-      validated,
-      imageUrl: img1.sourceUrl,
-      deployWaitSec: Number(process.env.SNS_DEPLOY_WAIT_SEC ?? 90),
-    });
+    try {
+      await promoteAll({
+        post:    { ...topic, track: section.dir },
+        outline,
+        validated,
+        imageUrl: img1.sourceUrl,
+        deployWaitSec: Number(process.env.SNS_DEPLOY_WAIT_SEC ?? 90),
+      });
+    } catch (err) {
+      log('⚠️', `[STEP 9] SNS 홍보 실패 (포스팅은 정상 발행됨): ${err.message}`);
+    }
   }
 
   return { title: topic.title, slug: topic.slug, sectionDir: section.dir };

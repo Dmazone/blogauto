@@ -147,20 +147,34 @@ export class GeminiSession {
     log('⚠️', '로그인 감지 시간 초과 — 계속 시도합니다');
   }
 
+  // ── 세션 살아있는지 확인 ───────────────────────────────────────────────────
+  async isSessionAlive() {
+    try {
+      const url = this.page.url();
+      if (url.includes('accounts.google.com') || url.includes('/signin')) return false;
+      const hasInput = await this.page.evaluate((sels) =>
+        sels.some((s) => !!document.querySelector(s)), SEL.input
+      ).catch(() => false);
+      return hasInput;
+    } catch {
+      return false;
+    }
+  }
+
   // ── 새 대화 시작 ─────────────────────────────────────────────────────────────
   async newConversation() {
-    if (this.gemUrl) {
-      // Gem: 해당 Gem URL로 재이동 (새 대화 시작)
-      await this.page.goto(this.gemUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    const target = this.gemUrl ?? GEMINI_HOME;
+
+    // 세션 죽었으면 재로그인 시도
+    if (!(await this.isSessionAlive())) {
+      log('⚠️', '세션 만료 감지 → 재이동 시도');
+      await this.page.goto(target, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+      await wait(3000);
+      await this._ensureLoggedIn();
     } else {
-      // 일반: 새 채팅 버튼 or 홈으로
-      const btn = await this._tryFind(SEL.newChat);
-      if (btn) {
-        await btn.click();
-      } else {
-        await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded' });
-      }
+      await this.page.goto(target, { waitUntil: 'domcontentloaded', timeout: 30000 });
     }
+
     await wait(2000);
     this._turnCount = 0;
     log('💬', '새 대화 시작');

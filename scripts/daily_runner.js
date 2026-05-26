@@ -21,12 +21,21 @@ import { sendTelegram } from './telegram.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, appendFileSync } from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
+// ── 파일 로그 (Task Scheduler 실행 시 콘솔 출력이 사라지므로 파일에도 기록) ──
+const LOG_DIR  = path.join(__dirname, '..', 'logs');
+const LOG_FILE = path.join(LOG_DIR, `runner-${new Date().toISOString().slice(0, 10)}.log`);
+mkdirSync(LOG_DIR, { recursive: true });
+
+const log = (emoji, msg) => {
+  const line = `[${new Date().toISOString()}] ${emoji}  ${msg}`;
+  console.log(line);
+  try { appendFileSync(LOG_FILE, line + '\n', 'utf8'); } catch {}
+};
 
 /**
  * 오늘 날짜 기준 홀/짝으로 발행 그룹 결정
@@ -130,17 +139,31 @@ async function main() {
     log('📰', `[${i + 1}/${targetSections.length}] ${section.name}${subtopic ? ` (${subtopic})` : ''}`);
     log('📅', `발행 예약: ${dateStr}`);
 
-    try {
-      const result = await runForSection(section, { subtopic, dateOverride: dateStr, skipSns: false });
-      successCount++;
-      if (result?.title && result?.slug) {
-        publishedPosts.push({ ...result, sectionId: section.id });
+    let sectionSuccess = false;
+    // 최대 2회 시도 (첫 실패 시 3분 후 재시도)
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const result = await runForSection(section, { subtopic, dateOverride: dateStr, skipSns: false });
+        successCount++;
+        if (result?.title && result?.slug) {
+          publishedPosts.push({ ...result, sectionId: section.id });
+        } else if (result === undefined) {
+          // 이미 존재하는 포스팅 스킵 — 성공으로 간주
+          log('⏭️', `${section.name}: 이미 발행된 포스팅 스킵`);
+        }
+        sectionSuccess = true;
+        break;
+      } catch (err) {
+        log('❌', `${section.name} 실패 (시도 ${attempt}/2): ${err.message}`);
+        if (process.env.DEBUG) appendFileSync(LOG_FILE, err.stack + '\n', 'utf8');
+        if (attempt < 2) {
+          log('⏳', '3분 후 재시도...');
+          await new Promise((resolve) => setTimeout(resolve, 3 * 60 * 1000));
+        }
       }
-    } catch (err) {
-      failCount++;
-      log('❌', `${section.name} 실패: ${err.message}`);
-      if (process.env.DEBUG) console.error(err.stack);
     }
+
+    if (!sectionSuccess) failCount++;
 
     // 마지막 섹션이 아니면 1분 대기 (글마다 개성 부여)
     if (i < targetSections.length - 1) {
