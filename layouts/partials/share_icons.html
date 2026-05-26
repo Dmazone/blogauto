@@ -17,21 +17,20 @@
 .share-btn-custom {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  vertical-align: middle;
+  padding: 0;
   transition: opacity 0.2s;
+  flex-shrink: 0;
 }
-.share-btn-custom:hover { opacity: 0.85; }
-.share-btn-copy  { background: #555; color: #fff; }
+.share-btn-custom:hover { opacity: 0.8; }
+.share-btn-copy  { background: #666; color: #fff; }
 .share-btn-kakao { background: #FEE500; color: #391B1B; }
-.share-btn-insta { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
+.share-btn-insta { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); color: #fff; }
 #share-toast {
   position: fixed;
   bottom: 30px;
@@ -42,6 +41,7 @@
   padding: 10px 22px;
   border-radius: 20px;
   font-size: 14px;
+  white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;
@@ -55,7 +55,7 @@
 <ul class="share-buttons">
   <!-- 🔗 링크복사 -->
   <li>
-    <button class="share-btn-custom share-btn-copy" onclick="(function(){
+    <button class="share-btn-custom share-btn-copy" title="링크 복사" onclick="(function(){
       navigator.clipboard.writeText('{{ $pageurl }}').then(function(){
         var t=document.getElementById('share-toast');
         t.textContent='🔗 링크가 복사됐어요!';
@@ -64,17 +64,13 @@
       });
     })()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-      링크 복사
     </button>
   </li>
 
   <!-- 💛 카카오톡 -->
   <li>
-    <button class="share-btn-custom share-btn-kakao" onclick="(function(){
-      var url='{{ $pageurl }}';
-      var title='{{ $title | htmlEscape }}';
-      var kakaoUrl='https://sharer.kakao.com/talk/friends/picker/easylink?app_key=&url='+encodeURIComponent(url);
-      navigator.clipboard.writeText(url).then(function(){
+    <button class="share-btn-custom share-btn-kakao" title="카카오톡 공유" onclick="(function(){
+      navigator.clipboard.writeText('{{ $pageurl }}').then(function(){
         var t=document.getElementById('share-toast');
         t.textContent='💛 링크 복사! 카카오톡에 붙여넣기 해주세요';
         t.classList.add('show');
@@ -82,13 +78,12 @@
       });
     })()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.477 3 2 6.477 2 10.5c0 2.667 1.59 5.003 4 6.384V21l3.5-2.1c.814.133 1.645.2 2.5.2 5.523 0 10-3.477 10-7.6C22 6.477 17.523 3 12 3z"/></svg>
-      카카오톡
     </button>
   </li>
 
   <!-- 📷 인스타그램 -->
   <li>
-    <button class="share-btn-custom share-btn-insta" onclick="(function(){
+    <button class="share-btn-custom share-btn-insta" title="인스타그램 공유" onclick="(function(){
       navigator.clipboard.writeText('{{ $pageurl }}').then(function(){
         var t=document.getElementById('share-toast');
         t.textContent='📷 링크 복사! 인스타그램에 붙여넣기 해주세요';
@@ -97,7 +92,6 @@
       });
     })()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-      인스타그램
     </button>
   </li>
 
