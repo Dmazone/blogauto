@@ -27,7 +27,7 @@ buildFuture = false
   TocOpen = false
   ShowWordCount = false
   firebaseDbUrl = ""
-  comments = false
+  comments = true
 
   [params.homeInfoParams]
     Title = "오늘의 트렌드, 여기서 다 본다"
