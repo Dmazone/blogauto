@@ -9,6 +9,10 @@ enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 
+[services]
+  [services.googleAnalytics]
+    ID = "G-2HL16N8SHS"
+
 [params]
   author = "트렌드줌"
   description = "최신기술·경제·사회·인문·연예·건강·IT기기·부동산·여행·스포츠까지. 오늘의 트렌드를 한눈에."
