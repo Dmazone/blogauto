@@ -84,6 +84,8 @@ export class GeminiSession {
       locale:     'ko-KR',
       timezoneId: 'Asia/Seoul',
     });
+    // 클립보드 권한 부여 (페이스트 자동화에 필수)
+    await this.context.grantPermissions(['clipboard-read', 'clipboard-write']);
     this.page = await this.context.newPage();
 
     // 먼저 홈으로 이동해서 로그인 확인
@@ -195,22 +197,68 @@ export class GeminiSession {
     // 입력창 찾기
     const inputEl = await this._findEl(SEL.input, '입력창');
     await inputEl.click();
-    await wait(300);
+    await wait(500);
 
-    // 클립보드로 붙여넣기 (긴 프롬프트)
+    // 텍스트 삽입: execCommand → clipboard+paste → fill 순서로 폴백
+    let inserted = false;
+
+    // 1단계: document.execCommand (contenteditable에서 가장 안정적)
     try {
-      await this.page.evaluate((t) => navigator.clipboard.writeText(t), text);
-      await this.page.keyboard.press('Control+v');
-    } catch {
-      // 클립보드 실패 시 직접 입력
-      await inputEl.fill(text);
+      await this.page.evaluate((t) => {
+        const el = document.querySelector('rich-textarea .ql-editor')
+          || document.querySelector('[contenteditable="true"][aria-multiline="true"]')
+          || document.querySelector('div[role="textbox"][contenteditable="true"]');
+        if (el) { el.focus(); document.execCommand('insertText', false, t); }
+      }, text);
+      await wait(400);
+      const len = await inputEl.evaluate((el) => (el.innerText ?? '').trim().length);
+      if (len > 5) inserted = true;
+    } catch {}
+
+    // 2단계: clipboard + Ctrl+V
+    if (!inserted) {
+      try {
+        await this.page.evaluate((t) => navigator.clipboard.writeText(t), text);
+        await inputEl.click();
+        await this.page.keyboard.press('Control+v');
+        await wait(500);
+        const len = await inputEl.evaluate((el) => (el.innerText ?? '').trim().length);
+        if (len > 5) inserted = true;
+      } catch {}
     }
+
+    // 3단계: Playwright fill (최후 수단)
+    if (!inserted) {
+      try {
+        await inputEl.fill(text);
+        await wait(300);
+      } catch {}
+    }
+
     await wait(400);
+
+    // 전송 버튼이 활성화될 때까지 최대 5초 대기
+    await this.page.waitForFunction(
+      (sels) => sels.some((s) => {
+        const btn = document.querySelector(s);
+        return btn && !btn.disabled && btn.getAttribute('aria-disabled') !== 'true';
+      }),
+      SEL.send,
+      { timeout: 5000 }
+    ).catch(() => {});
 
     // 전송
     const sendBtn = await this._tryFind(SEL.send);
     if (sendBtn) {
-      await sendBtn.click();
+      const isDisabled = await sendBtn.evaluate(
+        (el) => el.disabled || el.getAttribute('aria-disabled') === 'true'
+      ).catch(() => false);
+      if (!isDisabled) {
+        await sendBtn.click();
+      } else {
+        log('⚠️', '전송 버튼 비활성 → Enter 키로 전송');
+        await this.page.keyboard.press('Enter');
+      }
     } else {
       await this.page.keyboard.press('Enter');
     }

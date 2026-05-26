@@ -28,6 +28,7 @@ buildFuture = false
   ShowWordCount = false
   firebaseDbUrl = ""
   comments = true
+  walineServerUrl = ""  # Vercel 배포 후 URL 입력: https://your-app.vercel.app
 
   [params.homeInfoParams]
     Title = "오늘의 트렌드, 여기서 다 본다"
