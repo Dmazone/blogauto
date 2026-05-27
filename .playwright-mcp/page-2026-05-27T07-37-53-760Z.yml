@@ -1,0 +1,269 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - button [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e8]:
+            - generic [ref=e9]:
+              - generic [ref=e11]:
+                - generic [ref=e55] [cursor=pointer]:
+                  - generic [ref=e56]: 34평
+                  - generic [ref=e57]: 27.3억
+                - generic [ref=e59] [cursor=pointer]:
+                  - generic [ref=e60]: 14평
+                  - generic [ref=e61]: 3억
+                - generic [ref=e62] [cursor=pointer]:
+                  - generic [ref=e63]: 62평
+                  - generic [ref=e64]: 62억
+                - generic [ref=e66] [cursor=pointer]:
+                  - generic [ref=e67]: 18평
+                  - generic [ref=e68]: 13.3억
+                - generic [ref=e71] [cursor=pointer]:
+                  - generic [ref=e72]: 21평
+                  - generic [ref=e73]: 26억
+                  - generic [ref=e74]: 42명 보는중
+                - generic [ref=e75] [cursor=pointer]:
+                  - generic [ref=e76]: 41평
+                  - generic [ref=e77]: 34.5억
+                - generic [ref=e79] [cursor=pointer]:
+                  - generic [ref=e80]: 41평
+                  - generic [ref=e81]: 34억
+                - generic [ref=e85] [cursor=pointer]:
+                  - generic [ref=e86]: 80평
+                  - generic [ref=e87]: 43억
+                - generic [ref=e90] [cursor=pointer]:
+                  - generic [ref=e91]: 100평
+                  - generic [ref=e92]: 155억
+                - generic [ref=e93] [cursor=pointer]:
+                  - generic [ref=e94]: 31평
+                  - generic [ref=e95]: 32.5억
+                - generic [ref=e96] [cursor=pointer]:
+                  - generic [ref=e97]: 40평
+                  - generic [ref=e98]: 27억
+                  - generic [ref=e99]: 12명 보는중
+                - generic [ref=e101] [cursor=pointer]:
+                  - generic [ref=e102]: 34평
+                  - generic [ref=e103]: 60.5억
+                  - generic [ref=e105]: 51명 보는중
+                - generic [ref=e106] [cursor=pointer]:
+                  - generic [ref=e107]: 17평
+                  - generic [ref=e108]: 3.9억
+                - generic [ref=e109] [cursor=pointer]:
+                  - generic [ref=e110]: 31평
+                  - generic [ref=e111]: 22억
+                - generic [ref=e115] [cursor=pointer]:
+                  - generic [ref=e116]: 53평
+                  - generic [ref=e117]: 26.7억
+                - generic [ref=e119] [cursor=pointer]:
+                  - generic [ref=e120]: 44평
+                  - generic [ref=e121]: 45억
+                - generic [ref=e122] [cursor=pointer]:
+                  - generic [ref=e123]: 43평
+                  - generic [ref=e124]: 28.5억
+                - generic [ref=e126] [cursor=pointer]:
+                  - generic [ref=e127]: 20평
+                  - generic [ref=e128]: 11.1억
+                - generic [ref=e129] [cursor=pointer]:
+                  - generic [ref=e130]: 43평
+                  - generic [ref=e131]: 45억
+                - generic [ref=e133] [cursor=pointer]:
+                  - generic [ref=e134]: 31평
+                  - generic [ref=e135]: 21억
+                - generic [ref=e136] [cursor=pointer]:
+                  - generic [ref=e137]: 31평
+                  - generic [ref=e138]: 26.3억
+                - generic [ref=e139] [cursor=pointer]:
+                  - generic [ref=e140]: 12평
+                  - generic [ref=e141]: 2.8억
+                - generic [ref=e142] [cursor=pointer]:
+                  - generic [ref=e143]: 41평
+                  - generic [ref=e144]: 10.5억
+                - generic [ref=e149] [cursor=pointer]: 10명 보는중
+                - generic [ref=e154] [cursor=pointer]:
+                  - generic [ref=e155]: 35평
+                  - generic [ref=e156]: 54억
+                  - generic [ref=e157]: 14명 보는중
+                - generic [ref=e161] [cursor=pointer]:
+                  - generic [ref=e162]: 12평
+                  - generic [ref=e163]: 3.4억
+                - generic [ref=e173] [cursor=pointer]:
+                  - generic [ref=e174]: 예정
+                  - generic [ref=e175]: 분양
+                - generic [ref=e177] [cursor=pointer]:
+                  - generic [ref=e178]: 
+                  - generic [ref=e179]: 7호선
+                  - text: 
+              - generic:
+                - generic [ref=e181]: 50m
+                - link [ref=e182] [cursor=pointer]:
+                  - /url: https://ssl.pstatic.net/static/maps/mantle/notice/legal.html
+                  - img [ref=e183]
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: © NAVER Corp.
+            - generic [ref=e184] [cursor=pointer]:
+              - generic [ref=e185]: NEW
+              - text: 봄꽃 사진전 보러가기
+              - button [ref=e186]:
+                - img [ref=e187]
+            - link [ref=e190] [cursor=pointer]:
+              - /url: /my/items
+              - img
+              - text: 집 내놓기
+              - generic [ref=e191]: 빠르게 거래하려면?
+            - link [ref=e196] [cursor=pointer]:
+              - /url: /region/11680104/item-catalog
+              - text: 강남구 청담동 주변 매물 보기
+            - generic [ref=e197]:
+              - generic [ref=e198]:
+                - button [ref=e199] [cursor=pointer]:
+                  - img [ref=e200]
+                - button [ref=e202] [cursor=pointer]:
+                  - img [ref=e203]
+              - generic [ref=e205]:
+                - button [ref=e206] [cursor=pointer]:
+                  - img [ref=e207]
+                - button [ref=e211] [cursor=pointer]: 지도
+                - button [ref=e213] [cursor=pointer]:
+                  - generic [ref=e214]: 필터
+                - button [ref=e216] [cursor=pointer]:
+                  - generic [ref=e217]: 주변
+                - button [ref=e218] [cursor=pointer]:
+                  - generic [ref=e219]: 거리
+                - button [ref=e221] [cursor=pointer]: 정책
+                - button [ref=e222] [cursor=pointer]: 숨김
+                - button [ref=e224] [cursor=pointer]:
+                  - img
+          - generic [ref=e225]:
+            - group [ref=e226]:
+              - generic [ref=e227]: 검색
+              - generic [ref=e228]:
+                - generic [ref=e229]:
+                  - textbox [ref=e230]:
+                    - /placeholder: 아파트, 지역 또는 학교명으로 검색
+                  - button [ref=e231] [cursor=pointer]: 검색하기
+                - link [ref=e232] [cursor=pointer]:
+                  - /url: /ranking
+                  - generic [ref=e233]:
+                    - img [ref=e234]
+                    - generic [ref=e237]: 실시간
+                  - generic [ref=e239]:
+                    - generic [ref=e240]: "1"
+                    - generic [ref=e241]: 써밋더힐
+                    - generic [ref=e242]: 1,716명
+                - generic [ref=e247]:
+                  - list [ref=e249]:
+                    - listitem [ref=e250]:
+                      - button [ref=e251] [cursor=pointer]: 매매
+                    - listitem [ref=e252]:
+                      - button [ref=e253] [cursor=pointer]: 유형
+                    - listitem [ref=e254]:
+                      - button [ref=e255] [cursor=pointer]: 평형
+                    - listitem [ref=e256]:
+                      - button [ref=e257] [cursor=pointer]: 가격
+                    - listitem [ref=e258]:
+                      - button [ref=e259] [cursor=pointer]: 세대수
+                    - listitem [ref=e260]:
+                      - button [ref=e261] [cursor=pointer]: 입주년차
+                    - listitem [ref=e262]:
+                      - button [ref=e263] [cursor=pointer]: 용적률
+                    - listitem [ref=e264]:
+                      - button [ref=e265] [cursor=pointer]: 건폐율
+                    - listitem [ref=e266]:
+                      - button [ref=e267] [cursor=pointer]: 전세가율
+                    - listitem [ref=e268]:
+                      - button [ref=e269] [cursor=pointer]: 갭가격
+                    - listitem [ref=e270]:
+                      - button [ref=e271] [cursor=pointer]: 임대사업율
+                    - listitem [ref=e272]:
+                      - button [ref=e273] [cursor=pointer]: 월세수익률
+                    - listitem [ref=e274]:
+                      - button [ref=e275] [cursor=pointer]: 주차공간
+                    - listitem [ref=e276]:
+                      - button [ref=e277] [cursor=pointer]: 현관구조
+                    - listitem [ref=e278]:
+                      - button [ref=e279] [cursor=pointer]: 난방방식
+                  - button [ref=e280] [cursor=pointer]:
+                    - img [ref=e281]
+                - link [ref=e283] [cursor=pointer]:
+                  - /url: "#"
+                  - text: 호갱노노
+            - generic [ref=e285]:
+              - list [ref=e286]:
+                - listitem [ref=e287]:
+                  - link [ref=e288] [cursor=pointer]:
+                    - /url: /offer
+                    - generic [ref=e289]: 분양
+                - listitem [ref=e291]:
+                  - link [ref=e292] [cursor=pointer]:
+                    - /url: /community
+                    - text: 이야기
+                - listitem [ref=e293]:
+                  - link [ref=e294] [cursor=pointer]:
+                    - /url: "#"
+                    - text: 재건축
+                - listitem [ref=e295]:
+                  - link [ref=e296] [cursor=pointer]:
+                    - /url: /auction
+                    - text: 경매
+                - listitem [ref=e297]:
+                  - link [ref=e298] [cursor=pointer]:
+                    - /url: /news
+                    - text: 뉴스
+                - listitem [ref=e299]:
+                  - link [ref=e300] [cursor=pointer]:
+                    - /url: /ranking?tab=dailyReport
+                    - text: 오늘
+              - generic [ref=e302]:
+                - button [ref=e303] [cursor=pointer]: 학원가
+                - button [ref=e304] [cursor=pointer]: 가격변동
+                - button [ref=e305] [cursor=pointer]: 개발호재
+                - button [ref=e306] [cursor=pointer]: 상권
+                - button [ref=e307] [cursor=pointer]: 경사/고도
+                - button [ref=e308] [cursor=pointer]: 거래량
+                - button [ref=e309] [cursor=pointer]: 신고가
+                - button [ref=e310] [cursor=pointer]: 직장인연봉
+                - button [ref=e311] [cursor=pointer]: 인구
+                - button [ref=e312] [cursor=pointer]: 공급
+                - button [ref=e313] [cursor=pointer]: 출근
+                - button [ref=e314] [cursor=pointer]: 분위지도
+                - button [ref=e315] [cursor=pointer]: 외지인비율
+                - button [ref=e316] [cursor=pointer]: 하락거래
+                - button [ref=e317] [cursor=pointer]: 미분양
+                - button [ref=e318] [cursor=pointer]: 역전세
+                - button [ref=e319] [cursor=pointer]: 배송생활권
+          - button [ref=e321] [cursor=pointer]:
+            - img [ref=e322]
+        - generic [ref=e326]:
+          - heading [level=2] [ref=e327]: 호갱노노의 강력한 기능을 무료로 사용해보세요.
+          - paragraph [ref=e328]: 200만 회원과 부동산 전문가들이 추천하는 호갱노노 앱을 설치하고, 더 편하게 이용하세요!
+          - textbox [ref=e330]:
+            - /placeholder: 휴대전화번호를 입력해 주세요
+          - link [ref=e331] [cursor=pointer]:
+            - /url: "#"
+            - text: 설치 SMS 보내기
+          - generic [ref=e332]:
+            - link [ref=e333] [cursor=pointer]:
+              - /url: "#"
+              - text: 호갱노노에 문의하기
+            - link [ref=e334] [cursor=pointer]:
+              - /url: /privacy
+              - text: 개인정보 및 이용약관 보기
+          - link [ref=e335] [cursor=pointer]:
+            - /url: "#"
+            - img [ref=e337]
+      - textbox
+    - list
+  - dialog "게이트웨이 광고":
+    - generic:
+      - heading "게이트웨이 광고" [level=2]
+    - iframe [ref=e340]:
+      - link [ref=f29e3] [cursor=pointer]:
+        - /url: https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjsvd_O4MGupaIhBYZ07SEXD9_t0dIy-v9xZC8KBOyTV2SET7yk1NiMPSLPW6XYZK9EHg6bztTg8nIvyzzav2uxdDVZDdcLHWO7hyaWle-JqFnq4L9X2pfxEe6Fa7ex9C_jtjQk_X7vdgQYWsXGmoT9HkzCbfNxvSYzvx_c13WX-BE_EcVI0SM6Ae0ABh2l75fyHPVwXRZykgHuvizXypxWH78LNzutaPS0voLy85LFBB64hvTx23MTAg9RBEiJvnCO9kQ4KNKQRQ92tejTcd_XvDuuKccD-51UUZYDoR3DN7rcaNbrliwl0M-ryREjicv-J3bgONlWJtQsZqCQ5hdkv8Zuun3T8dLp00DAtOLT0JzuCGI-vrIvkqwxMqMe1CacBglvoFD1LUqX2UUQc&sai=AMfl-YT1ld5rvcqUNiwW727IhSWfOIctuZ1pezEiF0wtv2PnB4k7nBRY_rghHo7PR80XTqzCrcqVH8lunuq3PR79H-pbh5LEVApChoiDDIegC35UWv15r0EhxRCgAQ2lSJbZv55bgzbdKjzk-zlYa25yYJ5xZwM-VpXKdPQvCnFzpJQj3ArdEzeyQHn8wCk4Bw9pep__TP4Bm8IndrIisEkF9CXVIl2txfClWN1BP9NeXofsuAoyawtf8RQhx6WEh88K9E8PjocQH8eGO9GvU_sZvre0ptiMhTjH6K0KiEV0sK4lzzSIofI21mLikJqw-dvJb_7JMPixMTlw6iS0BRx7sjCcLSi5-qK_98i3bscubP_FwB94Cnkuzw&sig=Cg0ArKJSzEOkw4i5zAQ3EAE&fbs_aeid=%5Bgw_fbsaeid%5D&urlfix=1&adurl=https://mdirect.kbinsure.co.kr/websquare/mobilePromotion.jsp%3Fpid%3D5130048%26code%3D0045%26page%3Dm_houseFire_prod1%26utm_source%3DDA%26utm_medium%3D%25ED%2598%25B8%25EA%25B0%25B1%25EB%2585%25B8%25EB%2585%25B8%26utm_campaign%3D20260512_houseFire_prod1%26utm_term%3D%25ED%2598%25B8%25EA%25B0%25B1%25EB%2585%25B8%25EB%2585%25B8_DA_%25EC%25A3%25BC%25ED%2583%259D%25ED%2599%2594%25EC%259E%25AC_%25EB%25A9%2594%25EC%259D%25B8%25ED%258C%259D%25EC%2597%2585_%25EC%2586%258C%25EC%259E%25ACB%26utm_content%3D51300480045
+        - img [ref=f29e4]
+    - generic:
+      - generic:
+        - checkbox "오늘 하루 보지않기"
+        - generic: 오늘 하루 보지않기
+      - button "닫기"

@@ -1,0 +1,11 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e6]: 앗!
+    - paragraph [ref=e7]: 페이지가 존재하지 않습니다.
+    - paragraph [ref=e8]: URL이 잘못됐거나 삭제된 페이지입니다.
+  - generic [ref=e9]:
+    - link "홈으로 돌아가기" [ref=e10] [cursor=pointer]:
+      - /url: /
+    - link "앱 설치하기" [ref=e11] [cursor=pointer]:
+      - /url: https://hogangnono.com/install
+      - generic [ref=e12]: 앱 설치하기

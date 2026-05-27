@@ -1,0 +1,29 @@
+- generic [ref=e2]:
+  - link "본문 바로가기" [ref=e4] [cursor=pointer]:
+    - /url: "#container"
+  - banner [ref=e5]
+  - generic [ref=e8]:
+    - link "네이버" [ref=e10] [cursor=pointer]:
+      - /url: https://www.naver.com
+      - heading "네이버" [level=1] [ref=e11]:
+        - generic [ref=e12]: 네이버
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - heading "2단계 인증 알림 발송 완료" [level=2] [ref=e17]
+        - paragraph [ref=e18]: 설정한 기기에서 인증 알림을 확인하세요.
+      - paragraph [ref=e19]:
+        - img "네이버 회원정보 2단계 인증요청을 승인하시겠습니까? 유효시간 59초" [ref=e20]
+      - generic [ref=e21]:
+        - checkbox "이 브라우저는 “2단계 인증” 없이 로그인 합니다." [ref=e22] [cursor=pointer]
+        - generic [ref=e23] [cursor=pointer]: 이 브라우저는 “2단계 인증” 없이 로그인 합니다.
+      - button "알림 다시 보내기" [ref=e24] [cursor=pointer]
+      - button "OTP 인증번호를 입력하여 로그인 하기" [ref=e25] [cursor=pointer]
+  - contentinfo [ref=e26]:
+    - list [ref=e28]:
+      - listitem [ref=e29]:
+        - link "네이버" [ref=e30] [cursor=pointer]:
+          - /url: http://www.navercorp.com
+          - generic [ref=e32]: 네이버
+      - listitem [ref=e33]:
+        - link "회원정보 고객센터" [ref=e34] [cursor=pointer]:
+          - /url: https://help.naver.com/alias/membership/p.membership/main.naver

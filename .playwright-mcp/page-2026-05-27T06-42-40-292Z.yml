@@ -1,0 +1,458 @@
+- iframe [active] [ref=e2]:
+  - generic [active] [ref=f1e1]:
+    - generic [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - link "NAVER" [ref=f1e5] [cursor=pointer]:
+          - /url: http://www.naver.com
+        - link "블로그" [ref=f1e6] [cursor=pointer]:
+          - /url: https://blog.naver.com
+      - link "드마" [ref=f1e9] [cursor=pointer]:
+        - /url: https://blog.naver.com/PostList.naver?blogId=myubel
+        - strong [ref=f1e10]: 드마
+      - search [ref=f1e11]:
+        - group "블로그 검색" [ref=f1e13]:
+          - generic [ref=f1e14]: 블로그 검색
+          - generic [ref=f1e15]:
+            - textbox "이 블로그에서 검색" [ref=f1e16]
+            - generic [ref=f1e17]: 이 블로그에서 검색
+            - button "검색" [ref=f1e18] [cursor=pointer]
+      - button "카테고리 열기" [ref=f1e21] [cursor=pointer]
+    - generic [ref=f1e28]:
+      - generic:
+        - generic [ref=f1e30]:
+          - button [ref=f1e33] [cursor=pointer]
+          - button "공감 0" [ref=f1e35]:
+            - button "공감 0" [ref=f1e37]:
+              - generic [ref=f1e38]: 공감
+              - generic [ref=f1e39]: "0"
+        - button "첫 댓글을 남겨보세요" [ref=f1e41] [cursor=pointer]:
+          - generic [ref=f1e43]:
+            - emphasis [ref=f1e44]: 첫 댓글을 남겨보세요
+            - emphasis
+      - link "공유하기" [ref=f1e45] [cursor=pointer]:
+        - /url: "#"
+        - img
+        - generic [ref=f1e46]: 공유하기
+    - generic [ref=f1e48]:
+      - link "메뉴 바로가기" [ref=f1e49] [cursor=pointer]:
+        - /url: "#blog-menu"
+      - link "본문 바로가기" [ref=f1e50] [cursor=pointer]:
+        - /url: "#post_1"
+      - list [ref=f1e53]:
+        - listitem [ref=f1e54]:
+          - link "내 블로그" [ref=f1e55] [cursor=pointer]:
+            - /url: https://blog.naver.com/MyBlog.naver
+        - listitem [ref=f1e56]:
+          - link "이웃블로그" [ref=f1e57] [cursor=pointer]:
+            - /url: https://nid.naver.com/nidlogin.login?mode=form&url=https://blog.naver.com/myubel
+        - listitem [ref=f1e58]:
+          - link "블로그 홈" [ref=f1e59] [cursor=pointer]:
+            - /url: https://section.blog.naver.com
+        - listitem [ref=f1e60]:
+          - link "로그인" [ref=f1e61] [cursor=pointer]:
+            - /url: https://nid.naver.com/nidlogin.login?mode=form&url=https://blog.naver.com/myubel
+            - generic [ref=f1e62]: 로그인
+        - listitem:
+          - strong [ref=f1e63]: 사용자 링크
+      - generic [ref=f1e65]:
+        - table "블로그 메뉴" [ref=f1e69]:
+          - caption:
+            - generic [ref=f1e70]: 블로그 메뉴
+          - rowgroup [ref=f1e71]:
+            - row "프롤로그 블로그 안부" [ref=f1e72]:
+              - cell "프롤로그 블로그" [ref=f1e73]:
+                - list:
+                  - listitem [ref=f1e74]:
+                    - link "프롤로그" [ref=f1e75] [cursor=pointer]:
+                      - /url: https://blog.naver.com/prologue/PrologueList.naver?blogId=myubel&skinType=&skinId=&from=menu
+                  - listitem [ref=f1e76]:
+                    - link "블로그" [ref=f1e77] [cursor=pointer]:
+                      - /url: https://blog.naver.com/PostList.naver?blogId=myubel&categoryNo=74&skinType=&skinId=&from=menu
+              - cell "안부" [ref=f1e78]:
+                - list [ref=f1e79]:
+                  - listitem [ref=f1e80]:
+                    - link "안부" [ref=f1e81] [cursor=pointer]:
+                      - /url: https://blog.naver.com/guestbook/GuestBookList.naver?blogId=myubel&skinType=&skinId=&from=menu
+        - generic [ref=f1e83]:
+          - generic [ref=f1e85]:
+            - heading "블로그" [level=2] [ref=f1e86]
+            - generic [ref=f1e88]:
+              - generic:
+                - heading "부동산/ 재테크 1개의 글" [level=4] [ref=f1e89]:
+                  - button "부동산/ 재테크" [ref=f1e90] [cursor=pointer]:
+                    - strong [ref=f1e91]: 부동산/ 재테크
+                  - text: 1개의 글
+                - button "부동산/ 재테크 목록열기" [ref=f1e92] [cursor=pointer]:
+                  - generic [ref=f1e93]: 부동산/ 재테크
+                  - text: 목록열기
+            - generic [ref=f1e97]:
+              - table [ref=f1e98]:
+                - rowgroup [ref=f1e99]:
+                  - row [ref=f1e100]:
+                    - cell [ref=f1e101]
+                    - cell [ref=f1e102]
+                    - cell [ref=f1e103]
+              - generic [ref=f1e105]:
+                - generic [ref=f1e108]:
+                  - link "부동산/ 재테크" [ref=f1e110] [cursor=pointer]:
+                    - /url: /PostList.naver?blogId=myubel&categoryNo=74&from=postList&parentCategoryNo=74
+                  - paragraph [ref=f1e113]:
+                    - generic [ref=f1e114]: 서울 옆세권, 부천 온수역 이편한세상(e편한세상) 임장기
+                  - generic [ref=f1e116]:
+                    - link "프로파일" [ref=f1e118] [cursor=pointer]:
+                      - /url: https://blog.naver.com/myubel
+                      - img "프로파일" [ref=f1e119]
+                    - link "드마" [ref=f1e121] [cursor=pointer]:
+                      - /url: https://blog.naver.com/myubel
+                    - generic [ref=f1e122]: ・ 2026. 2. 19. 9:23
+                  - generic [ref=f1e123]:
+                    - link "URL 복사" [ref=f1e124] [cursor=pointer]:
+                      - /url: "#"
+                    - link " 이웃추가" [ref=f1e125] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=f1e126]: 
+                      - text: 이웃추가
+                    - button " 본문 기타 기능" [ref=f1e129] [cursor=pointer]:
+                      - text: 
+                      - generic [ref=f1e130]: 본문 기타 기능
+                - generic [ref=f1e131]:
+                  - generic [ref=f1e135]:
+                    - paragraph [ref=f1e136]: 부동산 시장이 혼조세라고 하지만, 결국 입지는 거짓말을 하지 않습니다.
+                    - paragraph [ref=f1e137]:
+                      - text: 수원 아파트를 매도하고 새로운 투자처를 물색하던 중, 제 레이더망에 포착된 곳은 바로
+                      - generic [ref=f1e138]: 부천 온수역
+                      - text: 이었습니다.
+                    - paragraph [ref=f1e139]: 마케터로서 데이터를 분석하고, 실거주자 입장에서 발품을 팔아본 결과 'e편한세상 온수역' 은 단순한 경기권 아파트가 아니었습니다. 사실상 '서울 생활권' 이면서 아직 저평가된 구간, 그 현장의 기록을 남깁니다.
+                  - separator [ref=f1e144]
+                  - generic [ref=f1e148]:
+                    - paragraph [ref=f1e149]:
+                      - generic [ref=f1e150]: 갭투자 관점에서 본 3가지 확신 (feat. 1·7호선)
+                    - paragraph [ref=f1e151]
+                    - paragraph [ref=f1e152]:
+                      - generic [ref=f1e153]: "1. 압도적인 교통 편의성: 1호선 & 7호선 더블 역세권"
+                    - paragraph [ref=f1e154]
+                    - paragraph [ref=f1e155]: 임장의 시작은 역에서부터입니다.
+                    - paragraph [ref=f1e156]
+                  - generic [ref=f1e159]:
+                    - link [ref=f1e161] [cursor=pointer]:
+                      - /url: "#"
+                    - paragraph [ref=f1e163]:
+                      - generic [ref=f1e164]: 온수역 4번 출구 사진
+                  - generic [ref=f1e168]:
+                    - paragraph [ref=f1e169]
+                    - paragraph [ref=f1e170]: 온수역 4번 출구입니다. 사진에서 보시다시피 역에서 나오자마자 단지로 이어지는 동선이 매우 짧습니다.
+                    - paragraph [ref=f1e171]:
+                      - text: 부천이라고 하지만,
+                      - generic [ref=f1e172]: 7호선
+                      - text: 을 타면 강남까지 직통으로 연결되고,
+                      - generic [ref=f1e173]: 1호선
+                      - text: 으로 종로/시청 접근성도 탁월합니다.
+                    - paragraph [ref=f1e174]: 직주근접을 중요시하는 세입자 수요가 끊이지 않을 수밖에 없는 입지입니다.
+                    - paragraph [ref=f1e175]
+                  - generic [ref=f1e178]:
+                    - generic [ref=f1e181]:
+                      - link [ref=f1e183] [cursor=pointer]:
+                        - /url: "#"
+                      - link [ref=f1e185] [cursor=pointer]:
+                        - /url: "#"
+                    - paragraph [ref=f1e187]:
+                      - generic [ref=f1e188]: 이편한세상 온수역으로 올라가는 길
+                  - generic [ref=f1e192]:
+                    - paragraph [ref=f1e193]
+                    - paragraph [ref=f1e194]: 역에서 단지로 올라가는 길입니다. 경사가 다소 있으나, 흑석이나 창신쪽에서 느꼈던 숨이 가쁜 정도는 아닌 완만한 경사입니다.
+                    - paragraph [ref=f1e195]: 재개발을 앞둔 빌라 단지를 가로질러 가는데, 당장 재개발이 이루어질 것 같진 않아 보입니다.
+                  - separator [ref=f1e200]
+                  - generic [ref=f1e204]:
+                    - paragraph [ref=f1e205]:
+                      - generic [ref=f1e206]: "2. 단지 내외부 디테일: 브랜드 대단지의 위엄"
+                    - paragraph [ref=f1e207]
+                  - generic [ref=f1e210]:
+                    - link [ref=f1e212] [cursor=pointer]:
+                      - /url: "#"
+                    - paragraph [ref=f1e214]:
+                      - generic [ref=f1e215]: 아파트 전경 사진
+                  - generic [ref=f1e219]:
+                    - paragraph [ref=f1e220]:
+                      - text: 드디어 마주한
+                      - generic [ref=f1e221]: e편한세상 온수역
+                      - text: 의 전경입니다.
+                    - paragraph [ref=f1e222]: 신축 브랜드 아파트다운 깔끔한 외관 도색과 웅장함이 돋보입니다.
+                    - paragraph [ref=f1e223]:
+                      - text: 구축 밭이었던 이 일대에서 확실한
+                      - generic [ref=f1e224]: "'대장주'"
+                      - text: 역할을 하고 있다는 인상을 줍니다.
+                    - paragraph [ref=f1e225]
+                  - generic [ref=f1e228]:
+                    - link [ref=f1e230] [cursor=pointer]:
+                      - /url: "#"
+                    - paragraph [ref=f1e232]:
+                      - generic [ref=f1e233]: 유한공업고등학교 사진
+                  - generic [ref=f1e237]:
+                    - paragraph [ref=f1e238]
+                    - paragraph [ref=f1e239]: 단지 바로 맞은편에는 유한공업고등학교가 위치해 있습니다.
+                    - paragraph [ref=f1e240]: 학교가 인접해 있다는 건 영구 조망권이 확보된다는 뜻이기도 합니다.
+                    - paragraph [ref=f1e241]: 높은 건물이 들어설 확률이 낮아 채광과 통풍 면에서 유리한 점수를 주었습니다.
+                    - paragraph [ref=f1e242]
+                  - generic [ref=f1e245]:
+                    - link [ref=f1e247] [cursor=pointer]:
+                      - /url: "#"
+                    - paragraph [ref=f1e249]:
+                      - generic [ref=f1e250]: 정문 '신뢰의 문' 조형물 사진
+                  - paragraph [ref=f1e255]: 정문(주차장 정문이 아닌, 온수역 방향에서의 도보 정문) 들어가면서 보이는 '신뢰의 문' 이라는 문구가 새겨진 조형물입니다.
+                  - separator [ref=f1e260]
+                  - generic [ref=f1e264]:
+                    - paragraph [ref=f1e265]:
+                      - generic [ref=f1e266]: "3. 커뮤니티와 미래 가치: 지금이 기회인 이유"
+                    - paragraph [ref=f1e267]
+                  - generic [ref=f1e270]:
+                    - generic [ref=f1e273]:
+                      - link [ref=f1e275] [cursor=pointer]:
+                        - /url: "#"
+                      - link [ref=f1e277] [cursor=pointer]:
+                        - /url: "#"
+                    - paragraph [ref=f1e279]:
+                      - generic [ref=f1e280]: 커뮤니티 센터/ 단지 내 조경 사진
+                  - generic [ref=f1e284]:
+                    - paragraph [ref=f1e285]
+                    - paragraph [ref=f1e286]: 단지 내부 조경과 커뮤니티 시설을 둘러봤습니다.
+                    - paragraph [ref=f1e287]: 관리가 매우 잘 되어 있고, 조경수들의 배치도 훌륭합니다.
+                    - paragraph [ref=f1e288]:
+                      - text: 실거주 만족도가 높다는 건 전세가 방어에 유리하다는 뜻이고, 이는 곧
+                      - generic [ref=f1e289]: 갭투자 리스크를 줄여주는 핵심 요소
+                      - text: 가 됩니다.
+                    - paragraph [ref=f1e290]: 특히 40대 가장이나 직장인들이 선호할 만한 차분하고 고급스러운 분위기입니다.
+                    - paragraph [ref=f1e291]
+                  - generic [ref=f1e294]:
+                    - link [ref=f1e296] [cursor=pointer]:
+                      - /url: "#"
+                    - paragraph [ref=f1e298]:
+                      - generic [ref=f1e299]: 맞은편 쌍용 더 플래티넘 공사 현장
+                  - generic [ref=f1e303]:
+                    - paragraph [ref=f1e304]:
+                      - text: 마지막으로 가장 중요한 포인트, 맞은편
+                      - generic [ref=f1e305]: "'쌍용 더 플래티넘'"
+                      - text: 공사 현장입니다.
+                    - paragraph [ref=f1e306]: 이게 왜 중요하냐고요? 나 홀로 아파트가 아니라, 주변이 함께 신축 브랜드 타운으로 변모하고 있다는 증거이기 때문입니다.
+                    - paragraph [ref=f1e307]: 쌍용 더 플래티넘이 완공되면 인프라는 공유되고, 일대의 가치는 동반 상승할 것입니다.
+                    - paragraph [ref=f1e308]:
+                      - generic [ref=f1e309]: 지금의 공사 소음은 미래의 시세 상승 소리
+                      - text: 나 다름없습니다.
+                  - separator [ref=f1e314]
+                  - generic [ref=f1e318]:
+                    - paragraph [ref=f1e319]:
+                      - generic [ref=f1e320]: "[임장 총평]"
+                    - paragraph [ref=f1e321]
+                    - paragraph [ref=f1e322]: 이번 임장을 통해 내린 결론은 명확합니다.
+                    - paragraph [ref=f1e323]
+                    - list [ref=f1e324]:
+                      - listitem [ref=f1e325]:
+                        - paragraph [ref=f1e326]:
+                          - generic [ref=f1e327]: "입지:"
+                          - text: 서울 구로/광명과 딱 붙어있는
+                          - generic [ref=f1e328]: 사실상의 서울
+                      - listitem [ref=f1e329]:
+                        - paragraph [ref=f1e330]:
+                          - generic [ref=f1e331]: "수요:"
+                          - text: 1·7호선 더블 역세권으로 강남/도심 출퇴근 수요 풍부
+                      - listitem [ref=f1e332]:
+                        - paragraph [ref=f1e333]:
+                          - generic [ref=f1e334]: "호재:"
+                          - text: 주변 재개발 및 신축 입주로 인한 주거 환경 개선 지속
+                    - paragraph [ref=f1e335]
+                    - paragraph [ref=f1e336]
+                  - generic [ref=f1e339]:
+                    - generic [ref=f1e342]:
+                      - link [ref=f1e344] [cursor=pointer]:
+                        - /url: "#"
+                      - link [ref=f1e346] [cursor=pointer]:
+                        - /url: "#"
+                    - paragraph [ref=f1e348]:
+                      - generic [ref=f1e349]: 59A/ 59B타입 평면도, 동호수 일부
+                  - generic [ref=f1e353]:
+                    - paragraph [ref=f1e354]
+                    - paragraph [ref=f1e355]: 블로그 지수 분석하듯 부동산을 분석해 봐도, 이곳은 하방 경직성이 강하고 상승 여력이 충분한 곳입니다.
+                    - paragraph [ref=f1e356]: 실거주는 물론 투자 관점에서도 매력적인 선택지임이 틀림없습니다.
+                    - paragraph [ref=f1e357]
+                  - link "e편한세상온수역아파트 경기도 부천시 소사구 경인로 605" [ref=f1e363] [cursor=pointer]:
+                    - /url: "#"
+                    - strong [ref=f1e364]: e편한세상온수역아파트
+                    - paragraph [ref=f1e365]: 경기도 부천시 소사구 경인로 605
+                  - generic [ref=f1e369]:
+                    - paragraph [ref=f1e370]
+                    - paragraph [ref=f1e371]
+                    - paragraph [ref=f1e372]:
+                      - generic [ref=f1e373]: "#부천부동산 #온수역이편한세상 #부천갭투자 #7호선역세권 #서울출퇴근 #부천아파트 #임장기 #부동산투자"
+              - generic [ref=f1e376]:
+                - strong [ref=f1e377]: 태그
+                - link "#부천부동산" [ref=f1e378] [cursor=pointer]:
+                  - /url: /PostListByTagName.naver?blogId=myubel&logType=mylog&tagName=%EB%B6%80%EC%B2%9C%EB%B6%80%EB%8F%99%EC%82%B0
+                  - generic [ref=f1e379]: "#부천부동산"
+                - link "#온수역이편한세상" [ref=f1e381] [cursor=pointer]:
+                  - /url: /PostListByTagName.naver?blogId=myubel&logType=mylog&tagName=%EC%98%A8%EC%88%98%EC%97%AD%EC%9D%B4%ED%8E%B8%ED%95%9C%EC%84%B8%EC%83%81
+                  - generic [ref=f1e382]: "#온수역이편한세상"
+                - link "#부천갭투자" [ref=f1e384] [cursor=pointer]:
+                  - /url: /PostListByTagName.naver?blogId=myubel&logType=mylog&tagName=%EB%B6%80%EC%B2%9C%EA%B0%AD%ED%88%AC%EC%9E%90
+                  - generic [ref=f1e385]: "#부천갭투자"
+                - link "#7호선역세권" [ref=f1e387] [cursor=pointer]:
+                  - /url: /PostListByTagName.naver?blogId=myubel&logType=mylog&tagName=7%ED%98%B8%EC%84%A0%EC%97%AD%EC%84%B8%EA%B6%8C
+                  - generic [ref=f1e388]: "#7호선역세권"
+                - link "#서울출퇴근" [ref=f1e390] [cursor=pointer]:
+                  - /url: /PostListByTagName.naver?blogId=myubel&logType=mylog&tagName=%EC%84%9C%EC%9A%B8%EC%B6%9C%ED%87%B4%EA%B7%BC
+                  - generic [ref=f1e391]: "#서울출퇴근"
+                - link "#부천아파트" [ref=f1e393] [cursor=pointer]:
+                  - /url: /PostListByTagName.naver?blogId=myubel&logType=mylog&tagName=%EB%B6%80%EC%B2%9C%EC%95%84%ED%8C%8C%ED%8A%B8
+                  - generic [ref=f1e394]: "#부천아파트"
+                - link "#임장기" [ref=f1e396] [cursor=pointer]:
+                  - /url: /PostListByTagName.naver?blogId=myubel&logType=mylog&tagName=%EC%9E%84%EC%9E%A5%EA%B8%B0
+                  - generic [ref=f1e397]: "#임장기"
+                - link "#부동산투자" [ref=f1e399] [cursor=pointer]:
+                  - /url: /PostListByTagName.naver?blogId=myubel&logType=mylog&tagName=%EB%B6%80%EB%8F%99%EC%82%B0%ED%88%AC%EC%9E%90
+                  - generic [ref=f1e400]: "#부동산투자"
+              - generic [ref=f1e402]:
+                - generic [ref=f1e403]:
+                  - generic [ref=f1e404]:
+                    - generic [ref=f1e405]:
+                      - button "" [ref=f1e408] [cursor=pointer]:
+                        - generic [ref=f1e409]: 
+                      - button "공감 0" [ref=f1e410]:
+                        - button "공감 0" [ref=f1e412]: 공감 0
+                    - link " 이 글에 공감한 블로거 열고 닫기" [ref=f1e413] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=f1e415]: 
+                      - generic [ref=f1e416]: 이 글에 공감한 블로거 열고 닫기
+                  - button " 댓글 쓰기  이 글에 댓글 단 블로거 열고 닫기" [ref=f1e419] [cursor=pointer]:
+                    - generic [ref=f1e420]: 
+                    - text: 댓글
+                    - emphasis
+                    - emphasis [ref=f1e421]: 쓰기
+                    - generic [ref=f1e423]:
+                      - generic [ref=f1e424]: 
+                      - generic [ref=f1e425]: 이 글에 댓글 단 블로거 열고 닫기
+                - generic [ref=f1e427]:
+                  - generic [ref=f1e431]:
+                    - link "블로그 보내기" [ref=f1e432] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=f1e433]: 블로그 보내기
+                    - link "카페 보내기" [ref=f1e434] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=f1e435]: 카페 보내기
+                    - link "Keep 보내기" [ref=f1e436] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=f1e437]: Keep 보내기
+                    - link "메모 보내기" [ref=f1e438] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=f1e439]: 메모 보내기
+                    - link "기타 보내기 펼치기" [ref=f1e440] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=f1e441]: 기타 보내기 펼치기
+                  - link "인쇄" [ref=f1e444] [cursor=pointer]:
+                    - /url: "#"
+              - text:  
+              - table [ref=f1e445]:
+                - rowgroup [ref=f1e446]:
+                  - row [ref=f1e447]:
+                    - cell [ref=f1e448]
+                    - cell [ref=f1e449]
+                    - cell [ref=f1e450]
+            - generic [ref=f1e455]:
+              - generic [ref=f1e456]:
+                - heading "이 블로그 부동산/ 재테크 카테고리 글" [level=4] [ref=f1e457]:
+                  - text: 이 블로그
+                  - link "부동산/ 재테크" [ref=f1e458] [cursor=pointer]:
+                    - /url: /PostList.naver?blogId=myubel&categoryNo=74&from=postList
+                    - strong [ref=f1e459]: 부동산/ 재테크
+                  - text: 카테고리 글
+                - link "전체글 보기" [ref=f1e460] [cursor=pointer]:
+                  - /url: /PostList.naver?blogId=myubel&categoryNo=74&from=postList
+              - table "부동산/ 재테크글 목록" [ref=f1e463]:
+                - caption:
+                  - generic [ref=f1e464]: 부동산/ 재테크글 목록
+                - rowgroup:
+                  - row "글 제목 작성일":
+                    - columnheader "글 제목":
+                      - generic [ref=f1e468]: 글 제목
+                    - columnheader "작성일":
+                      - generic [ref=f1e469]: 작성일
+                - rowgroup [ref=f1e470]:
+                  - row "서울 옆세권, 부천 온수역 이편한세상(e편한세상) 임장기 2026. 2. 19." [ref=f1e471]:
+                    - cell "서울 옆세권, 부천 온수역 이편한세상(e편한세상) 임장기" [ref=f1e472]:
+                      - link "서울 옆세권, 부천 온수역 이편한세상(e편한세상) 임장기" [ref=f1e475] [cursor=pointer]:
+                        - /url: /PostView.naver?blogId=myubel&logNo=224187781342&parentCategoryNo=&categoryNo=74&viewDate=&isShowPopularPosts=false&from=
+                    - cell "2026. 2. 19." [ref=f1e477]:
+                      - generic [ref=f1e478]: 2026. 2. 19.
+              - button " 화면 최상단으로 이동" [ref=f1e481] [cursor=pointer]:
+                - generic [ref=f1e482]: 
+                - generic [ref=f1e483]: 화면 최상단으로 이동
+          - generic [ref=f1e486]:
+            - generic [ref=f1e490]:
+              - generic [ref=f1e493]:
+                - strong [ref=f1e494]: 드마
+                - generic [ref=f1e495]: myubel
+              - paragraph [ref=f1e496]
+              - paragraph [ref=f1e497]:
+                - link "프로필" [ref=f1e499] [cursor=pointer]:
+                  - /url: https://blog.naver.com/profile/intro.naver?blogId=myubel
+              - link "이웃추가" [ref=f1e501] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f1e502]: 이웃추가
+            - generic [ref=f1e505]:
+              - generic [ref=f1e506] [cursor=pointer]:
+                - heading "카테고리" [level=3] [ref=f1e507]
+                - paragraph [ref=f1e508]:
+                  - button "^" [ref=f1e510]
+              - list [ref=f1e513]:
+                - listitem [ref=f1e514]:
+                  - link "전체보기" [ref=f1e515] [cursor=pointer]:
+                    - /url: "/PostList.naver?blogId=myubel&categoryNo=0&from=postList "
+                  - text: (1)
+                - listitem [ref=f1e516]:
+                  - generic [ref=f1e517]:
+                    - link "부동산/ 재테크" [ref=f1e518] [cursor=pointer]:
+                      - /url: "/PostList.naver?blogId=myubel&from=postList&categoryNo=74 "
+                    - text: (1)
+                - listitem [ref=f1e519]:
+                  - textbox "카테고리 구분선" [disabled] [ref=f1e520]: "-----------------------"
+                - listitem [ref=f1e521]:
+                  - generic [ref=f1e522]:
+                    - link "건강정보" [ref=f1e523] [cursor=pointer]:
+                      - /url: "/PostList.naver?blogId=myubel&from=postList&categoryNo=63 "
+                    - text: (0)
+                - listitem [ref=f1e524]:
+                  - textbox "카테고리 구분선" [disabled] [ref=f1e525]: "-----------------------"
+                - listitem [ref=f1e526]:
+                  - textbox "카테고리 구분선" [disabled] [ref=f1e527]: "-----------------------"
+                - listitem [ref=f1e528]:
+                  - textbox "카테고리 구분선" [disabled] [ref=f1e529]: "-----------------------"
+                - listitem [ref=f1e530]:
+                  - textbox "카테고리 구분선" [disabled] [ref=f1e531]: "-----------------------"
+            - generic [ref=f1e535]:
+              - heading "검색" [level=3] [ref=f1e536]
+              - generic [ref=f1e537]: 글 검색
+              - textbox "글 검색" [ref=f1e538]
+              - button "검색" [ref=f1e539] [cursor=pointer]
+            - generic [ref=f1e541]:
+              - link "RSS 2.0" [ref=f1e542] [cursor=pointer]:
+                - /url: https://rss.blog.naver.com/myubel.xml
+                - generic [ref=f1e543]: RSS 2.0
+              - link "RSS 1.0" [ref=f1e544] [cursor=pointer]:
+                - /url: https://rss.blog.naver.com/myubel.xml?rss=1.0
+                - generic [ref=f1e545]: RSS 1.0
+              - link "ATOM 0.3" [ref=f1e546] [cursor=pointer]:
+                - /url: https://rss.blog.naver.com/myubel.xml?atom=0.3
+                - generic [ref=f1e547]: ATOM 0.3
+            - generic [ref=f1e553]:
+              - paragraph [ref=f1e554]:
+                - generic [ref=f1e555]: "1"
+              - paragraph [ref=f1e556]:
+                - generic [ref=f1e557]: 179,486
+    - generic [ref=f1e567]:
+      - generic [ref=f1e569]:
+        - link "확인" [ref=f1e570] [cursor=pointer]:
+          - /url: "#"
+          - img "확인" [ref=f1e571]
+        - link "취소" [ref=f1e572] [cursor=pointer]:
+          - /url: "#"
+          - img "취소" [ref=f1e573]
+      - link "닫기" [ref=f1e574] [cursor=pointer]:
+        - /url: "#"
+        - img "닫기" [ref=f1e575]

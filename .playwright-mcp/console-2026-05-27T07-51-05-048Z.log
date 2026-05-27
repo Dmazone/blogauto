@@ -1,0 +1,4 @@
+[    1891ms] [ERROR] Permissions policy violation: accelerometer is not allowed in this document. @ https://wtm.pstatic.net/508e018/58b3e8e539ad7984d0de.js:1
+[    1891ms] [WARNING] The deviceorientation events are blocked by permissions policy. See https://github.com/w3c/webappsec-permissions-policy/blob/master/features.md#sensor-features @ https://wtm.pstatic.net/508e018/58b3e8e539ad7984d0de.js:1
+[    1891ms] [ERROR] Permissions policy violation: accelerometer is not allowed in this document. @ https://wtm.pstatic.net/508e018/58b3e8e539ad7984d0de.js:1
+[    1891ms] [WARNING] The devicemotion events are blocked by permissions policy. See https://github.com/w3c/webappsec-permissions-policy/blob/master/features.md#sensor-features @ https://wtm.pstatic.net/508e018/58b3e8e539ad7984d0de.js:1

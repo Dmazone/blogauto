@@ -6,7 +6,10 @@
     "generate": "node scripts/generate-post.js",
     "agent": "node scripts/agent_core.js",
     "bot": "node scripts/claude_telegram_bot.js",
-    "localbot": "node scripts/local_bot.js"
+    "localbot": "node scripts/local_bot.js",
+    "naver-login": "node scripts/naver_login.js",
+    "naver": "node scripts/naver_runner.js",
+    "naver-health": "node scripts/naver_runner.js --category 건강정보"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.55.0",

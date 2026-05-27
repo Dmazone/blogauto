@@ -1,0 +1,125 @@
+- generic [ref=e1]:
+  - generic [ref=e36]:
+    - heading "NAVER blog" [level=1] [ref=e37]:
+      - link "NAVER" [ref=e38] [cursor=pointer]:
+        - /url: https://www.naver.com/
+        - generic [ref=e39]: NAVER
+      - link "blog" [ref=e40] [cursor=pointer]:
+        - /url: https://section.blog.naver.com
+        - generic [ref=e41]: blog
+    - generic [ref=e42]:
+      - generic [ref=e508]: 자동저장 오후 03:52
+      - generic [ref=e43]:
+        - button "저장" [ref=e44] [cursor=pointer]
+        - button "임시저장된 글 보기, 0개" [ref=e45] [cursor=pointer]: "0"
+      - generic [ref=e47]:
+        - button "발행" [active] [ref=e48] [cursor=pointer]:
+          - generic [ref=e49]: 발행
+          - img [ref=e51]
+        - generic [ref=e678]:
+          - generic [ref=e679]:
+            - group [ref=e680]: 카테고리
+            - button "카테고리 목록 버튼" [ref=e683] [cursor=pointer]:
+              - generic [ref=e684]: 부동산/ 재테크
+          - generic [ref=e685]:
+            - group [ref=e686]: 주제
+            - generic "주제 목록 버튼" [ref=e689] [cursor=pointer]: 비즈니스·경제 >
+          - generic [ref=e690]:
+            - heading "공개 설정" [level=4] [ref=e691]
+            - generic [ref=e692]:
+              - generic [ref=e693]:
+                - list:
+                  - listitem [ref=e694]:
+                    - generic [ref=e695]:
+                      - radio "전체공개" [checked] [ref=e696]
+                      - generic [ref=e697] [cursor=pointer]: 전체공개
+                  - listitem [ref=e698]:
+                    - generic [ref=e699]:
+                      - radio "이웃공개" [ref=e700]
+                      - generic [ref=e701] [cursor=pointer]: 이웃공개
+                  - listitem [ref=e702]:
+                    - generic [ref=e703]:
+                      - radio "서로이웃공개" [ref=e704]
+                      - generic [ref=e705] [cursor=pointer]: 서로이웃공개
+                  - listitem [ref=e706]:
+                    - generic [ref=e707]:
+                      - radio "비공개" [ref=e708]
+                      - generic [ref=e709] [cursor=pointer]: 비공개
+              - paragraph [ref=e710]: 모든 사람이 이 글을 볼 수 있습니다.
+          - generic [ref=e711]:
+            - heading "발행 설정" [level=4] [ref=e712]
+            - generic [ref=e713]:
+              - list [ref=e715]:
+                - listitem [ref=e716]:
+                  - generic [ref=e717]:
+                    - checkbox "댓글허용" [checked] [ref=e718]
+                    - generic [ref=e719] [cursor=pointer]: 댓글허용
+                - listitem [ref=e720]:
+                  - generic [ref=e721]:
+                    - checkbox "공감허용" [checked] [ref=e722]
+                    - generic [ref=e723] [cursor=pointer]: 공감허용
+                - listitem [ref=e724]:
+                  - generic [ref=e725]:
+                    - checkbox "검색허용" [checked] [ref=e726]
+                    - generic [ref=e727] [cursor=pointer]: 검색허용
+                  - button "도움말 레이어 열고 닫기" [ref=e729] [cursor=pointer]:
+                    - generic [ref=e730]: 검색 허용 도움말
+                - listitem [ref=e731]:
+                  - generic [ref=e732]:
+                    - checkbox "블로그/카페 공유" [checked] [ref=e733]
+                    - generic [ref=e734] [cursor=pointer]: 블로그/카페 공유
+                  - generic [ref=e735]:
+                    - link "본문 허용" [ref=e736] [cursor=pointer]:
+                      - /url: "#"
+                      - text: 본문 허용
+                    - button "도움말 레이어 열고 닫기" [ref=e738] [cursor=pointer]:
+                      - generic [ref=e739]: 링크 허용 도움말
+                - listitem [ref=e740]:
+                  - generic [ref=e741]:
+                    - checkbox "외부 공유 허용" [checked] [ref=e742]
+                    - generic [ref=e743] [cursor=pointer]: 외부 공유 허용
+                  - button "도움말 레이어 열고 닫기" [ref=e745] [cursor=pointer]:
+                    - generic [ref=e746]: 외부 공유 허용 도움말
+                - listitem [ref=e747]:
+                  - generic [ref=e748]:
+                    - checkbox "CCL표시" [ref=e749]
+                    - generic [ref=e750] [cursor=pointer]: CCL표시
+                  - generic [ref=e751]:
+                    - link "CCL표시 설정":
+                      - /url: "#"
+                      - generic: CCL표시
+                      - text: 설정
+              - button "발행 설정 닫기" [ref=e752] [cursor=pointer]:
+                - generic [ref=e753]: 발행 설정 닫기
+          - generic [ref=e755]:
+            - checkbox "이 설정을 기본값으로 유지" [ref=e756]
+            - generic [ref=e757] [cursor=pointer]: 이 설정을 기본값으로 유지
+          - generic [ref=e758]:
+            - log
+            - generic [ref=e759]:
+              - heading "태그 편집" [level=4] [ref=e760]
+              - generic [ref=e764]:
+                - text: "#"
+                - combobox "태그 입력 (최대 30개)" [ref=e765]
+          - generic [ref=e766]:
+            - heading "발행 시간" [level=4] [ref=e767]
+            - generic [ref=e769]:
+              - list:
+                - listitem [ref=e770]:
+                  - generic [ref=e771]:
+                    - radio "현재" [checked] [ref=e772]
+                    - generic [ref=e773] [cursor=pointer]: 현재
+                - listitem [ref=e774]:
+                  - generic [ref=e775]:
+                    - radio "예약" [ref=e776]
+                    - generic [ref=e777] [cursor=pointer]: 예약
+          - generic [ref=e778]:
+            - generic [ref=e779]:
+              - checkbox "공지사항으로 등록" [ref=e780]
+              - generic [ref=e781] [cursor=pointer]: 공지사항으로 등록
+            - button "발행" [ref=e783] [cursor=pointer]: 발행
+      - button "더보기" [ref=e56] [cursor=pointer]:
+        - generic "더보기" [ref=e57]:
+          - img [ref=e58]
+  - iframe [ref=e468]:
+    

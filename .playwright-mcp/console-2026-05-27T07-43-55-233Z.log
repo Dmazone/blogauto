@@ -1,0 +1,3 @@
+[   11398ms] TypeError: Cannot read properties of undefined (reading 'classList')
+    at HTMLDocument.<anonymous> (https://asil.kr/app/area_list.jsp?os=pc:300:15)
+[   45494ms] [LOG] 검색 실행: 당산삼성래미안 @ https://asil.kr/app/area_list.jsp?os=pc:172

@@ -1,0 +1,300 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e36]:
+      - heading "NAVER blog" [level=1] [ref=e37]:
+        - link "NAVER" [ref=e38] [cursor=pointer]:
+          - /url: https://www.naver.com/
+          - generic [ref=e39]: NAVER
+        - link "blog" [ref=e40] [cursor=pointer]:
+          - /url: https://section.blog.naver.com
+          - generic [ref=e41]: blog
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - button "저장" [ref=e44] [cursor=pointer]
+          - button "임시저장된 글 보기, 0개" [ref=e45] [cursor=pointer]: "0"
+        - button "발행" [ref=e48] [cursor=pointer]:
+          - generic [ref=e49]: 발행
+          - img [ref=e51]
+        - button "더보기" [ref=e56] [cursor=pointer]:
+          - generic "더보기" [ref=e57]:
+            - img [ref=e58]
+    - generic [ref=e63]:
+      - generic [ref=e65]:
+        - banner [ref=e66]:
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "사진 추가" [ref=e70] [cursor=pointer]:
+                - generic [ref=e72]: 사진
+                - generic: 사진 추가
+            - listitem [ref=e73]:
+              - button "MYBOX 추가" [ref=e74] [cursor=pointer]:
+                - generic [ref=e76]: MYBOX
+                - generic: MYBOX 추가
+            - listitem [ref=e77]:
+              - button "동영상 추가" [ref=e78] [cursor=pointer]:
+                - generic [ref=e80]: 동영상
+                - generic: 동영상 추가
+            - listitem [ref=e81]:
+              - button "스티커 추가" [ref=e82] [cursor=pointer]:
+                - generic [ref=e84]: 스티커
+                - generic: 스티커 추가
+            - listitem [ref=e85]:
+              - generic [ref=e86]:
+                - button "인용구 추가" [ref=e87] [cursor=pointer]:
+                  - generic: 인용구 추가
+                - button "인용구 선택" [ref=e89] [cursor=pointer]:
+                  - generic [ref=e90]: 인용구 선택
+                  - generic: 인용구 선택
+                - generic [ref=e91]: 인용구
+            - listitem [ref=e92]:
+              - generic [ref=e93]:
+                - button "구분선 추가" [ref=e94] [cursor=pointer]:
+                  - generic: 구분선 추가
+                - button "구분선 선택" [ref=e96] [cursor=pointer]:
+                  - generic [ref=e97]: 구분선 선택
+                  - generic: 구분선 선택
+                - generic [ref=e98]: 구분선
+            - listitem [ref=e99]:
+              - button "링크 추가" [ref=e100] [cursor=pointer]:
+                - generic [ref=e102]: 링크
+                - generic: 링크 추가
+            - listitem [ref=e103]:
+              - button "파일 추가" [ref=e104] [cursor=pointer]:
+                - generic [ref=e106]: 파일
+                - generic: 파일 추가
+            - listitem [ref=e107]:
+              - button "일정 추가" [ref=e108] [cursor=pointer]:
+                - generic [ref=e110]: 일정
+                - generic: 일정 추가
+            - listitem [ref=e111]:
+              - button "소스코드 추가" [ref=e112] [cursor=pointer]:
+                - generic [ref=e114]: 소스코드
+                - generic: 소스코드 추가
+            - listitem [ref=e115]:
+              - button "표 추가" [ref=e116] [cursor=pointer]:
+                - generic [ref=e118]: 표
+                - generic: 표 추가
+            - listitem [ref=e119]:
+              - button "수식 추가" [ref=e120] [cursor=pointer]:
+                - generic [ref=e122]: 수식
+                - generic: 수식 추가
+            - listitem [ref=e123]
+            - listitem [ref=e126]:
+              - button "장소 추가" [ref=e127] [cursor=pointer]:
+                - generic [ref=e129]: 장소
+                - generic: 장소 추가
+            - listitem [ref=e130]:
+              - button "내돈내산 상품 첨부" [ref=e470] [cursor=pointer]:
+                - generic [ref=e133]: 내돈내산
+                - generic: 내돈내산 상품 첨부
+            - listitem [ref=e134]:
+              - button "글감 검색 열기" [ref=e135] [cursor=pointer]:
+                - generic [ref=e137]: 글감
+                - generic: 글감 검색 열기
+            - listitem
+            - listitem [ref=e138]:
+              - button "내 클립 열기" [ref=e139] [cursor=pointer]:
+                - generic [ref=e141]: 내 클립
+                - generic: 내 클립 열기
+            - listitem [ref=e142]:
+              - button "라이브러리 열기" [ref=e143] [cursor=pointer]:
+                - generic [ref=e145]: 라이브러리
+                - generic: 라이브러리 열기
+            - listitem [ref=e146]:
+              - button "템플릿 열기" [ref=e147] [cursor=pointer]:
+                - generic [ref=e149]: 템플릿
+                - generic: 템플릿 열기
+          - list [ref=e151]:
+            - listitem [ref=e471]:
+              - button "서체 변경" [ref=e473] [cursor=pointer]:
+                - text: 나눔고딕
+                - generic: 서체 변경
+            - listitem [ref=e474]:
+              - button "글자 크기 변경" [ref=e476] [cursor=pointer]:
+                - text: "32"
+                - generic: 글자 크기 변경
+            - listitem [ref=e477]
+            - listitem [ref=e480]:
+              - button "정렬 열기" [ref=e482] [cursor=pointer]:
+                - generic [ref=e484]: 정렬
+                - generic: 정렬 열기
+            - listitem [ref=e485]
+            - listitem [ref=e488]:
+              - button "특수문자 열기" [ref=e489] [cursor=pointer]:
+                - generic [ref=e491]: 특수문자
+                - generic: 특수문자 열기
+            - listitem [ref=e492]
+            - listitem [ref=e495]:
+              - button "번역" [ref=e496] [cursor=pointer]:
+                - text: 번역
+                - generic: 번역
+            - listitem [ref=e498]
+            - listitem [ref=e501]:
+              - button "맞춤법" [ref=e502] [cursor=pointer]:
+                - text: 맞춤법
+                - generic: 맞춤법
+        - generic [ref=e248]:
+          - generic [ref=e250]:
+            - img [ref=e252]
+            - article [ref=e254]:
+              - generic [ref=e255]:
+                - paragraph [ref=e259]: 제목
+                - generic [ref=e504]:
+                  - generic "내 컴퓨터에서 배경사진 첨부" [ref=e505] [cursor=pointer]
+                  - generic "MYBOX에서 배경사진 불러오기" [ref=e506] [cursor=pointer]
+              - paragraph [ref=e266]: 글감과 함께 나의 일상을 기록해보세요!
+          - article [ref=e271]:
+            - generic [ref=e272]:
+              - generic [ref=e273]:
+                - heading "도움말" [level=1] [ref=e274]
+                - generic [ref=e275]:
+                  - heading "What’s New" [level=2] [ref=e276]
+                  - generic [ref=e277]:
+                    - button "Previous" [ref=e278] [cursor=pointer]
+                    - generic [ref=e280]:
+                      - img [ref=e284]
+                      - img [ref=e296]
+                    - button "Next" [ref=e306] [cursor=pointer]
+                  - generic [ref=e307]:
+                    - button "Previous" [ref=e308] [cursor=pointer]
+                    - generic [ref=e309]:
+                      - generic:
+                        - generic [ref=e312]:
+                          - heading "간결해진 에디터 화면" [level=3] [ref=e313]
+                          - paragraph [ref=e314]: 익숙한 문서 편집 방식으로 쉽고 간편하게 글을 작성해보세요
+                        - generic [ref=e317]:
+                          - heading [level=3] [ref=e318]: 똑똑한 컨텍스트 메뉴
+                          - paragraph [ref=e319]: 자주 쓰는 기능을 모아둔 컨텍스트 메뉴로 더 빠르게 편집해보세요
+                        - generic [ref=e322]:
+                          - heading [level=3] [ref=e323]: 그룹 사진 기능 추가
+                          - paragraph [ref=e324]: 여러 사진을 하나로 묶어 꼴라주와 슬라이드 형태로 첨부해보세요
+                        - generic [ref=e327]:
+                          - heading [level=3] [ref=e328]: 부분 템플릿 기능 추가
+                          - paragraph [ref=e329]: 일정, 위치, 레시피 등 부분템플릿을 글 중간에 추가해보세요
+                        - generic [ref=e332]:
+                          - heading [level=3] [ref=e333]: 편리해진 사진·글감 검색
+                          - paragraph [ref=e334]: 화면을 가리지 않는 우측 패널에서 사진과 글감을 검색해보세요
+                        - generic [ref=e337]:
+                          - heading [level=3] [ref=e338]: 강력해진 포토에디터
+                          - paragraph [ref=e339]: 새롭게 추가된 기능들로 아름다운 사진을 만들어보세요
+                        - generic [ref=e342]:
+                          - heading [level=3] [ref=e343]: 동영상 정보 추가
+                          - paragraph [ref=e344]: 이제 더 많은 사용자가 내 글과 동영상을 조회할 수 있게됩니다
+                        - generic [ref=e347]:
+                          - heading [level=3] [ref=e348]: 장소 멀티첨부 기능 추가
+                          - paragraph [ref=e349]: 지도에 여러 개의 장소를 한 번에 표시할 수 있어요
+                        - generic [ref=e352]:
+                          - heading [level=3] [ref=e353]: 간편해진 태그 입력
+                          - paragraph [ref=e354]: 글 작성중 ‘#태그명’을 입력하면, 태그가 자동으로 추가됩니다
+                        - generic [ref=e357]:
+                          - heading [level=3] [ref=e358]: 똑똑해진 링크 첨부
+                          - paragraph [ref=e359]: 페이스북, 트위터, 유튜브 콘텐츠를 내 글에 첨부할 수 있어요
+                    - button "Next" [ref=e360] [cursor=pointer]
+                    - list [ref=e361]:
+                      - listitem [ref=e362]:
+                        - button "1"
+                      - listitem [ref=e363]:
+                        - button "2"
+                      - listitem [ref=e364]:
+                        - button "3"
+                      - listitem [ref=e365]:
+                        - button "4"
+                      - listitem [ref=e366]:
+                        - button "5"
+                      - listitem [ref=e367]:
+                        - button "6"
+                      - listitem [ref=e368]:
+                        - button "7"
+                      - listitem [ref=e369]:
+                        - button "8"
+                      - listitem [ref=e370]:
+                        - button "9"
+                      - listitem [ref=e371]:
+                        - button "10"
+                - button "닫기" [ref=e372] [cursor=pointer]:
+                  - generic [ref=e373]: 닫기
+              - generic [ref=e374]:
+                - generic [ref=e375]:
+                  - heading "시작하기" [level=2] [ref=e376]
+                  - navigation [ref=e377]:
+                    - list [ref=e378]:
+                      - listitem [ref=e379] [cursor=pointer]: 기본 인터페이스 안내
+                      - listitem [ref=e380] [cursor=pointer]: 컨텍스트 메뉴, 인서트 메뉴
+                      - listitem [ref=e381] [cursor=pointer]: 모바일 화면 미리보기
+                      - listitem [ref=e382] [cursor=pointer]: 스마트에디터 단축키
+                - generic [ref=e383]:
+                  - heading "글쓰기" [level=2] [ref=e384]
+                  - navigation [ref=e385]:
+                    - list [ref=e386]:
+                      - listitem [ref=e387] [cursor=pointer]: 제목 및 제목 배경 사진
+                      - listitem [ref=e388] [cursor=pointer]: 글 작성 및 편집
+                      - listitem [ref=e389] [cursor=pointer]: 템플릿으로 글쓰기
+                - generic [ref=e390]:
+                  - heading "첨부하기" [level=2] [ref=e391]
+                  - navigation [ref=e392]:
+                    - list [ref=e393]:
+                      - listitem [ref=e394] [cursor=pointer]: 사진 첨부 및 교체
+                      - listitem [ref=e395] [cursor=pointer]: 사진 속성 편집
+                      - listitem [ref=e396] [cursor=pointer]: 포토에디터
+                      - listitem [ref=e397] [cursor=pointer]: 사진 여러 장 레이아웃 편집
+                      - listitem [ref=e398] [cursor=pointer]: 스티커 첨부
+                      - listitem [ref=e399] [cursor=pointer]: 동영상 첨부
+                      - listitem [ref=e400] [cursor=pointer]: 구분선 넣기
+                      - listitem [ref=e401] [cursor=pointer]: 인용구 첨부
+                      - listitem [ref=e402] [cursor=pointer]: 장소 첨부 및 장소 멀티 첨부
+                      - listitem [ref=e403] [cursor=pointer]: 링크 및 외부 링크 첨부
+                      - listitem [ref=e404] [cursor=pointer]: 파일 첨부
+                      - listitem [ref=e405] [cursor=pointer]: 일정 만들기
+                      - listitem [ref=e406] [cursor=pointer]: 표 만들기
+                      - listitem [ref=e407] [cursor=pointer]: 네이버 톡톡 첨부
+                      - listitem [ref=e408] [cursor=pointer]: 수식 편집기
+                      - listitem [ref=e409] [cursor=pointer]: 사진·글감 검색
+                      - listitem [ref=e410] [cursor=pointer]: 라이브러리
+                - generic [ref=e411]:
+                  - heading "발행하기" [level=2] [ref=e412]
+                  - navigation [ref=e413]:
+                    - list [ref=e414]:
+                      - listitem [ref=e415] [cursor=pointer]: 글 발행하기
+                      - listitem [ref=e416] [cursor=pointer]: 태그 입력 기능 안내
+                      - listitem [ref=e417] [cursor=pointer]: 글 임시저장
+                - generic [ref=e418]:
+                  - heading "더 알아보기" [level=2] [ref=e419]
+                  - list [ref=e420]:
+                    - listitem [ref=e421] [cursor=pointer]:
+                      - link "궁금할 땐 블로그 스마트봇" [ref=e422]:
+                        - /url: https://talk.naver.com/ct/w4nd8p
+                    - listitem [ref=e423] [cursor=pointer]:
+                      - link "스마트에디터 브랜드 사이트" [ref=e424]:
+                        - /url: https://smarteditor.naver.com/
+                    - listitem [ref=e425] [cursor=pointer]:
+                      - link "네이버 고객센터" [ref=e426]:
+                        - /url: https://help.naver.com/alias/blog/basic_setting/blogeditor.naver
+        - list [ref=e428]:
+          - listitem [ref=e429]:
+            - button "PC 화면" [ref=e430] [cursor=pointer]:
+              - generic [ref=e431]: PC 화면
+          - listitem [ref=e432]:
+            - link "도움말" [ref=e433] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e434]: 도움말
+        - generic [ref=e435]:
+          - generic [ref=e436]:
+            - generic [ref=e438]: 글감
+            - generic [ref=e440]:
+              - button "책 글감" [ref=e442] [cursor=pointer]
+              - button "음악 글감" [ref=e444] [cursor=pointer]
+              - button "부동산 글감" [ref=e446] [cursor=pointer]
+              - button "스포츠 글감" [ref=e448] [cursor=pointer]
+              - button "공연·전시 글감" [ref=e450] [cursor=pointer]
+              - button "영화 글감" [ref=e452] [cursor=pointer]
+              - button "방송 글감" [ref=e454] [cursor=pointer]
+              - button "쇼핑 글감" [ref=e456] [cursor=pointer]
+              - button "이미지 글감" [ref=e458] [cursor=pointer]
+              - button "뉴스 글감" [ref=e460] [cursor=pointer]
+            - button "접기" [ref=e463] [cursor=pointer]
+          - search [ref=e465]:
+            - button "검색" [ref=e466] [cursor=pointer]
+            - textbox "글감을 검색해 보세요." [ref=e467]
+      - generic: 제목 컴포넌트 제목위치이동제목 배경 사진 삭제취소확인
+  - iframe [active] [ref=e468]:
+    

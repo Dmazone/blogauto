@@ -1,0 +1,212 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - heading "아파트 실거래가" [level=1] [ref=e4]:
+      - link "아파트 실거래가" [ref=e5] [cursor=pointer]:
+        - /url: /
+    - generic [ref=e6]:
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - link "Home" [ref=e9] [cursor=pointer]:
+            - /url: javascript:void(0)
+        - listitem [ref=e10]:
+          - link "매물Home" [ref=e11] [cursor=pointer]:
+            - /url: javascript:setMenu(2, '/asil/sub/offer_home.jsp')
+        - listitem [ref=e12]:
+          - link "순위분석" [ref=e13] [cursor=pointer]:
+            - /url: javascript:setMenu(3, '/asil/sub/ranking.jsp')
+        - listitem [ref=e14]:
+          - link "가격분석" [ref=e15] [cursor=pointer]:
+            - /url: javascript:setMenu(4, '/asil/sub/price_index.jsp')
+        - listitem [ref=e16]:
+          - link "인구변화" [ref=e17] [cursor=pointer]:
+            - /url: javascript:setMenu(5, '/asil/sub/transfer.jsp')
+        - listitem [ref=e18]:
+          - link "입주물량" [ref=e19] [cursor=pointer]:
+            - /url: javascript:setMenu(6, '/asil/sub/movein.jsp')
+        - listitem [ref=e20]:
+          - link "분양" [ref=e21] [cursor=pointer]:
+            - /url: javascript:setMenu(7, '/asil/sub/bunyang.jsp')
+      - link "더보기" [ref=e22] [cursor=pointer]:
+        - /url: ""
+    - generic [ref=e23]:
+      - link "회사소개" [ref=e24] [cursor=pointer]:
+        - /url: javascript:openAsil()
+      - link "가맹점가입" [ref=e26] [cursor=pointer]:
+        - /url: javascript:openJoin()
+      - link "가맹점문의" [ref=e28] [cursor=pointer]:
+        - /url: javascript:openJoin2()
+  - link "시도 시구군 읍면동" [ref=e30] [cursor=pointer]:
+    - /url: ""
+    - generic [ref=e32]: 시도
+    - generic [ref=e33]: 시구군
+    - generic [ref=e34]: 읍면동
+  - generic [ref=e35]:
+    - heading "본문 영역" [level=2]
+    - generic [ref=e38]:
+      - link "평형" [ref=e40] [cursor=pointer]:
+        - /url: ""
+      - link "50세대이상" [ref=e42] [cursor=pointer]:
+        - /url: ""
+      - link "입주년차" [ref=e44] [cursor=pointer]:
+        - /url: ""
+      - link "매매실거래가" [ref=e46] [cursor=pointer]:
+        - /url: ""
+      - link "평당가격" [ref=e48] [cursor=pointer]:
+        - /url: ""
+      - link "매매가(매물)" [ref=e50] [cursor=pointer]:
+        - /url: ""
+      - link "전세가(매물)" [ref=e52] [cursor=pointer]:
+        - /url: ""
+      - link "매매전세갭" [ref=e54] [cursor=pointer]:
+        - /url: ""
+      - link "전세가율" [ref=e56] [cursor=pointer]:
+        - /url: ""
+      - link "거래회전율" [ref=e58] [cursor=pointer]:
+        - /url: ""
+      - link "대지지분" [ref=e60] [cursor=pointer]:
+        - /url: ""
+      - link "용적률" [ref=e62] [cursor=pointer]:
+        - /url: ""
+      - link "건폐율" [ref=e64] [cursor=pointer]:
+        - /url: ""
+      - link "초기화" [ref=e66] [cursor=pointer]:
+        - /url: javascript:resetAllParameter()
+        - text: 초기화
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - list:
+            - listitem [ref=e71]:
+              - link "분양" [ref=e72] [cursor=pointer]:
+                - /url: javascript:setCateMenu(1)
+            - listitem [ref=e73]:
+              - link "아파트/오피스텔" [ref=e74] [cursor=pointer]:
+                - /url: javascript:setCateMenu(2)
+        - iframe [ref=e75]:
+          - generic [ref=f75e3]:
+            - textbox "아파트명을 검색해보세요." [ref=f75e6]
+            - generic [ref=f75e7]:
+              - generic [ref=f75e8]:
+                - generic [ref=f75e9]: 시도 선택
+                - generic [ref=f75e10]: ">"
+                - generic [ref=f75e11]: 시군구 선택
+                - generic [ref=f75e12]: ">"
+                - generic [ref=f75e13]: 읍면동 선택
+              - generic [ref=f75e14]:
+                - generic [ref=f75e15] [cursor=pointer]: 서울시
+                - generic [ref=f75e16] [cursor=pointer]: 경기도
+                - generic [ref=f75e17] [cursor=pointer]: 부산시
+                - generic [ref=f75e18] [cursor=pointer]: 대구시
+                - generic [ref=f75e19] [cursor=pointer]: 인천시
+                - generic [ref=f75e20] [cursor=pointer]: 광주시
+                - generic [ref=f75e21] [cursor=pointer]: 대전시
+                - generic [ref=f75e22] [cursor=pointer]: 울산시
+                - generic [ref=f75e23] [cursor=pointer]: 세종시
+                - generic [ref=f75e24] [cursor=pointer]: 강원도
+                - generic [ref=f75e25] [cursor=pointer]: 충청북도
+                - generic [ref=f75e26] [cursor=pointer]: 충청남도
+                - generic [ref=f75e27] [cursor=pointer]: 전라북도
+                - generic [ref=f75e28] [cursor=pointer]: 전라남도
+                - generic [ref=f75e29] [cursor=pointer]: 경상북도
+                - generic [ref=f75e30] [cursor=pointer]: 경상남도
+                - generic [ref=f75e31] [cursor=pointer]: 제주도
+              - iframe [ref=f75e32]:
+                - generic [ref=f82e3]:
+                  - generic [ref=f82e4]:
+                    - heading "부동산 스터디" [level=3] [ref=f82e5]
+                    - list [ref=f82e6]:
+                      - listitem [ref=f82e7]:
+                        - generic [ref=f82e8] [cursor=pointer]: 최근하락
+                        - generic [ref=f82e10] [cursor=pointer]: 최고가
+                        - generic [ref=f82e12] [cursor=pointer]: 최고상승
+                        - generic [ref=f82e14] [cursor=pointer]: 가격변동
+                        - generic [ref=f82e16] [cursor=pointer]: 가격비교
+                        - generic [ref=f82e18] [cursor=pointer]: 여러단지비교
+                        - generic [ref=f82e20] [cursor=pointer]: 매물증감
+                        - generic [ref=f82e22] [cursor=pointer]: 많이산단지
+                        - generic [ref=f82e24] [cursor=pointer]: 거래량
+                        - generic [ref=f82e26] [cursor=pointer]: 갭투자
+                        - generic [ref=f82e28] [cursor=pointer]: 매수심리
+                        - generic [ref=f82e30] [cursor=pointer]: 공급물량
+                        - generic [ref=f82e32] [cursor=pointer]: 미분양
+                        - generic [ref=f82e34] [cursor=pointer]: 인구변화
+                        - generic [ref=f82e36] [cursor=pointer]: 분양가비교
+                        - generic [ref=f82e38] [cursor=pointer]: 학군비교
+                        - generic [ref=f82e40] [cursor=pointer]: 대단지
+                        - generic [ref=f82e42] [cursor=pointer]: 조회수
+                        - generic [ref=f82e44] [cursor=pointer]: 월세수익
+                        - generic [ref=f82e46] [cursor=pointer]: 상가통계
+                        - generic [ref=f82e48] [cursor=pointer]: 토지통계
+                  - generic [ref=f82e50]:
+                    - list [ref=f82e52]:
+                      - listitem [ref=f82e53]:
+                        - generic "회사소개" [ref=f82e54] [cursor=pointer]
+                      - listitem [ref=f82e55]:
+                        - generic "개인정보 처리방침" [ref=f82e56] [cursor=pointer]
+                      - listitem [ref=f82e57]:
+                        - generic "앱다운로드" [ref=f82e58] [cursor=pointer]
+                      - listitem [ref=f82e59]:
+                        - generic "공지사항" [ref=f82e60] [cursor=pointer]
+                    - list [ref=f82e62]:
+                      - listitem [ref=f82e63]: 본사 서울 서초구 서초대로 398
+                      - listitem [ref=f82e64]: 연구소 대구 달서구 장산남로 21, 707호(용산동, 법조빌딩)
+                      - listitem [ref=f82e65]: 이메일 asilhelp@naver.com
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - link "공급" [ref=e79] [cursor=pointer]:
+            - /url: javascript:clickBigdata(1)
+          - link "인구" [ref=e81] [cursor=pointer]:
+            - /url: javascript:clickBigdata(3)
+          - link "가격" [ref=e83] [cursor=pointer]:
+            - /url: javascript:clickBigdata(4)
+          - link "심리" [ref=e85] [cursor=pointer]:
+            - /url: javascript:clickBigdata(5)
+          - link "거래" [ref=e87] [cursor=pointer]:
+            - /url: javascript:clickBigdata(6)
+          - link "비교" [ref=e89] [cursor=pointer]:
+            - /url: javascript:clickBigdata(7)
+          - link "정책" [ref=e91] [cursor=pointer]:
+            - /url: javascript:clickBigdata(9)
+          - link "학군" [ref=e93] [cursor=pointer]:
+            - /url: javascript:clickBigdata(10)
+          - link "랭킹" [ref=e95] [cursor=pointer]:
+            - /url: javascript:clickBigdata(11)
+        - generic [ref=e96]:
+          - generic [ref=e98] [cursor=pointer]: 지도
+          - generic [ref=e100] [cursor=pointer]: 거리뷰
+          - generic [ref=e102] [cursor=pointer]:
+            - text: 경매
+            - text: 공매
+          - generic [ref=e104] [cursor=pointer]: 교통망
+          - generic [ref=e105]:
+            - generic [ref=e106]: new
+            - generic [ref=e107] [cursor=pointer]: 단지
+          - generic [ref=e109] [cursor=pointer]: 매물
+          - generic [ref=e111] [cursor=pointer]: 중개
+          - generic [ref=e113] [cursor=pointer]: 재재
+        - generic [ref=e114]:
+          - link "앱다운로드" [ref=e115] [cursor=pointer]:
+            - /url: ""
+            - text: 앱다운로드
+          - link "X" [ref=e117] [cursor=pointer]:
+            - /url: ""
+        - generic [ref=e118]:
+          - generic [ref=e119] [cursor=pointer]: 지도확대
+          - generic [ref=e120] [cursor=pointer]: 지도축소
+        - generic [ref=e121]:
+          - link "명칭 세대수" [ref=e122] [cursor=pointer]:
+            - /url: ""
+            - generic [ref=e123]: 명칭
+            - generic [ref=e124]: 세대수
+          - text: "?"
+        - generic [ref=e126]:
+          - generic:
+            - link "NAVER" [ref=e159] [cursor=pointer]:
+              - /url: https://ssl.pstatic.net/static/maps/mantle/notice/legal.html
+              - img "NAVER" [ref=e160]
+            - generic:
+              - generic:
+                - generic: © NAVER Corp.
+                - link "/OpenStreetMap" [ref=e161] [cursor=pointer]:
+                  - /url: http://www.openstreetmap.org/copyright
+            - generic [ref=e163]: 30km

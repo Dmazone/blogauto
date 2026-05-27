@@ -1,0 +1,8 @@
+- generic [active] [ref=e1]:
+  - heading "HTTP 상태 404 – 찾을 수 없음" [level=1] [ref=e2]
+  - separator [ref=e3]
+  - paragraph [ref=e4]: 타입 상태 보고
+  - paragraph [ref=e5]: 메시지 파일 [/asil/sub/apt_real_price.jsp]을(를) 찾을 수 없습니다.
+  - paragraph [ref=e6]: 설명 Origin 서버가 대상 리소스를 위한 현재의 representation을 찾지 못했거나, 그것이 존재하는지를 밝히려 하지 않습니다.
+  - separator [ref=e7]
+  - heading "Apache Tomcat/8.5.70" [level=3] [ref=e8]

@@ -1,0 +1,97 @@
+- generic [ref=e2]:
+  - link "본문 바로가기" [ref=e4] [cursor=pointer]:
+    - /url: https://www.naver.com
+  - banner [ref=e5]:
+    - link "NAVER" [ref=e7] [cursor=pointer]:
+      - /url: https://www.naver.com
+      - heading "NAVER" [level=1] [ref=e8]
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - tablist [ref=e12]:
+        - tab "ID/전화번호" [selected] [ref=e14] [cursor=pointer]:
+          - generic [ref=e15]: ID/전화번호
+        - tab "일회용 번호" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: 일회용 번호
+        - tab "QR코드" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: QR코드
+      - list [ref=e23]:
+        - listitem [ref=e24]:
+          - tabpanel [ref=e25]:
+            - generic [ref=e27]:
+              - text: 아이디(로그인 전화번호, 로그인 전용 아이디), 비밀번호 또는
+              - text: 자동입력 방지 문자를 잘못 입력했습니다.
+              - text: 입력하신 내용을 다시 확인해주세요.
+            - generic [ref=e29]:
+              - generic [ref=e30]:
+                - textbox "아이디 또는 전화번호" [ref=e31] [cursor=pointer]: myubel
+                - generic: 아이디 또는 전화번호
+                - button "삭제" [ref=e32] [cursor=pointer]:
+                  - generic [ref=e34]: 삭제
+              - generic [ref=e35]:
+                - textbox "비밀번호" [active] [ref=e36] [cursor=pointer]: Aledma10051014!
+                - generic: 비밀번호
+                - button "비밀번호 표시" [ref=e94] [cursor=pointer]:
+                  - generic [ref=e96]: 비밀번호 표시
+                - button "삭제" [ref=e97] [cursor=pointer]:
+                  - generic [ref=e99]: 삭제
+            - generic [ref=e38]:
+              - img "캡차이미지" [ref=e40]
+              - paragraph [ref=e41]: 해당 영수증은 가상으로 제작된 것으로 실제 영수증 사진이 아닙니다.
+              - paragraph [ref=e42]: 가게 전화번호의 뒤에서 2번째 숫자는 무엇입니까?
+              - generic [ref=e43]:
+                - textbox "정답을 입력해주세요." [ref=e45] [cursor=pointer]
+                - generic [ref=e46]:
+                  - button "새로고침" [ref=e47] [cursor=pointer]:
+                    - generic [ref=e48]: 새로고침
+                  - button "음성으로 전환" [ref=e49] [cursor=pointer]:
+                    - generic [ref=e50]: 음성으로 전환
+            - generic [ref=e51]:
+              - checkbox "로그인 상태 유지" [ref=e52] [cursor=pointer]:
+                - generic [ref=e53]: 로그인 상태 유지
+              - generic [ref=e54]:
+                - link "IP보안" [ref=e55] [cursor=pointer]:
+                  - /url: /login/ext/help_ip3.html
+                  - generic [ref=e56]: IP보안
+                - generic [ref=e57]:
+                  - checkbox [checked] [ref=e58] [cursor=pointer]
+                  - generic [ref=e60] [cursor=pointer]: "ON"
+            - paragraph [ref=e102]:
+              - strong [ref=e103]: Caps Lock
+              - text: 이 켜져 있습니다.
+            - button "로그인" [ref=e62] [cursor=pointer]
+            - generic [ref=e64]: 지문 · 얼굴 인증을 설정했다면
+            - button "패스키 로그인" [ref=e66] [cursor=pointer]
+    - list [ref=e67]:
+      - listitem [ref=e68]:
+        - link "비밀번호 찾기" [ref=e69] [cursor=pointer]:
+          - /url: https://nid.naver.com/user2/api/route?m=routePwInquiry&lang=ko_KR
+      - listitem [ref=e70]:
+        - link "아이디 찾기" [ref=e71] [cursor=pointer]:
+          - /url: https://nid.naver.com/user2/api/route?m=routeIdInquiry&lang=ko_KR
+      - listitem [ref=e72]:
+        - link "회원가입" [ref=e73] [cursor=pointer]:
+          - /url: https://nid.naver.com/user2/V2Join?m=agree&lang=ko_KR&realname=N
+    - iframe [ref=e76]:
+      - link "취향 기록하면 매월 N 포인트 최대 12만원" [ref=f12e4] [cursor=pointer]:
+        - /url: https://tivan.naver.com/gc/101/_VrP63rwdfvtNIK9BO-Dyi_wP5tqMSkE_iTiK-QbQwc3wdYbpK_2HbhkIoekvKoyNJLBq5r7aFTzZjOM2mo3L_ms46hRaGlhfxEttrT9GDQbdytOrdvZYzKAVyz89xHOUEdwO_j78yzbVJcz_Kn7WcEHtXu2WszWQdfsVfjK1PC0SEfOOjjAkpsqrWBfbeqKul83_BNetWlCMUz5CV4JgcQVUTWlTffk-fkBjnXy8_1Kwjnhf1XCtjP3sqltgOzvW0aRMifJ7_LlTilxh_x7X8iHGno_uKFRKR74hKV8LW7j7gpj1udMVjNDnMEBqiusO1vh9CyEKQMIJoD2gWAM6WXRGHVycM2KpeBLrQ7Zt_F6whX_8rvb4ZcrRItQ4XiJa5NYV7JY25MeC32n3Us4D4fYoliCW_28J2ECUE8I0limw8A02L8U_Z8_ObtVxhXv1zkCMSo7zlZKm7v_xTVwrfIyidz1l1jv2iT4OFzBMMAtC1YtPotrvTA7n3Vxm-J_zTBaxttpt_KoqmFI1FG_6KNaJDMJtoraRw-8qvAnZZAk-FAE4W90pUiskqSY2Li8jLJY0R0ujIg0KGP7tdLpms4jYQ8fCAM9eG5zj9Hz7DstdsoW1SfdgwEkZ8NXC5UDQt_9zTfNZTtqK5WLWD4zTEA_XF-Y35troSDW8QF5XUg9YRggszbOkbhox9ijJ4nnSf6GJYK286ZT-fYSmlS2GlzevgkazO6KYEOtXQ8bNMF1nMrpRIW9LSSWWnkZPlNKKHc8KM0aAEWBRznUuxdm8X9-OsMj46nCMUWz4Qruj4mO7yUuU3CiGcmp_haA6CurHI9f9-KtQnSkbUelsWoWSnCOT3VaNRPWF-3UtGS5AYnvBqN3lH-10hAfywGD9Zp-tgfxKX0Jt9EcKF5o6vbZJzbYBXRS5qZl2JUVp7V5sqxLduPbDqF_LZxWCuJ50RgA7UV-9oQS2ahvIVyz8uqnrRIleZNRBhxdmE6bYvSDHp_M2XVtXMHr1sZuyjieWQ59Umf7jGwAT6cUaBAeNolv2Kux6r0wxFHVwvIP6cVlcid3Qz6CCJGdpRZ6neco8DNi06_DqFjn8RlE1rHldqqthg/NE
+        - img "취향 기록하면 매월 N 포인트 최대 12만원" [ref=f12e5]
+  - generic [ref=e78]:
+    - list [ref=e79]:
+      - listitem [ref=e80]:
+        - link "이용약관" [ref=e81] [cursor=pointer]:
+          - /url: http://www.naver.com/rules/service.html
+      - listitem [ref=e82]:
+        - link "개인정보처리방침" [ref=e83] [cursor=pointer]:
+          - /url: http://www.naver.com/rules/privacy.html
+          - strong [ref=e85]: 개인정보처리방침
+      - listitem [ref=e86]:
+        - link "책임의 한계와 법적고지" [ref=e87] [cursor=pointer]:
+          - /url: http://www.naver.com/rules/disclaimer.html
+      - listitem [ref=e88]:
+        - link "회원정보 고객센터" [ref=e89] [cursor=pointer]:
+          - /url: https://help.naver.com/alias/membership/p.membership/main.naver
+    - generic [ref=e90]:
+      - link "네이버" [ref=e91] [cursor=pointer]:
+        - /url: https://www.navercorp.com
+        - generic [ref=e93]: 네이버
+      - text: Copyright © NAVER Corp. All Rights Reserved.

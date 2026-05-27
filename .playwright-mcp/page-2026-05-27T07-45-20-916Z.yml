@@ -1,0 +1,418 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - heading "당산삼성래미안" [level=2] [ref=e3]:
+      - text: 당산삼성래미안
+      - link [ref=e4] [cursor=pointer]:
+        - /url: "#"
+    - generic [ref=e6]: X
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: 매물
+      - paragraph [ref=e10]: "60"
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - heading "거래년월" [level=2] [ref=e13]
+        - link "매매, 전세, 월세 43평 전용 115㎡" [ref=e14] [cursor=pointer]:
+          - /url: ""
+          - text: 매매, 전세, 월세
+          - paragraph [ref=e15]:
+            - generic [ref=e16]: 43평
+            - text: 전용 115㎡
+        - paragraph [ref=e18]:
+          - generic [ref=e19]: 매매 거래정보
+          - generic [ref=e20]: 전세 거래정보
+        - generic [ref=e21]: VS가격비교
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: 06년 1월 ~ 26년 5월
+          - generic [ref=e26]: 최근 3년 보기
+        - generic [ref=e32]:
+          - generic [ref=e33]: 동 선택
+          - generic [ref=e34]: 호 선택
+          - generic [ref=e35]:
+            - textbox [ref=e36]
+            - heading "호" [level=1] [ref=e37]
+          - link "집 내놓기" [ref=e38] [cursor=pointer]:
+            - /url: javascript:void(0);
+        - generic [ref=e39]:
+          - table [ref=e41]:
+            - rowgroup [ref=e49]:
+              - row "계약 일 정보 가격 ↓ 타입 거래동 층" [ref=e50]:
+                - columnheader "계약" [ref=e51]
+                - columnheader "일" [ref=e52]
+                - columnheader "정보" [ref=e53]
+                - columnheader "가격 ↓" [ref=e54]
+                - columnheader "타입" [ref=e55]
+                - columnheader "거래동 층" [ref=e56]:
+                  - generic [ref=e57]: 거래동
+                  - generic [ref=e58]: 층
+            - rowgroup
+          - generic [ref=e59]: 거래현황 더보기
+          - generic [ref=e60]: 영등포구 최근 거래
+          - generic [ref=e61]: 실거래가 표
+      - generic [ref=e62]:
+        - heading "당산삼성래미안 전문 중개사" [level=2] [ref=e63]
+        - paragraph [ref=e64]: 지역 전문 중개사에게 매물문의를 해보세요.
+        - generic [ref=e65]: 더보기
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - paragraph [ref=e69]
+              - paragraph [ref=e70]: 현대공인중개사사무소
+              - paragraph [ref=e71]:
+                - text: "현단지 매전월 : 10/3/1"
+                - text: "상담전화 : 02-3667-2667 / 010-3478-4494"
+              - generic [ref=e72]:
+                - generic [ref=e73]: 지도보기
+                - generic [ref=e74]: 로드뷰
+                - generic [ref=e75]: 단지매물
+                - generic [ref=e76]: 전체매물
+            - generic [ref=e77]: 문의하기
+          - generic [ref=e78]:
+            - generic [ref=e79]:
+              - paragraph [ref=e80]
+              - paragraph [ref=e81]: 독일공인중개사사무소
+              - paragraph [ref=e82]:
+                - text: "현단지 매전월 : 15/2/2"
+                - text: "상담전화 : 02-2678-5000 / 010-7373-9050"
+              - generic [ref=e83]:
+                - generic [ref=e84]: 지도보기
+                - generic [ref=e85]: 로드뷰
+                - generic [ref=e86]: 단지매물
+                - generic [ref=e87]: 전체매물
+            - generic [ref=e88]: 문의하기
+      - generic [ref=e89]:
+        - heading "매물" [level=2] [ref=e90]
+        - generic [ref=e91]:
+          - paragraph
+          - paragraph
+          - list [ref=e92]:
+            - listitem [ref=e93]:
+              - generic [ref=e94]: 매매 49건
+            - listitem [ref=e95]:
+              - generic [ref=e96]: 전세 8건
+            - listitem [ref=e97]:
+              - generic [ref=e98]: 월세 3건
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - paragraph [ref=e102]:
+                - img [ref=e103]
+              - paragraph [ref=e104]:
+                - strong [ref=e105]: 매매
+                - text: 21억5000만
+                - generic [ref=e106]: 109㎡
+              - paragraph [ref=e107]:
+                - strong [ref=e108]: 402동 중층
+              - paragraph [ref=e109]: 현대공인중개사사무소 2026-05-26
+            - generic [ref=e110]:
+              - paragraph [ref=e111]:
+                - img [ref=e112]
+              - paragraph [ref=e113]:
+                - strong [ref=e114]: 매매
+                - text: 24억9000만
+                - generic [ref=e115]: 142㎡
+              - paragraph [ref=e116]:
+                - strong [ref=e117]: 408동 중층
+              - paragraph [ref=e118]: 독일공인중개사사무소 2026-05-26
+            - generic [ref=e119]:
+              - paragraph [ref=e120]:
+                - img [ref=e121]
+              - paragraph [ref=e122]:
+                - strong [ref=e123]: 매매
+                - text: 26억
+                - generic [ref=e124]: 142㎡
+              - paragraph [ref=e125]:
+                - strong [ref=e126]: 416동 중층
+                - text: 입주 가능 매물,햇살 가득 남향,탁 트임,조건 협의가,당서초 배정
+              - paragraph [ref=e127]: 독일공인중개사사무소 2026-05-26
+            - generic [ref=e128]:
+              - paragraph [ref=e129]:
+                - img [ref=e130]
+              - paragraph [ref=e131]:
+                - strong [ref=e132]: 매매
+                - text: 26억
+                - generic [ref=e133]: 142㎡
+              - paragraph [ref=e134]:
+                - strong [ref=e135]: 408동 고층
+              - paragraph [ref=e136]: 현대공인중개사사무소 2026-05-26
+          - generic [ref=e137]: 매물 더보기
+      - generic [ref=e138]:
+        - heading "단지 기본정보" [level=2] [ref=e139]
+        - list [ref=e140]:
+          - listitem [ref=e141]: "주소 : 서울 영등포구 당산동5가 42"
+          - listitem [ref=e142]: "준공년월 : 2003년 12월 건축"
+          - listitem [ref=e143]: "세대수 : 총 1,391세대"
+          - listitem [ref=e144]: "동수 : 총 25개동"
+          - listitem [ref=e145]: "난방방식 : 개별난방"
+          - listitem [ref=e146]:
+            - list [ref=e147]:
+              - listitem [ref=e148]:
+                - link "용적률 ?" [ref=e149] [cursor=pointer]:
+                  - /url: "#desc1"
+                  - text: 용적률
+                  - generic [ref=e150]: "?"
+                - text: ": 299% /"
+              - listitem [ref=e151]:
+                - link "건폐율 ?" [ref=e152] [cursor=pointer]:
+                  - /url: "#desc2"
+                  - text: 건폐율
+                  - generic [ref=e153]: "?"
+                - text: ": 18%"
+        - list [ref=e154]:
+          - listitem [ref=e155]:
+            - generic [ref=e156]: 관심사용자
+            - strong [ref=e157]: 3,658명
+          - listitem [ref=e158]:
+            - generic [ref=e159]: 영등포구 단지 중
+            - strong [ref=e160]: 4위
+            - text: 더보기
+          - listitem [ref=e161]:
+            - generic [ref=e162]: 최근 갭투자 현황
+            - text: 더보기
+        - list [ref=e163]:
+          - listitem [ref=e164]:
+            - generic [ref=e165]: 로드뷰
+          - listitem [ref=e166]:
+            - generic [ref=e167]: 항공뷰
+          - listitem [ref=e168]:
+            - generic [ref=e169]: 네이버평면도
+      - generic [ref=e170]:
+        - heading "평면도" [level=2] [ref=e171]
+        - list [ref=e172]:
+          - listitem [ref=e173]:
+            - generic [ref=e175]: "109"
+          - listitem [ref=e176]:
+            - generic [ref=e178]: "122"
+          - listitem [ref=e179]:
+            - generic [ref=e181]: "193"
+        - generic [ref=e182]:
+          - img "평면도" [ref=e183]
+          - generic [ref=e184]:
+            - generic [ref=e185]: 공급면적 109㎡
+            - generic [ref=e186]: 전용면적 84㎡
+      - generic [ref=e187]:
+        - heading "당산삼성래미안 & 영등포구 통계" [level=2] [ref=e188]
+        - paragraph [ref=e189]: 아파트와 지역에 대한 의미 있는 통계입니다.
+        - list [ref=e190]:
+          - listitem [ref=e191]:
+            - strong [ref=e192]:
+              - text: 최근 하락
+              - generic [ref=e193]: new
+            - generic [ref=e194]: 최고가 대비 많이 하락한 거래를 확인해 보세요.
+          - listitem [ref=e195]:
+            - strong [ref=e196]:
+              - text: 매물 증감
+              - generic [ref=e197]: new
+            - generic [ref=e198]: 매물이 줄어든다는 건 요즘 많이 팔렸다는거에요.
+          - listitem [ref=e199]:
+            - strong [ref=e200]: 최고가 APT
+            - generic [ref=e201]: 지역 최고가 아파트가 보통 지역 시세를 견인합니다.
+          - listitem [ref=e202]:
+            - strong [ref=e203]: 거래 잘되는 APT
+            - generic [ref=e204]: 거래 잘되는 아파트가 팔고 싶을 때 팔기도 좋습니다.
+          - listitem [ref=e205]:
+            - strong [ref=e206]: 거래량
+            - generic [ref=e207]: 언제 아파트를 많이 샀는지 알아보세요.
+          - listitem [ref=e208]:
+            - strong [ref=e209]: 인기도
+            - generic [ref=e210]: 최근에 어떤 단지를 많이 조회할까요?
+          - listitem [ref=e211]:
+            - strong [ref=e212]: 월세수익률
+            - generic [ref=e213]: 임대수익률이 좋은 아파트를 찾아보세요.
+          - listitem [ref=e214]:
+            - strong [ref=e215]: 대단지 APT
+            - generic [ref=e216]: 단지규모가 클 수록 편의시설이 잘 되어 있습니다.
+      - generic [ref=e217]:
+        - heading "부동산 환경변화" [level=2] [ref=e218]
+        - paragraph [ref=e219]: 당산삼성래미안 단지가 있는 지역 부동산시장을 확인할 수 있습니다.
+        - list [ref=e220]:
+          - listitem [ref=e221]:
+            - strong [ref=e222]: APT 공급
+            - generic [ref=e223]: 향후 아파트공급이 너무 많으면 위험해요.
+          - listitem [ref=e224]:
+            - strong [ref=e225]: APT 미분양
+            - generic [ref=e226]: 분양 후에도 안팔린 아파트가 많으면 위험해요.
+          - listitem [ref=e227]:
+            - strong [ref=e228]: 매수심리
+            - generic [ref=e229]: 사람들이 집을 사고 싶어하는지 심리를 확인해 보세요.
+          - listitem [ref=e230]:
+            - strong [ref=e231]: 갭투자현황
+            - generic [ref=e232]: 실거주가 아닌 임대 목적으로 구입한 APT매입 사례
+          - listitem [ref=e233]:
+            - strong [ref=e234]: 인구변화
+            - generic [ref=e235]: 인구변화와 인구 이동흐름을 확인해 보세요.
+          - listitem [ref=e236]:
+            - strong [ref=e237]: 가격변동
+            - generic [ref=e238]: 매매, 전세가격흐름을 확인해보세요.
+      - generic [ref=e239]:
+        - heading "학군 정보" [level=2] [ref=e240]
+        - generic [ref=e241]:
+          - generic [ref=e242]: 초등학교
+          - generic [ref=e243]: 중학교
+        - generic [ref=e244]:
+          - paragraph [ref=e245]: 학교 선택1
+          - generic [ref=e246]:
+            - combobox [ref=e247]:
+              - option "서울" [selected]
+              - option "경기"
+              - option "부산"
+              - option "대구"
+              - option "인천"
+              - option "광주"
+              - option "대전"
+              - option "울산"
+              - option "세종"
+              - option "강원"
+              - option "충북"
+              - option "충남"
+              - option "전북"
+              - option "전남"
+              - option "경북"
+              - option "경남"
+              - option "제주"
+            - combobox [ref=e248]:
+              - option "시구군"
+              - option "강남구"
+              - option "강동구"
+              - option "강북구"
+              - option "강서구"
+              - option "관악구"
+              - option "광진구"
+              - option "구로구"
+              - option "금천구"
+              - option "노원구"
+              - option "도봉구"
+              - option "동대문구"
+              - option "동작구"
+              - option "마포구"
+              - option "서대문구"
+              - option "서초구"
+              - option "성동구"
+              - option "성북구"
+              - option "송파구"
+              - option "양천구"
+              - option "영등포구" [selected]
+              - option "용산구"
+              - option "은평구"
+              - option "종로구"
+              - option "중구"
+              - option "중랑구"
+            - combobox [ref=e249]:
+              - option "초등학교"
+              - option "서울당서초등학교" [selected]
+              - option "서울영중초등학교"
+              - option "서울영동초등학교"
+              - option "서울선유초등학교"
+              - option "서울당산초등학교"
+              - option "서울당중초등학교"
+              - option "서울영원초등학교"
+              - option "서울문래초등학교"
+              - option "서울영등포초등학교"
+              - option "서울도림초등학교"
+              - option "서울영문초등학교"
+              - option "서울우신초등학교"
+              - option "서울윤중초등학교"
+              - option "서울대영초등학교"
+              - option "서울도신초등학교"
+              - option "서울영신초등학교"
+              - option "서울신영초등학교"
+              - option "서울대동초등학교"
+              - option "서울여의도초등학교"
+              - option "서울신대림초등학교"
+              - option "서울대길초등학교"
+              - option "서울영림초등학교"
+              - option "서울대방초등학교"
+          - paragraph [ref=e250]: 학교 선택2
+          - generic [ref=e251]:
+            - combobox [ref=e252]:
+              - option "서울" [selected]
+              - option "경기"
+              - option "부산"
+              - option "대구"
+              - option "인천"
+              - option "광주"
+              - option "대전"
+              - option "울산"
+              - option "세종"
+              - option "강원"
+              - option "충북"
+              - option "충남"
+              - option "전북"
+              - option "전남"
+              - option "경북"
+              - option "경남"
+              - option "제주"
+            - combobox [ref=e253]:
+              - option "시구군"
+              - option "강남구"
+              - option "강동구"
+              - option "강북구"
+              - option "강서구"
+              - option "관악구"
+              - option "광진구"
+              - option "구로구"
+              - option "금천구"
+              - option "노원구"
+              - option "도봉구"
+              - option "동대문구"
+              - option "동작구"
+              - option "마포구"
+              - option "서대문구"
+              - option "서초구"
+              - option "성동구"
+              - option "성북구"
+              - option "송파구"
+              - option "양천구"
+              - option "영등포구" [selected]
+              - option "용산구"
+              - option "은평구"
+              - option "종로구"
+              - option "중구"
+              - option "중랑구"
+            - combobox [ref=e254]:
+              - option "초등학교"
+              - option "서울당서초등학교"
+              - option "서울영중초등학교" [selected]
+              - option "서울영동초등학교"
+              - option "서울선유초등학교"
+              - option "서울당산초등학교"
+              - option "서울당중초등학교"
+              - option "서울영원초등학교"
+              - option "서울문래초등학교"
+              - option "서울영등포초등학교"
+              - option "서울도림초등학교"
+              - option "서울영문초등학교"
+              - option "서울우신초등학교"
+              - option "서울윤중초등학교"
+              - option "서울대영초등학교"
+              - option "서울도신초등학교"
+              - option "서울영신초등학교"
+              - option "서울신영초등학교"
+              - option "서울대동초등학교"
+              - option "서울여의도초등학교"
+              - option "서울신대림초등학교"
+              - option "서울대길초등학교"
+              - option "서울영림초등학교"
+              - option "서울대방초등학교"
+        - list [ref=e256]:
+          - listitem [ref=e257]: 고학년 전학 학생 수 증감추이
+          - listitem [ref=e258]: "인원 : 각 학년별 제적 학생 수"
+          - listitem [ref=e259]:
+            - text: "분석 : 초등학교 고학년으로 갈 수록 학생 수가 늘어나는 학교"
+            - text: 학군이 좋은 중학교로 가기 위해 미리 전학가는 수요증가
+          - listitem [ref=e260]: "출처 : 학교알리미 2025년 5월 공시자료"
+      - generic [ref=e261]:
+        - heading "실거주자의 진짜 이야기" [level=2] [ref=e262]
+        - generic [ref=e263]:
+          - generic [ref=e265]:
+            - strong [ref=e267]: 당삼래
+            - generic [ref=e268]: 카톡 오카방 "당산삼성래미안 4차" 입주민 단톡방 생겼어요~
+            - generic:
+              - list
+          - generic [ref=e270]:
+            - strong [ref=e272]: 당산푸르지오에서
+            - generic [ref=e273]: 당산 푸르지오의 야경입니다.
+            - list [ref=e275]:
+              - listitem [ref=e276]:
+                - img [ref=e277]
+          - generic [ref=e279]: 9건 더보기

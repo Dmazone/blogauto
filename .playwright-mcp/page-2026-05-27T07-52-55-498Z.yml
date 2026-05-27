@@ -1,0 +1,129 @@
+- generic [ref=e3]:
+  - generic:
+    - link "본문 바로가기" [ref=e4] [cursor=pointer]:
+      - /url: "#section_content"
+      - generic [ref=e5]: 본문 바로가기
+    - link "주 메뉴 바로가기" [ref=e6] [cursor=pointer]:
+      - /url: "#header"
+      - generic [ref=e7]: 주 메뉴 바로가기
+  - banner [ref=e8]:
+    - heading "네이버지도" [level=1] [ref=e9]:
+      - link "네이버지도" [ref=e10] [cursor=pointer]:
+        - /url: https://www.naver.com
+        - generic [ref=e11]: 네이버지도
+    - navigation [ref=e12]:
+      - list [ref=e13]:
+        - listitem [ref=e14]:
+          - button "지도 홈 선택됨" [ref=e15] [cursor=pointer]:
+            - img [ref=e18]
+            - generic [ref=e21]: 지도 홈
+            - generic [ref=e22]: 선택됨
+        - listitem [ref=e23]:
+          - button "길찾기" [ref=e24] [cursor=pointer]:
+            - img [ref=e27]
+            - generic [ref=e29]: 길찾기
+        - listitem [ref=e30]:
+          - button "버스" [ref=e31] [cursor=pointer]:
+            - img [ref=e34]
+            - generic [ref=e36]: 버스
+        - listitem [ref=e37]:
+          - button "지하철" [ref=e38] [cursor=pointer]:
+            - img [ref=e41]
+            - generic [ref=e43]: 지하철
+        - listitem [ref=e44]:
+          - button "기차" [ref=e45] [cursor=pointer]:
+            - img [ref=e48]
+            - generic [ref=e50]: 기차
+        - listitem [ref=e51]:
+          - button "new 저장" [ref=e52] [cursor=pointer]:
+            - generic [ref=e54]: new
+            - img [ref=e57]
+            - generic [ref=e59]: 저장
+        - listitem [ref=e60]:
+          - button "더보기" [ref=e61] [cursor=pointer]:
+            - img [ref=e64]
+            - generic [ref=e66]: 더보기
+  - generic:
+    - generic [ref=e68]:
+      - generic [ref=e70]:
+        - button "검색" [ref=e71] [cursor=pointer]
+        - button "삭제" [ref=e72] [cursor=pointer]:
+          - generic [ref=e73]: 삭제
+        - combobox [ref=e75]: 당산삼성래미안4차
+      - generic [ref=e77]:
+        - status [ref=e78]
+        - generic [ref=e80]:
+          - heading "검색" [level=2] [ref=e81]
+          - generic [ref=e83] [cursor=pointer]: loading
+      - button "패널 접기" [expanded] [ref=e88] [cursor=pointer]:
+        - generic [ref=e89]: 패널 접기
+    - generic [ref=e90]:
+      - generic:
+        - button "장소 · 방면정보 표기" [pressed] [ref=e93] [cursor=pointer]:
+          - generic [ref=e94]: 장소 · 방면정보 표기
+        - button "미니뷰어로 전환" [ref=e95] [cursor=pointer]:
+          - generic [ref=e96]: 미니뷰어로 전환
+        - button "파노라마 뷰어 닫기" [ref=e97] [cursor=pointer]:
+          - generic [ref=e98]: 파노라마 뷰어 닫기
+      - generic:
+        - generic [ref=e99]:
+          - button "중앙" [ref=e100] [cursor=pointer]:
+            - generic [ref=e101]: 중앙
+          - button "위" [ref=e102] [cursor=pointer]:
+            - generic [ref=e103]: 위
+          - button "오른쪽" [ref=e104] [cursor=pointer]:
+            - generic [ref=e105]: 오른쪽
+          - button "왼쪽" [ref=e106] [cursor=pointer]:
+            - generic [ref=e107]: 왼쪽
+          - button "아래" [ref=e108] [cursor=pointer]:
+            - generic [ref=e109]: 아래
+        - generic [ref=e110]:
+          - button "공유하기" [ref=e111] [cursor=pointer]:
+            - generic [ref=e112]: 공유하기
+          - button "정보 수정 제안" [ref=e113] [cursor=pointer]:
+            - generic [ref=e114]: 정보 수정 제안
+        - generic [ref=e115]:
+          - button "확대" [ref=e116] [cursor=pointer]:
+            - generic [ref=e117]: 확대
+          - button "축소" [ref=e118] [cursor=pointer]:
+            - generic [ref=e119]: 축소
+      - generic [ref=e120]:
+        - button "최대 크기" [ref=e121] [cursor=pointer]:
+          - generic [ref=e122]: 최대 크기
+        - generic [ref=e123]:
+          - button "확대" [ref=e124] [cursor=pointer]:
+            - generic [ref=e125]: 확대
+          - button "축소" [ref=e126] [cursor=pointer]:
+            - generic [ref=e127]: 축소
+        - button "너비/높이 조절" [ref=e128]:
+          - generic [ref=e129]: 너비/높이 조절
+      - dialog [ref=e132]:
+        - generic [ref=e133]:
+          - emphasis [ref=e134]:
+            - generic [ref=e135]: NEW
+          - generic [ref=e136]:
+            - strong [ref=e137]: 거리뷰의 새로운 기능
+            - text: 을 소개합니다!
+          - generic [ref=e138]:
+            - button "이전" [disabled] [ref=e141]:
+              - generic [ref=e142]: 이전
+            - button "다음" [active] [ref=e143] [cursor=pointer]:
+              - generic [ref=e144]: 다음
+            - generic [ref=e146]: 원하는 곳을 눌러 자유롭게 이동하세요!
+            - list [ref=e147]:
+              - listitem [ref=e148]:
+                - generic [ref=e149]: "1"
+              - listitem [ref=e150]:
+                - generic [ref=e151]: "2"
+              - listitem [ref=e152]:
+                - generic [ref=e153]: "3"
+              - listitem [ref=e154]:
+                - generic [ref=e155]: "4"
+              - listitem [ref=e156]:
+                - generic [ref=e157]: "5"
+        - generic [ref=e158]:
+          - checkbox "다시보지 않기"
+          - generic [ref=e161] [cursor=pointer]: 다시보지 않기
+        - button "닫기" [ref=e162] [cursor=pointer]:
+          - generic [ref=e163]: 닫기
+  - status [ref=e164]

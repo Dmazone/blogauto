@@ -1,0 +1,426 @@
+[2026-05-26T13:03:09.487Z] 💎  Gem 모드: https://gemini.google.com/u/2/gem/cca9fca55f60
+[2026-05-26T13:03:09.488Z] 🚀  daily_runner 시작 — 그룹 2 / 5개 섹션
+[2026-05-26T13:03:09.489Z] 📅  예약 발행: 07:10~07:50 KST (다음날, 10분 간격)
+[2026-05-26T13:03:10.567Z] 📰  [1/5] 건강 (질병)
+[2026-05-26T13:03:10.567Z] 📅  발행 예약: 2026-05-27T07:10:00+09:00
+[2026-05-26T13:03:44.174Z] ❌  건강 실패 (시도 1/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:03:44.176Z] ⏳  3분 후 재시도...
+[2026-05-26T13:07:17.824Z] ❌  건강 실패 (시도 2/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:07:17.828Z] ⏸️  다음 섹션까지 1분 대기...
+[2026-05-26T13:08:17.847Z] 📰  [2/5] IT기기
+[2026-05-26T13:08:17.847Z] 📅  발행 예약: 2026-05-27T07:20:00+09:00
+[2026-05-26T13:08:51.575Z] ❌  IT기기 실패 (시도 1/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:08:51.578Z] ⏳  3분 후 재시도...
+[2026-05-26T13:12:25.248Z] ❌  IT기기 실패 (시도 2/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:12:25.250Z] ⏸️  다음 섹션까지 1분 대기...
+[2026-05-26T13:13:25.257Z] 📰  [3/5] 한국부동산
+[2026-05-26T13:13:25.257Z] 📅  발행 예약: 2026-05-27T07:30:00+09:00
+[2026-05-26T13:13:59.179Z] ❌  한국부동산 실패 (시도 1/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c2293890761="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c2293890761-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c2293890761="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c2293890761-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:13:59.182Z] ⏳  3분 후 재시도...
+[2026-05-26T13:17:33.014Z] ❌  한국부동산 실패 (시도 2/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:17:33.016Z] ⏸️  다음 섹션까지 1분 대기...
+[2026-05-26T13:18:33.031Z] 📰  [4/5] 세계여행지
+[2026-05-26T13:18:33.032Z] 📅  발행 예약: 2026-05-27T07:40:00+09:00
+[2026-05-26T13:19:06.817Z] ❌  세계여행지 실패 (시도 1/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:19:06.819Z] ⏳  3분 후 재시도...
+[2026-05-26T13:22:40.465Z] ❌  세계여행지 실패 (시도 2/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:22:40.468Z] ⏸️  다음 섹션까지 1분 대기...
+[2026-05-26T13:23:40.470Z] 📰  [5/5] 스포츠
+[2026-05-26T13:23:40.471Z] 📅  발행 예약: 2026-05-27T07:50:00+09:00
+[2026-05-26T13:24:14.211Z] ❌  스포츠 실패 (시도 1/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:24:14.213Z] ⏳  3분 후 재시도...
+[2026-05-26T13:27:47.774Z] ❌  스포츠 실패 (시도 2/2): locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('button.send-button').first()[22m
+[2m    - locator resolved to <button tabindex="-1" mat-icon-button="" aria-label="메시지 보내기" aria-disabled="true" _ngcontent-ng-c1514364005="" mat-ripple-loader-centered="" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple" class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base send-button ng-tns-c1514364005-4 submit mat-unthemed ng-star-inserted" jslog="173899;track:generic_click,impression;BardVeMetadataKey:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,nul…>…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at GeminiSession.send (C:\Users\Paydma\BlogAuto\scripts\gemini_browser.js:213:21)
+    at async runWebPipeline (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:719:3)
+    at async runForSection (C:\Users\Paydma\BlogAuto\scripts\agent_core.js:888:20)
+    at async main (C:\Users\Paydma\BlogAuto\scripts\daily_runner.js:146:24)
+[2026-05-26T13:27:47.949Z] 🔒  브라우저 세션 종료
+[2026-05-26T13:27:47.954Z] 🎉  완료 — 성공 0개 / 실패 5개
+[2026-05-26T13:27:47.956Z] 💾  posts_log.json 저장 완료
+[2026-05-26T13:27:48.877Z] 📱  텔레그램 완료 알림 전송

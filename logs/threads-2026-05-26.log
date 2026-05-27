@@ -1,0 +1,90 @@
+[2026-05-26T07:45:32.677Z] 🚀  threads_poster 시작 — 1개 포스팅
+[2026-05-26T07:45:32.678Z] 🌐  Threads 브라우저 시작...
+[2026-05-26T07:45:38.540Z] ✅  Threads 세션 준비 완료
+[2026-05-26T07:45:38.541Z]   ───────────────────────────────────────────────────────
+[2026-05-26T07:45:38.541Z] 📰  [1/1] 스스로 판단하고 결제하는 AI 에이전트의 출현과 금융 결합 트렌드
+[2026-05-26T07:45:38.542Z] ✍️  홍보글 생성: 스스로 판단하고 결제하는 AI 에이전트의 출현과 금융 결합 트렌드
+[2026-05-26T07:45:38.989Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbQorUEQMYWqW6cN2Am7M"}
+[2026-05-26T07:45:38.989Z] 📤  게시 시작: 스스로 판단하고 결제하는 AI 에이전트의 출현과 금융 결합 트렌드  지금 트렌드줌에서 확인...
+[2026-05-26T07:45:43.157Z] ⚠️  작성 영역 클릭 실패, JS 강제 시도
+[2026-05-26T07:45:49.217Z] ✅  게시 완료
+[2026-05-26T07:45:49.218Z] ✅  게시 완료: 스스로 판단하고 결제하는 AI 에이전트의 출현과 금융 결합 트렌드
+[2026-05-26T07:45:49.218Z] 👀  피드 10개 탐색 중...
+[2026-05-26T07:46:38.679Z] 📚  피드 0개 파악 완료
+[2026-05-26T07:46:38.680Z] 🔥  스하리 시작 (목표: 30개)
+[2026-05-26T07:47:11.189Z] 📍  피드 끝 도달 → 홈 재이동
+[2026-05-26T07:47:43.405Z] 📍  피드 끝 도달 → 홈 재이동
+[2026-05-26T07:48:16.315Z] 📍  피드 끝 도달 → 홈 재이동
+[2026-05-26T08:56:01.398Z] 🚀  threads_poster 시작 — 1개 포스팅, postOnly=false, shariOnly=false
+[2026-05-26T08:56:01.399Z] 🌐  Threads 브라우저 시작...
+[2026-05-26T08:56:06.965Z] ✅  Threads 세션 준비 완료
+[2026-05-26T08:56:06.966Z]   ───────────────────────────────────────────────────────
+[2026-05-26T08:56:06.966Z] 📰  [1/1] 2026 FIFA 월드컵 한국 대표팀, 16강 넘을 수 있을까
+[2026-05-26T08:56:06.967Z] ✍️  홍보글 생성: 2026 FIFA 월드컵 한국 대표팀, 16강 넘을 수 있을까
+[2026-05-26T08:56:07.541Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbQuEBHNUvGFR7Mskc5UR"}
+[2026-05-26T08:56:07.542Z] 📤  게시 시작: 2026 FIFA 월드컵 한국 대표팀, 16강 넘을 수 있을까  지금 트렌드줌에서 확인하세...
+[2026-05-26T08:56:11.538Z] ❌  게시 실패: page.evaluate: Execution context was destroyed, most likely because of a navigation
+[2026-05-26T08:56:11.539Z]   ───────────────────────────────────────────────────────
+[2026-05-26T08:56:11.540Z] 🔥  스하리 시작 (목표: 30개) — 검색 기반 모집글 탐색
+[2026-05-26T08:56:11.540Z] 🔍  "스하리모집" 검색 중...
+[2026-05-26T08:56:12.055Z] ❌  스하리 실패: page.goto: Navigation to "https://www.threads.com/search/?q=%EC%8A%A4%ED%95%98%EB%A6%AC%EB%AA%A8%EC%A7%91&serp_type=default" is interrupted by another navigation to "https://www.instagram.com/accounts/login/?force_authentication&platform_app_id=1289884158313322&enable_fb_login&request_id=51234074-b1af-4b80-898b-3adff079bd4d&next=https%3A%2F%2Fwww.instagram.com%2Foauth%2Foidc%2F%3Fapp_id%3D1289884158313322%26redirect_uri%3Dhttps%253A%252F%252Fwww.threads.com%252Flogin%252Foidc%252F%26response_type%3Dcode%26scope%3Dopenid%26state%3DATqN_I2Nt29ICO7fC7wSXF0vaB5NTfFZUW3NIPWXq4U-_o2eBTlxBlJ8Fh1DkyZr1adr3IzhSv9bX2j6oDxRTs602DXu5WQf1zmYQO8Zp7UJg6lPrKDGYjkCfCkAm_LDSSDpQ0-ugoLwaZa_-WJFkAzpmZg9aoILF9FfkPYqwuJKxMgVstmeVB6fpiH2o81F%26logger_id%3D51234074-b1af-4b80-898b-3adff079bd4d%26force_consent%3D0%26force_authentication%3D0"
+Call log:
+[2m  - navigating to "https://www.threads.com/search/?q=%EC%8A%A4%ED%95%98%EB%A6%AC%EB%AA%A8%EC%A7%91&serp_type=default", waiting until "domcontentloaded"[22m
+
+[2026-05-26T08:56:12.235Z] 🔒  Threads 세션 종료
+[2026-05-26T08:56:12.235Z]   =======================================================
+[2026-05-26T08:56:12.235Z] 🎉  완료 — 게시 0/1 | 스하리 총 0개
+[2026-05-26T08:56:13.225Z] 📱  텔레그램 알림 전송 완료
+[2026-05-26T08:57:19.399Z] 🚀  threads_poster 시작 — 1개 포스팅, postOnly=false, shariOnly=false
+[2026-05-26T08:57:19.400Z] 🌐  Threads 브라우저 시작...
+[2026-05-26T08:57:27.843Z] ✅  Threads 세션 준비 완료
+[2026-05-26T08:57:27.843Z]   ───────────────────────────────────────────────────────
+[2026-05-26T08:57:27.844Z] 📰  [1/1] 2026 FIFA 월드컵 한국 대표팀, 16강 넘을 수 있을까
+[2026-05-26T08:57:27.844Z] ✍️  홍보글 생성: 2026 FIFA 월드컵 한국 대표팀, 16강 넘을 수 있을까
+[2026-05-26T08:57:28.429Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbQuL8i1YQh6K6861edTo"}
+[2026-05-26T08:57:28.429Z] 📤  게시 시작: 2026 FIFA 월드컵 한국 대표팀, 16강 넘을 수 있을까  지금 트렌드줌에서 확인하세...
+[2026-05-26T08:57:32.900Z] ⚠️  작성 영역 클릭 실패, JS 강제 시도
+[2026-05-26T08:57:38.948Z] ✅  게시 완료
+[2026-05-26T08:57:38.948Z] ✅  게시 완료: 2026 FIFA 월드컵 한국 대표팀, 16강 넘을 수 있을까
+[2026-05-26T08:57:38.949Z]   ───────────────────────────────────────────────────────
+[2026-05-26T08:57:38.950Z] 🔥  스하리 시작 (목표: 30개) — 검색 기반 모집글 탐색
+[2026-05-26T08:57:38.950Z] 🔍  "스하리모집" 검색 중...
+[2026-05-26T08:57:47.066Z] 📋  "스하리모집" — 포스트 0개 발견
+[2026-05-26T08:57:47.066Z] 🔍  "스하리1000명프로젝트" 검색 중...
+[2026-05-26T08:57:56.838Z] 📋  "스하리1000명프로젝트" — 포스트 10개 발견
+[2026-05-26T08:57:56.839Z] 👤  스하리 진행: @xxhxxgxx (https://www.threads.com/@xxhxxgxx/post/DYy63SWmXKd)
+[2026-05-26T08:58:05.414Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:58:05.415Z] 🎉  스하리+댓글 완료: @xxhxxgxx (1/30)
+[2026-05-26T08:58:11.542Z] 👤  스하리 진행: @fruny_official (https://www.threads.com/@fruny_official/post/DYy7wizkijR)
+[2026-05-26T08:58:20.989Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:58:20.990Z] 🎉  스하리+댓글 완료: @fruny_official (2/30)
+[2026-05-26T08:58:25.168Z] 👤  스하리 진행: @loll.ll.lol (https://www.threads.com/@loll.ll.lol/post/DYy5ftiks2b)
+[2026-05-26T08:58:34.105Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:58:34.105Z] 🎉  스하리+댓글 완료: @loll.ll.lol (3/30)
+[2026-05-26T08:58:39.589Z] 👤  스하리 진행: @yang__gaa (https://www.threads.com/@yang__gaa/post/DYy10E9Eb7W)
+[2026-05-26T08:58:48.219Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:58:48.220Z] 🎉  스하리+댓글 완료: @yang__gaa (4/30)
+[2026-05-26T08:58:52.771Z] 👤  스하리 진행: @llama.43542961 (https://www.threads.com/@llama.43542961/post/DYy2nhvk_Zw)
+[2026-05-26T08:59:01.302Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:59:01.303Z] 🎉  스하리+댓글 완료: @llama.43542961 (5/30)
+[2026-05-26T08:59:07.779Z] 👤  스하리 진행: @mioooooooz (https://www.threads.com/@mioooooooz/post/DYy20b3E6qj)
+[2026-05-26T08:59:16.214Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:59:16.215Z] 🎉  스하리+댓글 완료: @mioooooooz (6/30)
+[2026-05-26T08:59:20.379Z] 👤  스하리 진행: @h.eewa (https://www.threads.com/@h.eewa/post/DYyzharCSBU)
+[2026-05-26T08:59:29.813Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:59:29.814Z] 🎉  스하리+댓글 완료: @h.eewa (7/30)
+[2026-05-26T08:59:35.601Z] 👤  스하리 진행: @aj_ao_nlm (https://www.threads.com/@aj_ao_nlm/post/DYyagYlkybf)
+[2026-05-26T08:59:44.592Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:59:44.593Z] 🎉  스하리+댓글 완료: @aj_ao_nlm (8/30)
+[2026-05-26T08:59:49.352Z] 👤  스하리 진행: @dot_shape_ (https://www.threads.com/@dot_shape_/post/DYyxkL7AZtV)
+[2026-05-26T08:59:58.045Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T08:59:58.046Z] 🎉  스하리+댓글 완료: @dot_shape_ (9/30)
+[2026-05-26T09:00:05.011Z] 👤  스하리 진행: @ompusj_flu12 (https://www.threads.com/@ompusj_flu12/post/DYyHn7RmYWl)
+[2026-05-26T09:00:13.462Z] ⚠️  댓글 입력창 못 찾음 — 댓글 생략
+[2026-05-26T09:00:13.463Z] 🎉  스하리+댓글 완료: @ompusj_flu12 (10/30)
+[2026-05-26T09:00:20.033Z] 🔍  "뒷삭없는스하리" 검색 중...
+[2026-05-26T09:00:26.873Z] ❌  스하리 실패: page.evaluate: Target page, context or browser has been closed
+[2026-05-26T09:00:26.874Z] 🔒  Threads 세션 종료
+[2026-05-26T09:00:26.874Z]   =======================================================
+[2026-05-26T09:00:26.875Z] 🎉  완료 — 게시 1/1 | 스하리 총 0개
+[2026-05-26T09:00:27.791Z] 📱  텔레그램 알림 전송 완료

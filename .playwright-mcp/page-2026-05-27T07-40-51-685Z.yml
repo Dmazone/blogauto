@@ -1,0 +1,1562 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - button [ref=e1971]:
+      - generic [ref=e5]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - generic [ref=e11]:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic [ref=e49] [cursor=pointer]:
+                      - generic [ref=e50]: 
+                      - generic [ref=e51]: 입구뷰
+                    - generic [ref=e77] [cursor=pointer]:
+                      - generic [ref=e78]: 402동
+                      - generic [ref=e79]: 109타입
+                      - generic [ref=e80]: 25F
+                    - generic [ref=e81] [cursor=pointer]:
+                      - generic [ref=e82]: 404동
+                      - generic [ref=e83]: 109타입
+                      - generic [ref=e84]: 25F
+                    - generic [ref=e85] [cursor=pointer]:
+                      - generic [ref=e86]: 414동
+                      - generic [ref=e87]: 109타입
+                      - generic [ref=e88]: 19F
+                    - generic [ref=e89] [cursor=pointer]:
+                      - generic [ref=e90]: 418동
+                      - generic [ref=e91]: 109타입
+                      - generic [ref=e92]: 24F
+                    - generic [ref=e93] [cursor=pointer]:
+                      - generic [ref=e95]: 
+                      - text: 
+                    - generic [ref=e96] [cursor=pointer]:
+                      - generic [ref=e98]: M
+                      - text: 
+                    - generic [ref=e99] [cursor=pointer]:
+                      - generic [ref=e101]: 
+                      - text: 
+                    - generic [ref=e102] [cursor=pointer]:
+                      - generic [ref=e104]: M
+                      - text: 
+                    - generic [ref=e105] [cursor=pointer]:
+                      - generic [ref=e107]: 
+                      - text: 
+                    - generic [ref=e108] [cursor=pointer]:
+                      - generic [ref=e110]: 
+                      - text: 
+                    - generic [ref=e111] [cursor=pointer]:
+                      - generic [ref=e113]: 
+                      - text: 
+                    - generic [ref=e114] [cursor=pointer]:
+                      - generic [ref=e116]: 
+                      - text: 
+                    - generic [ref=e117] [cursor=pointer]:
+                      - generic [ref=e119]: 
+                      - text: 
+                    - generic [ref=e120] [cursor=pointer]:
+                      - generic [ref=e122]: 
+                      - text: 
+                    - generic [ref=e123] [cursor=pointer]:
+                      - generic [ref=e124]: 
+                      - generic [ref=e125]: 9호선
+                      - text: 
+                    - generic [ref=e126] [cursor=pointer]:
+                      - generic [ref=e128]: 
+                      - text: 
+                    - generic [ref=e129] [cursor=pointer]:
+                      - generic [ref=e131]: 
+                      - text: 
+                    - generic [ref=e132] [cursor=pointer]:
+                      - generic [ref=e134]: 
+                      - text: 
+                    - generic [ref=e135] [cursor=pointer]:
+                      - generic [ref=e136]: 초
+                      - text: 
+                    - generic [ref=e137] [cursor=pointer]:
+                      - generic [ref=e139]: M
+                      - text: 
+                    - generic [ref=e140] [cursor=pointer]:
+                      - generic [ref=e141]: 
+                      - generic [ref=e142]: 2호선
+                      - text: 
+                    - generic [ref=e143] [cursor=pointer]:
+                      - generic [ref=e145]: 
+                      - text: 
+                    - generic [ref=e146] [cursor=pointer]:
+                      - generic [ref=e148]: 
+                      - text: 
+                    - generic [ref=e149] [cursor=pointer]:
+                      - generic [ref=e151]: 
+                      - text: 
+                    - generic [ref=e152] [cursor=pointer]:
+                      - generic [ref=e154]: 
+                      - text: 
+                    - generic [ref=e155] [cursor=pointer]:
+                      - generic [ref=e157]: 
+                      - text: 
+                    - generic [ref=e158] [cursor=pointer]:
+                      - generic [ref=e160]: 
+                      - text: 
+                    - generic [ref=e161] [cursor=pointer]:
+                      - generic [ref=e163]: 
+                      - text: 
+                    - generic [ref=e164] [cursor=pointer]:
+                      - generic [ref=e166]: 
+                      - text: 
+                    - generic [ref=e167] [cursor=pointer]:
+                      - generic [ref=e169]: 
+                      - text: 
+                    - generic [ref=e170] [cursor=pointer]:
+                      - generic [ref=e172]: 
+                      - text: 
+                    - generic [ref=e176] [cursor=pointer]:
+                      - generic [ref=e178]: M
+                      - text: 
+                    - generic [ref=e179] [cursor=pointer]:
+                      - generic [ref=e181]: 
+                      - text: 
+                    - generic [ref=e182] [cursor=pointer]:
+                      - generic [ref=e184]: 
+                      - text: 
+                    - generic [ref=e185] [cursor=pointer]:
+                      - generic [ref=e186]: 33평
+                      - generic [ref=e187]: 20억
+                      - generic [ref=e189]: 90명 보는중
+                    - generic [ref=e190] [cursor=pointer]:
+                      - generic [ref=e191]: 9평
+                      - generic [ref=e192]: 2.9억
+                    - generic [ref=e193] [cursor=pointer]:
+                      - generic [ref=e194]: 11평
+                      - generic [ref=e195]: 3.2억
+                    - generic [ref=e196] [cursor=pointer]:
+                      - generic [ref=e197]: 24평
+                      - generic [ref=e198]: 15.9억
+                    - generic [ref=e201] [cursor=pointer]:
+                      - generic [ref=e202]: 23평
+                      - generic [ref=e203]: 4.3억
+                    - generic [ref=e204] [cursor=pointer]:
+                      - generic [ref=e205]: 32평
+                      - generic [ref=e206]: 22.5억
+                      - generic [ref=e207]: 41명 보는중
+                    - generic [ref=e209] [cursor=pointer]:
+                      - generic [ref=e210]: 34평
+                      - generic [ref=e211]: 19억
+                    - generic [ref=e213] [cursor=pointer]:
+                      - generic [ref=e214]: 16평
+                      - generic [ref=e215]: 2억
+                    - generic [ref=e217] [cursor=pointer]:
+                      - generic [ref=e218]: 15평
+                      - generic [ref=e219]: 2.1억
+                    - generic [ref=e220] [cursor=pointer]:
+                      - generic [ref=e221]: 18평
+                      - generic [ref=e222]: 2.3억
+                    - generic [ref=e226] [cursor=pointer]:
+                      - generic [ref=e227]: 29평
+                      - generic [ref=e228]: 8.8억
+                    - generic [ref=e229] [cursor=pointer]:
+                      - generic [ref=e1886]: 22평
+                      - generic [ref=e1887]: 16.5억
+                      - generic [ref=e1888]: 33명 보는중
+                    - generic [ref=e233] [cursor=pointer]:
+                      - generic [ref=e234]: 30평
+                      - generic [ref=e235]: 9.8억
+                    - generic [ref=e236] [cursor=pointer]:
+                      - generic [ref=e1889]: 32평
+                      - generic [ref=e1890]: 15.9억
+                    - generic [ref=e241] [cursor=pointer]:
+                      - generic [ref=e242]: 15평
+                      - generic [ref=e243]: 1.6억
+                    - generic [ref=e244] [cursor=pointer]:
+                      - generic [ref=e245]: 20평
+                      - generic [ref=e246]: 8.8억
+                    - generic [ref=e248] [cursor=pointer]:
+                      - generic [ref=e249]: 33평
+                      - generic [ref=e250]: 16.5억
+                      - generic [ref=e252]: 47명 보는중
+                    - generic [ref=e253] [cursor=pointer]:
+                      - generic [ref=e254]: 33평
+                      - generic [ref=e255]: 19.2억
+                    - generic [ref=e256] [cursor=pointer]:
+                      - generic [ref=e257]: 32평
+                      - generic [ref=e258]: 15.2억
+                    - generic [ref=e266] [cursor=pointer]:
+                      - generic [ref=e267]: 17평
+                      - generic [ref=e268]: 1.8억
+                    - generic [ref=e270] [cursor=pointer]:
+                      - generic [ref=e271]: 26평
+                      - generic [ref=e272]: 11.3억
+                    - generic [ref=e273] [cursor=pointer]:
+                      - generic [ref=e274]: 32평
+                      - generic [ref=e275]: 16억
+                    - generic [ref=e284] [cursor=pointer]:
+                      - generic [ref=e285]: 10평
+                      - generic [ref=e286]: 1.5억
+                    - generic [ref=e287] [cursor=pointer]:
+                      - generic [ref=e288]: 6평
+                      - generic [ref=e289]: 1.5억
+                    - generic [ref=e293] [cursor=pointer]:
+                      - generic [ref=e294]: 12평
+                      - generic [ref=e295]: 1.5억
+                    - generic [ref=e304] [cursor=pointer]:
+                      - generic [ref=e305]: 7평
+                      - generic [ref=e306]: 1.2억
+                    - generic [ref=e311] [cursor=pointer]:
+                      - generic [ref=e312]: 27평
+                      - generic [ref=e313]: 6억
+                    - generic [ref=e315] [cursor=pointer]:
+                      - generic [ref=e316]: 30평
+                      - generic [ref=e317]: 7.4억
+                    - generic:
+                      - generic:
+                        - generic: 당산동5가 월간 방문자 1위
+                        - paragraph: 당산삼성래미안4차
+                        - emphasis: 서울특별시 영등포구 당산동5가 42
+                    - generic [ref=e1892] [cursor=pointer]:
+                      - generic [ref=e1893]: 32평
+                      - generic [ref=e1894]: 8.6억
+                    - generic [ref=e1895] [cursor=pointer]:
+                      - generic [ref=e1896]: 31평
+                      - generic [ref=e1897]: 19.7억
+                    - generic [ref=e1898] [cursor=pointer]:
+                      - generic [ref=e1899]: 28평
+                      - generic [ref=e1900]: 10.3억
+                    - generic [ref=e1901] [cursor=pointer]:
+                      - generic [ref=e1902]: 33평
+                      - generic [ref=e1903]: 12억
+                    - generic [ref=e1904] [cursor=pointer]:
+                      - generic [ref=e1905]: 33평
+                      - generic [ref=e1906]: 18억
+                      - generic [ref=e1907]: 35명 보는중
+                    - generic [ref=e1914] [cursor=pointer]:
+                      - generic [ref=e1915]: 8평
+                      - generic [ref=e1916]: 1.5억
+                    - generic [ref=e1918] [cursor=pointer]:
+                      - generic [ref=e1919]: 중
+                      - text: 
+                    - generic [ref=e1920] [cursor=pointer]:
+                      - generic [ref=e1921]: 중
+                      - text: 
+                    - generic [ref=e1922] [cursor=pointer]:
+                      - generic [ref=e1924]: 
+                      - text: 
+                    - generic [ref=e1925] [cursor=pointer]:
+                      - generic [ref=e1927]: 
+                      - text: 
+                    - generic [ref=e1928] [cursor=pointer]:
+                      - generic [ref=e1930]: 
+                      - text: 
+                    - generic [ref=e1931] [cursor=pointer]:
+                      - generic [ref=e1933]: 
+                      - text: 
+                    - generic [ref=e1934] [cursor=pointer]:
+                      - generic [ref=e1936]: 
+                      - text: 
+                    - generic [ref=e1937] [cursor=pointer]:
+                      - generic [ref=e1939]: 
+                      - text: 
+                    - generic [ref=e1940] [cursor=pointer]:
+                      - generic [ref=e1942]: 
+                      - text: 
+                    - generic [ref=e1943] [cursor=pointer]:
+                      - generic [ref=e1945]: 
+                      - text: 
+            - generic:
+              - generic [ref=e321]: 50m
+              - link "NAVER" [ref=e322] [cursor=pointer]:
+                - /url: https://ssl.pstatic.net/static/maps/mantle/notice/legal.html
+                - img "NAVER" [ref=e323]
+            - generic:
+              - generic:
+                - generic:
+                  - generic: © NAVER Corp.
+          - link "집 내놓기 페이지로 이동" [ref=e324] [cursor=pointer]:
+            - /url: /my/items
+            - img
+            - text: 집 내놓기
+            - generic [ref=e1978]: 여러 부동산에 한번에
+          - link "영등포구 당산동5가 주변 매물 보기" [ref=e325] [cursor=pointer]:
+            - /url: /region/11560115/item-catalog
+          - generic [ref=e326]:
+            - generic [ref=e327]:
+              - button [ref=e328] [cursor=pointer]:
+                - img [ref=e329]
+              - button [ref=e331] [cursor=pointer]:
+                - img [ref=e332]
+            - generic [ref=e334]:
+              - button [ref=e335] [cursor=pointer]:
+                - img [ref=e336]
+              - button "지도" [ref=e340] [cursor=pointer]
+              - button "필터" [ref=e342] [cursor=pointer]:
+                - generic [ref=e343]: 필터
+              - button "주변" [ref=e345] [cursor=pointer]:
+                - generic [ref=e346]: 주변
+              - button "거리" [ref=e347] [cursor=pointer]:
+                - generic [ref=e348]: 거리
+              - button "정책" [ref=e350] [cursor=pointer]
+              - button "숨김" [ref=e351] [cursor=pointer]
+              - button [ref=e353] [cursor=pointer]:
+                - img
+        - button "로그인" [ref=e356] [cursor=pointer]:
+          - img [ref=e357]
+        - generic [ref=e360]:
+          - generic [ref=e361]:
+            - generic [ref=e362]:
+              - group "검색" [ref=e363]:
+                - generic [ref=e364]: 검색
+                - generic [ref=e365]:
+                  - generic [ref=e366]:
+                    - textbox "아파트, 지역 또는 학교명으로 검색" [ref=e367]
+                    - button "검색하기" [ref=e368] [cursor=pointer]
+                  - link "호갱노노" [ref=e369] [cursor=pointer]:
+                    - /url: "#"
+              - generic [ref=e370]:
+                - button [ref=e372] [cursor=pointer]:
+                  - img [ref=e373]
+                - heading "당산동5가 당산삼성래미안4차" [level=1] [ref=e375]
+                - generic [ref=e376]:
+                  - button [ref=e377] [cursor=pointer]:
+                    - img [ref=e378]
+                  - button "알림설정" [ref=e384] [cursor=pointer]:
+                    - img "알림설정"
+                  - button [ref=e385] [cursor=pointer]:
+                    - img [ref=e386]
+              - generic [ref=e391]:
+                - button "매매" [ref=e393] [cursor=pointer]:
+                  - text: 매매
+                  - img
+                - button "33평" [ref=e396] [cursor=pointer]:
+                  - text: 33평
+                  - img
+                - button "893" [ref=e398] [cursor=pointer]:
+                  - text: "893"
+                  - img
+            - generic [ref=e400]:
+              - generic [ref=e401]:
+                - generic [ref=e402]:
+                  - generic [ref=e403]:
+                    - generic [ref=e404]: 서울특별시 영등포구 당산동5가 42
+                    - generic [ref=e405]:
+                      - generic [ref=e406]:
+                        - generic [ref=e407]: 1,391세대|
+                        - generic [ref=e408]: 2003년 12월(24년차)
+                      - generic [ref=e409]:
+                        - generic [ref=e410]: 용적률 299%|
+                        - generic [ref=e411]: 건폐율 18%
+                  - button "3D 단지투어" [ref=e413] [cursor=pointer]
+                - link "당산동5가 월간 방문자 1위 지금 91명이 보는 중" [ref=e1972] [cursor=pointer]:
+                  - /url: /apt/1pa09/0/0/visitor
+                  - generic [ref=e417]:
+                    - img [ref=e419]
+                    - text: 당산동5가 월간 방문자 1위
+                  - generic [ref=e424]:
+                    - text: 지금
+                    - generic [ref=e425]: "91"
+                    - text: 명이 보는 중
+                    - img [ref=e427]
+                - iframe [ref=e436]:
+                  - link [ref=f47e3] [cursor=pointer]:
+                    - /url: https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjsv7Ypy6D9AP2apy50ioFyO4L6AkjUts6KLTVse2Jk8Kr4Ac9uxcJJNU9F6auVjY6hXNYZ58U6SB1Y9pZnUu8ZavDKWNmgDZbSZYo1a542t2BvHhkXZtNGc5aDqXCmSlc2x4gpGqrr1J7UFCMOIVyqnTLI2A7fVOVxcpLtglQKuqJbsM6-yBXOyMjsZxUBEQckD7P26rNh38swLh9vfMhW3BW3ixirkA1l5ayMKLtxNLOaOs1iVqmNXu-b4CV7z-95tY15aX7uX5Y5ITPU1X8iIx7CePVzSOaXjCttKqm51fVbK-Hg61uba-6z2nS0bPU2sDmonKZvu9Vo2H6ncpFm1uR4gbkM0hTfCK9BpMSwm3ayF84hQ7TIlYQs9BP50h_MgSPlE-BWdP8EaWgg&sai=AMfl-YQA6yqdbLJDonRMRo-51pdjwM1NfQ56qzIlxDtBajyXZL8hy03dMDDq8JzwtOM-nRcoUWZUDguV2ROcBSiRA2Odo6XH_3JwgJBbssBbkOwTRo4J9kfToe5SQvmmCBnN4frAeY7B4DR9xgBt5O8d4qF5YCn9PS2WT57D8v2K6_xpPNsvcZBDF5vH8HLoVaVzMTeW358wjKb4IWmLAYVE8PLx8Mq-tGMkI-QdTH7BDEe5ZeQWFOSQ5owrS-TO4JQ-CzLtz4HlUbr6vfzHFmm3JhR3KVEskVKio2Shf3bSdCy0muNUo4mXtFXhnPZQTadccr_wvAUNxKajbD3MsP7b8O8tw2csfSAVTfwI6wQ9TPCHMEO7TPmHEg&sig=Cg0ArKJSzI8-yLmSZIaoEAE&fbs_aeid=%5Bgw_fbsaeid%5D&urlfix=1&adurl=https://www.plusetf.co.kr/product/detail%3Fn%3D006236
+                    - img [ref=f47e4]
+                - button "토지거래허가 1건 발생 (최근 7일)" [ref=e440] [cursor=pointer]:
+                  - generic [ref=e441]:
+                    - paragraph [ref=e442]:
+                      - text: 토지거래허가
+                      - generic [ref=e443]: 1건 발생
+                      - text: (최근 7일)
+                    - img [ref=e444]
+                - generic [ref=e447]:
+                  - generic [ref=e448]:
+                    - generic [ref=e449]:
+                      - link "매매" [ref=e450] [cursor=pointer]:
+                        - /url: "#"
+                      - link "전월세" [ref=e451] [cursor=pointer]:
+                        - /url: "#"
+                    - button " 33평" [ref=e452] [cursor=pointer]
+                  - generic [ref=e453]:
+                    - generic [ref=e454]:
+                      - generic [ref=e455]: 최근 실거래 기준 1개월 평균
+                      - generic [ref=e456]: 20억 333
+                    - generic [ref=e458]:
+                      - generic [ref=e459]:
+                        - link "최근 3년" [ref=e461] [cursor=pointer]:
+                          - /url: "#"
+                        - link "전체 기간" [ref=e463] [cursor=pointer]:
+                          - /url: "#"
+                        - link "매매/전세" [ref=e465] [cursor=pointer]:
+                          - /url: "#"
+                        - link "비교" [ref=e467] [cursor=pointer]:
+                          - /url: "#"
+                      - generic [ref=e468]:
+                        - generic [ref=e470]: 저층
+                        - img [ref=e471]:
+                          - generic [ref=e473]:
+                            - generic [ref=e474]:
+                              - generic [ref=e477]: "2024.01"
+                              - generic [ref=e479]: "2025.01"
+                              - generic [ref=e481]: "2026.01"
+                            - generic [ref=e482]:
+                              - generic [ref=e484]: 14억
+                              - generic [ref=e486]: 16억
+                              - generic [ref=e488]: 18억
+                              - generic [ref=e490]: 20억
+                              - generic [ref=e492]: 22억
+                            - generic [ref=e494]: 거래량
+                            - generic [ref=e498]:
+                              - generic [ref=e499]: 실거래 29건
+                              - generic [ref=e510]: 최저
+                              - generic [ref=e513]: 최고
+                    - generic [ref=e522]:
+                      - link "국토교통부에서 16분 전 확인" [ref=e524] [cursor=pointer]:
+                        - /url: https://rt.molit.go.kr/pt/xls/xls.do
+                      - table [ref=e525]:
+                        - rowgroup [ref=e530]:
+                          - row "계약일 면적(공급) 가격" [ref=e531]:
+                            - cell "계약일" [ref=e532]
+                            - cell "면적(공급)" [ref=e533]:
+                              - generic "국토교통부 실거래가에서 타입 정보를 제공하지 않기 때문에 실제와 다를 수 있습니다." [ref=e534] [cursor=pointer]:
+                                - text: 면적(공급)
+                                - img [ref=e535]
+                            - cell "가격" [ref=e538]:
+                              - generic [ref=e539] [cursor=pointer]:
+                                - text: 가격
+                                - img [ref=e540]
+                            - cell [ref=e543]
+                        - rowgroup [ref=e544]:
+                          - row "26.04.22 109 19억 9,000 8층" [ref=e545] [cursor=pointer]:
+                            - cell "26.04.22" [ref=e546]
+                            - cell "109" [ref=e547]:
+                              - button "109" [ref=e548]
+                            - cell "19억 9,000 8층" [ref=e549]:
+                              - generic [ref=e550]:
+                                - generic [ref=e552]: 19억 9,000
+                                - generic [ref=e553]: 8층
+                          - row "26.04.17 109 20억 7,000 18층" [ref=e554] [cursor=pointer]:
+                            - cell "26.04.17" [ref=e555]
+                            - cell "109" [ref=e556]:
+                              - button "109" [ref=e557]
+                            - cell "20억 7,000 18층" [ref=e558]:
+                              - generic [ref=e559]:
+                                - generic [ref=e561]: 20억 7,000
+                                - generic [ref=e562]: 18층
+                          - row "26.04.11 109 19억 5,000 2층" [ref=e563] [cursor=pointer]:
+                            - cell "26.04.11" [ref=e564]
+                            - cell "109" [ref=e565]:
+                              - button "109" [ref=e566]
+                            - cell "19억 5,000 2층" [ref=e567]:
+                              - generic [ref=e568]:
+                                - generic [ref=e570]: 19억 5,000
+                                - generic [ref=e571]: 2층
+                            - cell [ref=e572]
+                          - row "25.12.12 109 등기 20억 9,000 402동/12층" [ref=e573] [cursor=pointer]:
+                            - cell "25.12.12" [ref=e574]
+                            - cell "109" [ref=e575]:
+                              - button "109" [ref=e576]
+                            - cell "등기 20억 9,000 402동/12층" [ref=e577]:
+                              - generic [ref=e578]:
+                                - generic [ref=e579]:
+                                  - generic [ref=e581]: 등기
+                                  - generic [ref=e582]: 20억 9,000
+                                - generic [ref=e583]: 402동/12층
+                          - row "25.10.18 109 등기 20억 5,500 402동/3층" [ref=e584] [cursor=pointer]:
+                            - cell "25.10.18" [ref=e585]
+                            - cell "109" [ref=e586]:
+                              - button "109" [ref=e587]
+                            - cell "등기 20억 5,500 402동/3층" [ref=e588]:
+                              - generic [ref=e589]:
+                                - generic [ref=e590]:
+                                  - generic [ref=e592]: 등기
+                                  - generic [ref=e593]: 20억 5,500
+                                - generic [ref=e594]: 402동/3층
+                            - cell [ref=e595]
+                      - button "더보기" [ref=e598] [cursor=pointer]:
+                        - generic [ref=e599]: 더보기
+                        - img [ref=e600]
+                    - button "새로운 실거래가 알림받기" [ref=e604] [cursor=pointer]:
+                      - img [ref=e605]
+                      - text: 새로운 실거래가 알림받기
+                - generic [ref=e609]:
+                  - generic [ref=e612]: 이 단지 매물
+                  - list [ref=e614]:
+                    - listitem [ref=e615]:
+                      - article [ref=e616] [cursor=pointer]:
+                        - link "실거래 매매 26억 142 / 115m², 408동 22층 당산최고입지 남향 탑층의여유 한강뷰" [ref=e617]:
+                          - /url: /apt/1pa09/0/0/item-catalog/1630546/0
+                          - list [ref=e619]:
+                            - generic "실거래" [ref=e620]: 실매물 확인
+                          - generic [ref=e623]:
+                            - heading "매매 26억" [level=1] [ref=e624]
+                            - listitem [ref=e625]: 142 / 115m², 408동 22층
+                            - listitem [ref=e626]: 당산최고입지 남향 탑층의여유 한강뷰
+                          - img [ref=e628]
+                    - listitem [ref=e629]:
+                      - article [ref=e630] [cursor=pointer]:
+                        - link "매매 26억 142 / 115m², 408동 고층 B.주인직접의뢰 햇살 가득 남향 탑층의여유 입주협의" [ref=e631]:
+                          - /url: /apt/1pa09/0/0/item-catalog/1630535/0
+                          - generic [ref=e634]:
+                            - heading "매매 26억" [level=1] [ref=e635]
+                            - listitem [ref=e636]: 142 / 115m², 408동 고층
+                            - listitem [ref=e637]: B.주인직접의뢰 햇살 가득 남향 탑층의여유 입주협의
+                          - img [ref=e639]
+                    - listitem [ref=e640]:
+                      - article [ref=e641] [cursor=pointer]:
+                        - link "매매 26억 142 / 115m², 408동 중층 B.남향,역세권,편리한 주차,선호라인,당서초배정" [ref=e642]:
+                          - /url: /apt/1pa09/0/0/item-catalog/1630428/0
+                          - generic [ref=e645]:
+                            - heading "매매 26억" [level=1] [ref=e646]
+                            - listitem [ref=e647]: 142 / 115m², 408동 중층
+                            - listitem [ref=e648]: B.남향,역세권,편리한 주차,선호라인,당서초배정
+                          - img [ref=e650]
+                    - listitem [ref=e651]:
+                      - article [ref=e652] [cursor=pointer]:
+                        - link "매매 26억 142 / 115m², 408동 중층 입주협의,방2확장,집상태좋아요 매물 찜 3명" [ref=e653]:
+                          - /url: /apt/1pa09/0/0/item-catalog/1630429/0
+                          - generic [ref=e656]:
+                            - heading "매매 26억" [level=1] [ref=e657]
+                            - listitem [ref=e658]: 142 / 115m², 408동 중층
+                            - listitem [ref=e659]: 입주협의,방2확장,집상태좋아요
+                          - img [ref=e661]
+                          - paragraph [ref=e663]: 매물 찜 3명
+                - generic [ref=e665]:
+                  - generic [ref=e667]:
+                    - generic [ref=e668]: 지역 평당가 비교
+                    - button [ref=e669] [cursor=pointer]:
+                      - img [ref=e670]
+                  - generic [ref=e673]:
+                    - list [ref=e674]:
+                      - listitem [ref=e675]:
+                        - button "30평대 비교" [ref=e676] [cursor=pointer]
+                      - listitem [ref=e677]:
+                        - button "변동률 비교" [ref=e678] [cursor=pointer]
+                    - generic [ref=e679]:
+                      - generic [ref=e680]:
+                        - generic [ref=e682]: 6,071만원
+                        - generic [ref=e685]: 5,125만원
+                        - generic [ref=e688]: 3,987만원
+                        - generic [ref=e691]: 3,239만원
+                      - generic [ref=e694]:
+                        - generic [ref=e696]: 이 아파트
+                        - generic [ref=e698]: 당산동5가
+                        - generic [ref=e700]: 영등포구
+                        - generic [ref=e702]: 서울
+                  - button "영등포구 평당가 상세보기" [ref=e703] [cursor=pointer]:
+                    - generic [ref=e704]: 영등포구 평당가 상세보기
+                    - img [ref=e705]
+                  - button "당산동5가 평당가 상세보기" [ref=e707] [cursor=pointer]:
+                    - generic [ref=e708]: 당산동5가 평당가 상세보기
+                    - img [ref=e709]
+                - generic [ref=e712]:
+                  - generic [ref=e715]: 거래세
+                  - generic [ref=e716]:
+                    - generic [ref=e717]:
+                      - generic [ref=e718]:
+                        - generic [ref=e719]: 예상 거래가
+                        - generic [ref=e720]:
+                          - generic [ref=e721]: 20억 333
+                          - button [ref=e722] [cursor=pointer]:
+                            - img [ref=e723]
+                      - button [ref=e728] [cursor=pointer]
+                    - generic [ref=e730]:
+                      - generic [ref=e731]:
+                        - text: 세금
+                        - button "" [ref=e732] [cursor=pointer]:
+                          - generic [ref=e733]: 
+                      - generic [ref=e734]: 6,611만원
+                    - generic [ref=e735]:
+                      - generic [ref=e736]:
+                        - text: 중개보수
+                        - button "" [ref=e737] [cursor=pointer]:
+                          - generic [ref=e738]: 
+                      - button "0.7%" [ref=e739] [cursor=pointer]:
+                        - generic [ref=e740]: 0.7%
+                        - img [ref=e741]
+                      - generic [ref=e743]: 1,402만원
+                - generic [ref=e746]:
+                  - generic [ref=e748]:
+                    - generic [ref=e749]:
+                      - text: 보유세
+                      - link "" [ref=e750] [cursor=pointer]:
+                        - /url: "#"
+                        - generic [ref=e751]: 
+                    - generic [ref=e752]: 2025/01 기준
+                  - list [ref=e755]:
+                    - listitem [ref=e756]:
+                      - button "109타입" [ref=e757] [cursor=pointer]
+                  - generic [ref=e758]:
+                    - generic [ref=e759]:
+                      - link "개인, 1인 소유, 1주택, 60세 미만, 1년 보유 변경" [ref=e760] [cursor=pointer]:
+                        - /url: "#"
+                        - generic [ref=e761]: 개인, 1인 소유, 1주택, 60세 미만, 1년 보유
+                        - generic [ref=e762]: 변경
+                      - button "보유주택 추가" [ref=e764] [cursor=pointer]:
+                        - generic [ref=e765]:
+                          - img [ref=e766]
+                          - generic [ref=e767]: 보유주택 추가
+                    - generic [ref=e768]:
+                      - generic [ref=e769]:
+                        - generic [ref=e770]:
+                          - generic [ref=e771]:
+                            - text: 공시지가 예상 증감률
+                            - button "" [ref=e772] [cursor=pointer]:
+                              - generic [ref=e773]: 
+                          - generic [ref=e774]: 30%
+                        - button [ref=e778] [cursor=pointer]
+                      - generic [ref=e780]:
+                        - generic [ref=e781]: 2026년 예상 세금
+                        - generic [ref=e782]:
+                          - generic [ref=e783]: 293만원
+                          - generic [ref=e784]: +73만원(34%)
+                    - table [ref=e785]:
+                      - rowgroup [ref=e786]:
+                        - row "년도 공시가 재산세 종부세 합계" [ref=e787]:
+                          - columnheader "년도" [ref=e788]:
+                            - generic [ref=e789]: 년도
+                          - columnheader "공시가" [ref=e790]:
+                            - generic [ref=e791]: 공시가
+                            - link [ref=e792] [cursor=pointer]:
+                              - /url: "#"
+                              - img [ref=e794]
+                          - columnheader "재산세" [ref=e797]:
+                            - link "재산세" [ref=e798] [cursor=pointer]:
+                              - /url: "#"
+                              - generic [ref=e799]: 재산세
+                              - img [ref=e801]
+                          - columnheader "종부세" [ref=e804]:
+                            - link "종부세" [ref=e805] [cursor=pointer]:
+                              - /url: "#"
+                              - generic [ref=e806]: 종부세
+                              - img [ref=e808]
+                          - columnheader "합계" [ref=e811]
+                      - rowgroup [ref=e812]:
+                        - row "2023 9억5,500(55%) 191만 없음 191만원" [ref=e813]:
+                          - cell "2023" [ref=e814]:
+                            - generic [ref=e815]: "2023"
+                          - cell "9억5,500(55%)" [ref=e816]:
+                            - generic [ref=e817]: 9억5,500(55%)
+                          - cell "191만" [ref=e818]:
+                            - generic [ref=e819]: 191만
+                          - cell "없음" [ref=e820]:
+                            - generic [ref=e821]: 없음
+                          - cell "191만원" [ref=e822]:
+                            - generic [ref=e823]: 191만원
+                        - row "2024 10억4,000(65%) 205만 없음 205만원" [ref=e824]:
+                          - cell "2024" [ref=e825]:
+                            - generic [ref=e826]: "2024"
+                          - cell "10억4,000(65%)" [ref=e827]:
+                            - generic [ref=e828]: 10억4,000(65%)
+                          - cell "205만" [ref=e829]:
+                            - generic [ref=e830]: 205만
+                          - cell "없음" [ref=e831]:
+                            - generic [ref=e832]: 없음
+                          - cell "205만원" [ref=e833]:
+                            - generic [ref=e834]: 205만원
+                        - row "2025 10억8,000(66%) 220만 없음 220만원" [ref=e835]:
+                          - cell "2025" [ref=e836]:
+                            - generic [ref=e837]: "2025"
+                          - cell "10억8,000(66%)" [ref=e838]:
+                            - generic [ref=e839]: 10억8,000(66%)
+                          - cell "220만" [ref=e840]:
+                            - generic [ref=e841]: 220만
+                          - cell "없음" [ref=e842]:
+                            - generic [ref=e843]: 없음
+                          - cell "220만원" [ref=e844]:
+                            - generic [ref=e845]: 220만원
+                        - row "2026 14억400 240만 53만 293만원" [ref=e846]:
+                          - cell "2026" [ref=e847]:
+                            - generic [ref=e848]: "2026"
+                          - cell "14억400" [ref=e849]:
+                            - generic [ref=e850]: 14억400
+                          - cell "240만" [ref=e851]:
+                            - generic [ref=e852]: 240만
+                          - cell "53만" [ref=e853]:
+                            - generic [ref=e854]: 53만
+                          - cell "293만원" [ref=e855]:
+                            - generic [ref=e856]: 293만원
+                        - row "2027 18억2,520 265만 195만 460만원" [ref=e857]:
+                          - cell "2027" [ref=e858]:
+                            - generic [ref=e859]: "2027"
+                          - cell "18억2,520" [ref=e860]:
+                            - generic [ref=e861]: 18억2,520
+                          - cell "265만" [ref=e862]:
+                            - generic [ref=e863]: 265만
+                          - cell "195만" [ref=e864]:
+                            - generic [ref=e865]: 195만
+                          - cell "460만원" [ref=e866]:
+                            - generic [ref=e867]: 460만원
+                    - button "그래프 보기" [ref=e869] [cursor=pointer]:
+                      - generic [ref=e870]: 그래프 보기
+                      - img [ref=e871]
+                    - button "보유세 계산 자세히 보기" [ref=e873] [cursor=pointer]
+                - generic [ref=e875]:
+                  - generic [ref=e878]: 타입/동 정보
+                  - generic [ref=e879]:
+                    - list [ref=e882]:
+                      - listitem [ref=e883]:
+                        - button "33평" [ref=e884] [cursor=pointer]
+                      - listitem [ref=e885]:
+                        - button "37평" [ref=e886] [cursor=pointer]
+                      - listitem [ref=e887]:
+                        - button "43평" [ref=e888] [cursor=pointer]
+                      - listitem [ref=e889]:
+                        - button "48평" [ref=e890] [cursor=pointer]
+                      - listitem [ref=e891]:
+                        - button "58평" [ref=e892] [cursor=pointer]
+                    - list [ref=e895]:
+                      - listitem [ref=e896]:
+                        - button "109타입" [ref=e897] [cursor=pointer]:
+                          - text: 109타입
+                          - img [ref=e898]
+                    - generic [ref=e900]:
+                      - generic [ref=e901]:
+                        - generic [ref=e902]:
+                          - img [ref=e903]
+                          - text: 109타입 실거래 평균
+                          - generic "해당 평형의 인기 타입입니다" [ref=e905]: 
+                        - generic [ref=e906]: 20억 333
+                      - list [ref=e907]:
+                        - listitem [ref=e908]:
+                          - button "402동" [ref=e909] [cursor=pointer]
+                        - listitem [ref=e910]:
+                          - button "404동" [ref=e911] [cursor=pointer]
+                        - listitem [ref=e912]:
+                          - button "414동" [ref=e913] [cursor=pointer]
+                        - listitem [ref=e914]:
+                          - button "418동"
+                      - list "418동의 다른 타입" [ref=e915]:
+                        - text: 418동의 다른 타입
+                        - listitem [ref=e916]:
+                          - button "109타입"
+                - generic [ref=e918]:
+                  - generic [ref=e921]: 아파트 자산 관리
+                  - generic [ref=e922]:
+                    - generic [ref=e924]: 
+                    - generic [ref=e925]:
+                      - text: 이 아파트에 거주하시나요?
+                      - text: 아파트 자산 관리를 시작해보세요.
+                      - text: 자산 현황, 수익률, 임대 만기 알림까지!
+                      - text: 무료로 손쉽게 관리할 수 있습니다!
+                  - button "아파트 자산관리 시작하기" [ref=e927] [cursor=pointer]
+                - generic [ref=e929]:
+                  - generic [ref=e930]:
+                    - generic [ref=e931]:
+                      - generic [ref=e932]:
+                        - generic [ref=e933]: 대출계산기
+                        - generic [ref=e934]:
+                          - checkbox "생애최초" [ref=e935] [cursor=pointer]
+                          - generic [ref=e936] [cursor=pointer]: 생애최초
+                      - paragraph [ref=e937]:
+                        - link "금융감독원" [ref=e938] [cursor=pointer]:
+                          - /url: http://finlife.fss.or.kr/
+                        - text: 최저금리 기준
+                    - generic [ref=e939]:
+                      - generic [ref=e940]:
+                        - generic [ref=e941]:
+                          - paragraph [ref=e942]: 자본금
+                          - paragraph [ref=e943]: 16억 1,000만원
+                        - generic [ref=e944]:
+                          - paragraph [ref=e945]: 대출금(전체의 20%)
+                          - paragraph [ref=e946]: 3억 9,333만원
+                      - button [ref=e950] [cursor=pointer]
+                      - generic [ref=e954]:
+                        - generic [ref=e955]:
+                          - paragraph [ref=e956]: 월납입금 231만원
+                          - generic [ref=e958]: 20년간
+                        - paragraph [ref=e959]:
+                          - text: 이자총액 1억 6,138만원
+                          - generic [ref=e960]: (원금균등분할상환)
+                  - list [ref=e961]:
+                    - listitem [ref=e962]:
+                      - generic [ref=e963]: 가장 저렴한 대출 상담받기
+                      - generic [ref=e964]: 농협은행주식회사
+                      - generic [ref=e965]:
+                        - generic [ref=e966]: 변동
+                        - text: 4.12%
+                      - link "전화하기" [ref=e967] [cursor=pointer]:
+                        - /url: "#"
+                        - generic [ref=e968]: 전화하기
+                  - link "다른 은행 대출상품 더보기" [ref=e969] [cursor=pointer]:
+                    - /url: /apt/1pa09/0/0/loan
+                - generic [ref=e972]:
+                  - button [ref=e973] [cursor=pointer]
+                  - list [ref=e981]:
+                    - listitem [ref=e982]: 아파트
+                    - listitem [ref=e983]: 1,391세대
+                    - listitem [ref=e984]: 2003년 12월(24년차)
+                    - listitem [ref=e985]: 25개동
+                    - listitem [ref=e986]: 최고 25층
+                    - listitem [ref=e987]: 용적률 299%
+                    - listitem [ref=e988]: 건폐율 18%
+                    - listitem [ref=e989]: 지하주차 2,393대
+                    - listitem [ref=e990]: 지상주차 111대
+                    - listitem [ref=e991]: 계단식
+                    - listitem [ref=e992]: 개별난방
+                    - listitem [ref=e993]: 도시가스
+                    - listitem [ref=e994]:
+                      - link "내진설계대상 " [ref=e995] [cursor=pointer]:
+                        - /url: "#"
+                        - text: 내진설계대상
+                        - generic [ref=e996]: 
+                    - listitem [ref=e997]:
+                      - link "평지에 있는 단지 " [ref=e998] [cursor=pointer]:
+                        - /url: "#"
+                        - text: 평지에 있는 단지
+                        - generic [ref=e999]: 
+                  - button "109타입 109타입" [ref=e1001] [cursor=pointer]:
+                    - generic [ref=e1007]:
+                      - img "109타입" [ref=e1008]
+                      - generic [ref=e1009]: 109타입
+                  - generic [ref=e1010]:
+                    - generic [ref=e1011]:
+                      - text: 주차공간
+                      - generic [ref=e1012]: 충분
+                      - generic "국토교통부 자동차등록 현황과 호갱노노 리뷰를 통해 적절한 구간을 산정했습니다." [ref=e1013]: 
+                    - generic [ref=e1014]:
+                      - generic [ref=e1019]: 세대당
+                      - generic [ref=e1020]: "1.2"
+                      - generic [ref=e1021]: "1.5"
+                      - generic [ref=e1022]: 3대
+                - generic [ref=e1024]:
+                  - generic [ref=e1026]:
+                    - generic [ref=e1027]: 관리비
+                    - generic [ref=e1029]:
+                      - text: 2026년 04월
+                      - link "공동주택관리시스템 제공" [ref=e1030] [cursor=pointer]:
+                        - /url: http://k-apt.go.kr/
+                  - list [ref=e1031]:
+                    - listitem [ref=e1032]:
+                      - text: 겨울
+                      - paragraph [ref=e1033]: 21만원
+                    - listitem [ref=e1034]:
+                      - text: 여름
+                      - paragraph [ref=e1035]: 22만원
+                    - listitem [ref=e1036]:
+                      - text: 평균
+                      - paragraph [ref=e1037]: 22만원
+                - generic [ref=e1039]:
+                  - generic [ref=e1042]:
+                    - text: 아파트 일조량
+                    - link "" [ref=e1043] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=e1044]: 
+                  - button "3D 일조량 보기" [ref=e1049] [cursor=pointer]:
+                    - generic [ref=e1050]: 3D 일조량 보기
+                - generic [ref=e1052]:
+                  - generic [ref=e1055]:
+                    - text: 빠른 배송 생활권
+                    - link "" [ref=e1056] [cursor=pointer]:
+                      - /url: "#"
+                      - generic [ref=e1057]: 
+                  - list [ref=e1059]:
+                    - listitem [ref=e1060]:
+                      - generic [ref=e1061]: 쿠팡
+                      - text: 로켓배송 ∙ 로켓프레시
+                    - listitem [ref=e1062]:
+                      - generic [ref=e1063]: SSG
+                      - text: 쓱배송 ∙ 새벽배송
+                    - listitem [ref=e1064]:
+                      - generic [ref=e1065]: 마켓컬리
+                      - text: 샛별배송
+                - generic [ref=e1068]:
+                  - generic [ref=e1069]:
+                    - generic [ref=e1072]:
+                      - text: 주변 상권 정보
+                      - link "" [ref=e1073] [cursor=pointer]:
+                        - /url: "#"
+                        - generic [ref=e1074]: 
+                    - list [ref=e1075]:
+                      - listitem [ref=e1076]:
+                        - button "한림대학교 한강성심병원 1.1km, 4분거리" [ref=e1077] [cursor=pointer]:
+                          - heading "한림대학교 한강성심병원" [level=5] [ref=e1078]:
+                            - img [ref=e1079]
+                            - generic [ref=e1082]: 한림대학교 한강성심병원
+                          - generic [ref=e1083]: 1.1km, 4분거리
+                      - listitem [ref=e1084]:
+                        - button "씨엠병원 1.5km, 5분거리" [ref=e1085] [cursor=pointer]:
+                          - heading "씨엠병원" [level=5] [ref=e1086]:
+                            - img [ref=e1087]
+                            - generic [ref=e1090]: 씨엠병원
+                          - generic [ref=e1091]: 1.5km, 5분거리
+                      - listitem [ref=e1092]:
+                        - button "롯데맥스(영등포점) 481m, 2분거리" [ref=e1093] [cursor=pointer]:
+                          - heading "롯데맥스(영등포점)" [level=5] [ref=e1094]:
+                            - img [ref=e1095]
+                            - generic [ref=e1100]: 롯데맥스(영등포점)
+                          - generic [ref=e1101]: 481m, 2분거리
+                      - listitem [ref=e1102]:
+                        - button "코스트코(양평점) 1.1km, 4분거리" [ref=e1103] [cursor=pointer]:
+                          - heading "코스트코(양평점)" [level=5] [ref=e1104]:
+                            - img [ref=e1105]
+                            - generic [ref=e1110]: 코스트코(양평점)
+                          - generic [ref=e1111]: 1.1km, 4분거리
+                      - listitem [ref=e1112]:
+                        - button "하나로마트(국회점) 1.2km, 4분거리" [ref=e1113] [cursor=pointer]:
+                          - heading "하나로마트(국회점)" [level=5] [ref=e1114]:
+                            - img [ref=e1115]
+                            - generic [ref=e1120]: 하나로마트(국회점)
+                          - generic [ref=e1121]: 1.2km, 4분거리
+                      - listitem [ref=e1122]:
+                        - button "롯데마트(양평점) 1.2km, 4분거리" [ref=e1123] [cursor=pointer]:
+                          - heading "롯데마트(양평점)" [level=5] [ref=e1124]:
+                            - img [ref=e1125]
+                            - generic [ref=e1130]: 롯데마트(양평점)
+                          - generic [ref=e1131]: 1.2km, 4분거리
+                      - listitem [ref=e1132]:
+                        - button "롯데마트(양평점) 1.2km, 4분거리" [ref=e1133] [cursor=pointer]:
+                          - heading "롯데마트(양평점)" [level=5] [ref=e1134]:
+                            - img [ref=e1135]
+                            - generic [ref=e1140]: 롯데마트(양평점)
+                          - generic [ref=e1141]: 1.2km, 4분거리
+                      - listitem [ref=e1142]:
+                        - button "당산나루소공원(테니스장5.1배) 253m, 1분거리" [ref=e1143] [cursor=pointer]:
+                          - heading "당산나루소공원(테니스장5.1배)" [level=5] [ref=e1144]:
+                            - img [ref=e1145]
+                            - generic [ref=e1148]: 당산나루소공원(테니스장5.1배)
+                          - generic [ref=e1149]: 253m, 1분거리
+                  - button "상권 자세히 보기" [ref=e1151] [cursor=pointer]
+                - generic [ref=e1154]:
+                  - generic [ref=e1156]:
+                    - generic [ref=e1157]: 3개월 내 나올만한 전세
+                    - generic [ref=e1158]: 실거래 자료로 예측
+                  - generic [ref=e1160]: 7개
+                  - generic "A chart." [ref=e1165]:
+                    - img "A chart." [ref=e1166]:
+                      - generic [ref=e1195]:
+                        - generic [ref=e1197]: 26/05
+                        - generic [ref=e1199]: 26/06
+                        - generic [ref=e1201]: 26/07
+                        - generic [ref=e1203]: 26/08
+                        - generic [ref=e1205]: 26/09
+                        - generic [ref=e1207]: 26/10
+                        - generic [ref=e1209]: 26/11
+                        - generic [ref=e1211]: 26/12
+                        - generic [ref=e1213]: 27/01
+                        - generic [ref=e1215]: 27/02
+                        - generic [ref=e1217]: 27/03
+                        - generic [ref=e1219]: 27/04
+                        - generic [ref=e1221]: 27/05
+                    - generic "A tabular representation of the data in the chart." [ref=e1222]:
+                      - table [ref=e1223]:
+                        - rowgroup [ref=e1224]:
+                          - row "월 전세 예상 수" [ref=e1225]:
+                            - columnheader "월" [ref=e1226]
+                            - columnheader "전세 예상 수" [ref=e1227]
+                        - rowgroup [ref=e1228]:
+                          - row "26/05 6" [ref=e1229]:
+                            - cell "26/05" [ref=e1230]
+                            - cell "6" [ref=e1231]
+                          - row "26/06 0" [ref=e1232]:
+                            - cell "26/06" [ref=e1233]
+                            - cell "0" [ref=e1234]
+                          - row "26/07 1" [ref=e1235]:
+                            - cell "26/07" [ref=e1236]
+                            - cell "1" [ref=e1237]
+                          - row "26/08 2" [ref=e1238]:
+                            - cell "26/08" [ref=e1239]
+                            - cell "2" [ref=e1240]
+                          - row "26/09 2" [ref=e1241]:
+                            - cell "26/09" [ref=e1242]
+                            - cell "2" [ref=e1243]
+                          - row "26/10 3" [ref=e1244]:
+                            - cell "26/10" [ref=e1245]
+                            - cell "3" [ref=e1246]
+                          - row "26/11 1" [ref=e1247]:
+                            - cell "26/11" [ref=e1248]
+                            - cell "1" [ref=e1249]
+                          - row "26/12 1" [ref=e1250]:
+                            - cell "26/12" [ref=e1251]
+                            - cell "1" [ref=e1252]
+                          - row "27/01 1" [ref=e1253]:
+                            - cell "27/01" [ref=e1254]
+                            - cell "1" [ref=e1255]
+                          - row "27/02 0" [ref=e1256]:
+                            - cell "27/02" [ref=e1257]
+                            - cell "0" [ref=e1258]
+                          - row "27/03 5" [ref=e1259]:
+                            - cell "27/03" [ref=e1260]
+                            - cell "5" [ref=e1261]
+                          - row "27/04 1" [ref=e1262]:
+                            - cell "27/04" [ref=e1263]
+                            - cell "1" [ref=e1264]
+                          - row "27/05 0" [ref=e1265]:
+                            - cell "27/05" [ref=e1266]
+                            - cell "0" [ref=e1267]
+                  - paragraph [ref=e1269]: 총 1391세대중 2세대(0.1%)가 임대사업자를 등록
+                - generic [ref=e1271]:
+                  - generic [ref=e1273]:
+                    - generic [ref=e1274]: 주변 대중교통
+                    - generic [ref=e1275]: 지하철 1km, 광역버스 500m 이내
+                  - generic [ref=e1276]:
+                    - generic [ref=e1277]: 이 단지에서 출/퇴근 지역까지의 시간을 비교해보세요.
+                    - generic [ref=e1278]:
+                      - generic [ref=e1279]:
+                        - combobox [ref=e1280] [cursor=pointer]:
+                          - option "을지로"
+                          - option "가산"
+                          - option "역삼"
+                          - option "안산"
+                          - option "명동"
+                          - option "서현"
+                          - option "왕십리"
+                          - option "정자"
+                          - option "구로"
+                          - option "잠실"
+                          - option "홍대"
+                          - option "일산"
+                          - option "송도"
+                          - option "여의도" [selected]
+                          - option "양재"
+                          - option "평촌"
+                          - option "판교"
+                          - option "수원"
+                          - option "마곡"
+                        - img
+                        - generic [ref=e1281]: 15분
+                      - generic [ref=e1282]:
+                        - combobox [ref=e1283] [cursor=pointer]:
+                          - option "강남" [selected]
+                          - option "을지로"
+                          - option "가산"
+                          - option "역삼"
+                          - option "안산"
+                          - option "명동"
+                          - option "서현"
+                          - option "왕십리"
+                          - option "정자"
+                          - option "구로"
+                          - option "잠실"
+                          - option "홍대"
+                          - option "일산"
+                          - option "송도"
+                          - option "양재"
+                          - option "평촌"
+                          - option "판교"
+                          - option "수원"
+                          - option "마곡"
+                        - img
+                        - generic [ref=e1284]: 50분
+                  - generic [ref=e1285]:
+                    - generic [ref=e1286]:
+                      - img [ref=e1287]
+                      - generic [ref=e1292]: 지하철 3
+                    - list [ref=e1293]:
+                      - listitem [ref=e1294]:
+                        - button "9 당산역" [ref=e1295] [cursor=pointer]:
+                          - generic [ref=e1296]: "9"
+                          - generic [ref=e1297]: 당산역
+                        - generic [ref=e1298]: 218m/도보 3분
+                      - listitem [ref=e1299]:
+                        - button "2 당산역" [ref=e1300] [cursor=pointer]:
+                          - generic [ref=e1301]: "2"
+                          - generic [ref=e1302]: 당산역
+                        - generic [ref=e1303]: 316m/도보 5분
+                      - listitem [ref=e1304]:
+                        - button "2 영등포구청역" [ref=e1305] [cursor=pointer]:
+                          - generic [ref=e1306]: "2"
+                          - generic [ref=e1307]: 영등포구청역
+                        - generic [ref=e1308]: 883m/도보 13분
+                  - generic [ref=e1309]:
+                    - generic [ref=e1310]:
+                      - img [ref=e1311]
+                      - generic [ref=e1314]: 버스 65
+                    - list [ref=e1315]:
+                      - listitem [ref=e1316]:
+                        - list "공항" [ref=e1317]:
+                          - text: 공항
+                          - listitem "해군호텔~인천공항T2-3층" [ref=e1318]:
+                            - button "6008" [ref=e1319] [cursor=pointer]:
+                              - generic [ref=e1320]: "6008"
+                          - listitem "인천공항T2-B1층~국회의사당" [ref=e1321]:
+                            - button "6007" [ref=e1322] [cursor=pointer]:
+                              - generic [ref=e1323]: "6007"
+                      - listitem [ref=e1324]:
+                        - list "마을" [ref=e1325]:
+                          - text: 마을
+                          - listitem "당산역~경방타임스퀘어.신세계백화점" [ref=e1326]:
+                            - button "05" [ref=e1327] [cursor=pointer]:
+                              - generic [ref=e1328]: "05"
+                          - listitem "현대2.3차아파트~영등포로터리" [ref=e1329]:
+                            - button "03" [ref=e1330] [cursor=pointer]:
+                              - generic [ref=e1331]: "03"
+                          - listitem "한국환경수도연구원~신동아아파트.관악고교" [ref=e1332]:
+                            - button "02" [ref=e1333] [cursor=pointer]:
+                              - generic [ref=e1334]: "02"
+                          - listitem "강서보건소.9호선등촌역~당산역.지하철2호선" [ref=e1335]:
+                            - button "01" [ref=e1336] [cursor=pointer]:
+                              - generic [ref=e1337]: "01"
+                  - button "더보기" [ref=e1338] [cursor=pointer]:
+                    - text: 더보기
+                    - img [ref=e1339]
+                - generic [ref=e1342]:
+                  - list [ref=e1343]:
+                    - listitem [ref=e1344]:
+                      - button "초등학교" [ref=e1345] [cursor=pointer]
+                    - listitem [ref=e1346]:
+                      - button "중학교" [ref=e1347] [cursor=pointer]
+                    - listitem [ref=e1348]:
+                      - button "고등학교" [ref=e1349] [cursor=pointer]
+                  - generic [ref=e1351]:
+                    - generic [ref=e1352]:
+                      - generic [ref=e1353]:
+                        - generic [ref=e1354]: 거리
+                        - button [ref=e1355] [cursor=pointer]:
+                          - img [ref=e1356]
+                      - generic [ref=e1359]:
+                        - generic [ref=e1360]: 서울당서초통학구역
+                        - button [ref=e1361] [cursor=pointer]:
+                          - img [ref=e1362]
+                    - img [ref=e1365]
+                    - generic [ref=e1368]:
+                      - generic [ref=e1369]: 도보 5분
+                      - generic [ref=e1370]: 도보 10분
+                      - generic [ref=e1371]: 도보 20분
+                    - list [ref=e1372]:
+                      - listitem [ref=e1373]:
+                        - link "서울당서초등학교 공립 205m/3분 가장 가까움" [ref=e1374] [cursor=pointer]:
+                          - /url: /poi/gDe79?aptId=1pa09
+                          - generic [ref=e1376]:
+                            - generic [ref=e1377]:
+                              - generic [ref=e1378]: 서울당서초등학교
+                              - generic [ref=e1379]: 공립
+                            - generic [ref=e1380]:
+                              - generic [ref=e1381]:
+                                - text: 205m/
+                                - strong [ref=e1382]: 3분
+                              - generic [ref=e1383]: 가장 가까움
+                - generic [ref=e1385]:
+                  - list [ref=e1386]:
+                    - listitem [ref=e1387]:
+                      - button "어린이집" [ref=e1388] [cursor=pointer]
+                    - listitem [ref=e1389]:
+                      - button "유치원" [ref=e1390] [cursor=pointer]
+                  - generic [ref=e1391]:
+                    - generic [ref=e1393]: 반경 1km내의 보육시설
+                    - list [ref=e1394]:
+                      - listitem [ref=e1395]:
+                        - link "아르미어린이집 국공립 110m 가장 가까움" [ref=e1396] [cursor=pointer]:
+                          - /url: /poi/AuI32?aptId=1pa09
+                          - generic [ref=e1397]:
+                            - generic [ref=e1398]:
+                              - generic [ref=e1399]: 아르미어린이집
+                              - generic [ref=e1400]: 국공립
+                            - generic [ref=e1401]:
+                              - generic [ref=e1402]: 110m
+                              - generic [ref=e1403]: 가장 가까움
+                      - listitem [ref=e1404]:
+                        - link "오렌지어린이집 가정 176m" [ref=e1405] [cursor=pointer]:
+                          - /url: /poi/7rkae?aptId=1pa09
+                          - generic [ref=e1406]:
+                            - generic [ref=e1407]:
+                              - generic [ref=e1408]: 오렌지어린이집
+                              - generic [ref=e1409]: 가정
+                            - generic [ref=e1411]: 176m
+                      - listitem [ref=e1412]:
+                        - link "효성어린이집 민간 176m" [ref=e1413] [cursor=pointer]:
+                          - /url: /poi/bjp9f?aptId=1pa09
+                          - generic [ref=e1414]:
+                            - generic [ref=e1415]:
+                              - generic [ref=e1416]: 효성어린이집
+                              - generic [ref=e1417]: 민간
+                            - generic [ref=e1419]: 176m
+                      - button "더보기" [ref=e1421] [cursor=pointer]:
+                        - generic [ref=e1422]: 더보기
+                        - img [ref=e1423]
+                - link "운정아이파크포레스트 313,871명 방문, 688명 알림받는 중" [ref=e1427] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e1429]:
+                    - heading "운정아이파크포레스트" [level=5] [ref=e1430]
+                    - paragraph [ref=e1431]: 313,871명 방문, 688명 알림받는 중
+                - generic [ref=e1433]:
+                  - generic [ref=e1436]: 주변 입주 예정 아파트
+                  - generic [ref=e1437]:
+                    - list [ref=e1439]:
+                      - listitem [ref=e1440]:
+                        - link "당산동4가 e편한세상당산리버파크 2028년 3월 550세대, 33평 - 가장 가까운 곳" [ref=e1441] [cursor=pointer]:
+                          - /url: /apt/gv3e5/0/0
+                          - generic [ref=e1442]:
+                            - generic [ref=e1443]:
+                              - generic [ref=e1444]: 당산동4가 e편한세상당산리버파크
+                              - generic [ref=e1445]: 2028년 3월 550세대, 33평
+                            - generic [ref=e1446]:
+                              - generic [ref=e1447]: "-"
+                              - generic [ref=e1448]: 가장 가까운 곳
+                      - listitem [ref=e1449]:
+                        - link "영등포동5가 리버센트푸르지오위브 2029년 1월 659세대, 31평 15억" [ref=e1450] [cursor=pointer]:
+                          - /url: /apt/en2e1/0/0
+                          - generic [ref=e1451]:
+                            - generic [ref=e1452]:
+                              - generic [ref=e1453]: 영등포동5가 리버센트푸르지오위브
+                              - generic [ref=e1454]: 2029년 1월 659세대, 31평
+                            - generic [ref=e1456]: 15억
+                      - listitem [ref=e1457]:
+                        - link "여의도동 아크로여의도더원 2026년 12월 492세대, 32평 17억" [ref=e1458] [cursor=pointer]:
+                          - /url: /apt/gaN9e/0/0
+                          - generic [ref=e1459]:
+                            - generic [ref=e1460]:
+                              - generic [ref=e1461]: 여의도동 아크로여의도더원
+                              - generic [ref=e1462]: 2026년 12월 492세대, 32평
+                            - generic [ref=e1464]: 17억
+                    - button "더보기" [ref=e1466] [cursor=pointer]:
+                      - generic [ref=e1467]: 더보기
+                      - img [ref=e1468]
+                - generic [ref=e1471]:
+                  - generic [ref=e1473]:
+                    - generic [ref=e1474]: 영등포구 아파트 순위
+                    - generic [ref=e1477]:
+                      - button "매매ㅣ" [ref=e1478] [cursor=pointer]
+                      - button "전세" [ref=e1479] [cursor=pointer]
+                  - generic [ref=e1480]:
+                    - generic [ref=e1481]:
+                      - generic [ref=e1482]:
+                        - generic [ref=e1483]:
+                          - generic [ref=e1484]: 평당가
+                          - generic [ref=e1485]: 5,439만원
+                        - button "당산동5가 3위 ▼ 1" [ref=e1487] [cursor=pointer]:
+                          - generic [ref=e1488]: 당산동5가 3위
+                          - generic [ref=e1490]: ▼ 1
+                      - generic [ref=e1491]:
+                        - generic [ref=e1492]:
+                          - generic [ref=e1493]: 인기
+                          - generic [ref=e1494]: 14,310명 방문
+                        - button "영등포구 5위 ▲ 5" [ref=e1496] [cursor=pointer]:
+                          - generic [ref=e1497]: 영등포구 5위
+                          - generic [ref=e1499]: ▲ 5
+                    - button "영등포구 아파트 순위 더보기" [ref=e1501] [cursor=pointer]
+                    - button "당산동5가 아파트 순위 더보기" [ref=e1503] [cursor=pointer]
+                - generic [ref=e1505]:
+                  - generic [ref=e1507]:
+                    - generic [ref=e1508]: 살아본 이야기
+                    - link "사진 전체" [ref=e1511] [cursor=pointer]:
+                      - /url: /apt/1pa09/0/0/reviewPhotos
+                      - text: 사진 전체
+                      - img [ref=e1512]
+                  - list [ref=e1516]:
+                    - listitem [ref=e1517] [cursor=pointer]:
+                      - figure [ref=e1518]:
+                        - link "Bluejays 엄청나네요 신고가 축하합니다~~" [ref=e1519]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20250708063012_nID9uV8rNbkYZUuWx9?s=720x180&t=outside&q=100
+                          - img [ref=e1520]
+                          - generic [ref=e1521]:
+                            - strong [ref=e1522]: Bluejays
+                            - text: 엄청나네요 신고가 축하합니다~~
+                    - listitem [ref=e1523] [cursor=pointer]:
+                      - figure [ref=e1524]:
+                        - link "Bluejays 큰 도약이 있었네요. 메인 평형 신고가 축하합니다!" [ref=e1525]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20260110085045_Dqq1IBPkyNV8UGmLSP?s=720x180&t=outside&q=100
+                          - img [ref=e1526]
+                          - generic [ref=e1527]:
+                            - strong [ref=e1528]: Bluejays
+                            - text: 큰 도약이 있었네요. 메인 평형 신고가 축하합니다!
+                    - listitem [ref=e1529] [cursor=pointer]:
+                      - figure [ref=e1530]:
+                        - link "투투 당산래미안4차 이사온후 저녁마다 한강에서 운동합니다 아름다운 한강에서 몸도 마음도 건강하게 힐링되어 참 행복합니다" [ref=e1531]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20250225112521_oRgAgK6lsto454eCVb?s=720x180&t=outside&q=100
+                          - img [ref=e1532]
+                          - generic [ref=e1533]:
+                            - strong [ref=e1534]: 투투
+                            - text: 당산래미안4차 이사온후 저녁마다 한강에서 운동합니다 아름다운 한강에서 몸도 마음도 건강하게 힐링되어 참 행복합니다
+                    - listitem [ref=e1535] [cursor=pointer]:
+                      - figure [ref=e1536]:
+                        - link "언제나좋아 당산래미안4차에 이사온지 며칠 안됐어요. 지하철이 가까워서 출퇴근이 편해서 좋아요. 이번 불꽃축제도 베란다에서 치킨먹으면서 보고 너무 좋았어요." [ref=e1537]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20241007132514_T2fp9OQAaW1uBfLkMq?s=720x180&t=outside&q=100
+                          - img [ref=e1538]
+                          - generic [ref=e1539]:
+                            - strong [ref=e1540]: 언제나좋아
+                            - text: 당산래미안4차에 이사온지 며칠 안됐어요. 지하철이 가까워서 출퇴근이 편해서 좋아요. 이번 불꽃축제도 베란다에서 치킨먹으면서 보고 너무 좋았어요.
+                      - img [ref=e1541]
+                    - listitem [ref=e1544] [cursor=pointer]:
+                      - figure [ref=e1545]:
+                        - link "언제나좋아 당산래미안4차에 이사온지 며칠 안됐어요. 지하철이 가까워서 출퇴근이 편해서 좋아요. 이번 불꽃축제도 베란다에서 치킨먹으면서 보고 너무 좋았어요." [ref=e1546]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20241007132525_rGY0TqFEm5tKCD2boc?s=720x180&t=outside&q=100
+                          - generic [ref=e1547]:
+                            - strong [ref=e1548]: 언제나좋아
+                            - text: 당산래미안4차에 이사온지 며칠 안됐어요. 지하철이 가까워서 출퇴근이 편해서 좋아요. 이번 불꽃축제도 베란다에서 치킨먹으면서 보고 너무 좋았어요.
+                    - listitem [ref=e1549] [cursor=pointer]:
+                      - figure [ref=e1550]:
+                        - link "언제나좋아 당산래미안4차에 이사온지 며칠 안됐어요. 지하철이 가까워서 출퇴근이 편해서 좋아요. 이번 불꽃축제도 베란다에서 치킨먹으면서 보고 너무 좋았어요." [ref=e1551]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20241007132530_Mm1iAnUdZGCciXFU4Z?s=720x180&t=outside&q=100
+                          - generic [ref=e1552]:
+                            - strong [ref=e1553]: 언제나좋아
+                            - text: 당산래미안4차에 이사온지 며칠 안됐어요. 지하철이 가까워서 출퇴근이 편해서 좋아요. 이번 불꽃축제도 베란다에서 치킨먹으면서 보고 너무 좋았어요.
+                    - listitem [ref=e1554] [cursor=pointer]:
+                      - figure [ref=e1555]:
+                        - link "투투 당래4는 아파트가 아니라 그냥. 명품. 입니다♡" [ref=e1556]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20260421145741_Dp6fDTyo8D7gdfR9Ok?s=720x180&t=outside&q=100
+                          - img [ref=e1557]
+                          - generic [ref=e1558]:
+                            - strong [ref=e1559]: 투투
+                            - text: 당래4는 아파트가 아니라 그냥. 명품. 입니다♡
+                    - listitem [ref=e1560] [cursor=pointer]:
+                      - figure [ref=e1561]:
+                        - link "illliiiil 단지내부는 조용하고 조금만 이동하면 여의도 그리고 학원가인 목동도 쉽게 접근할 수 있습니다. 애키우기에도 조용하고 또래애들도많고요 게다가 아파트 컨디션도 너무 괜찮아서 오래살고싶은 아파트네요. 그리고 당산역이 바로앞 올림픽대로 접근도 쉬워 교통은 말할것도 없고요." [ref=e1562]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20230526164523_A5tGly9WbDvAWuzS8D?s=720x180&t=outside&q=100
+                          - img [ref=e1563]
+                          - generic [ref=e1564]:
+                            - strong [ref=e1565]: illliiiil
+                            - text: 단지내부는 조용하고 조금만 이동하면 여의도 그리고 학원가인 목동도 쉽게 접근할 수 있습니다. 애키우기에도 조용하고 또래애들도많고요 게다가 아파트 컨디션도 너무 괜찮아서 오래살고싶은 아파트네요. 그리고 당산역이 바로앞 올림픽대로 접근도 쉬워 교통은 말할것도 없고요.
+                    - listitem [ref=e1566] [cursor=pointer]:
+                      - figure [ref=e1567]:
+                        - link "투투 당산래미안4차 커뮤 관심있는들에게 도움될까 정보 올려봅니다 갠적으로 전 탁구장있는게 젤 좋은것 같습니다 당래4는 모든면에서 킹왕짱 아파트여서 이곳에 사는 매일매일이 행복입니다" [ref=e1568]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20250907074455_a126HMOXHZvYYPtzBm?s=720x180&t=outside&q=100
+                          - img [ref=e1569]
+                          - generic [ref=e1570]:
+                            - strong [ref=e1571]: 투투
+                            - text: 당산래미안4차 커뮤 관심있는들에게 도움될까 정보 올려봅니다 갠적으로 전 탁구장있는게 젤 좋은것 같습니다 당래4는 모든면에서 킹왕짱 아파트여서 이곳에 사는 매일매일이 행복입니다
+                    - listitem [ref=e1572] [cursor=pointer]:
+                      - figure [ref=e1573]:
+                        - link "당산동민클라스 살기에 정말 좋은 곳이에요. 9호선 뛰어가면 1분컷 가능하고 2호선까지 천천히 걸어도 5분이면 가니까..! 정말 초초초역세권입니다. 단지도 커서 나쁘지않고 한강까지 걸어서 10분으로 한강을 또 즐길수가 있거든요..!!" [ref=e1574]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20210809144254_tzFfS1W027AyW4jtEs?s=720x180&t=outside&q=100
+                          - img [ref=e1575]
+                          - generic [ref=e1576]:
+                            - strong [ref=e1577]: 당산동민클라스
+                            - text: 살기에 정말 좋은 곳이에요. 9호선 뛰어가면 1분컷 가능하고 2호선까지 천천히 걸어도 5분이면 가니까..! 정말 초초초역세권입니다. 단지도 커서 나쁘지않고 한강까지 걸어서 10분으로 한강을 또 즐길수가 있거든요..!!
+                    - listitem [ref=e1578] [cursor=pointer]:
+                      - figure [ref=e1579]:
+                        - link "와이디피 서울시 신통기획 재개발 후보지에 아파트 북쪽 지역이 선정되었네요~ 4~5년후에는 주변환경이 놀랍게 바뀔것 같습니다^^" [ref=e1580]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20211231183447_TnHuDOWkrXA8QaxyuT?s=720x180&t=outside&q=100
+                          - img [ref=e1581]
+                          - generic [ref=e1582]:
+                            - strong [ref=e1583]: 와이디피
+                            - text: 서울시 신통기획 재개발 후보지에 아파트 북쪽 지역이 선정되었네요~ 4~5년후에는 주변환경이 놀랍게 바뀔것 같습니다^^
+                    - listitem [ref=e1584] [cursor=pointer]:
+                      - figure [ref=e1585]:
+                        - link "상급지조아 살면 살수록 빠져드는 아파트 당산삼성래미안4차 \"당래4\" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요." [ref=e1586]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20250916110124_IA167g7ywXdaz0vASi?s=720x180&t=outside&q=100
+                          - img [ref=e1587]
+                          - generic [ref=e1588]:
+                            - strong [ref=e1589]: 상급지조아
+                            - text: 살면 살수록 빠져드는 아파트 당산삼성래미안4차 "당래4" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요.
+                      - img [ref=e1590]
+                    - listitem [ref=e1593] [cursor=pointer]:
+                      - figure [ref=e1594]:
+                        - link "상급지조아 살면 살수록 빠져드는 아파트 당산삼성래미안4차 \"당래4\" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요." [ref=e1595]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20250916110124_CSD4HwUmbvt7MqHaaS?s=720x180&t=outside&q=100
+                          - generic [ref=e1596]:
+                            - strong [ref=e1597]: 상급지조아
+                            - text: 살면 살수록 빠져드는 아파트 당산삼성래미안4차 "당래4" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요.
+                    - listitem [ref=e1598] [cursor=pointer]:
+                      - figure [ref=e1599]:
+                        - link "상급지조아 살면 살수록 빠져드는 아파트 당산삼성래미안4차 \"당래4\" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요." [ref=e1600]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20250916110124_jpBB5orRY3mBMoN7q0?s=720x180&t=outside&q=100
+                          - generic [ref=e1601]:
+                            - strong [ref=e1602]: 상급지조아
+                            - text: 살면 살수록 빠져드는 아파트 당산삼성래미안4차 "당래4" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요.
+                    - listitem [ref=e1603] [cursor=pointer]:
+                      - figure [ref=e1604]:
+                        - link "상급지조아 살면 살수록 빠져드는 아파트 당산삼성래미안4차 \"당래4\" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요." [ref=e1605]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20250916110124_Hj8WJuEeEnU5H35GM0?s=720x180&t=outside&q=100
+                          - generic [ref=e1606]:
+                            - strong [ref=e1607]: 상급지조아
+                            - text: 살면 살수록 빠져드는 아파트 당산삼성래미안4차 "당래4" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요.
+                    - listitem [ref=e1608] [cursor=pointer]:
+                      - figure [ref=e1609]:
+                        - link "상급지조아 살면 살수록 빠져드는 아파트 당산삼성래미안4차 \"당래4\" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요." [ref=e1610]:
+                          - /url: https://image.hogangnono.com/image/nowatermark/original/review/20250916110124_y01zCa2vZ6XKtvhb8f?s=720x180&t=outside&q=100
+                          - generic [ref=e1611]:
+                            - strong [ref=e1612]: 상급지조아
+                            - text: 살면 살수록 빠져드는 아파트 당산삼성래미안4차 "당래4" 당신과 내일(래),미(래)를 꿈꿀 수 있는 곳이네요.
+                    - link "더보기" [ref=e1613] [cursor=pointer]:
+                      - /url: /apt/1pa09/0/0/reviewPhotos
+                      - img [ref=e1615]
+                      - generic [ref=e1617]: 더보기
+                  - generic [ref=e1619]:
+                    - generic [ref=e1620]:
+                      - heading "AI 요약" [level=2] [ref=e1621]:
+                        - img [ref=e1622]
+                        - text: AI 요약
+                        - img [ref=e1625]
+                      - generic [ref=e1631]: 2026.5.4 업데이트
+                    - paragraph [ref=e1632]:
+                      - text: 이야기에 작성된 리뷰를 바탕으로 요약되었습니다.
+                      - button "자세히" [ref=e1633] [cursor=pointer]
+                    - generic [ref=e1634]:
+                      - link "주차" [ref=e1635] [cursor=pointer]:
+                        - /url: /apt/1pa09/review/ai-summary?category=%EC%A3%BC%EC%B0%A8
+                        - text: 주차
+                        - img [ref=e1636]
+                      - link "교통" [ref=e1638] [cursor=pointer]:
+                        - /url: /apt/1pa09/review/ai-summary?category=%EA%B5%90%ED%86%B5
+                        - text: 교통
+                        - img [ref=e1639]
+                      - link "소음" [ref=e1641] [cursor=pointer]:
+                        - /url: /apt/1pa09/review/ai-summary?category=%EC%86%8C%EC%9D%8C
+                        - text: 소음
+                        - img [ref=e1642]
+                      - link "생활 인프라" [ref=e1644] [cursor=pointer]:
+                        - /url: /apt/1pa09/review/ai-summary?category=%EC%83%9D%ED%99%9C%20%EC%9D%B8%ED%94%84%EB%9D%BC
+                        - text: 생활 인프라
+                        - img [ref=e1645]
+                      - link "학군" [ref=e1647] [cursor=pointer]:
+                        - /url: /apt/1pa09/review/ai-summary?category=%ED%95%99%EA%B5%B0
+                        - text: 학군
+                        - img [ref=e1648]
+                      - link "주변 자연환경" [ref=e1650] [cursor=pointer]:
+                        - /url: /apt/1pa09/review/ai-summary?category=%EC%A3%BC%EB%B3%80%20%EC%9E%90%EC%97%B0%ED%99%98%EA%B2%BD
+                        - text: 주변 자연환경
+                        - img [ref=e1651]
+                  - list [ref=e1654]:
+                    - listitem [ref=e1655]:
+                      - generic [ref=e1656]:
+                        - generic [ref=e1657]:
+                          - img [ref=e1659]
+                          - generic [ref=e1663]:
+                            - generic [ref=e1664]: 화이트메탈
+                            - generic [ref=e1665]: dkGH1ad
+                          - generic [ref=e1666]:
+                            - button [ref=e1667] [cursor=pointer]:
+                              - img [ref=e1668]
+                            - button [ref=e1670] [cursor=pointer]:
+                              - img [ref=e1671]
+                        - generic [ref=e1676]: 33평 기준으로 안방 확장하신분 있으신가요? 입주전 확장 하려고 하는데, 업체에서 안하는게 좋을것 같다는 의견을 줘서요..
+                        - generic [ref=e1677]:
+                          - generic [ref=e1678]: 7시간 전
+                          - button "좋아요" [ref=e1679] [cursor=pointer]:
+                            - img [ref=e1680]
+                            - generic [ref=e1683]: 좋아요
+                        - generic [ref=e1684]:
+                          - button "댓글 2개 더보기" [ref=e1685] [cursor=pointer]:
+                            - generic [ref=e1686]: 댓글 2개 더보기
+                          - list [ref=e1687]:
+                            - listitem [ref=e1688]:
+                              - generic [ref=e1689]:
+                                - generic [ref=e1690]:
+                                  - generic [ref=e1691]:
+                                    - generic [ref=e1692]:
+                                      - link "입주민" [ref=e1693] [cursor=pointer]:
+                                        - /url: /asset/register
+                                        - generic [ref=e1694]: 입주민
+                                      - generic [ref=e1695]:
+                                        - generic [ref=e1696]: 후후이
+                                        - generic [ref=e1697]: DjKG381
+                                    - generic [ref=e1698]: 3시간 전
+                                    - button [ref=e1699] [cursor=pointer]:
+                                      - img [ref=e1700]
+                                  - generic [ref=e1704]:
+                                    - text: 장점 공간이 진짜 엄청커집니다 단점 비올때 베란다창고?쪽에서 비소리가 좀들림 근데 이건.. 확장안했을때 들리는지 알수가없네요 그리고 확장할때...
+                                    - button "더보기" [ref=e1705] [cursor=pointer]
+                                - generic [ref=e1706]:
+                                  - button "답글달기" [ref=e1707] [cursor=pointer]
+                                  - img [ref=e1708]
+                                  - button [ref=e1710] [cursor=pointer]:
+                                    - img [ref=e1711]
+                          - generic [ref=e1714]:
+                            - generic [ref=e1715]:
+                              - textbox "로그인이 필요합니다" [ref=e1716]
+                              - textbox "로그인이 필요합니다" [ref=e1717]
+                            - generic:
+                              - button:
+                                - img [ref=e1718] [cursor=pointer]
+                              - button:
+                                - img [ref=e1721] [cursor=pointer]
+                    - listitem [ref=e1723]:
+                      - generic [ref=e1724]:
+                        - generic [ref=e1725]:
+                          - img [ref=e1727]
+                          - generic [ref=e1731]:
+                            - generic [ref=e1732]: 쩡한
+                            - generic [ref=e1733]: Bmob02f
+                          - generic [ref=e1734]:
+                            - button [ref=e1735] [cursor=pointer]:
+                              - img [ref=e1736]
+                            - button [ref=e1738] [cursor=pointer]:
+                              - img [ref=e1739]
+                        - generic [ref=e1744]: 국평기준 최소 22에서 시작해서 더 진도나가야 됩니다.
+                        - generic [ref=e1745]:
+                          - generic [ref=e1746]: 3일 전
+                          - img [ref=e1747]
+                          - generic [ref=e1749]: 13명이 좋아해요
+                          - button "좋아요" [ref=e1750] [cursor=pointer]:
+                            - img [ref=e1751]
+                            - generic [ref=e1754]: 좋아요
+                        - generic [ref=e1755]:
+                          - list [ref=e1756]:
+                            - listitem [ref=e1757]:
+                              - generic [ref=e1758]:
+                                - generic [ref=e1759]:
+                                  - generic [ref=e1760]:
+                                    - generic [ref=e1762]:
+                                      - generic [ref=e1763]: Peaches
+                                      - generic [ref=e1764]: DYWZ179
+                                    - generic [ref=e1765]: 2일 전
+                                    - button [ref=e1766] [cursor=pointer]:
+                                      - img [ref=e1767]
+                                  - generic [ref=e1771]: 뒤켠 국평 25보다 더 가야할 듯 하네요.
+                                - generic [ref=e1772]:
+                                  - button "답글달기" [ref=e1773] [cursor=pointer]
+                                  - img [ref=e1774]
+                                  - button "4" [ref=e1776] [cursor=pointer]:
+                                    - img [ref=e1777]
+                                    - generic [ref=e1780]: "4"
+                          - generic [ref=e1781]:
+                            - generic [ref=e1782]:
+                              - textbox "로그인이 필요합니다" [ref=e1783]
+                              - textbox "로그인이 필요합니다" [ref=e1784]
+                            - generic:
+                              - button:
+                                - img [ref=e1785] [cursor=pointer]
+                              - button:
+                                - img [ref=e1788] [cursor=pointer]
+                    - listitem [ref=e1790]:
+                      - generic [ref=e1791]:
+                        - generic [ref=e1792]:
+                          - img [ref=e1794]
+                          - generic [ref=e1798]:
+                            - generic [ref=e1799]: 0**1
+                            - generic [ref=e1800]: Mnyrad2
+                          - generic [ref=e1801]:
+                            - button [ref=e1802] [cursor=pointer]:
+                              - img [ref=e1803]
+                            - button [ref=e1805] [cursor=pointer]:
+                              - img [ref=e1806]
+                        - generic [ref=e1811]: 역세권에 주변 상가도 정비가 되어 깔끔
+                        - generic [ref=e1812]:
+                          - generic [ref=e1813]: 4일 전
+                          - img [ref=e1814]
+                          - generic [ref=e1816]: 9명이 좋아해요
+                          - button "좋아요" [ref=e1817] [cursor=pointer]:
+                            - img [ref=e1818]
+                            - generic [ref=e1821]: 좋아요
+                        - generic [ref=e1823]:
+                          - generic [ref=e1824]:
+                            - textbox "로그인이 필요합니다" [ref=e1825]
+                            - textbox "로그인이 필요합니다" [ref=e1826]
+                          - generic:
+                            - button:
+                              - img [ref=e1827] [cursor=pointer]
+                            - button:
+                              - img [ref=e1830] [cursor=pointer]
+                  - button "살아본 사람들의 이야기 890개 더보기" [ref=e1833] [cursor=pointer]
+                - generic [ref=e1834]:
+                  - generic [ref=e1835]:
+                    - heading "함께 볼만한 아파트" [level=3] [ref=e1836]
+                    - generic [ref=e1837]: 사용자 관심기반 추천
+                  - list [ref=e1838]:
+                    - listitem [ref=e1839]:
+                      - link "당산동5가 당산센트럴IPARK 22억" [ref=e1840] [cursor=pointer]:
+                        - /url: /apt/ctEc3
+                        - heading "당산동5가 당산센트럴IPARK" [level=5] [ref=e1841]
+                        - generic [ref=e1842]: 22억
+                      - paragraph [ref=e1843]: 매매, 32평
+                    - listitem [ref=e1844]:
+                      - link "신길동 래미안에스티움 20억" [ref=e1845] [cursor=pointer]:
+                        - /url: /apt/aDhc2
+                        - heading "신길동 래미안에스티움" [level=5] [ref=e1846]
+                        - generic [ref=e1847]: 20억
+                      - paragraph [ref=e1848]: 매매, 34평
+                    - listitem [ref=e1849]:
+                      - link "문래동3가 문래자이 18억" [ref=e1850] [cursor=pointer]:
+                        - /url: /apt/1pNa8
+                        - heading "문래동3가 문래자이" [level=5] [ref=e1851]
+                        - generic [ref=e1852]: 18억
+                      - paragraph [ref=e1853]: 매매, 35평
+              - generic [ref=e1854]:
+                - link "처음으로" [ref=e1855] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e1856]: 처음으로
+                - generic [ref=e1857]: © 2015 호갱노노
+              - link "이 단지 매물 4개 보기" [ref=e1859] [cursor=pointer]:
+                - /url: /apt/1pa09/item-catalog
+          - region "Notifications (F8)":
+            - list
+    - textbox
+  - region "Notifications (F8)":
+    - list

@@ -1,0 +1,234 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - button " 7호선 34평 27.3억 14평 3억 62평 62억 18평 13.3억 21평 26억 42명 보는중 41평 34.5억 41평 34억 80평 43억 100평 155억 31평 32.5억 34평 60.5억 51명 보는중 17평 3.9억 31평 22억 53평 26.7억 44평 45억 20평 11.1억 43평 45억 31평 21억 31평 26.3억 12평 2.8억 10명 보는중 예정 분양 50m NAVER © NAVER Corp. 집 내놓기 페이지로 이동 강남구 청담동 주변 매물 보기 지도 필터 주변 거리 정책 숨김 검색 아파트 당산동5가 당산삼성래미안4차 1,391세대 2003년 12월 입주 안양동 삼성래미안 1,998세대 2002년 1월 입주 가장동 삼성래미안 2,398세대 2002년 7월 입주 구로동 삼성래미안 1,244세대 2004년 5월 입주 내손동 삼성래미안 586세대 2001년 4월 입주 보라동 삼성래미안 370세대 1998년 5월 입주 오향리 삼성래미안 108세대 1994년 7월 입주 상동 다정한마을삼성래미안 718세대 2002년 9월 입주 비산동 비산삼성래미안 3,806세대 2003년 12월 입주 약사동 삼성래미안2차4단지 569세대 2004년 7월 입주 주변정보 종암동 삼성래미안어린이집 월성동 삼성래미안어린이집 영통동 삼성래미안어린이집 안양동 삼성래미안어린이집 양평동2가 삼성래미안어린이집" [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e8]:
+          - generic [ref=e9]:
+            - generic [ref=e11]:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic [ref=e42] [cursor=pointer]:
+                      - generic [ref=e43]: 
+                      - generic [ref=e44]: 7호선
+                      - text: 
+                    - generic [ref=e46] [cursor=pointer]:
+                      - generic [ref=e47]: 34평
+                      - generic [ref=e48]: 27.3억
+                    - generic [ref=e50] [cursor=pointer]:
+                      - generic [ref=e51]: 14평
+                      - generic [ref=e52]: 3억
+                    - generic [ref=e53] [cursor=pointer]:
+                      - generic [ref=e54]: 62평
+                      - generic [ref=e55]: 62억
+                    - generic [ref=e57] [cursor=pointer]:
+                      - generic [ref=e58]: 18평
+                      - generic [ref=e59]: 13.3억
+                    - generic [ref=e62] [cursor=pointer]:
+                      - generic [ref=e63]: 21평
+                      - generic [ref=e64]: 26억
+                      - generic [ref=e65]: 42명 보는중
+                    - generic [ref=e66] [cursor=pointer]:
+                      - generic [ref=e67]: 41평
+                      - generic [ref=e68]: 34.5억
+                    - generic [ref=e70] [cursor=pointer]:
+                      - generic [ref=e71]: 41평
+                      - generic [ref=e72]: 34억
+                    - generic [ref=e76] [cursor=pointer]:
+                      - generic [ref=e77]: 80평
+                      - generic [ref=e78]: 43억
+                    - generic [ref=e81] [cursor=pointer]:
+                      - generic [ref=e82]: 100평
+                      - generic [ref=e83]: 155억
+                    - generic [ref=e84] [cursor=pointer]:
+                      - generic [ref=e85]: 31평
+                      - generic [ref=e86]: 32.5억
+                    - generic [ref=e88] [cursor=pointer]:
+                      - generic [ref=e89]: 34평
+                      - generic [ref=e90]: 60.5억
+                      - generic [ref=e92]: 51명 보는중
+                    - generic [ref=e93] [cursor=pointer]:
+                      - generic [ref=e94]: 17평
+                      - generic [ref=e95]: 3.9억
+                    - generic [ref=e96] [cursor=pointer]:
+                      - generic [ref=e97]: 31평
+                      - generic [ref=e98]: 22억
+                    - generic [ref=e102] [cursor=pointer]:
+                      - generic [ref=e103]: 53평
+                      - generic [ref=e104]: 26.7억
+                    - generic [ref=e105] [cursor=pointer]:
+                      - generic [ref=e106]: 44평
+                      - generic [ref=e107]: 45억
+                    - generic [ref=e108] [cursor=pointer]:
+                      - generic [ref=e109]: 20평
+                      - generic [ref=e110]: 11.1억
+                    - generic [ref=e111] [cursor=pointer]:
+                      - generic [ref=e112]: 43평
+                      - generic [ref=e113]: 45억
+                    - generic [ref=e115] [cursor=pointer]:
+                      - generic [ref=e116]: 31평
+                      - generic [ref=e117]: 21억
+                    - generic [ref=e118] [cursor=pointer]:
+                      - generic [ref=e119]: 31평
+                      - generic [ref=e120]: 26.3억
+                    - generic [ref=e121] [cursor=pointer]:
+                      - generic [ref=e122]: 12평
+                      - generic [ref=e123]: 2.8억
+                    - generic [ref=e126] [cursor=pointer]: 10명 보는중
+                    - generic [ref=e131] [cursor=pointer]:
+                      - generic [ref=e132]: 예정
+                      - generic [ref=e133]: 분양
+            - generic:
+              - generic [ref=e135]: 50m
+              - link "NAVER" [ref=e136] [cursor=pointer]:
+                - /url: https://ssl.pstatic.net/static/maps/mantle/notice/legal.html
+                - img "NAVER" [ref=e137]
+            - generic:
+              - generic:
+                - generic:
+                  - generic: © NAVER Corp.
+          - link "집 내놓기 페이지로 이동" [ref=e138] [cursor=pointer]:
+            - /url: /my/items
+            - img
+            - text: 집 내놓기
+            - generic [ref=e289]: 여러 부동산에 한번에
+          - link "강남구 청담동 주변 매물 보기" [ref=e144] [cursor=pointer]:
+            - /url: /region/11680104/item-catalog
+          - generic [ref=e145]:
+            - generic [ref=e146]:
+              - button [ref=e147] [cursor=pointer]:
+                - img [ref=e148]
+              - button [ref=e150] [cursor=pointer]:
+                - img [ref=e151]
+            - generic [ref=e153]:
+              - button [ref=e154] [cursor=pointer]:
+                - img [ref=e155]
+              - button "지도" [ref=e159] [cursor=pointer]
+              - button "필터" [ref=e161] [cursor=pointer]:
+                - generic [ref=e162]: 필터
+              - button "주변" [ref=e164] [cursor=pointer]:
+                - generic [ref=e165]: 주변
+              - button "거리" [ref=e166] [cursor=pointer]:
+                - generic [ref=e167]: 거리
+              - button "정책" [ref=e169] [cursor=pointer]
+              - button "숨김" [ref=e170] [cursor=pointer]
+              - button [ref=e172] [cursor=pointer]:
+                - img
+        - button "로그인" [ref=e175] [cursor=pointer]:
+          - img [ref=e176]
+        - generic [ref=e179]:
+          - group "검색" [ref=e180]:
+            - generic [ref=e181]: 검색
+            - generic [ref=e182]:
+              - generic [ref=e183]:
+                - textbox "아파트, 지역 또는 학교명으로 검색" [ref=e184]
+                - button "검색하기" [ref=e185] [cursor=pointer]
+              - link "호갱노노" [ref=e186] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e187]:
+              - heading "당산역삼성래미안4차 검색 결과" [level=3] [ref=e188]
+              - link "뒤로가기" [ref=e189] [cursor=pointer]:
+                - /url: "#"
+              - link "닫기" [ref=e190] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=e191]: 닫기
+          - generic [ref=e192]:
+            - generic [ref=e193]:
+              - heading "아파트" [level=3] [ref=e194]
+              - list [ref=e195]:
+                - listitem [ref=e196]:
+                  - link "당산동5가 당산삼성래미안4차 1,391세대 2003년 12월 입주" [ref=e197] [cursor=pointer]:
+                    - /url: /apt/1pa09
+                    - generic [ref=e199]: 당산동5가 당산삼성래미안4차
+                    - generic [ref=e200]:
+                      - generic [ref=e201]: 1,391세대
+                      - generic [ref=e202]: 2003년 12월 입주
+                - listitem [ref=e203]:
+                  - link "안양동 삼성래미안 1,998세대 2002년 1월 입주" [ref=e204] [cursor=pointer]:
+                    - /url: /apt/5kgaf
+                    - generic [ref=e206]: 안양동 삼성래미안
+                    - generic [ref=e207]:
+                      - generic [ref=e208]: 1,998세대
+                      - generic [ref=e209]: 2002년 1월 입주
+                - listitem [ref=e210]:
+                  - link "가장동 삼성래미안 2,398세대 2002년 7월 입주" [ref=e211] [cursor=pointer]:
+                    - /url: /apt/4uZb3
+                    - generic [ref=e213]: 가장동 삼성래미안
+                    - generic [ref=e214]:
+                      - generic [ref=e215]: 2,398세대
+                      - generic [ref=e216]: 2002년 7월 입주
+                - listitem [ref=e217]:
+                  - link "구로동 삼성래미안 1,244세대 2004년 5월 입주" [ref=e218] [cursor=pointer]:
+                    - /url: /apt/1aL54
+                    - generic [ref=e220]: 구로동 삼성래미안
+                    - generic [ref=e221]:
+                      - generic [ref=e222]: 1,244세대
+                      - generic [ref=e223]: 2004년 5월 입주
+                - listitem [ref=e224]:
+                  - link "내손동 삼성래미안 586세대 2001년 4월 입주" [ref=e225] [cursor=pointer]:
+                    - /url: /apt/6c012
+                    - generic [ref=e227]: 내손동 삼성래미안
+                    - generic [ref=e228]:
+                      - generic [ref=e229]: 586세대
+                      - generic [ref=e230]: 2001년 4월 입주
+                - listitem [ref=e231]:
+                  - link "보라동 삼성래미안 370세대 1998년 5월 입주" [ref=e232] [cursor=pointer]:
+                    - /url: /apt/6h510
+                    - generic [ref=e234]: 보라동 삼성래미안
+                    - generic [ref=e235]:
+                      - generic [ref=e236]: 370세대
+                      - generic [ref=e237]: 1998년 5월 입주
+                - listitem [ref=e238]:
+                  - link "오향리 삼성래미안 108세대 1994년 7월 입주" [ref=e239] [cursor=pointer]:
+                    - /url: /apt/78E4d
+                    - generic [ref=e241]: 오향리 삼성래미안
+                    - generic [ref=e242]:
+                      - generic [ref=e243]: 108세대
+                      - generic [ref=e244]: 1994년 7월 입주
+                - listitem [ref=e245]:
+                  - link "상동 다정한마을삼성래미안 718세대 2002년 9월 입주" [ref=e246] [cursor=pointer]:
+                    - /url: /apt/5uq93
+                    - generic [ref=e248]: 상동 다정한마을삼성래미안
+                    - generic [ref=e249]:
+                      - generic [ref=e250]: 718세대
+                      - generic [ref=e251]: 2002년 9월 입주
+                - listitem [ref=e252]:
+                  - link "비산동 비산삼성래미안 3,806세대 2003년 12월 입주" [ref=e253] [cursor=pointer]:
+                    - /url: /apt/5mY9f
+                    - generic [ref=e255]: 비산동 비산삼성래미안
+                    - generic [ref=e256]:
+                      - generic [ref=e257]: 3,806세대
+                      - generic [ref=e258]: 2003년 12월 입주
+                - listitem [ref=e259]:
+                  - link "약사동 삼성래미안2차4단지 569세대 2004년 7월 입주" [ref=e260] [cursor=pointer]:
+                    - /url: /apt/4I960
+                    - generic [ref=e262]: 약사동 삼성래미안2차4단지
+                    - generic [ref=e263]:
+                      - generic [ref=e264]: 569세대
+                      - generic [ref=e265]: 2004년 7월 입주
+            - generic [ref=e266]:
+              - heading "주변정보" [level=3] [ref=e267]
+              - list [ref=e268]:
+                - listitem [ref=e269]:
+                  - link "종암동 삼성래미안어린이집" [ref=e270] [cursor=pointer]:
+                    - /url: /poi/4nUf1
+                    - generic [ref=e272]: 종암동 삼성래미안어린이집
+                - listitem [ref=e273]:
+                  - link "월성동 삼성래미안어린이집" [ref=e274] [cursor=pointer]:
+                    - /url: /poi/4nV86
+                    - generic [ref=e276]: 월성동 삼성래미안어린이집
+                - listitem [ref=e277]:
+                  - link "영통동 삼성래미안어린이집" [ref=e278] [cursor=pointer]:
+                    - /url: /poi/4nX97
+                    - generic [ref=e280]: 영통동 삼성래미안어린이집
+                - listitem [ref=e281]:
+                  - link "안양동 삼성래미안어린이집" [ref=e282] [cursor=pointer]:
+                    - /url: /poi/4nW39
+                    - generic [ref=e284]: 안양동 삼성래미안어린이집
+                - listitem [ref=e285]:
+                  - link "양평동2가 삼성래미안어린이집" [ref=e286] [cursor=pointer]:
+                    - /url: /poi/4nZcb
+                    - generic [ref=e288]: 양평동2가 삼성래미안어린이집
+    - textbox
+  - region "Notifications (F8)":
+    - list

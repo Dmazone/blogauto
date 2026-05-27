@@ -1,0 +1,17 @@
+[    1208ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/me:0
+[    1385ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/v2/subscriptions/1pa09:0
+[    1385ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/me:0
+[    1386ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/v2/chat/apt-channels/owner-verified-list:0
+[    1488ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/v2/chat/apt-channels/owner-verified-list:0
+[    1753ms] [WARNING] [GPT] PubAdsService.disableInitialLoad is deprecated, use googletag.setConfig({disableInitialLoad: ...}) instead.
+https://goo.gle/gpt-message#170 @ https://static.hogangnono.com/dist/2.5.0.26/5758c26c93/web/desktop.js:1
+[    1754ms] [WARNING] [GPT] Slot.setTargeting is deprecated, use Slot.setConfig({targeting: ...}) instead.
+https://goo.gle/gpt-message#171 @ https://static.hogangnono.com/dist/2.5.0.26/5758c26c93/web/desktop.js:1
+[    1979ms] [ERROR] Attestation check for Shared Storage on https://www.googleadservices.com failed. @ https://www.googleadservices.com/pagead/managed/js/activeview/current/reach_worklet.html:0
+[    2431ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/me:0
+[    2664ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/v2/chat/apt-channels/owner-verified-list:0
+[    4462ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/me:0
+[    4694ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/v2/chat/apt-channels/owner-verified-list:0
+[    8493ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/me:0
+[    8714ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hogangnono.com/api/v2/chat/apt-channels/owner-verified-list:0
+[   11176ms] [WARNING] [flushPendingZams] ⚠️ SPLASH_AD_LOADED not completed (normal if no ads) - proceeding anyway @ https://static.hogangnono.com/dist/2.5.0.26/5758c26c93/web/desktop.js:1

@@ -1,0 +1,19 @@
+[2026-05-27T01:55:36.540Z] 🚀  threads_poster 시작 — 5개 포스팅, postOnly=true, shariOnly=false
+[2026-05-27T01:55:36.543Z] 🌐  Threads 브라우저 시작...
+[2026-05-27T01:55:45.116Z] 🔐  세션 만료 — 브라우저에서 Threads 로그인 후 Enter 대기 (최대 5분)
+[2026-05-27T01:55:51.024Z] ✅  로그인 확인됨 — 작업 재개
+[2026-05-27T01:55:53.039Z] ✅  Threads 세션 준비 완료
+[2026-05-27T01:55:53.039Z]   ───────────────────────────────────────────────────────
+[2026-05-27T01:55:53.040Z] 📰  [1/5] 마이코플라스마 폐렴 81% 내성 시대 대처법
+[2026-05-27T01:55:53.040Z] ✍️  홍보글 생성: 마이코플라스마 폐렴 81% 내성 시대 대처법
+[2026-05-27T01:55:53.654Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbSEzQJtwpPPk2sNGa1QM"}
+[2026-05-27T01:55:53.654Z] 📤  게시 시작: 마이코플라스마 폐렴 81% 내성 시대 대처법  지금 트렌드줌에서 확인하세요! #트렌드 #최...
+[2026-05-27T01:55:58.209Z] ⚠️  작성 영역 클릭 실패, JS 강제 시도
+[2026-05-27T01:56:04.262Z] ✅  게시 완료
+[2026-05-27T01:56:04.263Z] ✅  게시 완료: 마이코플라스마 폐렴 81% 내성 시대 대처법
+[2026-05-27T01:56:04.263Z] ⏸️  다음 포스팅까지 30초 대기...
+[2026-05-27T01:56:34.279Z]   ───────────────────────────────────────────────────────
+[2026-05-27T01:56:34.279Z] 📰  [2/5] 갤럭시 링 2세대 vs 오라 링 5세대 완전 비교
+[2026-05-27T01:56:34.280Z] ✍️  홍보글 생성: 갤럭시 링 2세대 vs 오라 링 5세대 완전 비교
+[2026-05-27T01:56:34.616Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbSF3SFZWqP2JAxs446qa"}
+[2026-05-27T01:56:34.616Z] 📤  게시 시작: 갤럭시 링 2세대 vs 오라 링 5세대 완전 비교  지금 트렌드줌에서 확인하세요! #트렌드...
