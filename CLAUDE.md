@@ -34,7 +34,7 @@
 > **2026-05-28 사고**: 5개 포스팅 전부 generic title("X 트렌드 분석") + timestamp slug 저장됨.
 > 원인 분석 후 아래 5개 근본 원인을 코드에서 수정 완료.
 
-### 사고 5대 근본 원인 & 코드 수정 요약
+### 사고 7대 근본 원인 & 코드 수정 요약
 
 | # | 원인 | 파일·위치 | 수정 내용 |
 |---|---|---|---|
@@ -43,14 +43,19 @@
 | 3 | **이미지 검수에 섹션 정보 없음** | claudeCheckAndRegenImage | `sectionName` + `description` 파라미터 추가, 재생성 후 1회 재검수 |
 | 4 | **저장 전 품질 게이트 없음** | runForSection 저장부 | H2 < 3개 or 본문 < 1,200자 → throw, 저장 취소 |
 | 5 | **Gem 이전 대화 오염 가능성** | gemini_browser.js newConversation | URL 이동 후 "새 채팅" 버튼 클릭 시도 추가 |
+| 6 | **썸네일 프롬프트에 한국어 제목 직접 삽입** | agent_core.js TURN 6 폴백 | 한국어 → Pollinations 무시 → 모든 썸네일이 동일한 추상 디자인으로 생성됨. `topic.keyword`(영어) + `section.imageStyle` 기반으로만 폴백 생성 |
+| 7 | **본문 이미지 1·2 프롬프트가 지나치게 유사** | agent_core.js TURN 6 요청 | 같은 주제를 약간 다르게 표현 → 두 이미지가 거의 동일. TURN 6 요청 시 "이미지 1은 개념 설명형, 이미지 2는 비교·분석형"으로 용도 명시 필수 |
 
 ### 추가 코딩 규칙 (앞으로 코드 수정 시 반드시 준수)
 
 - **TURN 2 JSON 파싱**: 코드블록·인라인 JSON 모두 시도 → 실패 시 즉시 재시도 턴 추가. generic 제목 사용 시 반드시 `❌` 로그.
 - **이미지 프롬프트**: 항상 영어로만 생성. 한국어 제목을 그대로 프롬프트에 넣지 말 것. `topic.keyword` 또는 `section.imageStyle` 기반 영어 폴백 사용.
 - **TURN 6**: 반드시 3개 프롬프트 요청 (본문 2 + 썸네일 1). 2개만 요청하는 코드 절대 금지.
+- **TURN 6 이미지 용도 명시**: 본문 이미지 1 = "개념 설명형 (introductory, concept visualization)", 본문 이미지 2 = "비교·분석형 (comparison, data, chart-style illustration)". 두 이미지가 시각적으로 명확히 달라야 함.
+- **썸네일 폴백 프롬프트**: 한국어 title 절대 사용 금지. `"{topic.keyword} editorial magazine cover, bold colors, no text, professional blog thumbnail, 16:9"` 형식으로만 생성.
 - **품질 게이트**: `fs.writeFileSync` 직전에 H2 ≥ 3개, 본문 ≥ 1,200자 체크. 미달 시 throw.
 - **이미지 검수**: `claudeCheckAndRegenImage` 호출 시 반드시 `section.name` + `topic.description` 전달.
+- **크로스 포스트 이미지 오염 방지**: 이미지 생성 후 MD5 해시를 로그에 출력. 같은 런 내 동일 해시 감지 시 즉시 재생성.
 
 ---
 
