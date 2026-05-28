@@ -16,7 +16,7 @@
 
 import { chromium } from 'playwright';
 import Anthropic from '@anthropic-ai/sdk';
-import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync, rmSync } from 'fs';
 import { sendTelegram } from './telegram.js';
 import os from 'os';
 import path from 'path';
@@ -58,10 +58,25 @@ const SHARI_KEYWORDS = [
 ];
 
 // ────────────────────────────────────────────────────────────────────────────
-// Claude Haiku로 Threads 홍보글 3버전 생성
+// front matter에서 description + tags 기반 fallback 텍스트 생성
+// ────────────────────────────────────────────────────────────────────────────
+function buildFallbackText(post, blogContent) {
+  const descMatch = blogContent.match(/description:\s*"([^"]+)"/);
+  const tagsMatch = blogContent.match(/tags:\s*\[([^\]]+)\]/);
+  const desc = descMatch?.[1]?.slice(0, 90) ?? post.title;
+  const hashTags = tagsMatch
+    ? tagsMatch[1].split(',').map(t => `#${t.trim().replace(/['"]/g, '').replace(/\s+/g, '')}`).slice(0, 3).join(' ')
+    : '#트렌드줌 #최신이슈';
+  return `${desc}\n\n${hashTags}\n\n👇 더 보기`;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Claude Haiku로 Threads 홍보글 3버전 생성 (실패 시 front matter 기반 fallback)
 // ────────────────────────────────────────────────────────────────────────────
 async function generateThreadsText(post, blogContent) {
   log('✍️', `홍보글 생성: ${post.title}`);
+
+  const fallback = buildFallbackText(post, blogContent);
 
   const clean = blogContent
     .replace(/^---[\s\S]*?---\n/, '')
@@ -100,10 +115,10 @@ async function generateThreadsText(post, blogContent) {
       return json.versions;
     }
   } catch (err) {
-    log('⚠️', `홍보글 생성 실패: ${err.message}`);
+    log('⚠️', `홍보글 생성 실패 (fallback 사용): ${err.message}`);
   }
 
-  return [`${post.title}\n\n지금 트렌드줌에서 확인하세요!\n#트렌드 #최신이슈\n\n👇 더 보기`];
+  return [fallback];
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -141,12 +156,31 @@ class ThreadsPoster {
   // ── 초기화 ──────────────────────────────────────────────────────────────
   async init() {
     log('🌐', 'Threads 브라우저 시작...');
-    this.context = await chromium.launchPersistentContext(SESSION_DIR, {
-      headless:   this.headless,
-      viewport:   { width: 1280, height: 900 },
-      locale:     'ko-KR',
-      timezoneId: 'Asia/Seoul',
-    });
+
+    // 세션 깨진 경우 한 번 초기화 후 재시도
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        this.context = await chromium.launchPersistentContext(SESSION_DIR, {
+          headless:   this.headless,
+          viewport:   { width: 1280, height: 900 },
+          locale:     'ko-KR',
+          timezoneId: 'Asia/Seoul',
+          args:       ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+        break;
+      } catch (err) {
+        log('⚠️', `브라우저 시작 실패 (시도 ${attempt}/2): ${err.message}`);
+        if (attempt === 1) {
+          log('🔄', '세션 디렉토리 초기화 후 재시도...');
+          try { rmSync(SESSION_DIR, { recursive: true, force: true }); } catch {}
+          mkdirSync(SESSION_DIR, { recursive: true });
+          await wait(2000);
+        } else {
+          throw new Error(`Playwright 시작 불가: ${err.message}`);
+        }
+      }
+    }
+
     this.page = await this.context.newPage();
     await this.page.goto(THREADS_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await wait(3000);

@@ -36,27 +36,50 @@ Register-ScheduledTask `
 
 Write-Host "✅ BlogAuto-Generate 등록 완료 (매일 22:00 KST)"
 
-# ── Task 2: 매일 09:20 KST — 발행 확인 + 텔레그램 보고 ─────────────────────
+# ── Task 2: 매일 09:30 KST — 발행 확인 + 자동 수정 + 텔레그램 보고 ──────────
 $action2  = New-ScheduledTaskAction `
   -Execute $nodePath `
   -Argument "scripts\verify_posts.js" `
   -WorkingDirectory $blogPath
 
-$trigger2 = New-ScheduledTaskTrigger -Daily -At "09:20"
+$trigger2 = New-ScheduledTaskTrigger -Daily -At "09:30"
 
 $settings2 = New-ScheduledTaskSettingsSet `
-  -ExecutionTimeLimit (New-TimeSpan -Minutes 10) `
+  -ExecutionTimeLimit (New-TimeSpan -Minutes 15) `
   -StartWhenAvailable
 
 Register-ScheduledTask `
   -TaskName "BlogAuto-Verify" `
-  -Description "트렌드줌 발행 확인 및 텔레그램 보고 (09:20 KST)" `
+  -Description "트렌드줌 발행 확인 + 자동 수정 (09:30 KST)" `
   -Action $action2 `
   -Trigger $trigger2 `
   -Settings $settings2 `
   -Principal $principal `
   -Force | Out-Null
 
-Write-Host "✅ BlogAuto-Verify 등록 완료 (매일 09:20 KST)"
+Write-Host "✅ BlogAuto-Verify 등록 완료 (매일 09:30 KST)"
+
+# ── Task 3: 매일 10:00 KST — Threads 홍보 + 스하리 ────────────────────────
+$action3  = New-ScheduledTaskAction `
+  -Execute $nodePath `
+  -Argument "scripts\threads_poster.js" `
+  -WorkingDirectory $blogPath
+
+$trigger3 = New-ScheduledTaskTrigger -Daily -At "10:00"
+
+$settings3 = New-ScheduledTaskSettingsSet `
+  -ExecutionTimeLimit (New-TimeSpan -Hours 2) `
+  -StartWhenAvailable
+
+Register-ScheduledTask `
+  -TaskName "BlogAuto-Threads" `
+  -Description "트렌드줌 Threads 홍보 + 스하리 (10:00 KST)" `
+  -Action $action3 `
+  -Trigger $trigger3 `
+  -Settings $settings3 `
+  -Principal $principal `
+  -Force | Out-Null
+
+Write-Host "✅ BlogAuto-Threads 등록 완료 (매일 10:00 KST)"
 Write-Host ""
 Get-ScheduledTask -TaskName "BlogAuto-*" | Select-Object TaskName, State | Format-Table -AutoSize

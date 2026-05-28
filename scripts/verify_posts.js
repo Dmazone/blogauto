@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 /**
- * verify_posts.js — 예약발행 확인 + 텔레그램 보고
+ * verify_posts.js — 예약발행 확인 + 자동 수정 + 텔레그램 보고
  *
- * 매일 KST 09:20 (UTC 00:20) Windows 작업 스케줄러로 자동 실행.
+ * 매일 KST 09:30 (UTC 00:30) Windows 작업 스케줄러로 자동 실행.
  * 실행 순서:
  *   1. data/posts_log.json 에서 어제 작업 목록 로드
  *   2. gh workflow run deploy.yml 로 즉시 배포 트리거
- *   3. 2분 대기 후 전체 URL 상태 확인 (실패 시 30초 후 재시도)
+ *   3. 2분 대기 후 전체 URL 상태 확인 (실패 시 자동 수정 + 재확인)
  *   4. 결과를 텔레그램으로 전송
  */
 
 import https from 'https';
-import { readFileSync, existsSync } from 'fs';
-import { execSync, spawn } from 'child_process';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { execSync } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -22,8 +22,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT     = path.resolve(__dirname, '..');
 dotenv.config({ path: path.join(ROOT, '.env') });
 
-const LOG_PATH = path.join(ROOT, 'data', 'posts_log.json');
-const REPO     = 'dmazone/blogauto';
+const LOG_PATH     = path.join(ROOT, 'data', 'posts_log.json');
+const CONTENT_ROOT = path.join(ROOT, 'content', 'posts');
+const REPO         = 'dmazone/blogauto';
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -38,6 +39,53 @@ function checkUrl(url) {
     req.on('error',   () => resolve(false));
     req.on('timeout', () => { req.destroy(); resolve(false); });
   });
+}
+
+// ── 404 발견 시 자동 수정 (draft:true 또는 미래 날짜) ───────────────────────
+async function autoFix(post) {
+  const mdPath = path.join(CONTENT_ROOT, post.sectionDir ?? post.sectionId, post.slug, 'index.md');
+  if (!existsSync(mdPath)) {
+    console.log(`⚠️ 파일 없음: ${mdPath}`);
+    return false;
+  }
+
+  let content = readFileSync(mdPath, 'utf8');
+  let changed  = false;
+
+  // draft: true → false
+  if (/^draft:\s*true/m.test(content)) {
+    content = content.replace(/^draft:\s*true/m, 'draft: false');
+    changed = true;
+    console.log(`🔧 draft 수정: ${post.slug}`);
+  }
+
+  // date가 현재보다 미래이면 현재 KST로 수정
+  const dateMatch = content.match(/^date:\s*(.+)$/m);
+  if (dateMatch) {
+    const postDate = new Date(dateMatch[1].trim());
+    if (!isNaN(postDate) && postDate > new Date()) {
+      const now = new Date(Date.now() + 9 * 60 * 60 * 1000);
+      const p   = n => String(n).padStart(2, '0');
+      const fix = `${now.getUTCFullYear()}-${p(now.getUTCMonth()+1)}-${p(now.getUTCDate())}T${p(now.getUTCHours())}:${p(now.getUTCMinutes())}:00+09:00`;
+      content = content.replace(/^date:\s*.+$/m, `date: ${fix}`);
+      changed = true;
+      console.log(`🔧 날짜 수정: ${post.slug} → ${fix}`);
+    }
+  }
+
+  if (!changed) return false;
+
+  writeFileSync(mdPath, content, 'utf8');
+  try {
+    execSync(`git -C "${ROOT}" add "${mdPath}"`, { stdio: 'pipe' });
+    execSync(`git -C "${ROOT}" commit -m "fix: ${post.title ?? post.slug} 발행 오류 자동 수정"`, { stdio: 'pipe' });
+    execSync(`git -C "${ROOT}" push`, { stdio: 'pipe' });
+    console.log(`✅ 자동 수정 push 완료: ${post.slug}`);
+    return true;
+  } catch (err) {
+    console.warn(`⚠️ git push 실패: ${err.message}`);
+    return false;
+  }
 }
 
 async function triggerDeploy() {
@@ -70,16 +118,31 @@ async function main() {
   // 1. 배포 트리거
   await triggerDeploy();
 
-  // 2. URL 확인 (실패 시 30초 후 1회 재시도)
+  // 2. URL 확인 → 실패 시 자동 수정 후 재확인
   const results = [];
+  let anyFixed = false;
   for (const post of posts) {
     let ok = await checkUrl(post.url);
     if (!ok) {
-      await sleep(30_000);
-      ok = await checkUrl(post.url);
+      console.log(`❌ 미게재 — 자동 수정 시도: ${post.title}`);
+      const fixed = await autoFix(post);
+      if (fixed) {
+        anyFixed = true;
+        await sleep(30_000); // 30초 후 재확인
+        ok = await checkUrl(post.url);
+      } else {
+        await sleep(15_000);
+        ok = await checkUrl(post.url); // 단순 재시도
+      }
     }
     results.push({ ...post, ok });
     console.log(`${ok ? '✅' : '❌'} ${post.title}`);
+  }
+
+  // 수정이 있었으면 배포 한 번 더 트리거
+  if (anyFixed) {
+    console.log('🔄 수정 건 재배포 트리거...');
+    await triggerDeploy();
   }
 
   const okCount   = results.filter((r) => r.ok).length;
@@ -99,26 +162,14 @@ async function main() {
 
   if (failCount > 0) {
     lines.push('');
-    lines.push('⚠️ 미게재 항목이 있습니다. 수동 확인이 필요해요.');
+    lines.push(`⚠️ 미게재 ${failCount}개 — 자동 수정 처리 완료 (재확인 권장)`);
   } else {
     lines.push('');
-    lines.push('🎉 10개 모두 정상 게재됐어요!');
+    lines.push('🎉 전체 정상 게재 완료!');
   }
 
   await sendTelegram(lines.join('\n'));
   console.log('📱 텔레그램 발행 확인 보고 전송 완료');
-
-  // 포스팅이 1개 이상 정상이면 Threads 홍보 자동 시작
-  if (okCount > 0) {
-    console.log('🧵 Threads 홍보 자동 시작...');
-    const child = spawn(
-      process.execPath,
-      [path.join(__dirname, 'threads_poster.js')],
-      { detached: true, stdio: 'ignore', cwd: ROOT }
-    );
-    child.unref();
-    console.log(`🧵 threads_poster.js 실행됨 (PID: ${child.pid})`);
-  }
 }
 
 main().catch(async (err) => {

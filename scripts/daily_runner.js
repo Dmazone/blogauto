@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * daily_runner.js — 10개 섹션 하루 1개씩 예약발행
  *
@@ -49,14 +49,14 @@ function getTodayGroup() {
 }
 
 /**
- * 다음날 KST 07:10 기준 + index * 10분 오프셋 ISO 날짜
- * 5개 기준: 07:10, 07:20, 07:30, 07:40, 07:50
+ * 다음날 KST 07:00 기준 + index * 30분 오프셋 ISO 날짜
+ * 5개 기준: 07:00, 07:30, 08:00, 08:30, 09:00
  */
 function getPublishDate(sectionIndex) {
   const now = new Date();
   const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
-  // KST 07:10 = UTC 전날 22:10 → UTC 00:00 기준 -110분
-  const offsetMinutes = -110 + sectionIndex * 10;
+  // KST 07:00 = UTC 전날 22:00 → UTC 00:00 기준 -120분
+  const offsetMinutes = -120 + sectionIndex * 30;
   tomorrow.setMinutes(tomorrow.getMinutes() + offsetMinutes);
   const kst = new Date(tomorrow.getTime() + 9 * 60 * 60 * 1000);
   const p   = (n) => String(n).padStart(2, '0');
@@ -109,7 +109,7 @@ async function main() {
   }
 
   log('🚀', `daily_runner 시작 — 그룹 ${todayGroup} / ${targetSections.length}개 섹션`);
-  log('📅', `예약 발행: 07:10~07:50 KST (다음날, 10분 간격)`);
+  log('📅', `예약 발행: 07:00~09:00 KST (다음날, 30분 간격)`);
   console.log('');
 
   // ── 텔레그램 시작 알림 ──────────────────────────────────────────────────
@@ -122,7 +122,7 @@ async function main() {
     `🚀 트렌드줌 예약발행 작업 시작!\n` +
     `📅 작업일: ${startDate}\n` +
     `📂 그룹 ${todayGroup} (${targetSections.map(s=>s.name).join(', ')})\n` +
-    `⏰ 발행 예정: ${tomorrowStr} 07:10~07:50 KST\n` +
+    `⏰ 발행 예정: ${tomorrowStr} 07:00~09:00 KST\n` +
     `📝 총 ${targetSections.length}개 고품질 포스팅 진행합니다.`
   );
 
@@ -165,10 +165,10 @@ async function main() {
 
     if (!sectionSuccess) failCount++;
 
-    // 마지막 섹션이 아니면 1분 대기 (글마다 개성 부여)
+    // 마지막 섹션이 아니면 20분 대기 (이미지 생성 API 부하 분산)
     if (i < targetSections.length - 1) {
-      log('⏸️', '다음 섹션까지 1분 대기...');
-      await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
+      log('⏸️', '다음 섹션까지 20분 대기...');
+      await new Promise((resolve) => setTimeout(resolve, 20 * 60 * 1000));
     }
   }
 
@@ -198,7 +198,7 @@ function savePostsLog(posts, totalCount) {
     const logData = {
       date:         tomorrow,
       generatedAt:  new Date().toISOString(),
-      publishWindow: `${tomorrow} 07:10~07:50 KST`,
+      publishWindow: `${tomorrow} 07:00~09:00 KST`,
       totalCount,
       posts: posts.map((p, i) => ({
         title:      p.title,
@@ -221,7 +221,7 @@ async function sendTelegramDailyReport(posts, successCount, failCount) {
 
   const lines = [
     `✅ 트렌드줌 예약발행 완료!`,
-    `📅 발행 예정: ${tomorrow} 07:10~07:50 KST`,
+    `📅 발행 예정: ${tomorrow} 07:00~09:00 KST`,
     `성공 ${successCount}개 / 실패 ${failCount}개`,
     '',
   ];
