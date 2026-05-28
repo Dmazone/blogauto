@@ -503,18 +503,20 @@ async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slu
           {
             type: 'text',
             text:
-              `이 이미지가 블로그 포스팅 이미지로 적합한지 판단해줘.\n` +
+              `이 이미지가 블로그 포스팅 이미지로 적합한지 판단해줘.\n\n` +
               `섹션: ${sectionName || '미분류'}\n` +
               `포스팅 주제: "${postTitle}"\n` +
               `포스팅 설명: "${description}"\n` +
-              `이미지 용도: ${label}\n\n` +
+              `이미지 용도: ${label}\n` +
+              `생성 요청 프롬프트: "${prompt}"\n\n` +
               `불합격 기준 (하나라도 해당하면 불합격):\n` +
-              `- 섹션·주제와 전혀 다른 내용 (예: 경제 글에 운동 사진, 기술 글에 음식 사진)\n` +
-              `- 심하게 왜곡되거나 강제로 늘어진 비율\n` +
-              `- 극도로 흐릿하거나 저화질\n` +
-              `- 혐오스럽거나 불쾌한 내용\n` +
-              `- 아무 의미 없는 단색·노이즈 이미지\n\n` +
-              `JSON만: {"ok":true/false,"reason":"불합격이면 이유, 합격이면 빈 문자열"}`,
+              `1. [주제 불일치] 섹션·주제와 전혀 다른 내용 (예: 경제 글에 운동 사진, 기술 글에 음식 사진)\n` +
+              `2. [프롬프트 불일치] 생성 프롬프트에서 요청한 장면·소재와 이미지 내용이 전혀 무관함\n` +
+              `3. [비율 왜곡] 이미지가 세로로 좁거나 정사각형처럼 보임 (반드시 가로 와이드 16:9여야 함)\n` +
+              `4. [화질] 극도로 흐릿하거나 노이즈가 심함\n` +
+              `5. [내용] 혐오스럽거나 불쾌한 내용, 단색·노이즈만 있는 의미없는 이미지\n` +
+              `6. [텍스트] 이미지 안에 읽을 수 있는 텍스트·문자가 도배되어 있음\n\n` +
+              `JSON만: {"ok":true/false,"reason":"불합격이면 구체적 이유(1~6번 중 어떤 기준), 합격이면 빈 문자열"}`,
           },
         ],
       }],
@@ -553,7 +555,7 @@ async function generateContextualImagePrompts(section, topic, body) {
     return { idx: i + 1, alt: m[1], before, after };
   });
 
-  const thumbStyle = 'editorial magazine cover thumbnail, bold colors, no text overlay, 16:9 ratio';
+  const thumbStyle = 'editorial magazine cover, bold colors, no text overlay, landscape 16:9 wide format';
 
   if (!contexts.length) {
     return [
@@ -578,7 +580,10 @@ async function generateContextualImagePrompts(section, topic, body) {
     `- 앞뒤 내용에서 핵심 개념·장면을 파악해 구체적으로 묘사\n` +
     `- "a developer doing X", "diagram showing Y" 처럼 구체적으로\n` +
     `- 각 프롬프트는 영어 1~2문장\n` +
-    `- 썸네일은 주제를 한눈에 알 수 있도록 상징적으로 표현\n\n` +
+    `- 모든 이미지: landscape wide 16:9 format 필수 (세로·정사각형 절대 금지)\n` +
+    `- 본문이미지1: 개념 설명형 (introductory concept scene)\n` +
+    `- 본문이미지2: 비교·분석형 (comparison or data visualization scene), 이미지1과 시각적으로 확실히 다르게\n` +
+    `- 썸네일: 주제를 상징하는 커버, 사람 얼굴 중심 지양, 사물·개념·아이콘 중심\n\n` +
     `JSON만: {"prompts":["본문이미지1","본문이미지2","썸네일"]}`,
     { temperature: 0.6 }
   );
@@ -635,7 +640,7 @@ async function generateImage(prompt, slug, index, bundleDir) {
     try {
       const res = await axios.post(
         nanoBananaUrl,
-        { prompt, width: 1200, height: 630, format: 'webp' },
+        { prompt, width: 1280, height: 720, format: 'webp' },
         { headers: { Authorization: `Bearer ${nanoBananaKey}`, 'Content-Type': 'application/json' }, timeout: 90000 }
       );
       const imageUrl = res.data?.url ?? res.data?.image_url ?? res.data?.data?.url;
@@ -653,7 +658,7 @@ async function generateImage(prompt, slug, index, bundleDir) {
   log('🖼️', `  Pollinations fallback: ${filename}`);
   const polUrl =
     `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}` +
-    `?width=1200&height=630&nologo=true&model=flux`;
+    `?width=1280&height=720&nologo=true&model=flux`;
 
   return await withRetry(async () => {
     const imgRes = await axios.get(polUrl, { responseType: 'arraybuffer', timeout: 150000 });
@@ -854,23 +859,33 @@ ${subtopicLine}
   const t6 = await session.send(
     `글에 삽입된 이미지 2개와 블로그 커버 썸네일 1개를 위한 AI 이미지 생성 프롬프트를 만들어줘.
 
-⚠️ 중요: 프롬프트는 반드시 영어로만 작성. 한국어 한 글자도 포함하지 마.
-이미지 스타일 고정: ${section.imageStyle}
-각 이미지 삽입 위치의 앞뒤 글 내용을 참고해서 구체적 장면을 묘사해.
-"a developer doing X", "diagram showing Y" 처럼 구체적으로.
-썸네일은 글 전체를 상징하는 커버 이미지로, bold colors, no text overlay, 16:9 ratio.
+⚠️ 필수 규칙:
+- 프롬프트는 반드시 영어로만 작성. 한국어 한 글자도 포함 금지.
+- 모든 이미지: 가로 와이드 landscape 16:9 비율 필수 (세로·정사각형 금지)
+- 이미지 스타일: ${section.imageStyle}
+
+이미지별 용도와 내용:
+[이미지 1 — 도입부 직후] 글의 첫 번째 주요 개념·현상을 구체적으로 시각화하는 장면.
+  → 앞뒤 본문 내용을 파악해서 해당 개념이 실제로 어떻게 보이는지 묘사.
+  → "a developer doing X", "diagram showing Y" 처럼 구체적 장면으로.
+[이미지 2 — 2번째 H2 직후] 비교·분석·데이터 또는 두 번째 핵심 내용을 시각화.
+  → 두 가지를 나란히 비교하거나, 차트·흐름도 스타일의 장면.
+  → 이미지 1과 시각적으로 명확히 달라야 함 (색감, 구도, 소재 모두 다르게).
+[썸네일] 글 전체를 한눈에 상징하는 커버 이미지.
+  → 사람 얼굴 중심 NO, 개념·사물·장면·아이콘 중심으로.
+  → bold colors, no text overlay, 16:9 landscape.
 
 JSON만 출력 (prompts 배열은 반드시 3개):
 \`\`\`json
-{"prompts":["body_image_1_in_english","body_image_2_in_english","thumbnail_in_english"]}
+{"prompts":["body_image_1_landscape_16:9","body_image_2_landscape_16:9","thumbnail_landscape_16:9"]}
 \`\`\``
   );
 
   const defaultStyle = section.imageStyle ?? 'blog editorial illustration, clean design, professional';
   let imgPrompts = [
-    `${topic.keyword} concept illustration, ${defaultStyle}`,
-    `${topic.keyword} visual representation, ${defaultStyle}`,
-    `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9 ratio`,
+    `${topic.keyword} concept visualization, landscape 16:9, ${defaultStyle}, no text overlay`,
+    `${topic.keyword} comparison analysis chart, landscape 16:9, ${defaultStyle}, no text overlay`,
+    `${topic.keyword} editorial magazine cover, bold colors, no text overlay, landscape 16:9`,
   ];
   try {
     const m = t6.match(/```json\s*([\s\S]*?)```/);
