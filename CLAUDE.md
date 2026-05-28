@@ -29,6 +29,31 @@
 
 ---
 
+## 자동화 품질 사고 분석 & 재발 방지 규칙 ★★ (2026-05-28 추가)
+
+> **2026-05-28 사고**: 5개 포스팅 전부 generic title("X 트렌드 분석") + timestamp slug 저장됨.
+> 원인 분석 후 아래 5개 근본 원인을 코드에서 수정 완료.
+
+### 사고 5대 근본 원인 & 코드 수정 요약
+
+| # | 원인 | 파일·위치 | 수정 내용 |
+|---|---|---|---|
+| 1 | **TURN 2 JSON 파싱 실패 무음 통과** | agent_core.js TURN 2 | 코드블록 → 인라인 JSON → 재시도 턴 추가. 실패 시 ❌ 로그 |
+| 2 | **TURN 6 썸네일 프롬프트 미요청** | agent_core.js TURN 6 | prompts 3개 명시 요청, `topic.title`(한국어) 대신 `topic.keyword`(영어) 기반 폴백 |
+| 3 | **이미지 검수에 섹션 정보 없음** | claudeCheckAndRegenImage | `sectionName` + `description` 파라미터 추가, 재생성 후 1회 재검수 |
+| 4 | **저장 전 품질 게이트 없음** | runForSection 저장부 | H2 < 3개 or 본문 < 1,200자 → throw, 저장 취소 |
+| 5 | **Gem 이전 대화 오염 가능성** | gemini_browser.js newConversation | URL 이동 후 "새 채팅" 버튼 클릭 시도 추가 |
+
+### 추가 코딩 규칙 (앞으로 코드 수정 시 반드시 준수)
+
+- **TURN 2 JSON 파싱**: 코드블록·인라인 JSON 모두 시도 → 실패 시 즉시 재시도 턴 추가. generic 제목 사용 시 반드시 `❌` 로그.
+- **이미지 프롬프트**: 항상 영어로만 생성. 한국어 제목을 그대로 프롬프트에 넣지 말 것. `topic.keyword` 또는 `section.imageStyle` 기반 영어 폴백 사용.
+- **TURN 6**: 반드시 3개 프롬프트 요청 (본문 2 + 썸네일 1). 2개만 요청하는 코드 절대 금지.
+- **품질 게이트**: `fs.writeFileSync` 직전에 H2 ≥ 3개, 본문 ≥ 1,200자 체크. 미달 시 throw.
+- **이미지 검수**: `claudeCheckAndRegenImage` 호출 시 반드시 `section.name` + `topic.description` 전달.
+
+---
+
 ## 핵심 포스팅 8대 원칙 ★ (반드시 준수)
 
 ### 1. 최신 트렌드 기반 서칭

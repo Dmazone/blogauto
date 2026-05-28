@@ -477,7 +477,7 @@ async function claudeFullReviewAndFix(topic, body) {
 // ────────────────────────────────────────────────────────────────────────────
 // STEP 8c: Claude 비전으로 이미지 품질·주제 적합성 검토 및 재생성
 // ────────────────────────────────────────────────────────────────────────────
-async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir) {
+async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName = '', description = '', _retried = false) {
   if (!fs.existsSync(imagePath)) {
     log('⚠️', `  [이미지 검수] 파일 없음: ${imagePath}`);
     return;
@@ -487,6 +487,7 @@ async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slu
   if (stat.size < 15000) {
     log('⚠️', `  [이미지 검수] 파일 너무 작음 (${stat.size}B) → 재생성`);
     await generateImage(prompt, slug, index, bundleDir);
+    if (!_retried) await claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName, description, true);
     return;
   }
 
@@ -503,10 +504,12 @@ async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slu
             type: 'text',
             text:
               `이 이미지가 블로그 포스팅 이미지로 적합한지 판단해줘.\n` +
+              `섹션: ${sectionName || '미분류'}\n` +
               `포스팅 주제: "${postTitle}"\n` +
+              `포스팅 설명: "${description}"\n` +
               `이미지 용도: ${label}\n\n` +
               `불합격 기준 (하나라도 해당하면 불합격):\n` +
-              `- 포스팅 주제와 전혀 다른 내용 (예: 경제 글에 운동 사진)\n` +
+              `- 섹션·주제와 전혀 다른 내용 (예: 경제 글에 운동 사진, 기술 글에 음식 사진)\n` +
               `- 심하게 왜곡되거나 강제로 늘어진 비율\n` +
               `- 극도로 흐릿하거나 저화질\n` +
               `- 혐오스럽거나 불쾌한 내용\n` +
@@ -523,6 +526,11 @@ async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slu
     } else {
       log('⚠️', `  [이미지 검수] ${label} — 불합격 (${result.reason}) → 재생성`);
       await generateImage(prompt, slug, index, bundleDir);
+      if (!_retried) {
+        await claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName, description, true);
+      } else {
+        log('⚠️', `  [이미지 검수] ${label} 재생성 후에도 불합격 — 이미지 유지`);
+      }
     }
   } catch (err) {
     log('⚠️', `  [이미지 검수] API 오류 (${err.message}) → 통과`);
@@ -746,20 +754,45 @@ ${subtopicLine}
 각 섹션의 톤: 비교분석/장단점/경험담/튜토리얼 중 명시`
   );
 
-  // JSON 파싱
+  // JSON 파싱 (2단계: 코드블록 → 인라인 JSON → 재시도)
   let topic = { title: '', slug: '', keyword: '', description: '' };
+  let t2Parsed = false;
   try {
     const m = t2.match(/```json\s*([\s\S]*?)```/);
-    if (m) topic = { ...topic, ...JSON.parse(m[1]) };
+    if (m) { topic = { ...topic, ...JSON.parse(m[1]) }; t2Parsed = true; }
+    else {
+      const m2 = t2.match(/\{[^{}]*"title"\s*:[^{}]*\}/);
+      if (m2) { topic = { ...topic, ...JSON.parse(m2[0]) }; t2Parsed = true; }
+    }
   } catch {}
+
+  // 파싱 실패 시 재시도 (추가 턴)
+  if (!t2Parsed || !topic.title || !topic.slug) {
+    log('⚠️', '[Turn 2] JSON 파싱 실패 → 재시도 중...');
+    const t2Retry = await session.send(
+      `앞에서 선택한 주제의 JSON 정보만 아래 형식 그대로 출력해줘. 다른 텍스트 없이 JSON 코드 블록만.\n\n` +
+      `\`\`\`json\n{"title":"SEO최적화제목(28자이내)","slug":"english-slug-lowercase-hyphens","keyword":"핵심키워드","description":"160자이내설명"}\n\`\`\``
+    );
+    try {
+      const m3 = t2Retry.match(/```json\s*([\s\S]*?)```/);
+      const jsonStr = m3 ? m3[1] : (t2Retry.match(/\{[\s\S]*?\}/)?.[0] ?? '{}');
+      const parsed = JSON.parse(jsonStr);
+      if (parsed.title && parsed.slug) { topic = { ...topic, ...parsed }; t2Parsed = true; }
+    } catch {}
+  }
+
+  if (!t2Parsed || !topic.title || !topic.slug) {
+    log('❌', '[Turn 2] JSON 재시도도 실패 — 타임스탬프 슬러그로 대체');
+  }
 
   // 슬러그 중복 방지
   const existing2 = existingSlugsForSection(section);
   if (!topic.slug || existing2.includes(topic.slug)) {
     topic.slug = `${section.dir}-${Date.now()}`;
   }
-  if (!topic.title) topic.title = `${section.name} 트렌드 분석`;
+  if (!topic.title) topic.title = `${section.name} 최신 트렌드`;
   if (!topic.keyword) topic.keyword = section.name;
+  if (!topic.description) topic.description = '';
 
   log('✅', `확정 주제: "${topic.title}" / slug: ${topic.slug}`);
 
@@ -816,27 +849,35 @@ ${subtopicLine}
   );
   const finalBody = extractFinalMarkdown(_t5Raw);
 
-  // ── TURN 6: 이미지 프롬프트 생성 ─────────────────────────────────────────
-  log('🎨', '[Turn 6] 이미지 프롬프트 생성 중...');
+  // ── TURN 6: 이미지 프롬프트 생성 (본문 2장 + 썸네일 1장) ────────────────
+  log('🎨', '[Turn 6] 이미지 프롬프트 생성 중 (본문 2장 + 썸네일)...');
   const t6 = await session.send(
-    `글에 삽입된 이미지 2개를 위한 AI 이미지 생성 프롬프트를 영어로 만들어줘.
+    `글에 삽입된 이미지 2개와 블로그 커버 썸네일 1개를 위한 AI 이미지 생성 프롬프트를 만들어줘.
 
+⚠️ 중요: 프롬프트는 반드시 영어로만 작성. 한국어 한 글자도 포함하지 마.
 이미지 스타일 고정: ${section.imageStyle}
 각 이미지 삽입 위치의 앞뒤 글 내용을 참고해서 구체적 장면을 묘사해.
 "a developer doing X", "diagram showing Y" 처럼 구체적으로.
+썸네일은 글 전체를 상징하는 커버 이미지로, bold colors, no text overlay, 16:9 ratio.
 
-JSON만 출력:
+JSON만 출력 (prompts 배열은 반드시 3개):
 \`\`\`json
-{"prompts":["프롬프트1","프롬프트2"]}
+{"prompts":["body_image_1_in_english","body_image_2_in_english","thumbnail_in_english"]}
 \`\`\``
   );
 
-  let imgPrompts = [`${topic.title} concept, ${section.imageStyle}`, `${topic.keyword} visual, ${section.imageStyle}`];
+  const defaultStyle = section.imageStyle ?? 'blog editorial illustration, clean design, professional';
+  let imgPrompts = [
+    `${topic.keyword} concept illustration, ${defaultStyle}`,
+    `${topic.keyword} visual representation, ${defaultStyle}`,
+    `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9 ratio`,
+  ];
   try {
     const m = t6.match(/```json\s*([\s\S]*?)```/);
     if (m) {
       const p = JSON.parse(m[1]).prompts ?? [];
-      if (p.length >= 2) imgPrompts = p;
+      if (p.length >= 3) imgPrompts = p;
+      else if (p.length >= 2) { imgPrompts[0] = p[0]; imgPrompts[1] = p[1]; }
     }
   } catch {}
 
@@ -945,12 +986,25 @@ export async function runForSection(section, options = {}) {
   const img1Path    = path.join(bundleDir, `${topic.slug}-01.webp`);
   const img2Path    = path.join(bundleDir, `${topic.slug}-02.webp`);
   const thumbPath   = path.join(bundleDir, `${topic.slug}-thumb.webp`);
-  await claudeCheckAndRegenImage(img1Path,   topic.title, '본문 이미지 1', p1,     topic.slug, 1,       bundleDir);
-  await claudeCheckAndRegenImage(img2Path,   topic.title, '본문 이미지 2', p2,     topic.slug, 2,       bundleDir);
-  await claudeCheckAndRegenImage(thumbPath,  topic.title, '썸네일',       pThumb, topic.slug, 'thumb', bundleDir);
+  await claudeCheckAndRegenImage(img1Path,   topic.title, '본문 이미지 1', p1,     topic.slug, 1,       bundleDir, section.name, topic.description);
+  await claudeCheckAndRegenImage(img2Path,   topic.title, '본문 이미지 2', p2,     topic.slug, 2,       bundleDir, section.name, topic.description);
+  await claudeCheckAndRegenImage(thumbPath,  topic.title, '썸네일',       pThumb, topic.slug, 'thumb', bundleDir, section.name, topic.description);
 
   // STEP 7: Claude 본문 완전 검수 & 직접 수정 (이미지 완료 후)
   final = await claudeFullReviewAndFix(topic, final);
+
+  // 품질 게이트: 저장 전 H2 개수 + 분량 확인
+  const h2Count  = (final.match(/^## /gm) ?? []).length;
+  const charCount = final.replace(/\s/g, '').length;
+  if (h2Count < 3) {
+    log('❌', `품질 게이트 실패: H2 ${h2Count}개 (최소 3개 필요) → 저장 취소`);
+    throw new Error(`H2 부족 (${h2Count}개): "${topic.title}"`);
+  }
+  if (charCount < 1200) {
+    log('❌', `품질 게이트 실패: 본문 ${charCount}자 (최소 1,200자 필요) → 저장 취소`);
+    throw new Error(`분량 부족 (${charCount}자): "${topic.title}"`);
+  }
+  log('✅', `품질 게이트 통과: H2 ${h2Count}개, ${charCount}자`);
 
   // 파일 저장
   const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + final;

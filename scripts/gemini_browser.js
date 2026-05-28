@@ -177,7 +177,18 @@ export class GeminiSession {
       await this.page.goto(target, { waitUntil: 'domcontentloaded', timeout: 30000 });
     }
 
-    await wait(2000);
+    await wait(2500);
+
+    // Gem URL에서 "새 채팅" 버튼을 클릭하여 이전 대화 오염 방지
+    try {
+      const newChatEl = await this._tryFind(SEL.newChat);
+      if (newChatEl) {
+        await newChatEl.click();
+        await wait(1500);
+        log('💬', '새 채팅 버튼 클릭 → 대화 초기화');
+      }
+    } catch { /* 버튼 없으면 URL 이동만으로 초기화된 것으로 간주 */ }
+
     this._turnCount = 0;
     log('💬', '새 대화 시작');
   }
