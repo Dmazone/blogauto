@@ -557,9 +557,9 @@ async function generateContextualImagePrompts(section, topic, body) {
 
   if (!contexts.length) {
     return [
-      `${topic.title} concept illustration, ${style}`,
+      `${topic.keyword} concept illustration, ${style}`,
       `${topic.keyword} visual representation, ${style}`,
-      `${topic.title} cover image, ${thumbStyle}`,
+      `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`,
     ];
   }
 
@@ -588,14 +588,14 @@ async function generateContextualImagePrompts(section, topic, body) {
     const result  = JSON.parse(jsonStr);
     const prompts = result.prompts ?? [];
     while (prompts.length < 2) prompts.push(`${topic.keyword} concept, ${style}`);
-    if (prompts.length < 3) prompts.push(`${topic.title} cover image, ${thumbStyle}`);
+    if (prompts.length < 3) prompts.push(`${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`);
     log('✅', `  프롬프트 생성 완료 (본문 2장 + 썸네일 1장)`);
     return prompts;
   } catch {
     return [
-      `${topic.title} concept illustration, ${style}`,
+      `${topic.keyword} concept illustration, ${style}`,
       `${topic.keyword} visual representation, ${style}`,
-      `${topic.title} cover image, ${thumbStyle}`,
+      `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`,
     ];
   }
 }
@@ -956,10 +956,11 @@ export async function runForSection(section, options = {}) {
   // STEP 8: 이미지 생성 — 본문 2장 + 썸네일 1장 (포스팅 완료 직후 즉시)
   log('🖼️', '[STEP 8] 이미지 생성 중 (본문 2장 + 썸네일 1장)...');
   let img1 = { localPath: '', sourceUrl: '' };
-  const p1 = prompts[0] ?? `${topic.title} concept illustration, blog editorial style`;
-  const p2 = prompts[1] ?? `${topic.keyword} visual representation, blog editorial style`;
+  const imgStyle = section?.imageStyle ?? 'blog editorial illustration, clean design, professional';
+  const p1 = prompts[0] ?? `${topic.keyword} concept illustration, ${imgStyle}`;
+  const p2 = prompts[1] ?? `${topic.keyword} visual representation, ${imgStyle}`;
   const pThumb = prompts[2] ??
-    `${topic.title} editorial magazine thumbnail, bold colors, no text, Korean blog cover`;
+    `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`;
 
   // 본문 이미지 1
   try {
