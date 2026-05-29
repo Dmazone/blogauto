@@ -10,3 +10,6 @@ TypeError: (validated.validated_insights ?? []).join is not a function
     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
     at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:161:24)
 [2026-05-29T01:15:59.795Z] ⏳  3분 후 재시도...
+[2026-05-29T01:26:06.142Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-05-29T01:46:06.157Z] 📰  [2/2] 스포츠
+[2026-05-29T01:46:06.158Z] 📅  발행 예약: 2026-05-29T11:16:00+09:00
