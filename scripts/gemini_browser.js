@@ -1,23 +1,22 @@
 /**
- * gemini_browser.js — Playwright로 Gemini 웹/Gem 멀티턴 대화 자동화
+ * gemini_browser.js — 실행 중인 Chrome(CDP)에 연결해 Gemini 웹/Gem 멀티턴 대화 자동화
  *
  * GeminiSession:
- *   init()             — 브라우저 시작, 로그인 확인, Gem 이동
+ *   init()             — Chrome CDP 연결, Gem 탭 열기 (로그인 불필요 — 기존 세션 사용)
  *   send(text)         — 새 대화 시작 or 현재 대화에 메시지 추가
  *   newConversation()  — 명시적으로 새 대화 시작
- *   close()            — 브라우저 종료
+ *   close()            — Gemini 탭만 닫음 (브라우저 종료 안 함)
  *
- * 세션 저장: ~/.gemini-blog-session/  (로그인 자동 유지)
+ * 전제: Chrome이 --remote-debugging-port=9222 옵션으로 실행 중이어야 함
+ *       chrome_debug.bat 실행하면 자동으로 설정됨
  */
 
-import { chromium } from 'playwright';
-import os from 'os';
+import { connectChrome } from './connect_chrome.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { sendTelegram } from './telegram.js';
 
 const __dirname   = path.dirname(fileURLToPath(import.meta.url));
-const SESSION_DIR = path.join(os.homedir(), '.gemini-blog-session');
 const GEMINI_HOME = 'https://gemini.google.com/app';
 
 const log  = (e, m) => console.log(`${e}  ${m}`);
@@ -78,19 +77,16 @@ export class GeminiSession {
 
   // ── 초기화 ──────────────────────────────────────────────────────────────────
   async init() {
-    log('🌐', '브라우저 시작 중...');
-    this.context = await chromium.launchPersistentContext(SESSION_DIR, {
-      headless:   this.headless,
-      viewport:   { width: 1280, height: 900 },
-      locale:     'ko-KR',
-      timezoneId: 'Asia/Seoul',
-    });
-    // 클립보드 권한 부여 (페이스트 자동화에 필수)
-    await this.context.grantPermissions(['clipboard-read', 'clipboard-write']);
-    this.page = await this.context.newPage();
+    log('🌐', 'Chrome CDP 연결 중... (로그인 세션 자동 사용)');
+    const { newTab, context } = await connectChrome();
+    this.context = context;
+    this._newTab = newTab;
 
-    // 먼저 홈으로 이동해서 로그인 확인
-    await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    // 새 탭을 열어 Gemini로 이동 (기존 Chrome 세션 → 로그인 불필요)
+    this.page = await newTab(GEMINI_HOME);
+    await this.page.waitForLoadState('domcontentloaded');
+
+    // 로그인 상태 간단 확인 (계정 인덱스 추출용)
     await this._ensureLoggedIn();
 
     // 로그인 후 현재 URL에서 계정 인덱스 추출 → Gem URL 재구성
@@ -401,7 +397,8 @@ export class GeminiSession {
   }
 
   async close() {
-    try { await this.context?.close(); } catch {}
-    log('🔒', '브라우저 세션 종료');
+    // 탭만 닫고 Chrome 브라우저는 종료하지 않음
+    try { await this.page?.close(); } catch {}
+    log('🔒', 'Gemini 탭 종료 (Chrome 유지)');
   }
 }

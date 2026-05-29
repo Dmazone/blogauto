@@ -14,11 +14,11 @@
  *   ⑤ 처리한 계정은 data/shari_log.json에 기록 (30일간 중복 방지)
  */
 
-import { chromium } from 'playwright';
+import { connectChrome } from './connect_chrome.js';
 import Anthropic from '@anthropic-ai/sdk';
-import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync, rmSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'fs';
 import { sendTelegram } from './telegram.js';
-import os from 'os';
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -26,7 +26,6 @@ import dotenv from 'dotenv';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-const SESSION_DIR  = path.join(os.homedir(), '.threads-blog-session');
 const THREADS_HOME = 'https://www.threads.com';
 const LOG_DIR      = path.join(__dirname, '..', 'logs');
 const LOG_FILE     = path.join(LOG_DIR, `threads-${new Date().toISOString().slice(0, 10)}.log`);
@@ -146,60 +145,37 @@ function saveShariLog(shariLog) {
 // ThreadsPoster 클래스
 // ────────────────────────────────────────────────────────────────────────────
 class ThreadsPoster {
-  constructor({ headless = false } = {}) {
-    this.headless    = headless;
-    this.context     = null;
-    this.page        = null;
-    this.totalShari  = 0;
+  constructor() {
+    this.context    = null;
+    this.page       = null;
+    this.totalShari = 0;
   }
 
-  // ── 초기화 ──────────────────────────────────────────────────────────────
+  // ── 초기화 — 실행 중인 Chrome에 CDP 연결 ─────────────────────────────────
   async init() {
-    log('🌐', 'Threads 브라우저 시작...');
+    log('🌐', 'Chrome CDP 연결 중... (로그인 세션 자동 사용)');
+    const { context, newTab } = await connectChrome();
+    this.context = context;
 
-    // 세션 깨진 경우 한 번 초기화 후 재시도
-    for (let attempt = 1; attempt <= 2; attempt++) {
-      try {
-        this.context = await chromium.launchPersistentContext(SESSION_DIR, {
-          headless:   this.headless,
-          viewport:   { width: 1280, height: 900 },
-          locale:     'ko-KR',
-          timezoneId: 'Asia/Seoul',
-          args:       ['--no-sandbox', '--disable-setuid-sandbox'],
-        });
-        break;
-      } catch (err) {
-        log('⚠️', `브라우저 시작 실패 (시도 ${attempt}/2): ${err.message}`);
-        if (attempt === 1) {
-          log('🔄', '세션 디렉토리 초기화 후 재시도...');
-          try { rmSync(SESSION_DIR, { recursive: true, force: true }); } catch {}
-          mkdirSync(SESSION_DIR, { recursive: true });
-          await wait(2000);
-        } else {
-          throw new Error(`Playwright 시작 불가: ${err.message}`);
-        }
-      }
+    // 새 탭을 열어 Threads로 이동 (기존 Chrome 세션 → 로그인 불필요)
+    this.page = await newTab(THREADS_HOME);
+    await wait(2000);
+
+    const url = this.page.url();
+    if (url.includes('/login') || url.includes('accounts.instagram') || url.includes('/signup')) {
+      throw new Error('Threads 로그인 필요 — Chrome에서 Threads에 로그인 후 다시 실행해주세요.');
     }
-
-    this.page = await this.context.newPage();
-    await this.page.goto(THREADS_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await wait(3000);
-    await this._ensureLoggedIn();
-    log('✅', 'Threads 세션 준비 완료');
+    log('✅', 'Threads 세션 준비 완료 (Chrome 기존 로그인 사용)');
   }
 
-  async _ensureLoggedIn() {
-    await wait(4000);
-    await this._checkLogin();
-  }
-
-  // 현재 페이지가 로그인 페이지인지 확인 — 맞으면 사용자 로그인 대기
+  // (하위 호환 — CDP 방식에서는 사용 안 함)
+  async _ensureLoggedIn() {}
   async _checkLogin() {
     const url = this.page.url();
     const isLoginPage = url.includes('/login') || url.includes('accounts.instagram') ||
                         url.includes('accounts.google') || url.includes('/signup') ||
                         url.includes('force_authentication');
-    if (!isLoginPage) return; // 정상 상태
+    if (!isLoginPage) return;
 
     log('🔐', '세션 만료 — 브라우저에서 Threads 로그인 후 Enter 대기 (최대 5분)');
     // Threads 홈으로 이동해서 로그인 유도
@@ -532,8 +508,9 @@ class ThreadsPoster {
   }
 
   async close() {
-    try { await this.context?.close(); } catch {}
-    log('🔒', 'Threads 세션 종료');
+    // 탭만 닫고 Chrome 브라우저는 유지
+    try { await this.page?.close(); } catch {}
+    log('🔒', 'Threads 탭 종료 (Chrome 유지)');
   }
 }
 
