@@ -420,25 +420,38 @@ class ThreadsPoster {
   // ── 댓글 남기기 ("스하링") ───────────────────────────────────────────────
   async _leaveComment(commentText) {
     try {
-      // 댓글 입력창 찾아 클릭
+      // 댓글 입력창 찾아 클릭 (Threads UI 여러 버전 대응)
       const clickedInput = await this.page.evaluate(() => {
-        // 댓글 placeholder 찾기
-        const placeholders = [
-          ...document.querySelectorAll('[placeholder*="댓글"]'),
-          ...document.querySelectorAll('[data-placeholder*="댓글"]'),
-          ...document.querySelectorAll('[aria-placeholder*="댓글"]'),
+        // 1) aria-label 기반 (en/ko 혼용)
+        const ariaSelectors = [
+          '[aria-label*="댓글"]', '[aria-label*="reply"]', '[aria-label*="Reply"]',
+          '[aria-label*="답글"]', '[aria-label*="Add a comment"]',
+          '[placeholder*="댓글"]', '[data-placeholder*="댓글"]', '[aria-placeholder*="댓글"]',
         ];
-        if (placeholders.length > 0) { placeholders[0].click(); return true; }
+        for (const sel of ariaSelectors) {
+          const el = document.querySelector(sel);
+          if (el) { el.click(); return true; }
+        }
 
-        // "댓글 달기..." 텍스트 포함 요소
-        const allP = [...document.querySelectorAll('p, div, span')];
-        const commentArea = allP.find(el =>
-          el.textContent?.trim() === '댓글 달기...' ||
-          el.textContent?.trim() === '댓글 달기'
-        );
-        if (commentArea) { commentArea.click(); return true; }
+        // 2) 텍스트 기반 (placeholder-like 텍스트)
+        const keywords = ['댓글 달기', '댓글 추가', '답글 달기', 'Add a comment', 'Reply...'];
+        const all = [...document.querySelectorAll('p, div, span, [role="textbox"]')];
+        const found = all.find(el => keywords.some(kw => el.textContent?.trim().startsWith(kw)));
+        if (found) { found.click(); return true; }
+
+        // 3) data-lexical-text 또는 contenteditable 중 댓글 영역인 것
+        const edits = [...document.querySelectorAll('[contenteditable="true"]')];
+        // 포스트 작성용(홈)이 아닌 댓글 영역: 보통 여러 개 중 마지막
+        if (edits.length > 1) { edits[edits.length - 1].click(); return true; }
+
         return false;
       });
+
+      // 클릭 실패 시 키보드 단축키 시도 (Threads에서 r = 답글)
+      if (!clickedInput) {
+        await this.page.keyboard.press('r');
+        await wait(600);
+      }
 
       if (!clickedInput) {
         log('⚠️', '댓글 입력창 못 찾음 — 댓글 생략');
