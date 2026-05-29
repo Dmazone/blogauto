@@ -396,15 +396,38 @@ class ThreadsPoster {
         log('⚠️', `리포스트 버튼 못 찾음: @${username}`);
       }
 
-      // 3) 팔로우 (아직 팔로우 안 한 경우만)
-      const followed = await this.page.evaluate(() => {
+      // 3) 팔로우 — 포스트 페이지 시도 → 실패 시 프로필 페이지에서 재시도
+      let followed = await this.page.evaluate(() => {
         const btns = [...document.querySelectorAll('div[role="button"], button')];
-        const followBtn = btns.find(b => b.textContent?.trim() === '팔로우');
-        if (followBtn) { followBtn.click(); return true; }
+        const btn = btns.find(b => {
+          const txt = b.textContent?.trim();
+          return txt === '팔로우' || txt === 'Follow';
+        });
+        if (btn) { btn.click(); return true; }
         return false;
       });
-      if (followed) log('➕', `팔로우: @${username}`);
-      await wait(rand(800, 1500));
+
+      if (!followed) {
+        // 프로필 페이지에서 팔로우 시도
+        try {
+          await this._goto(`https://www.threads.com/@${username}`);
+          await wait(rand(1200, 2000));
+          followed = await this.page.evaluate(() => {
+            const btns = [...document.querySelectorAll('div[role="button"], button, [role="button"]')];
+            const btn = btns.find(b => {
+              const txt = b.textContent?.trim();
+              return txt === '팔로우' || txt === 'Follow';
+            });
+            if (btn) { btn.click(); return true; }
+            return false;
+          });
+          if (followed) log('➕', `팔로우 (프로필): @${username}`);
+          else log('⏭️', `이미 팔로우 중: @${username}`);
+        } catch {}
+      } else {
+        log('➕', `팔로우: @${username}`);
+      }
+      await wait(rand(600, 1200));
 
       // 4) 댓글 "스하링" 남기기 (가장 중요 — 반하리 유도 신호)
       const commented = await this._leaveComment('스하링 🔁🩷');
