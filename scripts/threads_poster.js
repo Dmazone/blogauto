@@ -37,21 +37,7 @@ mkdirSync(DATA_DIR, { recursive: true });
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-/**
- * 사람처럼 불규칙한 딜레이
- * 30%: 빠름(1~3초), 40%: 보통(4~10초), 20%: 느림(11~25초), 10%: 아주느림(26~50초)
- */
-function humanWait() {
-  const r = Math.random();
-  let ms;
-  if (r < 0.30) ms = rand(1000, 3000);        // 빠름
-  else if (r < 0.70) ms = rand(4000, 10000);  // 보통
-  else if (r < 0.90) ms = rand(11000, 25000); // 느림
-  else ms = rand(26000, 50000);                // 아주 느림 (가끔 딴 짓하는 척)
-  log('⏱️', `대기 ${(ms/1000).toFixed(1)}초...`);
-  return wait(ms);
-}
+const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 
 const log = (emoji, msg) => {
   const line = `[${new Date().toISOString()}] ${emoji}  ${msg}`;
@@ -61,8 +47,34 @@ const log = (emoji, msg) => {
 
 const claude = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-// 스하리 검색 키워드 (순서대로 순환)
-const SHARI_KEYWORDS = [
+/**
+ * 사람처럼 불규칙한 딜레이
+ * 30%: 빠름(1~3초), 40%: 보통(4~10초), 20%: 느림(11~25초), 10%: 아주느림(26~50초)
+ */
+function humanWait() {
+  const r = Math.random();
+  let ms;
+  if (r < 0.30)      ms = rand(1000, 3000);
+  else if (r < 0.70) ms = rand(4000, 10000);
+  else if (r < 0.90) ms = rand(11000, 25000);
+  else               ms = rand(26000, 50000);
+  log('⏱️', `대기 ${(ms/1000).toFixed(1)}초...`);
+  return wait(ms);
+}
+
+// 스하리 댓글 멘트 — 매번 랜덤 선택 (봇 감지 방지)
+const SHARI_COMMENTS = [
+  '스하링 🔁🩷',
+  '스하리해요 💕🔁',
+  '맞팔해요 🩷',
+  '스하리 합니다 ✨',
+  '반하리 할게요 🔁💚',
+  '팔로우 했어요 😊🩷',
+  '스하리+반하리 💕',
+];
+
+// 스하리 검색 키워드 — 실행마다 순서 셔플
+const SHARI_KEYWORDS_BASE = [
   '스하리모집',
   '스하리1000명프로젝트',
   '뒷삭없는스하리',
@@ -212,11 +224,28 @@ class ThreadsPoster {
     throw new Error('Threads 로그인 타임아웃 (5분 초과)');
   }
 
-  // goto() 래퍼 — 이동 후 로그인 페이지로 리다이렉트됐는지 자동 감지
+  // goto() 래퍼 — 이동 후 정지 계정 / 로그인 리다이렉트 감지
   async _goto(url, opts = {}) {
     await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000, ...opts });
-    await wait(1500);
+    await wait(rand(800, 1800));
+    const cur = this.page.url();
+    // 정지 계정 리다이렉트 감지 → 예외 throw → 호출부에서 skip 처리
+    if (cur.includes('/accounts/suspended/')) {
+      throw new Error('SUSPENDED');
+    }
     await this._checkLogin();
+  }
+
+  // 페이지에서 사람처럼 읽는 척 — 스크롤 위아래 랜덤
+  async _readPage(postText = '') {
+    const isLong = postText.length > 100;
+    // 글이 길면 더 오래 머뭄
+    const scrollCount = isLong ? rand(2, 5) : rand(1, 2);
+    for (let i = 0; i < scrollCount; i++) {
+      const dir = Math.random() > 0.3 ? 400 : -200; // 주로 아래, 가끔 위로
+      await this.page.evaluate((d) => window.scrollBy({ top: d, behavior: 'smooth' }), dir);
+      await wait(rand(1500, isLong ? 5000 : 3000));
+    }
   }
 
   // ── ① 홍보글 게시 ───────────────────────────────────────────────────────
@@ -266,58 +295,75 @@ class ThreadsPoster {
   }
 
   // ── ② 스하리 (검색 기반 — 모집글 찾아가기) ─────────────────────────────
-  async doShari(targetCount = 30) {
+  async doShari(targetCount = 15) {
     log('🔥', `스하리 시작 (목표: ${targetCount}개) — 검색 기반 모집글 탐색`);
 
-    const shariLog    = loadShariLog();
-    let successCount  = 0;
+    const shariLog   = loadShariLog();
+    let successCount = 0;
 
-    for (const keyword of SHARI_KEYWORDS) {
+    // 키워드 순서를 매 실행마다 셔플
+    const keywords = shuffle(SHARI_KEYWORDS_BASE);
+
+    for (const keyword of keywords) {
       if (successCount >= targetCount) break;
 
       log('🔍', `"${keyword}" 검색 중...`);
       await this._goto(
         `https://www.threads.com/search/?q=${encodeURIComponent(keyword)}&serp_type=default`
       );
-      await wait(2000);
+      await wait(rand(1500, 3000));
 
-      // 스크롤해서 결과 더 로드
-      for (let i = 0; i < 4; i++) {
-        await this.page.evaluate(() => window.scrollBy(0, 1200));
-        await wait(rand(800, 1400));
+      // 검색 결과 읽는 척 — 스크롤 횟수·속도 랜덤
+      const scrollTimes = rand(3, 6);
+      for (let i = 0; i < scrollTimes; i++) {
+        const scrollAmt = rand(600, 1400);
+        await this.page.evaluate((d) => window.scrollBy({ top: d, behavior: 'smooth' }), scrollAmt);
+        await wait(rand(2500, 5500)); // 사람이 결과 읽는 속도
       }
 
-      // 검색 결과에서 포스트 링크 추출
+      // 검색 결과에서 포스트 링크 + 팔로우 버튼 모두 추출
       const postLinks = await this.page.evaluate(() => {
         const anchors = [...document.querySelectorAll('a[href*="/post/"]')];
-        const urls = [...new Set(anchors.map(a => a.href))].filter(h =>
-          h.includes('/post/') && h.includes('threads.com')
+        return [...new Set(anchors.map(a => a.href))].filter(h =>
+          h.includes('/post/') && h.includes('threads.com') && !h.includes('/media')
         );
-        return urls;
       });
 
       log('📋', `"${keyword}" — 포스트 ${postLinks.length}개 발견`);
 
-      for (const postUrl of postLinks) {
+      // 포스트 목록도 랜덤 셔플 (같은 순서 반복 방지)
+      const shuffledPosts = shuffle(postLinks);
+
+      for (const postUrl of shuffledPosts) {
         if (successCount >= targetCount) break;
 
-        // URL에서 username 추출: https://www.threads.com/@username/post/xxx
         const usernameMatch = postUrl.match(/@([^/]+)\/post\//);
         if (!usernameMatch) continue;
         const username = usernameMatch[1];
 
-        // 30일 이내 이미 처리한 계정이면 스킵
         if (shariLog[username]) {
-          log('⏭️', `이미 스하리 한 계정 스킵: @${username}`);
+          log('⏭️', `이미 처리한 계정 스킵: @${username}`);
           continue;
         }
 
-        log('👤', `스하리 진행: @${username} (${postUrl})`);
+        log('👤', `스하리 진행: @${username}`);
 
-        // 해당 포스트로 이동 (포스트 진입 전 랜덤 대기)
+        // 포스트 방문 전 사람처럼 대기
         await humanWait();
-        await this._goto(postUrl);
-        await wait(rand(2000, 4000));
+
+        try {
+          await this._goto(postUrl);
+        } catch (err) {
+          if (err.message === 'SUSPENDED') {
+            log('🚫', `정지 계정 스킵: @${username}`);
+            continue; // 다음 포스트로 바로 이동
+          }
+          throw err;
+        }
+
+        // 포스트 내용 읽는 척
+        const postText = await this.page.evaluate(() => document.body.innerText.slice(0, 300));
+        await this._readPage(postText);
 
         const ok = await this._shariPost(username);
 
@@ -326,12 +372,11 @@ class ThreadsPoster {
           saveShariLog(shariLog);
           successCount++;
           this.totalShari++;
-          log('🎉', `스하리+팔로우 완료: @${username} (${successCount}/${targetCount})`);
-          // 다음 계정으로 이동 전 랜덤 대기
+          log('🎉', `스하리 완료: @${username} (${successCount}/${targetCount})`);
           await humanWait();
         } else {
           log('⚠️', `스하리 부분 실패: @${username}`);
-          await wait(rand(3000, 7000));
+          await wait(rand(3000, 8000));
         }
       }
     }
@@ -340,93 +385,135 @@ class ThreadsPoster {
     return successCount;
   }
 
-  // ── 포스트 1개 스하리 실행 (좋아요 + 리포스트 + 팔로우 + 댓글) ─────────
+  // ── 포스트 1개 스하리 실행 (순서 랜덤 + 댓글 다양화) ────────────────────
   async _shariPost(username) {
     try {
-      // 1) 좋아요
-      const liked = await this.page.evaluate(() => {
-        const btns = [...document.querySelectorAll('div[role="button"], button')];
-        const likeBtn = btns.find(b => {
-          const svg = b.querySelector('svg');
-          return svg?.getAttribute('aria-label')?.includes('좋아요') &&
-                 !svg?.getAttribute('aria-label')?.includes('좋아요 취소');
+      let liked = false, repostClicked = false, followed = false;
+
+      // ── 좋아요 클릭 ───────────────────────────────────────────────────────
+      const doLike = async () => {
+        const ok = await this.page.evaluate(() => {
+          const svgs = [...document.querySelectorAll('svg[aria-label]')];
+          const s = svgs.find(x => {
+            const l = x.getAttribute('aria-label') || '';
+            return (l.includes('좋아요') || l.toLowerCase().includes('like'))
+              && !l.includes('취소') && !l.toLowerCase().includes('unlike');
+          });
+          if (s) {
+            // SVG → 부모 → role="button" 인 조상 찾기
+            let el = s;
+            for (let i = 0; i < 4; i++) {
+              el = el.parentElement;
+              if (!el) break;
+              if (el.getAttribute('role') === 'button' || el.tagName === 'BUTTON') {
+                el.click(); return true;
+              }
+            }
+            s.parentElement?.click(); return true;
+          }
+          return false;
         });
-        if (likeBtn) { likeBtn.click(); return true; }
-        // 대체: aria-label 속성이 parent에 있는 경우
-        const svgs = [...document.querySelectorAll('svg[aria-label*="좋아요"]')];
-        const likeSvg = svgs.find(s => !s.getAttribute('aria-label')?.includes('취소'));
-        if (likeSvg) {
-          (likeSvg.closest('div[role="button"]') || likeSvg.parentElement)?.click();
-          return true;
-        }
-        return false;
-      });
+        liked = ok;
+        if (!ok) log('⚠️', `좋아요 버튼 못 찾음: @${username}`);
+        else log('❤️', `좋아요: @${username}`);
+        await wait(rand(1200, 3500));
+      };
 
-      if (!liked) {
-        log('⚠️', `좋아요 버튼 못 찾음: @${username}`);
-      }
-      await wait(rand(1200, 3500));
-
-      // 2) 리포스트
-      const repostClicked = await this.page.evaluate(() => {
-        const svgs = [...document.querySelectorAll('svg[aria-label*="리포스트"]')];
-        const repostSvg = svgs.find(s => !s.getAttribute('aria-label')?.includes('취소'));
-        const target = repostSvg?.closest('div[role="button"]') || repostSvg?.parentElement;
-        if (target) { target.click(); return true; }
-        return false;
-      });
-
-      if (repostClicked) {
-        await wait(700);
-        // 리포스트 확인 모달
-        await this.page.evaluate(() => {
-          const btns = [...document.querySelectorAll('div[role="button"], button')];
-          const confirm = btns.find(b => b.textContent?.trim() === '리포스트');
-          confirm?.click();
+      // ── 리포스트 클릭 ─────────────────────────────────────────────────────
+      const doRepost = async () => {
+        const ok = await this.page.evaluate(() => {
+          const svgs = [...document.querySelectorAll('svg[aria-label]')];
+          const s = svgs.find(x => {
+            const l = x.getAttribute('aria-label') || '';
+            return (l.includes('리포스트') || l.toLowerCase().includes('repost'))
+              && !l.includes('취소');
+          });
+          if (!s) return false;
+          let el = s;
+          for (let i = 0; i < 4; i++) {
+            el = el.parentElement;
+            if (!el) break;
+            if (el.getAttribute('role') === 'button' || el.tagName === 'BUTTON') {
+              el.click(); return true;
+            }
+          }
+          s.parentElement?.click(); return true;
         });
-        await wait(rand(1500, 4000));
-      } else {
-        log('⚠️', `리포스트 버튼 못 찾음: @${username}`);
-      }
-
-      // 3) 팔로우 — 포스트 페이지 시도 → 실패 시 프로필 페이지에서 재시도
-      let followed = await this.page.evaluate(() => {
-        const btns = [...document.querySelectorAll('div[role="button"], button')];
-        const btn = btns.find(b => {
-          const txt = b.textContent?.trim();
-          return txt === '팔로우' || txt === 'Follow';
-        });
-        if (btn) { btn.click(); return true; }
-        return false;
-      });
-
-      if (!followed) {
-        // 프로필 페이지에서 팔로우 시도
-        try {
-          await this._goto(`https://www.threads.com/@${username}`);
-          await wait(rand(1200, 2000));
-          followed = await this.page.evaluate(() => {
-            const btns = [...document.querySelectorAll('div[role="button"], button, [role="button"]')];
-            const btn = btns.find(b => {
-              const txt = b.textContent?.trim();
-              return txt === '팔로우' || txt === 'Follow';
-            });
-            if (btn) { btn.click(); return true; }
+        if (ok) {
+          await wait(rand(1000, 2500));
+          // 모달 확인 버튼
+          const confirmed = await this.page.evaluate(() => {
+            const b = [...document.querySelectorAll('div[role="button"],button')]
+              .find(b => b.textContent?.trim() === '리포스트' || b.textContent?.trim() === 'Repost');
+            if (b) { b.click(); return true; }
             return false;
           });
-          if (followed) log('➕', `팔로우 (프로필): @${username}`);
-          else log('⏭️', `이미 팔로우 중: @${username}`);
-        } catch {}
-      } else {
-        log('➕', `팔로우: @${username}`);
+          repostClicked = confirmed || ok;
+          if (repostClicked) log('🔁', `리포스트: @${username}`);
+          await wait(rand(1500, 4000));
+        } else {
+          log('⚠️', `리포스트 버튼 못 찾음: @${username}`);
+        }
+      };
+
+      // ── 팔로우 클릭 (포스트 페이지 먼저, 실패 시 프로필) ─────────────────
+      const doFollow = async () => {
+        const ok = await this.page.evaluate(() => {
+          const b = [...document.querySelectorAll('div[role="button"],button,[role="button"]')]
+            .find(b => { const t = b.textContent?.trim(); return t === '팔로우' || t === 'Follow'; });
+          if (b) { b.click(); return true; }
+          return false;
+        });
+        if (ok) {
+          followed = true;
+          log('➕', `팔로우: @${username}`);
+        } else {
+          // 프로필 페이지에서 재시도
+          try {
+            await this._goto(`https://www.threads.com/@${username}`);
+            await wait(rand(1000, 2500));
+            const ok2 = await this.page.evaluate(() => {
+              const b = [...document.querySelectorAll('div[role="button"],button,[role="button"]')]
+                .find(b => { const t = b.textContent?.trim(); return t === '팔로우' || t === 'Follow'; });
+              if (b) { b.click(); return true; }
+              return false;
+            });
+            followed = ok2;
+            if (ok2) log('➕', `팔로우 (프로필): @${username}`);
+            else log('⏭️', `이미 팔로우 중: @${username}`);
+          } catch {}
+        }
+        await wait(rand(1500, 4000));
+      };
+
+      // ── 댓글 남기기 ───────────────────────────────────────────────────────
+      const doComment = async () => {
+        const commentText = SHARI_COMMENTS[Math.floor(Math.random() * SHARI_COMMENTS.length)];
+        await this._leaveComment(commentText);
+      };
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 액션 순서 랜덤 결정
+      //   패턴 A: 좋아요 → 팔로우 → 리포스트 → 댓글
+      //   패턴 B: 팔로우 → 좋아요 → 댓글 → 리포스트
+      //   패턴 C: 좋아요 → 리포스트 → 댓글 → 팔로우
+      //   패턴 D: 팔로우 → 리포스트 → 좋아요 → 댓글
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      const patterns = [
+        [doLike, doFollow, doRepost, doComment],
+        [doFollow, doLike, doComment, doRepost],
+        [doLike, doRepost, doComment, doFollow],
+        [doFollow, doRepost, doLike, doComment],
+      ];
+      const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+      const patternIdx = patterns.indexOf(pattern) + 1;
+      log('🎲', `액션 패턴 ${patternIdx} 선택`);
+
+      for (const action of pattern) {
+        await action();
       }
-      await wait(rand(1500, 4000));
 
-      // 4) 댓글 "스하링" 남기기 (가장 중요 — 반하리 유도 신호)
-      const commented = await this._leaveComment('스하링 🔁🩷');
-
-      // 좋아요 또는 리포스트 중 하나라도 성공하면 카운트
-      return liked || repostClicked;
+      return liked || repostClicked || followed;
     } catch (err) {
       log('⚠️', `_shariPost 오류 @${username}: ${err.message}`);
       return false;
@@ -595,7 +682,7 @@ async function main() {
   if (!postOnly) {
     log('', '─'.repeat(55));
     try {
-      const count = await poster.doShari(30);
+      const count = await poster.doShari(15);
       totalShari  = count;
     } catch (err) {
       log('❌', `스하리 실패: ${err.message}`);
