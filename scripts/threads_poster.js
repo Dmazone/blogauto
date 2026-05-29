@@ -38,6 +38,21 @@ mkdirSync(DATA_DIR, { recursive: true });
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
+/**
+ * 사람처럼 불규칙한 딜레이
+ * 30%: 빠름(1~3초), 40%: 보통(4~10초), 20%: 느림(11~25초), 10%: 아주느림(26~50초)
+ */
+function humanWait() {
+  const r = Math.random();
+  let ms;
+  if (r < 0.30) ms = rand(1000, 3000);        // 빠름
+  else if (r < 0.70) ms = rand(4000, 10000);  // 보통
+  else if (r < 0.90) ms = rand(11000, 25000); // 느림
+  else ms = rand(26000, 50000);                // 아주 느림 (가끔 딴 짓하는 척)
+  log('⏱️', `대기 ${(ms/1000).toFixed(1)}초...`);
+  return wait(ms);
+}
+
 const log = (emoji, msg) => {
   const line = `[${new Date().toISOString()}] ${emoji}  ${msg}`;
   console.log(line);
@@ -299,9 +314,10 @@ class ThreadsPoster {
 
         log('👤', `스하리 진행: @${username} (${postUrl})`);
 
-        // 해당 포스트로 이동
+        // 해당 포스트로 이동 (포스트 진입 전 랜덤 대기)
+        await humanWait();
         await this._goto(postUrl);
-        await wait(rand(1500, 2500));
+        await wait(rand(2000, 4000));
 
         const ok = await this._shariPost(username);
 
@@ -310,11 +326,12 @@ class ThreadsPoster {
           saveShariLog(shariLog);
           successCount++;
           this.totalShari++;
-          log('🎉', `스하리+댓글 완료: @${username} (${successCount}/${targetCount})`);
-          await wait(rand(4000, 7000)); // 인간적인 속도 유지
+          log('🎉', `스하리+팔로우 완료: @${username} (${successCount}/${targetCount})`);
+          // 다음 계정으로 이동 전 랜덤 대기
+          await humanWait();
         } else {
           log('⚠️', `스하리 부분 실패: @${username}`);
-          await wait(rand(2000, 3500));
+          await wait(rand(3000, 7000));
         }
       }
     }
@@ -348,7 +365,7 @@ class ThreadsPoster {
       if (!liked) {
         log('⚠️', `좋아요 버튼 못 찾음: @${username}`);
       }
-      await wait(rand(500, 1000));
+      await wait(rand(1200, 3500));
 
       // 2) 리포스트
       const repostClicked = await this.page.evaluate(() => {
@@ -367,7 +384,7 @@ class ThreadsPoster {
           const confirm = btns.find(b => b.textContent?.trim() === '리포스트');
           confirm?.click();
         });
-        await wait(rand(600, 1000));
+        await wait(rand(1500, 4000));
       } else {
         log('⚠️', `리포스트 버튼 못 찾음: @${username}`);
       }
@@ -403,7 +420,7 @@ class ThreadsPoster {
       } else {
         log('➕', `팔로우: @${username}`);
       }
-      await wait(rand(600, 1200));
+      await wait(rand(1500, 4000));
 
       // 4) 댓글 "스하링" 남기기 (가장 중요 — 반하리 유도 신호)
       const commented = await this._leaveComment('스하링 🔁🩷');
@@ -536,49 +553,45 @@ async function main() {
     process.exit(0);
   }
 
-  log('🚀', `threads_poster 시작 — ${posts.length}개 포스팅, postOnly=${postOnly}, shariOnly=${shariOnly}`);
+  // 게시할 포스팅: 전체 중 랜덤 1개만 선택
+  const selectedPost = posts[Math.floor(Math.random() * posts.length)];
+  log('🚀', `threads_poster 시작 — 오늘의 게시글: "${selectedPost.title}" | shariOnly=${shariOnly}`);
 
-  const poster       = new ThreadsPoster({ headless: false });
+  const poster   = new ThreadsPoster();
   await poster.init();
 
   let successPost = 0;
   let totalShari  = 0;
   const results   = [];
 
-  // ── ① 블로그 홍보글 게시 (포스팅별 순서대로) ──────────────────────────
+  // ── ① 블로그 홍보글 게시 (랜덤 1개) ──────────────────────────────────────
   if (!shariOnly) {
-    for (let i = 0; i < posts.length; i++) {
-      const post = posts[i];
-      log('', '─'.repeat(55));
-      log('📰', `[${i + 1}/${posts.length}] ${post.title}`);
+    log('', '─'.repeat(55));
+    log('📰', `오늘의 포스팅: ${selectedPost.title}`);
 
-      const mdPath = path.join(
-        __dirname, '..', 'content', 'posts',
-        post.sectionDir, post.slug, 'index.md'
-      );
-      const blogContent = existsSync(mdPath) ? readFileSync(mdPath, 'utf8') : '';
+    const mdPath = path.join(
+      __dirname, '..', 'content', 'posts',
+      selectedPost.sectionDir, selectedPost.slug, 'index.md'
+    );
+    const blogContent = existsSync(mdPath) ? readFileSync(mdPath, 'utf8') : '';
 
-      try {
-        const versions = await generateThreadsText(post, blogContent);
-        const text     = versions[i % versions.length];
-        await poster.postThread(text, post.url);
-        successPost++;
-        results.push({ title: post.title, url: post.url, posted: true });
-        log('✅', `게시 완료: ${post.title}`);
-      } catch (err) {
-        log('❌', `게시 실패: ${err.message}`);
-        results.push({ title: post.title, url: post.url, posted: false });
-      }
-
-      // 포스팅 간 30초 휴식 (마지막 제외)
-      if (i < posts.length - 1) {
-        log('⏸️', '다음 포스팅까지 30초 대기...');
-        await wait(30_000);
-      }
+    try {
+      const versions = await generateThreadsText(selectedPost, blogContent);
+      const text     = versions[0];
+      await poster.postThread(text, selectedPost.url);
+      successPost++;
+      results.push({ title: selectedPost.title, url: selectedPost.url, posted: true });
+      log('✅', `게시 완료: ${selectedPost.title}`);
+    } catch (err) {
+      log('❌', `게시 실패: ${err.message}`);
+      results.push({ title: selectedPost.title, url: selectedPost.url, posted: false });
     }
+
+    // 게시 후 스하리 전 여유 시간
+    await humanWait();
   }
 
-  // ── ② 스하리 (모집글 검색 → 찾아가서 스하리+댓글) ─────────────────────
+  // ── ② 스하리 (모집글 검색 → 찾아가서 스하리+팔로우) ─────────────────────
   if (!postOnly) {
     log('', '─'.repeat(55));
     try {
@@ -593,13 +606,13 @@ async function main() {
 
   // 결과 요약
   log('', '='.repeat(55));
-  log('🎉', `완료 — 게시 ${successPost}/${posts.length} | 스하리 총 ${totalShari}개`);
+  log('🎉', `완료 — 게시 ${successPost}/1 | 스하리 총 ${totalShari}개`);
 
   // 텔레그램 알림
   const lines = [
-    `🧵 트렌드줌 Threads 홍보 완료!`,
-    `📝 게시: ${successPost}/${posts.length}개`,
-    `🔁 스하리: 총 ${totalShari}개`,
+    `🧵 트렌드줌 Threads 작업 완료!`,
+    `📝 게시: ${successPost}/1개 (랜덤 선택)`,
+    `🔁 스하리+팔로우: 총 ${totalShari}개`,
     ``,
   ];
   if (!shariOnly) {
