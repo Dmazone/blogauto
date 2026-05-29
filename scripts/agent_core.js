@@ -849,8 +849,13 @@ ${subtopicLine}
   // ── TURN 5: 최종 마크다운 추출 ────────────────────────────────────────────
   log('📝', '[Turn 5] 최종 마크다운 추출 중...');
   const _t5Raw = await session.send(
-    `최종 완성된 본문을 마크다운 형식으로만 출력해줘.
-추가 설명·요약·앞말 없이 마크다운 본문 코드만. front matter 없이.`
+    `최종 완성된 본문을 반드시 아래 형식의 코드블록으로 출력해줘:
+
+\`\`\`markdown
+[완성된 마크다운 본문 전체]
+\`\`\`
+
+규칙: 코드블록 안에 마크다운 본문만 넣을 것. front matter 없이. 코드블록 앞뒤로 설명·요약 없이.`
   );
   const finalBody = extractFinalMarkdown(_t5Raw);
 
@@ -1007,13 +1012,21 @@ export async function runForSection(section, options = {}) {
   await claudeCheckAndRegenImage(thumbPath,  topic.title, '썸네일',       pThumb, topic.slug, 'thumb', bundleDir, section.name, topic.description);
 
   // STEP 7: Claude 본문 완전 검수 & 직접 수정 (이미지 완료 후)
+  const preReviewBody = final;
   final = await claudeFullReviewAndFix(topic, final);
+  // 안전장치: 검수 후 H2가 사라진 경우(innerText 렌더링 버그 등) 검수 전 본문 복원
+  if ((final.match(/^## /gm) ?? []).length === 0 && (preReviewBody.match(/^## /gm) ?? []).length > 0) {
+    log('⚠️', '[STEP 7] 검수 후 H2 소실 감지 → 검수 전 본문으로 복원');
+    log('⚠️', `  검수 결과 앞 200자: ${final.slice(0, 200).replace(/\n/g, '↵')}`);
+    final = preReviewBody;
+  }
 
   // 품질 게이트: 저장 전 H2 개수 + 분량 확인
   const h2Count  = (final.match(/^## /gm) ?? []).length;
   const charCount = final.replace(/\s/g, '').length;
   if (h2Count < 3) {
     log('❌', `품질 게이트 실패: H2 ${h2Count}개 (최소 3개 필요) → 저장 취소`);
+    log('❌', `  본문 앞 300자: ${final.slice(0, 300).replace(/\n/g, '↵')}`);
     throw new Error(`H2 부족 (${h2Count}개): "${topic.title}"`);
   }
   if (charCount < 1200) {

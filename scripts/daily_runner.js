@@ -66,9 +66,23 @@ function getPublishDate(sectionIndex) {
   );
 }
 
+/**
+ * 즉시 발행용: 현재 시각 + index * 30분 오프셋 ISO 날짜 (오늘 날짜, 과거 시각도 Hugo가 즉시 공개)
+ */
+function getNowPublishDate(sectionIndex) {
+  const now = new Date(Date.now() + sectionIndex * 30 * 60 * 1000);
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  const p   = (n) => String(n).padStart(2, '0');
+  return (
+    `${kst.getUTCFullYear()}-${p(kst.getUTCMonth() + 1)}-${p(kst.getUTCDate())}` +
+    `T${p(kst.getUTCHours())}:${p(kst.getUTCMinutes())}:00+09:00`
+  );
+}
+
 async function main() {
   const args    = process.argv.slice(2);
   const useApi  = args.includes('--api');
+  const publishNow = args.includes('--now'); // 예약 없이 즉시 발행 (재발행/복구용)
 
   // --from N : N번째(1-based)부터 재개
   const fromIdx = (() => {
@@ -109,7 +123,7 @@ async function main() {
   }
 
   log('🚀', `daily_runner 시작 — 그룹 ${todayGroup} / ${targetSections.length}개 섹션`);
-  log('📅', `예약 발행: 07:00~09:00 KST (다음날, 30분 간격)`);
+  log('📅', publishNow ? `즉시 발행 모드 (30분 간격)` : `예약 발행: 07:00~09:00 KST (다음날, 30분 간격)`);
   console.log('');
 
   // ── 텔레그램 시작 알림 ──────────────────────────────────────────────────
@@ -119,10 +133,10 @@ async function main() {
     return t.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
   })();
   await sendTelegram(
-    `🚀 트렌드줌 예약발행 작업 시작!\n` +
+    `🚀 트렌드줌 ${publishNow ? '즉시발행' : '예약발행'} 작업 시작!\n` +
     `📅 작업일: ${startDate}\n` +
     `📂 그룹 ${todayGroup} (${targetSections.map(s=>s.name).join(', ')})\n` +
-    `⏰ 발행 예정: ${tomorrowStr} 07:00~09:00 KST\n` +
+    `⏰ ${publishNow ? '즉시 발행 (30분 간격)' : `발행 예정: ${tomorrowStr} 07:00~09:00 KST`}\n` +
     `📝 총 ${targetSections.length}개 고품질 포스팅 진행합니다.`
   );
 
@@ -133,7 +147,7 @@ async function main() {
   for (let i = 0; i < targetSections.length; i++) {
     const section   = targetSections[i];
     const globalIdx = targetSections.findIndex((s) => s.id === section.id);
-    const dateStr   = getPublishDate(globalIdx);
+    const dateStr   = publishNow ? getNowPublishDate(i) : getPublishDate(globalIdx);
     const subtopic  = section.id === 'health' ? healthSubtopic : null;
 
     log('📰', `[${i + 1}/${targetSections.length}] ${section.name}${subtopic ? ` (${subtopic})` : ''}`);
@@ -186,7 +200,7 @@ async function main() {
   savePostsLog(publishedPosts, targetSections.length);
 
   // ── 텔레그램 완료 알림 ──────────────────────────────────────────────────
-  await sendTelegramDailyReport(publishedPosts, successCount, failCount);
+  await sendTelegramDailyReport(publishedPosts, successCount, failCount, publishNow);
 }
 
 function savePostsLog(posts, totalCount) {
@@ -215,13 +229,14 @@ function savePostsLog(posts, totalCount) {
   }
 }
 
-async function sendTelegramDailyReport(posts, successCount, failCount) {
+async function sendTelegramDailyReport(posts, successCount, failCount, publishNow = false) {
   const baseUrl  = (process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto').replace(/\/$/, '');
   const tomorrow = (() => { const t = new Date(); t.setDate(t.getDate() + 1); return t.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' }); })();
+  const todayStr = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
 
   const lines = [
-    `✅ 트렌드줌 예약발행 완료!`,
-    `📅 발행 예정: ${tomorrow} 07:00~09:00 KST`,
+    `✅ 트렌드줌 ${publishNow ? '즉시발행' : '예약발행'} 완료!`,
+    `📅 ${publishNow ? `발행 완료: ${todayStr} (즉시 공개)` : `발행 예정: ${tomorrow} 07:00~09:00 KST`}`,
     `성공 ${successCount}개 / 실패 ${failCount}개`,
     '',
   ];
