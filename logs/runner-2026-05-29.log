@@ -1,0 +1,12 @@
+[2026-05-29T01:14:32.569Z] 🔑  API 모드 — Gemini API 키 사용
+[2026-05-29T01:14:32.569Z] 🚀  daily_runner 시작 — 그룹 1 / 2개 섹션
+[2026-05-29T01:14:32.570Z] 📅  즉시 발행 모드 (30분 간격)
+[2026-05-29T01:14:33.480Z] 📰  [1/2] 세계여행지
+[2026-05-29T01:14:33.481Z] 📅  발행 예약: 2026-05-29T10:14:00+09:00
+[2026-05-29T01:15:59.792Z] ❌  세계여행지 실패 (시도 1/2): (validated.validated_insights ?? []).join is not a function
+TypeError: (validated.validated_insights ?? []).join is not a function
+    at generateOutline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:312:56)
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:961:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:161:24)
+[2026-05-29T01:15:59.795Z] ⏳  3분 후 재시도...

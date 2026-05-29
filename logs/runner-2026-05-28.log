@@ -1,0 +1,76 @@
+[2026-05-28T13:03:08.341Z] 💎  Gem 모드: https://gemini.google.com/u/2/gem/cca9fca55f60
+[2026-05-28T13:03:08.342Z] 🚀  daily_runner 시작 — 그룹 2 / 5개 섹션
+[2026-05-28T13:03:08.342Z] 📅  예약 발행: 07:00~09:00 KST (다음날, 30분 간격)
+[2026-05-28T13:03:09.321Z] 📰  [1/5] 건강 (식단)
+[2026-05-28T13:03:09.321Z] 📅  발행 예약: 2026-05-29T07:00:00+09:00
+[2026-05-28T13:11:11.413Z] ❌  건강 실패 (시도 1/2): H2 부족 (0개): "2026 뇌과학 운동법, 우울증 날리는 3가지 진짜 이유"
+Error: H2 부족 (0개): "2026 뇌과학 운동법, 우울증 날리는 3가지 진짜 이유"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T13:11:11.416Z] ⏳  3분 후 재시도...
+[2026-05-28T13:23:25.494Z] ❌  건강 실패 (시도 2/2): H2 부족 (0개): "비만 주사 근손실, 진짜 막는 운동법 2가지"
+Error: H2 부족 (0개): "비만 주사 근손실, 진짜 막는 운동법 2가지"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T13:23:25.496Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-05-28T13:43:25.502Z] 📰  [2/5] IT기기
+[2026-05-28T13:43:25.503Z] 📅  발행 예약: 2026-05-29T07:30:00+09:00
+[2026-05-28T13:51:25.102Z] ❌  IT기기 실패 (시도 1/2): H2 부족 (0개): "바뀌는 ARM 노트북, 2026 윈도우 Copilot+ PC 완전정리"
+Error: H2 부족 (0개): "바뀌는 ARM 노트북, 2026 윈도우 Copilot+ PC 완전정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T13:51:25.104Z] ⏳  3분 후 재시도...
+[2026-05-28T14:02:06.013Z] ❌  IT기기 실패 (시도 2/2): H2 부족 (0개): "LPDDR6 반도체, AI 폰 성능 진짜 바뀔까? 핵심 정리"
+Error: H2 부족 (0개): "LPDDR6 반도체, AI 폰 성능 진짜 바뀔까? 핵심 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T14:02:06.015Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-05-28T14:22:06.018Z] 📰  [3/5] 한국부동산
+[2026-05-28T14:22:06.019Z] 📅  발행 예약: 2026-05-29T08:00:00+09:00
+[2026-05-28T14:28:16.254Z] ❌  한국부동산 실패 (시도 1/2): H2 부족 (0개): "양도세 중과 종료, 진짜 집값 튈까?"
+Error: H2 부족 (0개): "양도세 중과 종료, 진짜 집값 튈까?"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T14:28:16.255Z] ⏳  3분 후 재시도...
+[2026-05-28T14:37:39.996Z] ❌  한국부동산 실패 (시도 2/2): H2 부족 (0개): "반도체 벨트 집값 진짜 폭등? 2026 경기 남부 대장주 핵심 정리"
+Error: H2 부족 (0개): "반도체 벨트 집값 진짜 폭등? 2026 경기 남부 대장주 핵심 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T14:37:39.998Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-05-28T14:57:40.004Z] 📰  [4/5] 세계여행지
+[2026-05-28T14:57:40.005Z] 📅  발행 예약: 2026-05-29T08:30:00+09:00
+[2026-05-28T15:04:13.493Z] ❌  세계여행지 실패 (시도 1/2): H2 부족 (0개): "로맨타지 여행지 3곳 핵심만 진짜 추천"
+Error: H2 부족 (0개): "로맨타지 여행지 3곳 핵심만 진짜 추천"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T15:04:13.495Z] ⏳  3분 후 재시도...
+[2026-05-28T15:15:01.373Z] ❌  세계여행지 실패 (시도 2/2): H2 부족 (0개): "디지털 디톡스 여행, 2026 숨은 힐링 명소 3곳 완전 정리"
+Error: H2 부족 (0개): "디지털 디톡스 여행, 2026 숨은 힐링 명소 3곳 완전 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T15:15:01.374Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-05-28T15:35:01.388Z] 📰  [5/5] 스포츠
+[2026-05-28T15:35:01.390Z] 📅  발행 예약: 2026-05-29T09:00:00+09:00
+[2026-05-28T15:42:44.431Z] ❌  스포츠 실패 (시도 1/2): H2 부족 (0개): "2026 월드컵 명단 진짜 숨은 전술 핵심만"
+Error: H2 부족 (0개): "2026 월드컵 명단 진짜 숨은 전술 핵심만"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T15:42:44.433Z] ⏳  3분 후 재시도...
+[2026-05-28T15:55:00.114Z] ❌  스포츠 실패 (시도 2/2): H2 부족 (0개): "삼성 독주와 SSG 9연패 완전 정리"
+Error: H2 부족 (0개): "삼성 독주와 SSG 9연패 완전 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:1017:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:146:24)
+[2026-05-28T15:55:00.303Z] 🔒  브라우저 세션 종료
+[2026-05-28T15:55:00.305Z] 🎉  완료 — 성공 0개 / 실패 5개
+[2026-05-28T15:55:00.307Z] 💾  posts_log.json 저장 완료
+[2026-05-28T15:55:01.253Z] 📱  텔레그램 완료 알림 전송

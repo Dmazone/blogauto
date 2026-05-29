@@ -1,0 +1,45 @@
+[2026-05-28T00:22:06.131Z] 🚀  threads_poster 시작 — 5개 포스팅, postOnly=false, shariOnly=false
+[2026-05-28T00:22:06.132Z] 🌐  Threads 브라우저 시작...
+[2026-05-28T00:22:14.686Z] ✅  Threads 세션 준비 완료
+[2026-05-28T00:22:14.686Z]   ───────────────────────────────────────────────────────
+[2026-05-28T00:22:14.687Z] 📰  [1/5] 최신기술동향 트렌드 분석
+[2026-05-28T00:22:14.687Z] ✍️  홍보글 생성: 최신기술동향 트렌드 분석
+[2026-05-28T00:22:15.123Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbU1fDmcCXm84qVvz8Pke"}
+[2026-05-28T00:22:15.124Z] 📤  게시 시작: 최신기술동향 트렌드 분석  지금 트렌드줌에서 확인하세요! #트렌드 #최신이슈  👇 더 보...
+[2026-05-28T00:22:15.125Z] ❌  게시 실패: page.goto: Target page, context or browser has been closed
+[2026-05-28T00:22:15.125Z] ⏸️  다음 포스팅까지 30초 대기...
+[2026-05-28T00:22:45.131Z]   ───────────────────────────────────────────────────────
+[2026-05-28T00:22:45.132Z] 📰  [2/5] 경제 트렌드 분석
+[2026-05-28T00:22:45.133Z] ✍️  홍보글 생성: 경제 트렌드 분석
+[2026-05-28T00:22:45.502Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbU1hTsUgf7fkVquBvhzN"}
+[2026-05-28T00:22:45.502Z] 📤  게시 시작: 경제 트렌드 분석  지금 트렌드줌에서 확인하세요! #트렌드 #최신이슈  👇 더 보기...
+[2026-05-28T00:22:45.503Z] ❌  게시 실패: page.goto: Target page, context or browser has been closed
+[2026-05-28T00:22:45.503Z] ⏸️  다음 포스팅까지 30초 대기...
+[2026-05-28T00:23:15.513Z]   ───────────────────────────────────────────────────────
+[2026-05-28T00:23:15.514Z] 📰  [3/5] 사회 트렌드 분석
+[2026-05-28T00:23:15.515Z] ✍️  홍보글 생성: 사회 트렌드 분석
+[2026-05-28T00:23:15.837Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbU1jhbnbtoYP11Fsw6Lq"}
+[2026-05-28T00:23:15.837Z] 📤  게시 시작: 사회 트렌드 분석  지금 트렌드줌에서 확인하세요! #트렌드 #최신이슈  👇 더 보기...
+[2026-05-28T00:23:15.838Z] ❌  게시 실패: page.goto: Target page, context or browser has been closed
+[2026-05-28T00:23:15.838Z] ⏸️  다음 포스팅까지 30초 대기...
+[2026-05-28T00:23:45.852Z]   ───────────────────────────────────────────────────────
+[2026-05-28T00:23:45.853Z] 📰  [4/5] 인문 트렌드 분석
+[2026-05-28T00:23:45.853Z] ✍️  홍보글 생성: 인문 트렌드 분석
+[2026-05-28T00:23:46.215Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbU1mwJbVBsrieSoqN9Ke"}
+[2026-05-28T00:23:46.215Z] 📤  게시 시작: 인문 트렌드 분석  지금 트렌드줌에서 확인하세요! #트렌드 #최신이슈  👇 더 보기...
+[2026-05-28T00:23:46.216Z] ❌  게시 실패: page.goto: Target page, context or browser has been closed
+[2026-05-28T00:23:46.216Z] ⏸️  다음 포스팅까지 30초 대기...
+[2026-05-28T00:24:16.223Z]   ───────────────────────────────────────────────────────
+[2026-05-28T00:24:16.224Z] 📰  [5/5] 연예이슈 트렌드 분석
+[2026-05-28T00:24:16.225Z] ✍️  홍보글 생성: 연예이슈 트렌드 분석
+[2026-05-28T00:24:16.574Z] ⚠️  홍보글 생성 실패: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."},"request_id":"req_011CbU1pBB5buoDSuohvkaPv"}
+[2026-05-28T00:24:16.574Z] 📤  게시 시작: 연예이슈 트렌드 분석  지금 트렌드줌에서 확인하세요! #트렌드 #최신이슈  👇 더 보기...
+[2026-05-28T00:24:16.575Z] ❌  게시 실패: page.goto: Target page, context or browser has been closed
+[2026-05-28T00:24:16.575Z]   ───────────────────────────────────────────────────────
+[2026-05-28T00:24:16.576Z] 🔥  스하리 시작 (목표: 30개) — 검색 기반 모집글 탐색
+[2026-05-28T00:24:16.577Z] 🔍  "스하리모집" 검색 중...
+[2026-05-28T00:24:16.577Z] ❌  스하리 실패: page.goto: Target page, context or browser has been closed
+[2026-05-28T00:24:16.578Z] 🔒  Threads 세션 종료
+[2026-05-28T00:24:16.578Z]   =======================================================
+[2026-05-28T00:24:16.578Z] 🎉  완료 — 게시 0/5 | 스하리 총 0개
+[2026-05-28T00:24:17.533Z] 📱  텔레그램 알림 전송 완료
