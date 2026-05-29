@@ -22,6 +22,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { writeFileSync, mkdirSync, appendFileSync } from 'fs';
+import { spawn } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
@@ -201,6 +202,23 @@ async function main() {
 
   // ── 텔레그램 완료 알림 ──────────────────────────────────────────────────
   await sendTelegramDailyReport(publishedPosts, successCount, failCount, publishNow);
+
+  // ── 스레드 자동 연동: 성공한 포스팅이 있으면 threads_poster.js 즉시 실행 ──
+  if (successCount > 0) {
+    const delay = publishNow ? 0 : 60 * 60 * 1000; // --now: 즉시, 예약: 1시간 후(발행 시점 맞추기)
+    if (delay > 0) {
+      log('⏳', `스레드 게시 ${delay / 60000}분 후 자동 시작...`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+    log('🧵', '스레드 게시 + 스하리 자동 시작...');
+    const threadsProc = spawn(process.execPath, [path.join(__dirname, 'threads_poster.js')], {
+      cwd:   path.join(__dirname, '..'),
+      stdio: 'inherit',
+      detached: false,
+    });
+    await new Promise((resolve) => threadsProc.on('close', resolve));
+    log('✅', '스레드 게시 + 스하리 완료');
+  }
 }
 
 function savePostsLog(posts, totalCount) {

@@ -14,6 +14,7 @@ import { chromium } from 'playwright';
 import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { sendTelegram } from './telegram.js';
 
 const __dirname   = path.dirname(fileURLToPath(import.meta.url));
 const SESSION_DIR = path.join(os.homedir(), '.gemini-blog-session');
@@ -115,27 +116,43 @@ export class GeminiSession {
     // 페이지 로딩 여유 시간
     await wait(5000);
 
+    // 로그인 판단: URL 기반 + 입력창 존재 여부 (아바타 셀렉터는 Gemini UI 버전마다 달라서 신뢰 불가)
     const isLoggedIn = async () => {
-      const url = this.page.url();
-      if (url.includes('accounts.google.com') || url.includes('/signin')) return false;
-      return await this.page.evaluate(() => {
-        const signInEl = document.querySelector(
-          'a[href*="accounts.google.com"], button[aria-label*="sign in"], button[aria-label*="Sign in"], a[aria-label*="sign in"]'
-        );
-        const avatar = document.querySelector(
-          'img[alt*="profile"], img[alt*="Profile"], [aria-label*="Google Account"]'
-        );
-        return !signInEl && !!avatar;
-      }).catch(() => false);
+      try {
+        const url = this.page.url();
+        // Google 로그인 페이지로 리다이렉트된 경우
+        if (url.includes('accounts.google.com') || url.includes('/signin')) return false;
+        // accounts.google.com 리다이렉트 없이 Gemini 페이지에 있으면 로그인 상태
+        if (url.includes('gemini.google.com')) {
+          // 입력창이 존재하면 확실히 로그인됨
+          const hasInput = await this.page.evaluate(() => {
+            return !!(
+              document.querySelector('rich-textarea') ||
+              document.querySelector('.ql-editor') ||
+              document.querySelector('[contenteditable="true"]')
+            );
+          }).catch(() => false);
+          if (hasInput) return true;
+          // 입력창 없어도 Gemini 페이지면 로딩 중일 수 있으므로 true 반환 (추가 대기로 해소)
+          const hasSignIn = await this.page.evaluate(() =>
+            !!document.querySelector('a[href*="accounts.google.com/o/oauth"]')
+          ).catch(() => false);
+          return !hasSignIn;
+        }
+        return false;
+      } catch {
+        return false;
+      }
     };
 
     if (await isLoggedIn()) return; // 세션 유효 → 바로 통과
 
-    // 로그인 필요 — Chrome 창에서 paydma 계정으로 로그인 후 자동 감지 (최대 180초 대기)
+    // 로그인 필요 — 텔레그램 알림 + 최대 10분 대기
     log('🔐', '구글 계정 로그인이 필요합니다. Chrome 창에서 paydma 계정으로 로그인해 주세요.');
-    log('⏳', '로그인 완료를 자동으로 감지합니다 (최대 3분)...');
+    log('⏳', '로그인 완료를 자동으로 감지합니다 (최대 10분)...');
+    sendTelegram('🔐 Gemini 로그인 필요!\n트렌드줌 자동화 Chrome 창에서 paydma 계정으로 로그인해주세요.\n로그인하면 자동으로 재개됩니다.').catch(() => {});
 
-    const deadline = Date.now() + 180_000;
+    const deadline = Date.now() + 600_000; // 10분
     while (Date.now() < deadline) {
       await wait(4000);
       if (await isLoggedIn()) {
@@ -146,7 +163,9 @@ export class GeminiSession {
         return;
       }
     }
-    log('⚠️', '로그인 감지 시간 초과 — 계속 시도합니다');
+    // 10분 초과해도 로그인 안 된 경우 — 오류 throw 대신 최후 시도 후 계속
+    log('⚠️', '로그인 감지 10분 초과 — 세션 강제 재시도');
+    throw new Error('Gemini 로그인 타임아웃 (10분)');
   }
 
   // ── 세션 살아있는지 확인 ───────────────────────────────────────────────────
