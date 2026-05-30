@@ -203,14 +203,11 @@ async function main() {
   // ── 텔레그램 완료 알림 ──────────────────────────────────────────────────
   await sendTelegramDailyReport(publishedPosts, successCount, failCount, publishNow);
 
-  // ── 스레드 자동 연동: 성공한 포스팅이 있으면 threads_poster.js 즉시 실행 ──
-  if (successCount > 0) {
-    const delay = publishNow ? 0 : 60 * 60 * 1000; // --now: 즉시, 예약: 1시간 후(발행 시점 맞추기)
-    if (delay > 0) {
-      log('⏳', `스레드 게시 ${delay / 60000}분 후 자동 시작...`);
-      await new Promise(r => setTimeout(r, delay));
-    }
-    log('🧵', '스레드 게시 + 스하리 자동 시작...');
+  // ── 스레드 자동 연동 ────────────────────────────────────────────────────
+  // --now 모드(즉시 발행)일 때만 자동 실행. 예약 발행 모드에서는 포스팅이
+  // 07:00~09:00 KST에 공개되므로 threads_poster는 /threads-post 스킬(10:00 KST)로 실행.
+  if (successCount > 0 && publishNow) {
+    log('🧵', '스레드 게시 + 스하리 자동 시작 (--now 모드)...');
     const threadsProc = spawn(process.execPath, [path.join(__dirname, 'threads_poster.js')], {
       cwd:   path.join(__dirname, '..'),
       stdio: 'inherit',
@@ -218,6 +215,8 @@ async function main() {
     });
     await new Promise((resolve) => threadsProc.on('close', resolve));
     log('✅', '스레드 게시 + 스하리 완료');
+  } else if (successCount > 0) {
+    log('📌', '예약 발행 모드 — threads_poster는 10:00 KST /threads-post 스킬로 별도 실행');
   }
 }
 

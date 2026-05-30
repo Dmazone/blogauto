@@ -14,8 +14,9 @@
  *   ⑤ 처리한 계정은 data/shari_log.json에 기록 (30일간 중복 방지)
  */
 
-import { connectChrome } from './connect_chrome.js';
+import { chromium } from 'playwright';
 import Anthropic from '@anthropic-ai/sdk';
+import os from 'os';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'fs';
 import { sendTelegram } from './telegram.js';
 
@@ -26,11 +27,13 @@ import dotenv from 'dotenv';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
+const SESSION_DIR  = path.join(os.homedir(), '.threads-blog-session');
 const THREADS_HOME = 'https://www.threads.com';
 const LOG_DIR      = path.join(__dirname, '..', 'logs');
 const LOG_FILE     = path.join(LOG_DIR, `threads-${new Date().toISOString().slice(0, 10)}.log`);
-const SHARI_LOG    = path.join(__dirname, '..', 'data', 'shari_log.json');
-const DATA_DIR     = path.join(__dirname, '..', 'data');
+const SHARI_LOG       = path.join(__dirname, '..', 'data', 'shari_log.json');
+const THREADS_POST_LOG = path.join(__dirname, '..', 'data', 'threads_log.json');
+const DATA_DIR        = path.join(__dirname, '..', 'data');
 
 mkdirSync(LOG_DIR,  { recursive: true });
 mkdirSync(DATA_DIR, { recursive: true });
@@ -54,10 +57,10 @@ const claude = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 function humanWait() {
   const r = Math.random();
   let ms;
-  if (r < 0.30)      ms = rand(1000, 3000);
-  else if (r < 0.70) ms = rand(4000, 10000);
-  else if (r < 0.90) ms = rand(11000, 25000);
-  else               ms = rand(26000, 50000);
+  if (r < 0.30)      ms = rand(3000, 9000);
+  else if (r < 0.70) ms = rand(12000, 30000);
+  else if (r < 0.90) ms = rand(33000, 75000);
+  else               ms = rand(78000, 150000);
   log('⏱️', `대기 ${(ms/1000).toFixed(1)}초...`);
   return wait(ms);
 }
@@ -168,6 +171,19 @@ function saveShariLog(shariLog) {
   writeFileSync(SHARI_LOG, JSON.stringify(shariLog, null, 2), 'utf8');
 }
 
+// threads_log.json — 중복 게시 방지 (7일 보관)
+function loadThreadsLog() {
+  if (!existsSync(THREADS_POST_LOG)) return {};
+  try { return JSON.parse(readFileSync(THREADS_POST_LOG, 'utf8')); } catch { return {}; }
+}
+function saveThreadsLog(tlog) {
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  for (const [url, ts] of Object.entries(tlog)) {
+    if (new Date(ts).getTime() < cutoff) delete tlog[url];
+  }
+  writeFileSync(THREADS_POST_LOG, JSON.stringify(tlog, null, 2), 'utf8');
+}
+
 // ────────────────────────────────────────────────────────────────────────────
 // ThreadsPoster 클래스
 // ────────────────────────────────────────────────────────────────────────────
@@ -178,27 +194,32 @@ class ThreadsPoster {
     this.totalShari = 0;
   }
 
-  // ── 초기화 — 실행 중인 Chrome에 CDP 연결 ─────────────────────────────────
+  // ── 초기화 — Playwright 자체 브라우저 + 저장된 세션 사용 ─────────────────
   async init() {
-    log('🌐', 'Chrome CDP 연결 중... (로그인 세션 자동 사용)');
-    const { context, newTab } = await connectChrome();
-    this.context = context;
+    log('🌐', 'Threads 브라우저 시작...');
 
-    // 새 탭을 열어 Threads로 이동 (기존 Chrome 세션 → 로그인 불필요)
-    this.page = await newTab(THREADS_HOME);
-    await wait(2000);
+    this.context = await chromium.launchPersistentContext(SESSION_DIR, {
+      headless:  false,
+      viewport:  { width: 1280, height: 900 },
+      args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'],
+      ignoreDefaultArgs: ['--enable-automation'],
+    });
 
-    const url = this.page.url();
-    if (url.includes('/login') || url.includes('accounts.instagram') || url.includes('/signup')) {
-      throw new Error('Threads 로그인 필요 — Chrome에서 Threads에 로그인 후 다시 실행해주세요.');
-    }
-    log('✅', 'Threads 세션 준비 완료 (Chrome 기존 로그인 사용)');
+    this.page = this.context.pages()[0] ?? await this.context.newPage();
+    await this.page.goto(THREADS_HOME, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    await wait(4000);
+    await this._checkLogin();
+    log('✅', 'Threads 세션 준비 완료');
   }
 
-  // (하위 호환 — CDP 방식에서는 사용 안 함)
-  async _ensureLoggedIn() {}
+  async _ensureLoggedIn() {
+    await wait(4000);
+    await this._checkLogin();
+  }
   async _checkLogin() {
     const url = this.page.url();
+    // 내 계정 정지 감지 — 별도로 먼저 체크 (루프 전에)
+    if (url.includes('/accounts/suspended/')) throw new Error('MY_ACCOUNT_SUSPENDED');
     const isLoginPage = url.includes('/login') || url.includes('accounts.instagram') ||
                         url.includes('accounts.google') || url.includes('/signup') ||
                         url.includes('force_authentication');
@@ -212,12 +233,12 @@ class ThreadsPoster {
 
     const deadline = Date.now() + 300_000; // 5분
     while (Date.now() < deadline) {
-      await wait(5000);
+      await wait(15000);
       const u = this.page.url();
       if (!u.includes('/login') && !u.includes('force_authentication') &&
           !u.includes('accounts.instagram') && !u.includes('/signup')) {
         log('✅', '로그인 확인됨 — 작업 재개');
-        await wait(2000);
+        await wait(6000);
         return;
       }
     }
@@ -227,13 +248,37 @@ class ThreadsPoster {
   // goto() 래퍼 — 이동 후 정지 계정 / 로그인 리다이렉트 감지
   async _goto(url, opts = {}) {
     await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000, ...opts });
-    await wait(rand(800, 1800));
+    await wait(rand(2400, 5400));
     const cur = this.page.url();
     // 정지 계정 리다이렉트 감지 → 예외 throw → 호출부에서 skip 처리
     if (cur.includes('/accounts/suspended/')) {
-      throw new Error('SUSPENDED');
+      throw new Error('MY_ACCOUNT_SUSPENDED');
     }
     await this._checkLogin();
+  }
+
+  // 자연스러운 마우스 이동 후 클릭 (베지어 커브 경로 — 봇 감지 방지 핵심)
+  async _mouseClick(x, y, jitter = 3) {
+    const start = await this.page.evaluate(() => ({
+      x: window._lastMouseX ?? 300,
+      y: window._lastMouseY ?? 300,
+    }));
+    const steps = rand(8, 15);
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      // ease in-out cubic
+      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      const mx = start.x + (x - start.x) * ease + (Math.random() - 0.5) * 4;
+      const my = start.y + (y - start.y) * ease + (Math.random() - 0.5) * 4;
+      await this.page.mouse.move(mx, my);
+      await wait(rand(30, 84));
+    }
+    const cx = x + (Math.random() - 0.5) * jitter;
+    const cy = y + (Math.random() - 0.5) * jitter;
+    await this.page.mouse.click(cx, cy);
+    await this.page.evaluate(([lx, ly]) => {
+      window._lastMouseX = lx; window._lastMouseY = ly;
+    }, [cx, cy]);
   }
 
   // 페이지에서 사람처럼 읽는 척 — 스크롤 위아래 랜덤
@@ -244,7 +289,7 @@ class ThreadsPoster {
     for (let i = 0; i < scrollCount; i++) {
       const dir = Math.random() > 0.3 ? 400 : -200; // 주로 아래, 가끔 위로
       await this.page.evaluate((d) => window.scrollBy({ top: d, behavior: 'smooth' }), dir);
-      await wait(rand(1500, isLong ? 5000 : 3000));
+      await wait(rand(4500, isLong ? 15000 : 9000));
     }
   }
 
@@ -253,43 +298,65 @@ class ThreadsPoster {
     const fullText = `${text}\n${link}`;
     log('📤', `게시 시작: ${text.slice(0, 50).replace(/\n/g, ' ')}...`);
 
-    await this._goto(THREADS_HOME);
-    await wait(2000);
-
-    // 작성 영역 찾아 클릭
-    const clicked = await this.page.evaluate(() => {
-      const candidates = [
-        ...document.querySelectorAll('[contenteditable="true"]'),
-        ...document.querySelectorAll('p[data-lexical-text="true"]'),
-        ...[...document.querySelectorAll('div, span')].filter(el =>
-          el.textContent?.includes('새로운 소식이 있나요')
-        ),
-      ];
-      for (const el of candidates) { el.click(); return true; }
+    // 중복 게시 체크
+    const tlog = loadThreadsLog();
+    if (tlog[link]) {
+      log('⏭️', `이미 게시된 URL 스킵: ${link}`);
       return false;
-    });
-
-    if (!clicked) log('⚠️', '작성 영역 클릭 실패, JS 강제 시도');
-    await wait(1000);
-
-    try {
-      await this.page.evaluate((t) => navigator.clipboard.writeText(t), fullText);
-      await this.page.keyboard.press('Control+v');
-    } catch {
-      await this.page.keyboard.type(fullText, { delay: 30 });
     }
-    await wait(1000);
 
-    const posted = await this.page.evaluate(() => {
-      const btns = [...document.querySelectorAll('div[role="button"], button')];
-      const postBtn = btns.find(b => b.textContent?.trim() === '게시');
-      if (postBtn) { postBtn.click(); return true; }
-      return false;
-    });
+    await this._goto(THREADS_HOME);
+    await wait(rand(6000, 12000));
 
+    // 작성 영역 Playwright 실제 클릭 (mouse simulation — evaluate click 금지)
+    let editorClicked = false;
+    for (const sel of ['[contenteditable="true"]', '[placeholder*="새로운 소식"]', 'p[data-placeholder]']) {
+      try {
+        await this.page.locator(sel).first().click({ timeout: 4000 });
+        editorClicked = true;
+        break;
+      } catch {}
+    }
+    if (!editorClicked) {
+      // 홈 피드의 작성 영역 좌표 클릭 (fallback)
+      const box = await this.page.evaluate(() => {
+        const el = [...document.querySelectorAll('div,span')].find(e => e.textContent?.includes('새로운 소식이 있나요'));
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      });
+      if (box) await this._mouseClick(box.x, box.y);
+      else log('⚠️', '작성 영역 클릭 실패');
+    }
+    await wait(rand(2400, 4500));
+
+    // 텍스트 입력: keyboard.type — human-like 240~450ms/char (3x slower, replace: execCommand + clipboard)
+    await this.page.keyboard.type(fullText, { delay: rand(240, 450) });
+    await wait(rand(3000, 6000));
+
+    // 게시 버튼: bounding box 좌표 → page.mouse.click (±3px 랜덤 오프셋)
+    let posted = false;
+    try {
+      const box = await this.page.evaluate(() => {
+        const btns = [...document.querySelectorAll('div[role="button"], button')];
+        const b = btns.find(b => b.textContent?.trim() === '게시' && b.getBoundingClientRect().top > 300);
+        if (!b) return null;
+        const r = b.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      });
+      if (box) {
+        await this._mouseClick(box.x, box.y);
+        posted = true;
+      }
+    } catch {}
     if (!posted) await this.page.keyboard.press('Control+Enter');
 
-    await wait(4000);
+    await wait(rand(21000, 39000));
+
+    // 게시 성공 기록
+    tlog[link] = new Date().toISOString();
+    saveThreadsLog(tlog);
+
     log('✅', '게시 완료');
     return true;
   }
@@ -311,14 +378,14 @@ class ThreadsPoster {
       await this._goto(
         `https://www.threads.com/search/?q=${encodeURIComponent(keyword)}&serp_type=default`
       );
-      await wait(rand(1500, 3000));
+      await wait(rand(4500, 9000));
 
       // 검색 결과 읽는 척 — 스크롤 횟수·속도 랜덤
       const scrollTimes = rand(3, 6);
       for (let i = 0; i < scrollTimes; i++) {
         const scrollAmt = rand(600, 1400);
         await this.page.evaluate((d) => window.scrollBy({ top: d, behavior: 'smooth' }), scrollAmt);
-        await wait(rand(2500, 5500)); // 사람이 결과 읽는 속도
+        await wait(rand(7500, 16500)); // 사람이 결과 읽는 속도
       }
 
       // 검색 결과에서 포스트 링크 + 팔로우 버튼 모두 추출
@@ -354,18 +421,32 @@ class ThreadsPoster {
         try {
           await this._goto(postUrl);
         } catch (err) {
-          if (err.message === 'SUSPENDED') {
-            log('🚫', `정지 계정 스킵: @${username}`);
-            continue; // 다음 포스트로 바로 이동
+          if (err.message === 'MY_ACCOUNT_SUSPENDED') {
+            // 내 계정(paydma.action) 정지 → 즉시 전체 중단
+            log('🚨', '내 계정 정지 감지 — 스하리 즉시 중단');
+            await sendTelegram('🚨 paydma.action 계정 정지!\n스하리 자동 중단. 본인인증 후 재시도해주세요.').catch(() => {});
+            throw err;
           }
-          throw err;
+          // 방문 대상 페이지 오류 (타임아웃, 존재하지 않는 포스트 등) → 해당 계정만 스킵
+          log('⚠️', `페이지 이동 실패 @${username}: ${err.message}`);
+          continue;
         }
 
         // 포스트 내용 읽는 척
         const postText = await this.page.evaluate(() => document.body.innerText.slice(0, 300));
         await this._readPage(postText);
 
-        const ok = await this._shariPost(username);
+        let ok = false;
+        try {
+          ok = await this._shariPost(username);
+        } catch (err) {
+          if (err.message === 'MY_ACCOUNT_SUSPENDED') {
+            log('🚨', '내 계정 정지 감지 (스하리 중) — 즉시 중단');
+            await sendTelegram('🚨 paydma.action 계정 정지!\n스하리 자동 중단. 본인인증 후 재시도해주세요.').catch(() => {});
+            throw err;
+          }
+          log('⚠️', `_shariPost 예외 @${username}: ${err.message}`);
+        }
 
         if (ok) {
           shariLog[username] = new Date().toISOString();
@@ -376,7 +457,7 @@ class ThreadsPoster {
           await humanWait();
         } else {
           log('⚠️', `스하리 부분 실패: @${username}`);
-          await wait(rand(3000, 8000));
+          await wait(rand(9000, 24000));
         }
       }
     }
@@ -390,80 +471,99 @@ class ThreadsPoster {
     try {
       let liked = false, repostClicked = false, followed = false;
 
-      // ── 좋아요 클릭 ───────────────────────────────────────────────────────
+      // ── 좋아요 클릭 (좌표 조회 → page.mouse.click, evaluate click 금지) ─
       const doLike = async () => {
-        const ok = await this.page.evaluate(() => {
+        const box = await this.page.evaluate(() => {
           const svgs = [...document.querySelectorAll('svg[aria-label]')];
           const s = svgs.find(x => {
             const l = x.getAttribute('aria-label') || '';
             return (l.includes('좋아요') || l.toLowerCase().includes('like'))
               && !l.includes('취소') && !l.toLowerCase().includes('unlike');
           });
-          if (s) {
-            // SVG → 부모 → role="button" 인 조상 찾기
-            let el = s;
-            for (let i = 0; i < 4; i++) {
-              el = el.parentElement;
-              if (!el) break;
-              if (el.getAttribute('role') === 'button' || el.tagName === 'BUTTON') {
-                el.click(); return true;
-              }
-            }
-            s.parentElement?.click(); return true;
-          }
-          return false;
-        });
-        liked = ok;
-        if (!ok) log('⚠️', `좋아요 버튼 못 찾음: @${username}`);
-        else log('❤️', `좋아요: @${username}`);
-        await wait(rand(1200, 3500));
-      };
-
-      // ── 리포스트 클릭 ─────────────────────────────────────────────────────
-      const doRepost = async () => {
-        const ok = await this.page.evaluate(() => {
-          const svgs = [...document.querySelectorAll('svg[aria-label]')];
-          const s = svgs.find(x => {
-            const l = x.getAttribute('aria-label') || '';
-            return (l.includes('리포스트') || l.toLowerCase().includes('repost'))
-              && !l.includes('취소');
-          });
-          if (!s) return false;
+          if (!s) return null;
           let el = s;
           for (let i = 0; i < 4; i++) {
             el = el.parentElement;
             if (!el) break;
             if (el.getAttribute('role') === 'button' || el.tagName === 'BUTTON') {
-              el.click(); return true;
+              const r = el.getBoundingClientRect();
+              return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
             }
           }
-          s.parentElement?.click(); return true;
+          const r = s.getBoundingClientRect();
+          return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
         });
-        if (ok) {
-          await wait(rand(1000, 2500));
-          // 모달 확인 버튼
-          const confirmed = await this.page.evaluate(() => {
+        if (box) {
+          await this._mouseClick(box.x, box.y);
+          liked = true;
+          log('❤️', `좋아요: @${username}`);
+        } else {
+          log('⚠️', `좋아요 버튼 못 찾음: @${username}`);
+        }
+        await wait(rand(3600, 10500));
+      };
+
+      // ── 리포스트 클릭 (좌표 조회 → page.mouse.click) ────────────────────
+      const doRepost = async () => {
+        const box = await this.page.evaluate(() => {
+          const svgs = [...document.querySelectorAll('svg[aria-label]')];
+          const s = svgs.find(x => {
+            const l = x.getAttribute('aria-label') || '';
+            return (l.includes('리포스트') || l.toLowerCase().includes('repost')) && !l.includes('취소');
+          });
+          if (!s) return null;
+          let el = s;
+          for (let i = 0; i < 4; i++) {
+            el = el.parentElement;
+            if (!el) break;
+            if (el.getAttribute('role') === 'button' || el.tagName === 'BUTTON') {
+              const r = el.getBoundingClientRect();
+              return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+            }
+          }
+          const r = s.getBoundingClientRect();
+          return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        });
+        if (box) {
+          await this._mouseClick(box.x, box.y);
+          await wait(rand(3000, 7500));
+          // 모달 확인 버튼도 _mouseClick으로
+          const confirmBox = await this.page.evaluate(() => {
             const b = [...document.querySelectorAll('div[role="button"],button')]
               .find(b => b.textContent?.trim() === '리포스트' || b.textContent?.trim() === 'Repost');
-            if (b) { b.click(); return true; }
-            return false;
+            if (!b) return null;
+            const r = b.getBoundingClientRect();
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
           });
-          repostClicked = confirmed || ok;
+          if (confirmBox) {
+            await this._mouseClick(confirmBox.x, confirmBox.y);
+            repostClicked = true;
+          } else {
+            repostClicked = true; // 모달 없이 바로 완료된 경우
+          }
           if (repostClicked) log('🔁', `리포스트: @${username}`);
-          await wait(rand(1500, 4000));
+          await wait(rand(4500, 12000));
         } else {
           log('⚠️', `리포스트 버튼 못 찾음: @${username}`);
         }
       };
 
-      // ── 팔로우 클릭 (포스트 페이지 먼저, 실패 시 프로필) ─────────────────
+      // ── 팔로우 클릭 (좌표 조회 → page.mouse.click) ──────────────────────
       const doFollow = async () => {
-        const ok = await this.page.evaluate(() => {
-          const b = [...document.querySelectorAll('div[role="button"],button,[role="button"]')]
-            .find(b => { const t = b.textContent?.trim(); return t === '팔로우' || t === 'Follow'; });
-          if (b) { b.click(); return true; }
-          return false;
-        });
+        const _clickFollow = async () => {
+          const box = await this.page.evaluate(() => {
+            const b = [...document.querySelectorAll('div[role="button"],button,[role="button"]')]
+              .find(b => { const t = b.textContent?.trim(); return t === '팔로우' || t === 'Follow'; });
+            if (!b) return null;
+            const r = b.getBoundingClientRect();
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+          });
+          if (!box) return false;
+          await this._mouseClick(box.x, box.y);
+          return true;
+        };
+
+        const ok = await _clickFollow();
         if (ok) {
           followed = true;
           log('➕', `팔로우: @${username}`);
@@ -471,19 +571,16 @@ class ThreadsPoster {
           // 프로필 페이지에서 재시도
           try {
             await this._goto(`https://www.threads.com/@${username}`);
-            await wait(rand(1000, 2500));
-            const ok2 = await this.page.evaluate(() => {
-              const b = [...document.querySelectorAll('div[role="button"],button,[role="button"]')]
-                .find(b => { const t = b.textContent?.trim(); return t === '팔로우' || t === 'Follow'; });
-              if (b) { b.click(); return true; }
-              return false;
-            });
+            await wait(rand(3000, 7500));
+            const ok2 = await _clickFollow();
             followed = ok2;
             if (ok2) log('➕', `팔로우 (프로필): @${username}`);
             else log('⏭️', `이미 팔로우 중: @${username}`);
-          } catch {}
+          } catch (err) {
+            if (err.message === 'MY_ACCOUNT_SUSPENDED') throw err; // 상위로 전파
+          }
         }
-        await wait(rand(1500, 4000));
+        await wait(rand(4500, 12000));
       };
 
       // ── 댓글 남기기 ───────────────────────────────────────────────────────
@@ -515,94 +612,86 @@ class ThreadsPoster {
 
       return liked || repostClicked || followed;
     } catch (err) {
+      if (err.message === 'MY_ACCOUNT_SUSPENDED') throw err; // doShari로 전파
       log('⚠️', `_shariPost 오류 @${username}: ${err.message}`);
       return false;
     }
   }
 
-  // ── 댓글 남기기 ("스하링") ───────────────────────────────────────────────
+  // ── 댓글 남기기 (keyboard.type 전용 — execCommand/clipboard evaluate 금지) ─
   async _leaveComment(commentText) {
     try {
-      // 댓글 입력창 찾아 클릭 (Threads UI 여러 버전 대응)
-      const clickedInput = await this.page.evaluate(() => {
-        // 1) aria-label 기반 (en/ko 혼용)
-        const ariaSelectors = [
-          '[aria-label*="댓글"]', '[aria-label*="reply"]', '[aria-label*="Reply"]',
-          '[aria-label*="답글"]', '[aria-label*="Add a comment"]',
-          '[placeholder*="댓글"]', '[data-placeholder*="댓글"]', '[aria-placeholder*="댓글"]',
-        ];
-        for (const sel of ariaSelectors) {
-          const el = document.querySelector(sel);
-          if (el) { el.click(); return true; }
-        }
-
-        // 2) 텍스트 기반 (placeholder-like 텍스트)
-        const keywords = ['댓글 달기', '댓글 추가', '답글 달기', 'Add a comment', 'Reply...'];
-        const all = [...document.querySelectorAll('p, div, span, [role="textbox"]')];
-        const found = all.find(el => keywords.some(kw => el.textContent?.trim().startsWith(kw)));
-        if (found) { found.click(); return true; }
-
-        // 3) data-lexical-text 또는 contenteditable 중 댓글 영역인 것
-        const edits = [...document.querySelectorAll('[contenteditable="true"]')];
-        // 포스트 작성용(홈)이 아닌 댓글 영역: 보통 여러 개 중 마지막
-        if (edits.length > 1) { edits[edits.length - 1].click(); return true; }
-
-        return false;
-      });
-
-      // 클릭 실패 시 키보드 단축키 시도 (Threads에서 r = 답글)
-      if (!clickedInput) {
-        await this.page.keyboard.press('r');
-        await wait(600);
-      }
-
-      if (!clickedInput) {
-        log('⚠️', '댓글 입력창 못 찾음 — 댓글 생략');
-        return false;
-      }
-
-      await wait(800);
-
-      // 입력창이 활성화된 후 contenteditable 찾아 텍스트 입력
-      const typed = await this.page.evaluate((text) => {
-        const editables = [...document.querySelectorAll('[contenteditable="true"]')];
-        // 가장 마지막에 나타난 contenteditable (댓글 입력창)
-        const commentBox = editables[editables.length - 1];
-        if (!commentBox) return false;
-        commentBox.focus();
-        document.execCommand('insertText', false, text);
-        return true;
-      }, commentText);
-
-      if (!typed) {
-        // 폴백: 클립보드 + Ctrl+V
+      // 1) Playwright locator로 댓글 입력창 클릭 (mouse simulation)
+      let clickedInput = false;
+      const commentSelectors = [
+        '[aria-label*="댓글"]', '[aria-label*="reply"]', '[aria-label*="Reply"]',
+        '[aria-label*="답글"]', '[aria-label*="Add a comment"]',
+        '[placeholder*="댓글"]', '[data-placeholder*="댓글"]',
+      ];
+      for (const sel of commentSelectors) {
         try {
-          await this.page.evaluate((t) => navigator.clipboard.writeText(t), commentText);
-          await this.page.keyboard.press('Control+v');
-        } catch {
-          await this.page.keyboard.type(commentText, { delay: 60 });
+          const loc = this.page.locator(sel).first();
+          if (await loc.count() > 0 && await loc.isVisible({ timeout: 2000 })) {
+            await loc.click({ timeout: 3000 });
+            clickedInput = true;
+            break;
+          }
+        } catch {}
+      }
+
+      if (!clickedInput) {
+        // 텍스트 기반: 좌표 조회 → page.mouse.click
+        const box = await this.page.evaluate(() => {
+          const keywords = ['댓글 달기', '댓글 추가', '답글 달기', 'Add a comment', 'Reply...'];
+          const all = [...document.querySelectorAll('p, div, span, [role="textbox"]')];
+          const found = all.find(el => keywords.some(kw => el.textContent?.trim().startsWith(kw)));
+          if (found) {
+            const r = found.getBoundingClientRect();
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+          }
+          // 마지막 contenteditable (댓글 영역)
+          const edits = [...document.querySelectorAll('[contenteditable="true"]')];
+          if (edits.length > 1) {
+            const r = edits[edits.length - 1].getBoundingClientRect();
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+          }
+          return null;
+        });
+        if (box) {
+          await this._mouseClick(box.x, box.y, 2);
+          clickedInput = true;
         }
       }
 
-      await wait(600);
+      if (!clickedInput) {
+        // 최후 수단: 'r' 단축키
+        await this.page.keyboard.press('r');
+        await wait(1800);
+        clickedInput = true;
+      }
 
-      // 댓글 게시 버튼
-      const posted = await this.page.evaluate(() => {
+      await wait(rand(2100, 4200));
+
+      // 텍스트 입력: keyboard.type (human delay 180~360ms — execCommand 완전 금지)
+      await this.page.keyboard.type(commentText, { delay: rand(180, 360) });
+      await wait(rand(1500, 3000));
+
+      // 댓글 게시 버튼: 좌표 조회 → page.mouse.click
+      const postBox = await this.page.evaluate(() => {
         const btns = [...document.querySelectorAll('div[role="button"], button')];
-        // 댓글 영역에서 가장 마지막에 보이는 "게시" 버튼
         const postBtns = btns.filter(b => b.textContent?.trim() === '게시');
-        if (postBtns.length > 0) {
-          postBtns[postBtns.length - 1].click();
-          return true;
-        }
-        return false;
+        if (postBtns.length === 0) return null;
+        const b = postBtns[postBtns.length - 1];
+        const r = b.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
       });
-
-      if (!posted) {
+      if (postBox) {
+        await this._mouseClick(postBox.x, postBox.y);
+      } else {
         await this.page.keyboard.press('Control+Enter');
       }
 
-      await wait(1500);
+      await wait(rand(6000, 12000));
       log('💬', `댓글 남김: "${commentText}"`);
       return true;
     } catch (err) {
@@ -612,9 +701,8 @@ class ThreadsPoster {
   }
 
   async close() {
-    // 탭만 닫고 Chrome 브라우저는 유지
-    try { await this.page?.close(); } catch {}
-    log('🔒', 'Threads 탭 종료 (Chrome 유지)');
+    try { await this.context?.close(); } catch {}
+    log('🔒', 'Threads 세션 종료');
   }
 }
 

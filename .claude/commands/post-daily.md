@@ -11,7 +11,12 @@
 3. 각 섹션의 기존 슬러그 목록 조회 (중복 방지)
 
 ```bash
-node -e "const s=require('./scripts/sections.js'); const g=s.getTodayGroup(); console.log(g.name, g.sections.map(x=>x.id));"
+node --input-type=module <<'EOF'
+import { SECTIONS } from './scripts/sections.js';
+const day = new Date(Date.now() + 9*3600000).getUTCDate();
+const group = day % 2 === 1 ? 1 : 2;
+console.log('그룹', group, SECTIONS.filter(s=>s.group===group).map(s=>s.id));
+EOF
 ```
 
 ---
