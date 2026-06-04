@@ -623,52 +623,59 @@ async function generateImage(prompt, slug, index, bundleDir) {
     }
   }
 
-  // 3) Hugging Face Inference API (HF_API_KEY 설정 시 사용)
-  // 무료 키 발급: https://huggingface.co/settings/tokens
-  const hfKey = process.env.HF_API_KEY;
-  if (hfKey) {
-    log('🤗', `  HuggingFace 이미지 생성 중: ${filename}`);
-    try {
-      const hfRes = await axios.post(
-        'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell',
-        { inputs: prompt, parameters: { width: 1280, height: 720 } },
-        { headers: { Authorization: `Bearer ${hfKey}`, 'Content-Type': 'application/json' }, responseType: 'arraybuffer', timeout: 120000 }
+  // 3) Stable Horde (완전 무료, API 키 불필요 — 크라우드소싱 SD)
+  log('🖼️', `  Stable Horde 이미지 생성 중: ${filename}`);
+  try {
+    const sharp = (await import('sharp')).default;
+
+    // 작업 제출
+    const submitRes = await axios.post(
+      'https://stablehorde.net/api/v2/generate/async',
+      {
+        prompt,
+        params: { width: 1024, height: 576, steps: 25, n: 1, sampler_name: 'k_euler' },
+        models: ['stable_diffusion'],
+        r2: false,
+        shared: true,
+      },
+      { headers: { 'Content-Type': 'application/json', apikey: '0000000000' }, timeout: 30000 }
+    );
+    if (submitRes.status !== 202) throw new Error(`제출 실패 ${submitRes.status}`);
+    const jobId = submitRes.data.id;
+    log('🖼️', `  Job ID: ${jobId}`);
+
+    // 완료까지 폴링 (최대 5분)
+    const deadline = Date.now() + 300_000;
+    while (Date.now() < deadline) {
+      await new Promise(r => setTimeout(r, 10000));
+      const check = await axios.get(
+        `https://stablehorde.net/api/v2/generate/check/${jobId}`,
+        { headers: { apikey: '0000000000' }, timeout: 15000 }
       );
-      // HF가 JPEG/PNG 반환 → webp로 저장 (브라우저는 어차피 렌더링 가능)
-      fs.writeFileSync(destPath, Buffer.from(hfRes.data));
-      log('✅', `  HuggingFace 저장: ${filename}`);
-      return { localPath: `/images/${filename}`, sourceUrl: 'huggingface' };
-    } catch (err) {
-      log('⚠️', `  HuggingFace 실패 (${err.message}) → 이미지 없이 진행`);
+      if (check.data.faulted) throw new Error('Stable Horde faulted');
+      if (check.data.done) break;
     }
+
+    // 결과 수령
+    const result = await axios.get(
+      `https://stablehorde.net/api/v2/generate/status/${jobId}`,
+      { headers: { apikey: '0000000000' }, timeout: 30000 }
+    );
+    const b64 = result.data.generations?.[0]?.img;
+    if (!b64) throw new Error('이미지 데이터 없음');
+
+    // PNG/JPEG → 1280×720 WEBP 변환
+    const buf = Buffer.from(b64, 'base64');
+    await sharp(buf).resize(1280, 720, { fit: 'cover', position: 'centre' }).webp({ quality: 85 }).toFile(destPath);
+
+    const stat = fs.statSync(destPath);
+    log('✅', `  Stable Horde 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
+    return { localPath: `/images/${filename}`, sourceUrl: 'stablehorde' };
+  } catch (err) {
+    log('⚠️', `  Stable Horde 실패 (${err.message}) → 이미지 없이 진행`);
   }
 
-  // 4) Together AI (TOGETHER_API_KEY 설정 시 사용)
-  // 무료 크레딧: https://api.together.xyz/
-  const togetherKey = process.env.TOGETHER_API_KEY;
-  if (togetherKey) {
-    log('🤝', `  Together AI 이미지 생성 중: ${filename}`);
-    try {
-      const tRes = await axios.post(
-        'https://api.together.xyz/v1/images/generations',
-        { model: 'black-forest-labs/FLUX.1-schnell-Free', prompt, width: 1280, height: 720, n: 1 },
-        { headers: { Authorization: `Bearer ${togetherKey}`, 'Content-Type': 'application/json' }, timeout: 90000 }
-      );
-      const imgUrl = tRes.data?.data?.[0]?.url;
-      if (!imgUrl) throw new Error('URL 없음');
-      const imgRes = await axios.get(imgUrl, { responseType: 'arraybuffer', timeout: 60000 });
-      fs.writeFileSync(destPath, Buffer.from(imgRes.data));
-      log('✅', `  Together AI 저장: ${filename}`);
-      return { localPath: `/images/${filename}`, sourceUrl: imgUrl };
-    } catch (err) {
-      log('⚠️', `  Together AI 실패 (${err.message}) → 이미지 없이 진행`);
-    }
-  }
-
-  // API 키 없음 — 이미지 없이 진행 (텍스트 포스팅)
-  log('⚠️', `  이미지 API 미설정 — ${filename} 생성 건너뜀`);
-  log('⚠️', `  .env 에 HF_API_KEY 또는 TOGETHER_API_KEY 추가 필요`);
-  log('⚠️', `  무료 HF 키: https://huggingface.co/settings/tokens`);
+  log('⚠️', `  이미지 생성 실패 — ${filename} 없이 텍스트만 발행`);
   return { localPath: '', sourceUrl: '' };
 }
 
