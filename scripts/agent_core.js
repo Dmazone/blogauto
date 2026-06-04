@@ -17,7 +17,6 @@
  * STEP 8: 맥락 기반 이미지 생성 + GitHub 자동 푸시
  */
 
-import Anthropic from '@anthropic-ai/sdk';
 import { promoteAll } from './sns_promoter.js';
 import { SECTIONS, getSectionById, getHealthSubtopic } from './sections.js';
 import axios from 'axios';
@@ -31,7 +30,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 dotenv.config({ path: path.join(ROOT, '.env') });
 
-const claude  = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const POSTS_DIR  = path.join(ROOT, 'content', 'posts');
 const IMAGES_DIR = path.join(ROOT, 'static', 'images');
@@ -400,112 +398,54 @@ async function geminiRefineLoop(topic, outline, draft, maxRounds = 2) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// STEP 7: Claude 본문 완전 검수 & 직접 수정 (이미지 생성 완료 후 실행)
+// STEP 7: Gemini 본문 최종 검수 (Claude API 불필요 — Gemini 추가 턴)
 // ────────────────────────────────────────────────────────────────────────────
 async function claudeFullReviewAndFix(topic, body) {
-  log('🎯', '[STEP 7] Claude 완전 검수 & 직접 수정 (토큰 제한 없음)...');
+  log('🎯', '[STEP 7] Gemini 최종 검수 & 수정...');
 
   try {
-    const msg = await claude.messages.create({
-      model:      'claude-sonnet-4-6',
-      max_tokens: 8000,
-      messages: [{
-        role: 'user',
-        content:
-          `아래 한국어 블로그 포스팅을 꼼꼼히 검수하고, 문제가 있는 부분은 직접 수정해서 완성된 본문을 출력해줘.\n\n` +
-          `[검수 기준 — 전부 적용]\n` +
-          `1. 제목·키워드 일치: 제목 "${topic.title}", 키워드 "${topic.keyword}"와 내용이 완전히 부합해야 함\n` +
-          `2. 맥락·논리 일관성: 글의 흐름이 자연스럽고 앞뒤가 맞아야 함\n` +
-          `3. 오타·문법: 한국어 맞춤법·띄어쓰기 전면 교정\n` +
-          `4. AI 상투어 완전 제거: "다양한" "중요합니다" "살펴보겠습니다" "마지막으로" "~드립니다" 영어 직역체\n` +
-          `5. 출처 없는 수치·통계: 삭제 후 정성적 설명으로 대체\n` +
-          `6. 애드센스 위험 요소: 광고성·스팸·과장·선정적 표현 제거\n` +
-          `7. 헤딩 구조: ## H2 5~6개, ### H3 2~3개, # H1 본문 금지, 숫자번호 방식 금지\n` +
-          `8. 단락 여백: 문단 사이 빈 줄 1개, 연속 2개 이상 금지\n` +
-          `9. 가독성: **볼드**, > 인용구, - 불릿 적절히 활용\n` +
-          `10. 분량: 최소 1,500자 — 부족하면 해당 섹션 내용을 구체적으로 보강\n\n` +
-          `[절대 유지 항목 — 건드리지 말 것]\n` +
-          `- 이미지 마크다운 (![...](...)): 절대 삭제·수정 금지\n` +
-          `- 내부 링크 ([텍스트](/posts/...)): 절대 삭제 금지\n` +
-          `- 마지막 줄 해시태그 (#태그): 절대 삭제 금지\n\n` +
-          `수정이 없으면 원본 그대로 출력, 수정이 있으면 전체 수정본 출력.\n` +
-          `마크다운 본문만 출력 (front matter, 코드블록 감싸기 없이).\n\n` +
-          `--- 본문 ---\n${body}\n--- 끝 ---`,
-      }],
-    });
-
-    const result = extractFinalMarkdown(msg.content[0].text.trim());
-    log('✅', `[STEP 7] 검수 완료 (${result.length}자)`);
-    return result;
+    const fixed = extractFinalMarkdown(await geminiCall(
+      `아래 한국어 블로그 포스팅을 꼼꼼히 검수하고 문제 있는 부분만 수정해서 완성된 본문을 출력해줘.\n\n` +
+      `[검수 기준]\n` +
+      `1. 제목 "${topic.title}", 키워드 "${topic.keyword}"와 내용 일치\n` +
+      `2. AI 상투어 완전 제거: "다양한" "중요합니다" "살펴보겠습니다" "마지막으로" "~드립니다" 영어 직역체\n` +
+      `3. 헤딩: ## H2 4~6개, ### H3 2~3개, # H1 금지\n` +
+      `4. 문단 사이 빈 줄 1개 (연속 2개 이상 금지)\n` +
+      `5. 분량: 최소 1,500자\n\n` +
+      `[절대 유지]\n` +
+      `- 이미지 마크다운 ![...](...)  내부 링크  해시태그 — 건드리지 말 것\n\n` +
+      `마크다운 본문만 출력 (front matter, 코드블록 감싸기 없이).\n\n` +
+      `--- 본문 ---\n${body}\n--- 끝 ---`,
+      { temperature: 0.3 }
+    ));
+    log('✅', `[STEP 7] 검수 완료 (${fixed.length}자)`);
+    return fixed;
   } catch (err) {
-    log('⚠️', `[STEP 7] Claude 검수 실패 (${err.message}) → 원본 사용`);
+    log('⚠️', `[STEP 7] Gemini 검수 실패 (${err.message}) → 원본 사용`);
     return body;
   }
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// STEP 8c: Claude 비전으로 이미지 품질·주제 적합성 검토 및 재생성
+// STEP 8c: 이미지 기본 검수 (파일 크기만 체크 — API 없음)
 // ────────────────────────────────────────────────────────────────────────────
 async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName = '', description = '', _retried = false) {
   if (!fs.existsSync(imagePath)) {
-    log('⚠️', `  [이미지 검수] 파일 없음: ${imagePath}`);
-    return;
-  }
-
-  const stat = fs.statSync(imagePath);
-  if (stat.size < 15000) {
-    log('⚠️', `  [이미지 검수] 파일 너무 작음 (${stat.size}B) → 재생성`);
+    log('⚠️', `  [이미지 검수] 파일 없음 → 재생성: ${label}`);
     await generateImage(prompt, slug, index, bundleDir);
     if (!_retried) await claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName, description, true);
     return;
   }
 
-  try {
-    const imageData = fs.readFileSync(imagePath).toString('base64');
-    const msg = await claude.messages.create({
-      model:      'claude-haiku-4-5-20251001',
-      max_tokens: 400,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: 'image/webp', data: imageData } },
-          {
-            type: 'text',
-            text:
-              `이 이미지가 블로그 포스팅 이미지로 적합한지 판단해줘.\n\n` +
-              `섹션: ${sectionName || '미분류'}\n` +
-              `포스팅 주제: "${postTitle}"\n` +
-              `포스팅 설명: "${description}"\n` +
-              `이미지 용도: ${label}\n` +
-              `생성 요청 프롬프트: "${prompt}"\n\n` +
-              `불합격 기준 (하나라도 해당하면 불합격):\n` +
-              `1. [주제 불일치] 섹션·주제와 전혀 다른 내용 (예: 경제 글에 운동 사진, 기술 글에 음식 사진)\n` +
-              `2. [프롬프트 불일치] 생성 프롬프트에서 요청한 장면·소재와 이미지 내용이 전혀 무관함\n` +
-              `3. [비율 왜곡] 이미지가 세로로 좁거나 정사각형처럼 보임 (반드시 가로 와이드 16:9여야 함)\n` +
-              `4. [화질] 극도로 흐릿하거나 노이즈가 심함\n` +
-              `5. [내용] 혐오스럽거나 불쾌한 내용, 단색·노이즈만 있는 의미없는 이미지\n` +
-              `6. [텍스트] 이미지 안에 읽을 수 있는 텍스트·문자가 도배되어 있음\n\n` +
-              `JSON만: {"ok":true/false,"reason":"불합격이면 구체적 이유(1~6번 중 어떤 기준), 합격이면 빈 문자열"}`,
-          },
-        ],
-      }],
-    });
-
-    const result = JSON.parse(msg.content[0].text.match(/\{[\s\S]*?\}/)?.[0] ?? '{"ok":true}');
-    if (result.ok) {
-      log('✅', `  [이미지 검수] ${label} — 합격`);
-    } else {
-      log('⚠️', `  [이미지 검수] ${label} — 불합격 (${result.reason}) → 재생성`);
-      await generateImage(prompt, slug, index, bundleDir);
-      if (!_retried) {
-        await claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName, description, true);
-      } else {
-        log('⚠️', `  [이미지 검수] ${label} 재생성 후에도 불합격 — 이미지 유지`);
-      }
-    }
-  } catch (err) {
-    log('⚠️', `  [이미지 검수] API 오류 (${err.message}) → 통과`);
+  const stat = fs.statSync(imagePath);
+  if (stat.size < 20000) {
+    log('⚠️', `  [이미지 검수] 파일 너무 작음 (${stat.size}B) → 재생성: ${label}`);
+    await generateImage(prompt, slug, index, bundleDir);
+    if (!_retried) await claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName, description, true);
+    return;
   }
+
+  log('✅', `  [이미지 검수] ${label} — OK (${Math.round(stat.size / 1024)}KB)`);
 }
 
 // ────────────────────────────────────────────────────────────────────────────

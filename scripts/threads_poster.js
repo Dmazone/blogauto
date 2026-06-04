@@ -15,7 +15,6 @@
  */
 
 import { connectChrome } from './connect_chrome.js';
-import Anthropic from '@anthropic-ai/sdk';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'fs';
 import { sendTelegram } from './telegram.js';
 
@@ -46,7 +45,6 @@ const log = (emoji, msg) => {
   try { appendFileSync(LOG_FILE, line + '\n', 'utf8'); } catch {}
 };
 
-const claude = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 /**
  * 사람처럼 불규칙한 딜레이
@@ -98,54 +96,11 @@ function buildFallbackText(post, blogContent) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Claude Haiku로 Threads 홍보글 3버전 생성 (실패 시 front matter 기반 fallback)
+// Threads 홍보글 생성 — front matter 기반 템플릿 (API 없음)
 // ────────────────────────────────────────────────────────────────────────────
 async function generateThreadsText(post, blogContent) {
-  log('✍️', `홍보글 생성: ${post.title}`);
-
-  const fallback = buildFallbackText(post, blogContent);
-
-  const clean = blogContent
-    .replace(/^---[\s\S]*?---\n/, '')
-    .replace(/!\[.*?\]\(.*?\)/g, '')
-    .replace(/#{1,6}\s+/g, '')
-    .replace(/\*\*/g, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim()
-    .slice(0, 2500);
-
-  try {
-    const msg = await claude.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 800,
-      messages: [{
-        role: 'user',
-        content:
-          `아래 블로그 포스팅을 바탕으로 Threads(스레드)용 홍보글 3버전을 만들어줘.\n\n` +
-          `[조건]\n` +
-          `- 각 버전 250자 이내\n` +
-          `- 구어체, 캐주얼하고 자연스러운 한국어 (딱딱한 문어체 금지)\n` +
-          `- 첫 문장: 강렬한 훅 (질문형 또는 충격적 사실 또는 공감 유도)\n` +
-          `- 핵심 인사이트 1가지만 살짝 언급 (궁금증 유발, 전체 스포 금지)\n` +
-          `- 마지막 줄: "👇 더 보기" (링크는 포함하지 않음, 별도 추가됨)\n` +
-          `- 해시태그 3~4개 포함 (자연스럽게 중간 또는 끝에)\n\n` +
-          `[포스팅 제목]: ${post.title}\n\n` +
-          `[포스팅 내용 요약]:\n${clean}\n\n` +
-          `유효한 JSON만 출력 (다른 텍스트 없이):\n` +
-          `{"versions":["버전1","버전2","버전3"]}`,
-      }],
-    });
-
-    const raw = msg.content[0]?.text ?? '';
-    const json = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? '{}');
-    if (Array.isArray(json.versions) && json.versions.length > 0) {
-      return json.versions;
-    }
-  } catch (err) {
-    log('⚠️', `홍보글 생성 실패 (fallback 사용): ${err.message}`);
-  }
-
-  return [fallback];
+  log('✍️', `홍보글 생성 (템플릿): ${post.title}`);
+  return [buildFallbackText(post, blogContent)];
 }
 
 // ────────────────────────────────────────────────────────────────────────────
