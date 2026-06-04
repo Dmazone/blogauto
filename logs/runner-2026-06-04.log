@@ -1,0 +1,23 @@
+[2026-06-04T00:51:13.118Z] 💎  Gem 모드: https://gemini.google.com/u/2/gem/cca9fca55f60
+[2026-06-04T00:51:13.119Z] 🚀  daily_runner 시작 — 그룹 2 / 5개 섹션
+[2026-06-04T00:51:13.120Z] 📅  즉시 발행 모드 (30분 간격)
+[2026-06-04T00:51:14.080Z] 📰  [1/5] 건강 (질병)
+[2026-06-04T00:51:14.081Z] 📅  발행 예약: 2026-06-04T09:51:00+09:00
+[2026-06-04T00:51:47.110Z] ❌  건강 실패 (시도 1/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:732:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:949:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:161:24)
+[2026-06-04T00:51:47.112Z] ⏳  3분 후 재시도...
+[2026-06-04T01:01:41.733Z] ❌  건강 실패 (시도 2/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:851:18)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:949:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:161:24)
+[2026-06-04T01:01:41.734Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-04T01:21:41.739Z] 📰  [2/5] IT기기
+[2026-06-04T01:21:41.740Z] 📅  발행 예약: 2026-06-04T10:51:00+09:00

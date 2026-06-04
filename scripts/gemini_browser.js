@@ -1,23 +1,24 @@
 /**
- * gemini_browser.js — 실행 중인 Chrome(CDP)에 연결해 Gemini 웹/Gem 멀티턴 대화 자동화
+ * gemini_browser.js — Playwright 자체 세션으로 Gemini 웹/Gem 멀티턴 대화 자동화
  *
  * GeminiSession:
- *   init()             — Chrome CDP 연결, Gem 탭 열기 (로그인 불필요 — 기존 세션 사용)
+ *   init()             — 저장된 세션으로 Gemini 접속 (첫 실행 시 로그인 대기)
  *   send(text)         — 새 대화 시작 or 현재 대화에 메시지 추가
  *   newConversation()  — 명시적으로 새 대화 시작
- *   close()            — Gemini 탭만 닫음 (브라우저 종료 안 함)
+ *   close()            — 브라우저 종료 및 세션 저장
  *
- * 전제: Chrome이 --remote-debugging-port=9222 옵션으로 실행 중이어야 함
- *       chrome_debug.bat 실행하면 자동으로 설정됨
+ * Chrome CDP 불필요 — 세션 경로: ~/.gemini-blog-session
  */
 
-import { connectChrome } from './connect_chrome.js';
+import { chromium } from 'playwright';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { sendTelegram } from './telegram.js';
 
-const __dirname   = path.dirname(fileURLToPath(import.meta.url));
-const GEMINI_HOME = 'https://gemini.google.com/app';
+const __dirname    = path.dirname(fileURLToPath(import.meta.url));
+const SESSION_DIR  = path.join(os.homedir(), '.gemini-blog-session');
+const GEMINI_HOME  = 'https://gemini.google.com/app';
 
 const log  = (e, m) => console.log(`${e}  ${m}`);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -77,13 +78,16 @@ export class GeminiSession {
 
   // ── 초기화 ──────────────────────────────────────────────────────────────────
   async init() {
-    log('🌐', 'Chrome CDP 연결 중... (로그인 세션 자동 사용)');
-    const { newTab, context } = await connectChrome();
-    this.context = context;
-    this._newTab = newTab;
+    log('🌐', 'Gemini 브라우저 시작... (저장된 세션 사용)');
+    this.context = await chromium.launchPersistentContext(SESSION_DIR, {
+      headless: false,
+      viewport: { width: 1280, height: 900 },
+      args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'],
+      ignoreDefaultArgs: ['--enable-automation'],
+    });
 
-    // 새 탭을 열어 Gemini로 이동 (기존 Chrome 세션 → 로그인 불필요)
-    this.page = await newTab(GEMINI_HOME);
+    this.page = this.context.pages()[0] ?? await this.context.newPage();
+    await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded', timeout: 20000 });
     await this.page.waitForLoadState('domcontentloaded');
 
     // 로그인 상태 간단 확인 (계정 인덱스 추출용)
@@ -397,8 +401,7 @@ export class GeminiSession {
   }
 
   async close() {
-    // 탭만 닫고 Chrome 브라우저는 종료하지 않음
-    try { await this.page?.close(); } catch {}
-    log('🔒', 'Gemini 탭 종료 (Chrome 유지)');
+    try { await this.context?.close(); } catch {}
+    log('🔒', 'Gemini 세션 종료');
   }
 }

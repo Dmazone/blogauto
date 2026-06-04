@@ -16,10 +16,7 @@
  *   BLOG_BASE_URL       — 예: https://dmazone.github.io/blogauto
  */
 
-import { GoogleGenAI } from '@google/genai';
 import axios from 'axios';
-
-const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
 
@@ -47,49 +44,13 @@ async function withRetry(fn, retries = 3, baseDelay = 5000) {
 // ────────────────────────────────────────────────────────────────────────────
 // 1. Gemini로 플랫폼별 홍보 문구 생성
 // ────────────────────────────────────────────────────────────────────────────
-async function generateSnsContent(post, blogUrl, insights) {
-  log('✍️', '  Gemini 플랫폼별 홍보 문구 생성 중...');
-
-  const insightText = (insights ?? []).slice(0, 3).join('\n');
-
-  const raw = await withRetry(() =>
-    gemini.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents:
-        `한국어 기술 블로그 포스팅 홍보용 SNS 문구를 각 플랫폼에 맞게 만들어줘.\n\n` +
-        `[포스팅 정보]\n` +
-        `- 제목: ${post.title}\n` +
-        `- 핵심 키워드: ${post.keyword}\n` +
-        `- 핵심 인사이트:\n${insightText}\n` +
-        `- 블로그 URL: ${blogUrl}\n\n` +
-        `[플랫폼별 조건]\n` +
-        `1. Instagram: 2인칭 감성 캡션 (300자 이내) + 한국어/영어 해시태그 20개. ` +
-        `마지막 줄에 "🔗 링크는 프로필에!" 문구 포함.\n` +
-        `2. Threads: 짧고 임팩트 있는 훅 문장으로 시작 (500자 이내). ` +
-        `URL을 마지막 줄에 포함.\n` +
-        `3. Pinterest: 핀 제목(100자 이내) + SEO 최적화 설명(500자 이내) + URL.\n\n` +
-        `유효한 JSON만 출력:\n` +
-        `{\n` +
-        `  "instagram": { "caption": "..." },\n` +
-        `  "threads":   { "text": "..." },\n` +
-        `  "pinterest": { "title": "...", "description": "..." }\n` +
-        `}`,
-      config: { temperature: 0.8 },
-    })
-  );
-
-  try {
-    const jsonStr = raw.text.match(/\{[\s\S]*\}/)?.[0] ?? '{}';
-    return JSON.parse(jsonStr);
-  } catch {
-    log('⚠️', '  SNS 문구 JSON 파싱 실패 → 기본 문구로 대체');
-    const fallback = `${post.title} — 자세한 내용은 블로그에서! ${blogUrl}`;
-    return {
-      instagram: { caption: `${fallback}\n\n#ClaudeCode #AI #개발자 #자동화` },
-      threads:   { text: fallback },
-      pinterest: { title: post.title, description: `${post.keyword} 관련 최신 정보. ${blogUrl}` },
-    };
-  }
+function generateSnsContent(post, blogUrl, insights) {
+  const fallback = `${post.title} — 자세한 내용은 블로그에서! ${blogUrl}`;
+  return {
+    instagram: { caption: `${fallback}\n\n#트렌드줌 #${post.keyword ?? ''} #블로그 #최신이슈\n\n🔗 링크는 프로필에!` },
+    threads:   { text: fallback },
+    pinterest: { title: post.title, description: `${post.keyword ?? ''} 관련 최신 정보. ${blogUrl}` },
+  };
 }
 
 // ────────────────────────────────────────────────────────────────────────────

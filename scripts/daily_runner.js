@@ -3,8 +3,7 @@
  * daily_runner.js — 10개 섹션 하루 1개씩 예약발행
  *
  * 사용법:
- *   node scripts/daily_runner.js                    # 브라우저 모드 (제미나이 웹)
- *   node scripts/daily_runner.js --api              # API 모드 (Gemini API 키 필요)
+ *   node scripts/daily_runner.js                    # 브라우저 모드 (제미나이 웹, Gem)
  *   node scripts/daily_runner.js --from 3           # 3번째 섹션부터 재개
  *   node scripts/daily_runner.js --only economy,health  # 특정 섹션만
  *
@@ -82,7 +81,6 @@ function getNowPublishDate(sectionIndex) {
 
 async function main() {
   const args    = process.argv.slice(2);
-  const useApi  = args.includes('--api');
   const publishNow = args.includes('--now'); // 예약 없이 즉시 발행 (재발행/복구용)
 
   // --from N : N번째(1-based)부터 재개
@@ -106,21 +104,15 @@ async function main() {
       : SECTIONS.filter(s => s.group === todayGroup);
 
   // ── 브라우저 모드 초기화 ────────────────────────────────────────────────
-  let geminiSession = null;
-
-  if (!useApi) {
-    const { GeminiSession } = await import('./gemini_browser.js');
-    const gemUrl = process.env.GEMINI_GEM_URL || null;
-    geminiSession = new GeminiSession({ headless: false, gemUrl });
-    await geminiSession.init();
-    setGeminiBrowserSession(geminiSession);
-    if (gemUrl) {
-      log('💎', `Gem 모드: ${gemUrl}`);
-    } else {
-      log('⚠️', 'GEMINI_GEM_URL 미설정 → 일반 채팅 사용 (node scripts/setup_gem.js 로 Gem 생성 권장)');
-    }
+  const { GeminiSession } = await import('./gemini_browser.js');
+  const gemUrl = process.env.GEMINI_GEM_URL || null;
+  const geminiSession = new GeminiSession({ headless: true, gemUrl });
+  await geminiSession.init();
+  setGeminiBrowserSession(geminiSession);
+  if (gemUrl) {
+    log('💎', `Gem 모드: ${gemUrl}`);
   } else {
-    log('🔑', 'API 모드 — Gemini API 키 사용');
+    log('⚠️', 'GEMINI_GEM_URL 미설정 → 일반 채팅 사용');
   }
 
   log('🚀', `daily_runner 시작 — 그룹 ${todayGroup} / ${targetSections.length}개 섹션`);

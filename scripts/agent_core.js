@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * agent_core.js — AI 블로그 자동화 (Gemini 중심, Claude 최소 토큰)
  *
@@ -17,7 +17,6 @@
  * STEP 8: 맥락 기반 이미지 생성 + GitHub 자동 푸시
  */
 
-import { GoogleGenAI } from '@google/genai';
 import Anthropic from '@anthropic-ai/sdk';
 import { promoteAll } from './sns_promoter.js';
 import { SECTIONS, getSectionById, getHealthSubtopic } from './sections.js';
@@ -32,7 +31,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 dotenv.config({ path: path.join(ROOT, '.env') });
 
-const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY ?? 'placeholder' });
 const claude  = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const POSTS_DIR  = path.join(ROOT, 'content', 'posts');
@@ -85,22 +83,8 @@ async function withRetry(fn, retries = 4, baseDelay = 15000) {
 }
 
 async function geminiCall(prompt, opts = {}) {
-  // 브라우저 모드: 제미나이 웹 UI 사용
-  if (_geminiImpl) {
-    return await withRetry(() => _geminiImpl(prompt), 3, 5000);
-  }
-  // API 모드: Gemini API 직접 호출
-  const response = await withRetry(() =>
-    gemini.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        temperature: opts.temperature ?? 0.5,
-        ...(opts.tools ? { tools: opts.tools } : {}),
-      },
-    })
-  );
-  return response.text;
+  if (!_geminiImpl) throw new Error('Gemini 브라우저 세션이 초기화되지 않았습니다. daily_runner.js를 통해 실행하세요.');
+  return await withRetry(() => _geminiImpl(prompt), 3, 5000);
 }
 
 /** 해당 섹션에 이미 존재하는 슬러그 목록 (.md 파일 + 페이지 번들 디렉토리 모두 포함) */
@@ -247,22 +231,7 @@ async function searchTrends(section, topic) {
 
   let rawText, sources = [];
 
-  if (_geminiImpl) {
-    // 브라우저 모드: 제미나이 웹이 자동으로 구글 검색 수행
-    rawText = await withRetry(() => _geminiImpl(searchPrompt), 3, 5000);
-  } else {
-    // API 모드: Google Search 도구 명시
-    const response = await withRetry(() =>
-      gemini.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: searchPrompt,
-        config: { tools: [{ googleSearch: {} }], temperature: 0.3 },
-      })
-    );
-    rawText  = response.text;
-    sources  = response.candidates?.[0]?.groundingMetadata?.groundingChunks
-      ?.map((c) => c.web?.uri).filter(Boolean) ?? [];
-  }
+  rawText = await withRetry(() => _geminiImpl(searchPrompt), 3, 5000);
 
   log('✅', `트렌드 수집 완료${sources.length ? ` (출처 ${sources.length}개)` : ''}`);
   return { rawText, sources };
@@ -1069,11 +1038,7 @@ export async function runForSection(section, options = {}) {
 // CLI 진입점: node agent_core.js --section <id> [--subtopic <name>]
 // ────────────────────────────────────────────────────────────────────────────
 async function main() {
-  const missing = ['GEMINI_API_KEY'].filter((k) => !process.env[k]);
-  if (missing.length) {
-    console.error(`❌ 누락된 환경변수: ${missing.join(', ')}`);
-    process.exit(1);
-  }
+
 
   const args      = process.argv.slice(2);
   const sectionIdx = args.indexOf('--section');
