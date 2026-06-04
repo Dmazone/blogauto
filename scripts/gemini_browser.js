@@ -80,7 +80,7 @@ export class GeminiSession {
   async init() {
     log('🌐', 'Gemini 브라우저 시작... (저장된 세션 사용)');
     this.context = await chromium.launchPersistentContext(SESSION_DIR, {
-      headless: false,
+      headless: this.headless,
       viewport: { width: 1280, height: 900 },
       args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'],
       ignoreDefaultArgs: ['--enable-automation'],

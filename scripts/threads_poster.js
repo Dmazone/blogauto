@@ -14,9 +14,8 @@
  *   ⑤ 처리한 계정은 data/shari_log.json에 기록 (30일간 중복 방지)
  */
 
-import { chromium } from 'playwright';
+import { connectChrome } from './connect_chrome.js';
 import Anthropic from '@anthropic-ai/sdk';
-import os from 'os';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'fs';
 import { sendTelegram } from './telegram.js';
 
@@ -27,7 +26,6 @@ import dotenv from 'dotenv';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-const SESSION_DIR  = path.join(os.homedir(), '.threads-blog-session');
 const THREADS_HOME = 'https://www.threads.com';
 const LOG_DIR      = path.join(__dirname, '..', 'logs');
 const LOG_FILE     = path.join(LOG_DIR, `threads-${new Date().toISOString().slice(0, 10)}.log`);
@@ -194,22 +192,68 @@ class ThreadsPoster {
     this.totalShari = 0;
   }
 
-  // ── 초기화 — Playwright 자체 브라우저 + 저장된 세션 사용 ─────────────────
+  // ── 초기화 — 실행 중인 Chrome에 CDP 연결 ─────────────────────────────────
   async init() {
-    log('🌐', 'Threads 브라우저 시작...');
-
-    this.context = await chromium.launchPersistentContext(SESSION_DIR, {
-      headless:  false,
-      viewport:  { width: 1280, height: 900 },
-      args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'],
-      ignoreDefaultArgs: ['--enable-automation'],
-    });
-
-    this.page = this.context.pages()[0] ?? await this.context.newPage();
-    await this.page.goto(THREADS_HOME, { waitUntil: 'domcontentloaded', timeout: 20000 });
-    await wait(4000);
+    log('🌐', 'Chrome CDP 연결 중...');
+    const { context, newTab } = await connectChrome();
+    this.context = context;
+    this.page = await newTab(THREADS_HOME);
+    await wait(6000);
     await this._checkLogin();
+    await this._verifyAccount();
     log('✅', 'Threads 세션 준비 완료');
+  }
+
+  // ── paydma.action 계정 로그인 여부 확인 ──────────────────────────────────
+  async _verifyAccount() {
+    log('🔍', 'paydma.action 계정 확인 중...');
+
+    const checkProfilePage = async () => {
+      await this.page.goto('https://www.threads.com/@paydma.action', {
+        waitUntil: 'domcontentloaded', timeout: 15000,
+      }).catch(() => {});
+      await wait(2000);
+      return this.page.evaluate(() => {
+        const btns = [...document.querySelectorAll('div[role="button"], button')];
+        return btns.some(b => {
+          const t = b.textContent?.trim();
+          return t === '프로필 편집' || t === 'Edit profile';
+        });
+      }).catch(() => false);
+    };
+
+    // 1차: 현재 페이지 nav 링크에서 계정 확인 (빠른 체크)
+    const hasNavLink = await this.page.evaluate(() => {
+      return [...document.querySelectorAll('a[href]')]
+        .some(a => a.href.toLowerCase().includes('paydma.action'));
+    }).catch(() => false);
+
+    if (hasNavLink || await checkProfilePage()) {
+      log('✅', 'paydma.action 계정 확인됨');
+      await this.page.goto(THREADS_HOME, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
+      await wait(2000);
+      return;
+    }
+
+    log('🔐', '⚠️ paydma.action 미로그인 — 일반 Chrome에서 로그인해주세요');
+    await sendTelegram(
+      '⚠️ Threads 계정 확인 필요!\n' +
+      'paydma.action이 아닌 계정으로 로그인된 것 같습니다.\n' +
+      '일반 Chrome에서 paydma.action으로 로그인해주세요.\n' +
+      '로그인 완료 후 자동으로 재개됩니다 (최대 5분).'
+    ).catch(() => {});
+
+    const deadline = Date.now() + 300_000;
+    while (Date.now() < deadline) {
+      await wait(15000);
+      if (await checkProfilePage()) {
+        log('✅', 'paydma.action 계정 확인됨');
+        await this.page.goto(THREADS_HOME, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {});
+        await wait(2000);
+        return;
+      }
+    }
+    throw new Error('paydma.action 계정 로그인 타임아웃 (5분)');
   }
 
   async _ensureLoggedIn() {
@@ -701,8 +745,8 @@ class ThreadsPoster {
   }
 
   async close() {
-    try { await this.context?.close(); } catch {}
-    log('🔒', 'Threads 세션 종료');
+    try { await this.page?.close(); } catch {}
+    log('🔒', 'Threads 탭 종료');
   }
 }
 
