@@ -28,3 +28,7 @@ data/posts_log.json
 
 # Naver session
 data/naver_state.json
+
+# 작업 중 생성된 스크린샷 (git 추적 제외)
+screenshots/
+/*.png
