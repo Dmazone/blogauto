@@ -619,22 +619,57 @@ async function generateImage(prompt, slug, index, bundleDir) {
       log('✅', `  NanoBanana 저장: ${filename}`);
       return { localPath: `/images/${filename}`, sourceUrl: imageUrl };
     } catch (err) {
-      log('⚠️', `  NanoBanana 실패 (${err.message}) → Pollinations fallback`);
+      log('⚠️', `  NanoBanana 실패 (${err.message}) → HuggingFace fallback`);
     }
   }
 
-  // 3) Pollinations.ai fallback (타임아웃 150초, 최대 2회 재시도)
-  log('🖼️', `  Pollinations fallback: ${filename}`);
-  const polUrl =
-    `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}` +
-    `?width=1280&height=720&nologo=true&model=flux`;
+  // 3) Hugging Face Inference API (HF_API_KEY 설정 시 사용)
+  // 무료 키 발급: https://huggingface.co/settings/tokens
+  const hfKey = process.env.HF_API_KEY;
+  if (hfKey) {
+    log('🤗', `  HuggingFace 이미지 생성 중: ${filename}`);
+    try {
+      const hfRes = await axios.post(
+        'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell',
+        { inputs: prompt, parameters: { width: 1280, height: 720 } },
+        { headers: { Authorization: `Bearer ${hfKey}`, 'Content-Type': 'application/json' }, responseType: 'arraybuffer', timeout: 120000 }
+      );
+      // HF가 JPEG/PNG 반환 → webp로 저장 (브라우저는 어차피 렌더링 가능)
+      fs.writeFileSync(destPath, Buffer.from(hfRes.data));
+      log('✅', `  HuggingFace 저장: ${filename}`);
+      return { localPath: `/images/${filename}`, sourceUrl: 'huggingface' };
+    } catch (err) {
+      log('⚠️', `  HuggingFace 실패 (${err.message}) → 이미지 없이 진행`);
+    }
+  }
 
-  return await withRetry(async () => {
-    const imgRes = await axios.get(polUrl, { responseType: 'arraybuffer', timeout: 150000 });
-    fs.writeFileSync(destPath, Buffer.from(imgRes.data));
-    log('✅', `  Pollinations 저장: ${filename}`);
-    return { localPath: `/images/${filename}`, sourceUrl: polUrl };
-  }, 2, 5000);
+  // 4) Together AI (TOGETHER_API_KEY 설정 시 사용)
+  // 무료 크레딧: https://api.together.xyz/
+  const togetherKey = process.env.TOGETHER_API_KEY;
+  if (togetherKey) {
+    log('🤝', `  Together AI 이미지 생성 중: ${filename}`);
+    try {
+      const tRes = await axios.post(
+        'https://api.together.xyz/v1/images/generations',
+        { model: 'black-forest-labs/FLUX.1-schnell-Free', prompt, width: 1280, height: 720, n: 1 },
+        { headers: { Authorization: `Bearer ${togetherKey}`, 'Content-Type': 'application/json' }, timeout: 90000 }
+      );
+      const imgUrl = tRes.data?.data?.[0]?.url;
+      if (!imgUrl) throw new Error('URL 없음');
+      const imgRes = await axios.get(imgUrl, { responseType: 'arraybuffer', timeout: 60000 });
+      fs.writeFileSync(destPath, Buffer.from(imgRes.data));
+      log('✅', `  Together AI 저장: ${filename}`);
+      return { localPath: `/images/${filename}`, sourceUrl: imgUrl };
+    } catch (err) {
+      log('⚠️', `  Together AI 실패 (${err.message}) → 이미지 없이 진행`);
+    }
+  }
+
+  // API 키 없음 — 이미지 없이 진행 (텍스트 포스팅)
+  log('⚠️', `  이미지 API 미설정 — ${filename} 생성 건너뜀`);
+  log('⚠️', `  .env 에 HF_API_KEY 또는 TOGETHER_API_KEY 추가 필요`);
+  log('⚠️', `  무료 HF 키: https://huggingface.co/settings/tokens`);
+  return { localPath: '', sourceUrl: '' };
 }
 
 // ────────────────────────────────────────────────────────────────────────────
