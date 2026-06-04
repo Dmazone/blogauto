@@ -106,7 +106,7 @@ async function main() {
   // ── 브라우저 모드 초기화 ────────────────────────────────────────────────
   const { GeminiSession } = await import('./gemini_browser.js');
   const gemUrl = process.env.GEMINI_GEM_URL || null;
-  const geminiSession = new GeminiSession({ headless: true, gemUrl });
+  const geminiSession = new GeminiSession({ headless: false, gemUrl });
   await geminiSession.init();
   setGeminiBrowserSession(geminiSession);
   if (gemUrl) {
