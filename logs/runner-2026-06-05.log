@@ -3,3 +3,86 @@
 [2026-06-05T00:47:18.741Z] 📅  즉시 발행 모드 (30분 간격)
 [2026-06-05T00:47:19.740Z] 📰  [1/5] 최신기술동향
 [2026-06-05T00:47:19.740Z] 📅  발행 예약: 2026-06-05T09:47:00+09:00
+[2026-06-05T01:13:08.332Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-05T01:33:08.336Z] 📰  [2/5] 경제
+[2026-06-05T01:33:08.336Z] 📅  발행 예약: 2026-06-05T11:03:00+09:00
+[2026-06-05T01:33:18.864Z] ❌  경제 실패 (시도 1/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:663:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:880:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-05T01:33:18.867Z] ⏳  3분 후 재시도...
+[2026-06-05T01:36:29.396Z] ❌  경제 실패 (시도 2/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:663:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:880:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-05T01:36:29.397Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-05T01:56:29.400Z] 📰  [3/5] 사회
+[2026-06-05T01:56:29.400Z] 📅  발행 예약: 2026-06-05T11:56:00+09:00
+[2026-06-05T01:56:39.933Z] ❌  사회 실패 (시도 1/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:663:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:880:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-05T01:56:39.934Z] ⏳  3분 후 재시도...
+[2026-06-05T01:59:50.458Z] ❌  사회 실패 (시도 2/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:663:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:880:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-05T01:59:50.459Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-05T02:19:50.461Z] 📰  [4/5] 인문
+[2026-06-05T02:19:50.462Z] 📅  발행 예약: 2026-06-05T12:49:00+09:00
+[2026-06-05T02:20:00.995Z] ❌  인문 실패 (시도 1/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:663:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:880:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-05T02:20:00.996Z] ⏳  3분 후 재시도...
+[2026-06-05T02:23:11.535Z] ❌  인문 실패 (시도 2/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:663:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:880:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-05T02:23:11.536Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-05T02:43:11.548Z] 📰  [5/5] 연예이슈
+[2026-06-05T02:43:11.549Z] 📅  발행 예약: 2026-06-05T13:43:00+09:00
+[2026-06-05T02:43:22.079Z] ❌  연예이슈 실패 (시도 1/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:663:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:880:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-05T02:43:22.080Z] ⏳  3분 후 재시도...
+[2026-06-05T02:46:32.612Z] ❌  연예이슈 실패 (시도 2/2): 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contenteditable="true"], [contenteditable="true"][aria-multiline="true"], div[role="textbox"][contenteditable="true"], textarea.input-area
+    at GeminiSession._findEl (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:390:11)
+    at async GeminiSession.send (file:///C:/Users/Paydma/BlogAuto/scripts/gemini_browser.js:228:21)
+    at async runWebPipeline (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:663:3)
+    at async runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:880:20)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-05T02:46:32.613Z] 🔒  브라우저 세션 종료
+[2026-06-05T02:46:32.613Z] 🎉  완료 — 성공 1개 / 실패 4개
+[2026-06-05T02:46:32.614Z] 💾  posts_log.json 저장 완료
+[2026-06-05T02:46:33.507Z] 📱  텔레그램 완료 알림 전송
+[2026-06-05T02:46:33.507Z] 🧵  스레드 게시 + 스하리 자동 시작 (--now 모드)...
+[2026-06-05T02:46:39.174Z] ✅  스레드 게시 + 스하리 완료
+[2026-06-05T02:46:50.255Z] 💎  Gem 모드: https://gemini.google.com/u/2/gem/cca9fca55f60
+[2026-06-05T02:46:50.256Z] 🚀  daily_runner 시작 — 그룹 1 / 4개 섹션
+[2026-06-05T02:46:50.256Z] 📅  즉시 발행 모드 (30분 간격)
+[2026-06-05T02:46:51.241Z] 📰  [1/4] 경제
+[2026-06-05T02:46:51.241Z] 📅  발행 예약: 2026-06-05T11:46:00+09:00
