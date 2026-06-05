@@ -317,3 +317,39 @@ To https://github.com/Dmazone/blogauto.git
 ✅  품질 게이트 통과: H2 4개, 2327자
 ✅  포스팅 저장: C:\Users\Paydma\BlogAuto\content\posts\entertainment\ki-an84-netflix-variety-2026\index.md
 🚀  [STEP 8] GitHub 자동 커밋 & 푸시 중...
+[main 4fbea85] post: 기안84 기안장 넷플릭스 3가지 성공 요인
+ 3 files changed, 235 insertions(+)
+ create mode 100644 content/posts/entertainment/ki-an84-netflix-variety-2026/index.md
+To https://github.com/Dmazone/blogauto.git
+   ad14d40..4fbea85  main -> main
+✅  푸시 완료
+
+==================================================
+🎉  "기안84 기안장 넷플릭스 3가지 성공 요인" 배포 성공!
+==================================================
+
+📣  [STEP 9] SNS 자동 홍보 시작...
+⏳  [SNS] GitHub Pages 배포 대기 중 (90초)...
+📣  [SNS] 홍보 시작...
+⏭️    Instagram: META_ACCESS_TOKEN 또는 META_IG_USER_ID 미설정 → 건너뜀
+⏭️    Threads: META_ACCESS_TOKEN 또는 User ID 미설정 → 건너뜀
+⏭️    Pinterest: 토큰 또는 보드 ID 미설정 → 건너뜀
+📊  [SNS] 홍보 완료 — 0/3 플랫폼 성공
+🔒  Gemini 세션 종료
+[2026-06-05T04:14:00.934Z] 🔒  브라우저 세션 종료
+
+============================================================
+[2026-06-05T04:14:00.934Z] 🎉  완료 — 성공 4개 / 실패 0개
+============================================================
+[2026-06-05T04:14:00.935Z] 💾  posts_log.json 저장 완료
+[2026-06-05T04:14:01.808Z] 📱  텔레그램 완료 알림 전송
+[2026-06-05T04:14:01.808Z] 🧵  스레드 게시 + 스하리 자동 시작 (--now 모드)...
+[2026-06-05T04:14:02.147Z] 🚀  threads_poster 시작 — 오늘의 게시글: "AI 시대 진짜 살아남는 '질문의 인문학' 핵심만" | shariOnly=false
+[2026-06-05T04:14:02.148Z] 🌐  Chrome CDP 연결 중...
+🌐  Chrome 디버그 모드 실행 중...
+❌ threads_poster 치명적 오류: Chrome CDP 연결 실패 (browserType.connectOverCDP: connect ECONNREFUSED ::1:9222
+Call log:
+[2m  - <ws preparing> retrieving websocket url from http://localhost:9222[22m
+)
+→ chrome_debug.bat을 먼저 실행하거나, Chrome을 --remote-debugging-port=9222 옵션으로 시작해주세요.
+[2026-06-05T04:14:06.807Z] ✅  스레드 게시 + 스하리 완료
