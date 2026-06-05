@@ -401,29 +401,9 @@ async function geminiRefineLoop(topic, outline, draft, maxRounds = 2) {
 // STEP 7: Gemini 본문 최종 검수 (Claude API 불필요 — Gemini 추가 턴)
 // ────────────────────────────────────────────────────────────────────────────
 async function claudeFullReviewAndFix(topic, body) {
-  log('🎯', '[STEP 7] Gemini 최종 검수 & 수정...');
-
-  try {
-    const fixed = extractFinalMarkdown(await geminiCall(
-      `아래 한국어 블로그 포스팅을 꼼꼼히 검수하고 문제 있는 부분만 수정해서 완성된 본문을 출력해줘.\n\n` +
-      `[검수 기준]\n` +
-      `1. 제목 "${topic.title}", 키워드 "${topic.keyword}"와 내용 일치\n` +
-      `2. AI 상투어 완전 제거: "다양한" "중요합니다" "살펴보겠습니다" "마지막으로" "~드립니다" 영어 직역체\n` +
-      `3. 헤딩: ## H2 4~6개, ### H3 2~3개, # H1 금지\n` +
-      `4. 문단 사이 빈 줄 1개 (연속 2개 이상 금지)\n` +
-      `5. 분량: 최소 1,500자\n\n` +
-      `[절대 유지]\n` +
-      `- 이미지 마크다운 ![...](...)  내부 링크  해시태그 — 건드리지 말 것\n\n` +
-      `마크다운 본문만 출력 (front matter, 코드블록 감싸기 없이).\n\n` +
-      `--- 본문 ---\n${body}\n--- 끝 ---`,
-      { temperature: 0.3 }
-    ));
-    log('✅', `[STEP 7] 검수 완료 (${fixed.length}자)`);
-    return fixed;
-  } catch (err) {
-    log('⚠️', `[STEP 7] Gemini 검수 실패 (${err.message}) → 원본 사용`);
-    return body;
-  }
+  // Gemini Turn 4에서 이미 자체 검수 완료 — 추가 턴 불필요 (원본 그대로 반환)
+  log('✅', '[STEP 7] 검수 스킵 (Gemini Turn 4 자체검수 완료)');
+  return body;
 }
 
 // ────────────────────────────────────────────────────────────────────────────
