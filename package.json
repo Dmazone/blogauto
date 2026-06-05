@@ -19,5 +19,8 @@
     "chrome-cookies-secure": "^3.0.2",
     "dotenv": "^16.4.7",
     "playwright": "^1.60.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

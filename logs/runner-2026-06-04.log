@@ -41,3 +41,75 @@ Error: 입력창 찾기 실패: rich-textarea .ql-editor, div.ql-editor[contente
 [2026-06-04T06:20:25.737Z] 📅  즉시 발행 모드 (30분 간격)
 [2026-06-04T06:20:26.805Z] 📰  [1/1] 건강 (질병)
 [2026-06-04T06:20:26.805Z] 📅  발행 예약: 2026-06-04T15:20:00+09:00
+[2026-06-04T06:25:28.070Z] 🔒  브라우저 세션 종료
+[2026-06-04T06:25:28.070Z] 🎉  완료 — 성공 1개 / 실패 0개
+[2026-06-04T06:25:28.071Z] 💾  posts_log.json 저장 완료
+[2026-06-04T06:25:29.044Z] 📱  텔레그램 완료 알림 전송
+[2026-06-04T06:25:29.044Z] 🧵  스레드 게시 + 스하리 자동 시작 (--now 모드)...
+[2026-06-04T06:25:34.083Z] ✅  스레드 게시 + 스하리 완료
+[2026-06-04T13:00:07.382Z] 💎  Gem 모드: https://gemini.google.com/u/2/gem/cca9fca55f60
+[2026-06-04T13:00:07.382Z] 🚀  daily_runner 시작 — 그룹 2 / 5개 섹션
+[2026-06-04T13:00:07.383Z] 📅  예약 발행: 07:00~09:00 KST (다음날, 30분 간격)
+[2026-06-04T13:00:08.290Z] 📰  [1/5] 건강 (질병)
+[2026-06-04T13:00:08.290Z] 📅  발행 예약: 2026-06-05T07:00:00+09:00
+[2026-06-04T13:13:58.942Z] ❌  건강 실패 (시도 1/2): H2 부족 (0개): "GLP1 다이어트 식단 고단백 가이드 진짜 핵심만"
+Error: H2 부족 (0개): "GLP1 다이어트 식단 고단백 가이드 진짜 핵심만"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T13:13:58.944Z] ⏳  3분 후 재시도...
+[2026-06-04T13:22:10.943Z] ❌  건강 실패 (시도 2/2): H2 부족 (0개): "GLP-1 식단 3가지 핵심만"
+Error: H2 부족 (0개): "GLP-1 식단 3가지 핵심만"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T13:22:10.945Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-04T13:42:10.952Z] 📰  [2/5] IT기기
+[2026-06-04T13:42:10.953Z] 📅  발행 예약: 2026-06-05T07:30:00+09:00
+[2026-06-04T13:47:24.583Z] ❌  IT기기 실패 (시도 1/2): H2 부족 (0개): "미니 PC 추천, 2026 진짜 AI 탑재로 바뀌는 순위"
+Error: H2 부족 (0개): "미니 PC 추천, 2026 진짜 AI 탑재로 바뀌는 순위"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T13:47:24.585Z] ⏳  3분 후 재시도...
+[2026-06-04T13:54:43.484Z] ❌  IT기기 실패 (시도 2/2): H2 부족 (0개): "2026 가성비 AI 노트북 진짜 쓸만할까? 완전 정리"
+Error: H2 부족 (0개): "2026 가성비 AI 노트북 진짜 쓸만할까? 완전 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T13:54:43.486Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-04T14:14:43.493Z] 📰  [3/5] 한국부동산
+[2026-06-04T14:14:43.494Z] 📅  발행 예약: 2026-06-05T08:00:00+09:00
+[2026-06-04T14:19:00.952Z] ❌  한국부동산 실패 (시도 1/2): H2 부족 (0개): "바뀌는 양도세, 지금 집 사야 할까? 완전 정리"
+Error: H2 부족 (0개): "바뀌는 양도세, 지금 집 사야 할까? 완전 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T14:19:00.954Z] ⏳  3분 후 재시도...
+[2026-06-04T14:25:56.337Z] ❌  한국부동산 실패 (시도 2/2): H2 부족 (0개): "2026 서울 월세 폭등, 진짜 살아남는 법 완전 정리"
+Error: H2 부족 (0개): "2026 서울 월세 폭등, 진짜 살아남는 법 완전 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T14:25:56.339Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-04T14:45:56.349Z] 📰  [4/5] 세계여행지
+[2026-06-04T14:45:56.350Z] 📅  발행 예약: 2026-06-05T08:30:00+09:00
+[2026-06-04T14:50:10.953Z] ❌  세계여행지 실패 (시도 1/2): H2 부족 (0개): "세트제팅 2026 숨은 촬영지 완전 정리"
+Error: H2 부족 (0개): "세트제팅 2026 숨은 촬영지 완전 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T14:50:10.955Z] ⏳  3분 후 재시도...
+[2026-06-04T14:57:06.997Z] ❌  세계여행지 실패 (시도 2/2): H2 부족 (0개): "취미 여행 플레이케이션 2026 완전 정리"
+Error: H2 부족 (0개): "취미 여행 플레이케이션 2026 완전 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T14:57:06.999Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-04T15:17:07.008Z] 📰  [5/5] 스포츠
+[2026-06-04T15:17:07.009Z] 📅  발행 예약: 2026-06-05T09:00:00+09:00
+[2026-06-04T15:32:13.904Z] ❌  스포츠 실패 (시도 1/2): H2 부족 (0개): "2026 월드컵 손흥민 최다골 도전, 진짜 역사 쓸까?"
+Error: H2 부족 (0개): "2026 월드컵 손흥민 최다골 도전, 진짜 역사 쓸까?"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T15:32:13.905Z] ⏳  3분 후 재시도...
+[2026-06-04T15:39:29.746Z] ❌  스포츠 실패 (시도 2/2): H2 부족 (0개): "2026 월드컵 A조 분석: 진짜 16강 갈까? 전력 완전 정리"
+Error: H2 부족 (0개): "2026 월드컵 A조 분석: 진짜 16강 갈까? 전력 완전 정리"
+    at runForSection (file:///C:/Users/Paydma/BlogAuto/scripts/agent_core.js:981:11)
+    at async main (file:///C:/Users/Paydma/BlogAuto/scripts/daily_runner.js:153:24)
+[2026-06-04T15:39:29.927Z] 🔒  브라우저 세션 종료
+[2026-06-04T15:39:29.930Z] 🎉  완료 — 성공 0개 / 실패 5개
+[2026-06-04T15:39:29.932Z] 💾  posts_log.json 저장 완료
+[2026-06-04T15:39:30.864Z] 📱  텔레그램 완료 알림 전송
