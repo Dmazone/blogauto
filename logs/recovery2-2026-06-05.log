@@ -76,3 +76,71 @@ To https://github.com/Dmazone/blogauto.git
 ⏭️    Pinterest: 토큰 또는 보드 ID 미설정 → 건너뜀
 📊  [SNS] 홍보 완료 — 0/3 플랫폼 성공
 [2026-06-05T02:57:31.680Z] ⏸️  다음 섹션까지 20분 대기...
+[2026-06-05T03:17:31.692Z] 📰  [2/4] 사회
+[2026-06-05T03:17:31.693Z] 📅  발행 예약: 2026-06-05T12:47:00+09:00
+📂  
+──────────────────────────────────────────────────
+📂  섹션: [사회]
+📂  ──────────────────────────────────────────────────
+🔍  [Turn 1] 트렌드 조사 중...
+💬  새 채팅 버튼 클릭 → 대화 초기화
+💬  새 대화 시작
+📤  Turn 1 전송 중... ([섹션: 사회] 오늘 날짜: 2026-06-05   구글 검색으로 이 섹션에서 현재 가장 화제가 되는 트렌드...)
+📥  Turn 1 응답 완료 (2510자)
+📐  [Turn 2] 주제 확정 + 아웃라인...
+📤  Turn 2 전송 중... (가장 잠재력 있는 주제 1개를 선택하고, 아래 형식으로 출력해줘.  [JSON 블록] ```json {"ti...)
+📥  Turn 2 응답 완료 (1135자)
+✅  확정 주제: "AX 조직 AI 시대 살아남는 숨은 핵심 2가지" / slug: ax-organization-human-role-2026
+✍️  [Turn 3] 본문 집필 중...
+📤  Turn 3 전송 중... (아웃라인대로 Hugo 마크다운 본문을 작성해줘. front matter 없이.  [Technical SEO ...)
+📥  Turn 3 응답 완료 (4205자)
+🔍  [Turn 4] 애드센스 품질 자체검토 중...
+📤  Turn 4 전송 중... (방금 쓴 글을 다시 읽고, 아래 항목을 모두 점검해서 수정해줘:  1. **AI 냄새** — "다양한", "...)
+📥  Turn 4 응답 완료 (4607자)
+📝  [Turn 5] 최종 마크다운 추출 중...
+📤  Turn 5 전송 중... (최종 완성된 본문을 반드시 아래 형식의 코드블록으로 출력해줘:  ```markdown [완성된 마크다운 본문...)
+📥  Turn 5 응답 완료 (4473자)
+🎨  [Turn 6] 이미지 프롬프트 생성 중 (본문 2장 + 썸네일)...
+📤  Turn 6 전송 중... (글에 삽입된 이미지 2개와 블로그 커버 썸네일 1개를 위한 AI 이미지 생성 프롬프트를 만들어줘.  ⚠️ 필...)
+📥  Turn 6 응답 완료 (856자)
+✅  [STEP 7] 검수 스킵 (Gemini Turn 4 자체검수 완료)
+🖼️  [STEP 8] 이미지 생성 중 (본문 2장 + 썸네일 1장)...
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-01.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-01.webp 없이 텍스트만 발행
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-02.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-02.webp 없이 텍스트만 발행
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-thumb.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-thumb.webp 없이 텍스트만 발행
+✅    썸네일 생성 완료
+🔍  [STEP 8c] Claude 이미지 품질·주제 적합성 검수...
+⚠️    [이미지 검수] 파일 없음 → 재생성: 본문 이미지 1
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-01.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-01.webp 없이 텍스트만 발행
+⚠️    [이미지 검수] 파일 없음 → 재생성: 본문 이미지 1
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-01.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-01.webp 없이 텍스트만 발행
+⚠️    [이미지 검수] 파일 없음 → 재생성: 본문 이미지 2
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-02.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-02.webp 없이 텍스트만 발행
+⚠️    [이미지 검수] 파일 없음 → 재생성: 본문 이미지 2
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-02.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-02.webp 없이 텍스트만 발행
+⚠️    [이미지 검수] 파일 없음 → 재생성: 썸네일
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-thumb.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-thumb.webp 없이 텍스트만 발행
+⚠️    [이미지 검수] 파일 없음 → 재생성: 썸네일
+🖼️    Stable Horde 이미지 생성 중: ax-organization-human-role-2026-thumb.webp
+⚠️    Stable Horde 실패 (Request failed with status code 403) → 이미지 없이 진행
+⚠️    이미지 생성 실패 — ax-organization-human-role-2026-thumb.webp 없이 텍스트만 발행
+✅  [STEP 7] 검수 스킵 (Gemini Turn 4 자체검수 완료)
+✅  품질 게이트 통과: H2 4개, 3443자
+✅  포스팅 저장: C:\Users\Paydma\BlogAuto\content\posts\society\ax-organization-human-role-2026\index.md
+🚀  [STEP 8] GitHub 자동 커밋 & 푸시 중...
