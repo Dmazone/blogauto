@@ -208,6 +208,29 @@ export class GeminiSession {
       }
     } catch { /* 버튼 없으면 URL 이동만으로 초기화된 것으로 간주 */ }
 
+    // 입력창이 실제로 로드될 때까지 대기 (최대 30초)
+    // 20분 대기 후 페이지 상태가 불안정한 경우 대응
+    const inputDeadline = Date.now() + 30000;
+    let inputReady = false;
+    while (Date.now() < inputDeadline) {
+      inputReady = await this.page.evaluate((sels) =>
+        sels.some(s => {
+          const el = document.querySelector(s);
+          return el && el.getBoundingClientRect().height > 0;
+        }), SEL.input
+      ).catch(() => false);
+      if (inputReady) break;
+      await wait(1500);
+    }
+
+    if (!inputReady) {
+      // 입력창 미로드 → 페이지 새로고침 후 재시도
+      log('⚠️', '입력창 미로드 → 새로고침 후 재시도');
+      await this.page.goto(target, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+      await wait(5000);
+      await this._ensureLoggedIn();
+    }
+
     this._turnCount = 0;
     log('💬', '새 대화 시작');
   }
