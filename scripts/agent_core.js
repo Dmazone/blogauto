@@ -42,11 +42,16 @@ const log = (emoji, msg) => console.log(`${emoji}  ${msg}`);
 function extractFinalMarkdown(text) {
   // Python: content = """---\n...\n---\n..."""
   const pyMatch = text.match(/content\s*=\s*"""\s*([\s\S]*?)"""/);
-  if (pyMatch) return pyMatch[1].trim();
+  if (pyMatch) return stripMarkdownLabel(pyMatch[1].trim());
   // ```markdown / ```md / ``` 코드블록
   const mdMatch = text.match(/```(?:markdown|md|plaintext)?\s*([\s\S]*?)```/s);
-  if (mdMatch) return mdMatch[1].trim();
-  return text.trim();
+  if (mdMatch) return stripMarkdownLabel(mdMatch[1].trim());
+  return stripMarkdownLabel(text.trim());
+}
+
+/** Gemini가 코드블록 안팎에 "Markdown" 레이블을 붙이는 경우 제거 */
+function stripMarkdownLabel(text) {
+  return text.replace(/^Markdown\s*\n/, '').replace(/^markdown\s*\n/, '');
 }
 
 // ── Gemini 호출 구현체 (기본: API / 교체 가능: 브라우저) ───────────────────
