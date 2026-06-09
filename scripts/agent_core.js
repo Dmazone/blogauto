@@ -549,58 +549,73 @@ async function generateImage(prompt, slug, index, bundleDir) {
   }
 
   // 3) Stable Horde (완전 무료, API 키 불필요 — 크라우드소싱 SD)
-  log('🖼️', `  Stable Horde 이미지 생성 중: ${filename}`);
-  try {
-    const sharp = (await import('sharp')).default;
+  // ⚠️ 익명 키 제한: width/height 각 640 이하, 초당 2개, 폴링 최대 30분
+  const sharpLib = (await import('sharp')).default;
 
-    // 작업 제출
-    const submitRes = await axios.post(
-      'https://stablehorde.net/api/v2/generate/async',
-      {
-        prompt,
-        params: { width: 1024, height: 576, steps: 25, n: 1, sampler_name: 'k_euler' },
-        models: ['stable_diffusion'],
-        r2: false,
-        shared: true,
-      },
-      { headers: { 'Content-Type': 'application/json', apikey: '0000000000' }, timeout: 30000 }
-    );
-    if (submitRes.status !== 202) throw new Error(`제출 실패 ${submitRes.status}`);
-    const jobId = submitRes.data.id;
-    log('🖼️', `  Job ID: ${jobId}`);
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    log('🖼️', `  Stable Horde 이미지 생성 중: ${filename} (시도 ${attempt}/2)`);
+    try {
+      // 제출 (429 rate limit 시 1회 재시도)
+      let submitRes;
+      for (let i = 0; i < 3; i++) {
+        submitRes = await axios.post(
+          'https://stablehorde.net/api/v2/generate/async',
+          {
+            prompt,
+            params: { width: 640, height: 384, steps: 20, n: 1, sampler_name: 'k_euler' },
+            models: ['stable_diffusion'],
+            r2: false,
+            shared: true,
+          },
+          { headers: { 'Content-Type': 'application/json', apikey: '0000000000' }, timeout: 30000 }
+        );
+        if (submitRes.status === 202) break;
+        if (submitRes.status === 429) { await new Promise(r => setTimeout(r, 1500)); continue; }
+        throw new Error(`제출 실패 ${submitRes.status}: ${JSON.stringify(submitRes.data).slice(0,100)}`);
+      }
+      if (submitRes.status !== 202) throw new Error(`제출 실패 (재시도 소진) ${submitRes.status}`);
 
-    // 완료까지 폴링 (최대 5분)
-    const deadline = Date.now() + 300_000;
-    while (Date.now() < deadline) {
-      await new Promise(r => setTimeout(r, 10000));
-      const check = await axios.get(
-        `https://stablehorde.net/api/v2/generate/check/${jobId}`,
-        { headers: { apikey: '0000000000' }, timeout: 15000 }
+      const jobId = submitRes.data.id;
+      log('🖼️', `  Job ID: ${jobId} (큐 대기 최대 30분)`);
+
+      // 완료까지 폴링 (최대 30분 — 익명 키 대기시간 15~20분 대응)
+      const deadline = Date.now() + 1_800_000;
+      while (Date.now() < deadline) {
+        await new Promise(r => setTimeout(r, 15000));
+        const check = await axios.get(
+          `https://stablehorde.net/api/v2/generate/check/${jobId}`,
+          { headers: { apikey: '0000000000' }, timeout: 15000 }
+        );
+        if (check.data.faulted) throw new Error('Stable Horde faulted');
+        if (check.data.done) break;
+      }
+
+      // 결과 수령
+      const result = await axios.get(
+        `https://stablehorde.net/api/v2/generate/status/${jobId}`,
+        { headers: { apikey: '0000000000' }, timeout: 30000 }
       );
-      if (check.data.faulted) throw new Error('Stable Horde faulted');
-      if (check.data.done) break;
+      const b64 = result.data.generations?.[0]?.img;
+      if (!b64) throw new Error('이미지 데이터 없음 (큐 타임아웃 가능성)');
+
+      // 640×384 PNG/JPEG → 1280×720 WEBP 업스케일
+      await sharpLib(Buffer.from(b64, 'base64'))
+        .resize(1280, 720, { fit: 'cover', position: 'centre' })
+        .webp({ quality: 85 })
+        .toFile(destPath);
+
+      const stat = fs.statSync(destPath);
+      if (stat.size < 20000) throw new Error(`파일 크기 너무 작음 (${stat.size}B)`);
+
+      log('✅', `  Stable Horde 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
+      return { localPath: `/images/${filename}`, sourceUrl: 'stablehorde' };
+    } catch (err) {
+      log('⚠️', `  Stable Horde 시도 ${attempt} 실패: ${err.message}`);
+      if (attempt < 2) await new Promise(r => setTimeout(r, 5000));
     }
-
-    // 결과 수령
-    const result = await axios.get(
-      `https://stablehorde.net/api/v2/generate/status/${jobId}`,
-      { headers: { apikey: '0000000000' }, timeout: 30000 }
-    );
-    const b64 = result.data.generations?.[0]?.img;
-    if (!b64) throw new Error('이미지 데이터 없음');
-
-    // PNG/JPEG → 1280×720 WEBP 변환
-    const buf = Buffer.from(b64, 'base64');
-    await sharp(buf).resize(1280, 720, { fit: 'cover', position: 'centre' }).webp({ quality: 85 }).toFile(destPath);
-
-    const stat = fs.statSync(destPath);
-    log('✅', `  Stable Horde 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
-    return { localPath: `/images/${filename}`, sourceUrl: 'stablehorde' };
-  } catch (err) {
-    log('⚠️', `  Stable Horde 실패 (${err.message}) → 이미지 없이 진행`);
   }
 
-  log('⚠️', `  이미지 생성 실패 — ${filename} 없이 텍스트만 발행`);
+  log('⚠️', `  이미지 생성 2회 실패 — ${filename} 없이 텍스트만 발행`);
   return { localPath: '', sourceUrl: '' };
 }
 
@@ -645,7 +660,8 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
 // ────────────────────────────────────────────────────────────────────────────
 function gitPush(title) {
   log('🚀', '[STEP 8] GitHub 자동 커밋 & 푸시 중...');
-  execSync('git add .', { cwd: ROOT, stdio: 'inherit' });
+  // git add . 대신 content/ 만 스테이징 (스크린샷·temp 파일 실수 커밋 방지)
+  execSync('git add content/', { cwd: ROOT, stdio: 'inherit' });
   execSync(`git commit -m "post: ${title}"`, { cwd: ROOT, stdio: 'inherit' });
   execSync('git push', { cwd: ROOT, stdio: 'inherit' });
   log('✅', '푸시 완료');

@@ -77,6 +77,21 @@ content/posts/{섹션}/{slug}/
 
 ---
 
+## 이미지 생성 규칙 (Stable Horde — 반드시 준수)
+
+| 항목 | 값 | 이유 |
+|---|---|---|
+| 해상도 제출 | `width: 640, height: 384` | 익명키 640px 초과 시 403 |
+| 업스케일 | sharp로 1280×720 webp 변환 | 퍼블리시 해상도 |
+| 폴링 타임아웃 | **30분** | 익명 큐 대기 15~20분 |
+| 재시도 | 실패 시 1회 자동 재시도 | no data, timeout 대응 |
+| 동시 제출 | 600ms 간격 순차 제출 | 초당 2개 rate limit |
+| 이미지 누락 복구 | `node scripts/fix_missing_images.mjs` | 전체 스캔 후 누락만 생성 |
+
+**이미지 없이 발행된 포스팅은 반드시 fix_missing_images.mjs로 추후 보완.**
+
+---
+
 ## 개발 원칙
 
 - 모든 코드 수정은 Claude Code가 직접 수행 (사장님 코드 수정 안 함)
@@ -84,7 +99,9 @@ content/posts/{섹션}/{slug}/
 - `withRetry()` — 503/429 자동 재시도
 - 포스팅 1개 실패가 전체에 영향 없도록 독립 처리
 - **Claude에 본문 집필 맡기는 코드 작성 금지** (집필은 Gemini 전담)
+- **Anthropic API(ANTHROPIC_API_KEY) 사용 금지** — 비용 발생
 - 장기 작업 완료 시 **항상** 텔레그램 알림 전송
+- git 커밋 시 `git add content/` (git add . 금지 — 스크린샷 등 의도치 않은 파일 커밋 방지)
 
 ---
 
