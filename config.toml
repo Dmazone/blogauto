@@ -43,52 +43,52 @@ canonifyURLs = true
   [[menu.main]]
     identifier = "latest-tech"
     name = "최신기술"
-    url = "/posts/latest-tech/"
+    url = "/blogauto/posts/latest-tech/"
     weight = 10
   [[menu.main]]
     identifier = "economy"
     name = "경제"
-    url = "/posts/economy/"
+    url = "/blogauto/posts/economy/"
     weight = 20
   [[menu.main]]
     identifier = "society"
     name = "사회"
-    url = "/posts/society/"
+    url = "/blogauto/posts/society/"
     weight = 30
   [[menu.main]]
     identifier = "humanities"
     name = "인문"
-    url = "/posts/humanities/"
+    url = "/blogauto/posts/humanities/"
     weight = 40
   [[menu.main]]
     identifier = "entertainment"
     name = "연예이슈"
-    url = "/posts/entertainment/"
+    url = "/blogauto/posts/entertainment/"
     weight = 50
   [[menu.main]]
     identifier = "health"
     name = "건강"
-    url = "/posts/health/"
+    url = "/blogauto/posts/health/"
     weight = 60
   [[menu.main]]
     identifier = "it-devices"
     name = "IT기기"
-    url = "/posts/it-devices/"
+    url = "/blogauto/posts/it-devices/"
     weight = 70
   [[menu.main]]
     identifier = "kr-realestate"
     name = "부동산"
-    url = "/posts/kr-realestate/"
+    url = "/blogauto/posts/kr-realestate/"
     weight = 80
   [[menu.main]]
     identifier = "world-travel"
     name = "세계여행"
-    url = "/posts/world-travel/"
+    url = "/blogauto/posts/world-travel/"
     weight = 90
   [[menu.main]]
     identifier = "sports"
     name = "스포츠"
-    url = "/posts/sports/"
+    url = "/blogauto/posts/sports/"
     weight = 100
 
 [taxonomies]
