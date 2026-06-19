@@ -237,7 +237,7 @@ export class GeminiSession {
 
   // ── 메시지 전송 (새 대화 or 이어서) ─────────────────────────────────────────
   async send(text, opts = {}) {
-    const { timeout = 300000 } = opts; // 5분 기본 타임아웃
+    const { timeout = 600000 } = opts; // 10분 기본 타임아웃 (Gemini 검색 그라운딩 대응)
 
     // 첫 턴이면 새 대화부터 시작
     if (this._turnCount === 0) {
@@ -353,6 +353,11 @@ export class GeminiSession {
       while (Date.now() < deadline && stable < 4) {
         await wait(3000);
         const cur = await this._getLatestResponseLength();
+        // 페이지 닫힘 감지 → 루프 중단 (호출자가 빈 응답 처리)
+        if (cur === -1) {
+          log('⚠️', '응답 폴링 중 브라우저 오류 감지 → 대기 중단');
+          break;
+        }
         stable = (cur === prev && cur > 50) ? stable + 1 : 0;
         prev = cur;
       }
@@ -362,14 +367,18 @@ export class GeminiSession {
   }
 
   async _getLatestResponseLength() {
-    return await this.page.evaluate((sels) => {
-      for (const s of sels) {
-        const all = document.querySelectorAll(s);
-        const last = all[all.length - 1];
-        if (last) return last.innerText?.length ?? 0;
-      }
-      return 0;
-    }, SEL.response);
+    try {
+      return await this.page.evaluate((sels) => {
+        for (const s of sels) {
+          const all = document.querySelectorAll(s);
+          const last = all[all.length - 1];
+          if (last) return last.innerText?.length ?? 0;
+        }
+        return 0;
+      }, SEL.response);
+    } catch {
+      return -1; // 페이지 닫힘 신호
+    }
   }
 
   // ── 마지막 응답 추출 ─────────────────────────────────────────────────────────
@@ -387,19 +396,23 @@ export class GeminiSession {
     }
 
     // 최후 수단: JS로 추출
-    return await this.page.evaluate(() => {
-      const candidates = [
-        '[data-message-author-role="model"]',
-        '.model-response',
-        '.response-container',
-      ];
-      for (const s of candidates) {
-        const all = document.querySelectorAll(s);
-        const last = all[all.length - 1];
-        if (last?.innerText?.trim().length > 20) return last.innerText.trim();
-      }
+    try {
+      return await this.page.evaluate(() => {
+        const candidates = [
+          '[data-message-author-role="model"]',
+          '.model-response',
+          '.response-container',
+        ];
+        for (const s of candidates) {
+          const all = document.querySelectorAll(s);
+          const last = all[all.length - 1];
+          if (last?.innerText?.trim().length > 20) return last.innerText.trim();
+        }
+        return '';
+      });
+    } catch {
       return '';
-    });
+    }
   }
 
   // ── 내부 유틸 ────────────────────────────────────────────────────────────────

@@ -228,7 +228,7 @@ function savePostsLog(posts, totalCount) {
         slug:       p.slug,
         sectionDir: p.sectionDir,
         url:        `${baseUrl}/posts/${p.sectionDir}/${p.slug}/`,
-        publishTime: `07:${String(10 + i * 10).padStart(2, '0')} KST`,
+        publishTime: `0${7 + Math.floor(i / 2)}:${i % 2 === 0 ? '00' : '30'} KST`,
       })),
     };
     writeFileSync(path.join(dataDir, 'posts_log.json'), JSON.stringify(logData, null, 2), 'utf8');

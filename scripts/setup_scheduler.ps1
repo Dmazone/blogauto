@@ -1,7 +1,7 @@
 # setup_scheduler.ps1 — Windows 작업 스케줄러 등록
 # 실행: powershell -ExecutionPolicy Bypass -File scripts\setup_scheduler.ps1
 
-$blogPath = "C:\Users\Paydma\BlogAuto"
+$blogPath = "C:\Users\Paydma\00_Claude_CODE\BlogAuto"
 $nodePath = (Get-Command node -ErrorAction Stop).Source
 $userName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 

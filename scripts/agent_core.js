@@ -423,7 +423,7 @@ async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slu
   }
 
   const stat = fs.statSync(imagePath);
-  if (stat.size < 20000) {
+  if (stat.size < 15000) {
     log('⚠️', `  [이미지 검수] 파일 너무 작음 (${stat.size}B) → 재생성: ${label}`);
     await generateImage(prompt, slug, index, bundleDir);
     if (!_retried) await claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName, description, true);
@@ -551,6 +551,8 @@ async function generateImage(prompt, slug, index, bundleDir) {
   // 3) Stable Horde (완전 무료, API 키 불필요 — 크라우드소싱 SD)
   // ⚠️ 익명 키 제한: width/height 각 640 이하, 초당 2개, 폴링 최대 30분
   const sharpLib = (await import('sharp')).default;
+  const negativePrompt = 'text, watermark, logo, blurry, low quality, distorted, deformed, ugly, worst quality, jpeg artifacts, noise, grainy, oversaturated, duplicate';
+  const qualityPrompt = `best quality, masterpiece, highly detailed, sharp focus, ${prompt}`;
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     log('🖼️', `  Stable Horde 이미지 생성 중: ${filename} (시도 ${attempt}/2)`);
@@ -561,9 +563,18 @@ async function generateImage(prompt, slug, index, bundleDir) {
         submitRes = await axios.post(
           'https://stablehorde.net/api/v2/generate/async',
           {
-            prompt,
-            params: { width: 640, height: 384, steps: 20, n: 1, sampler_name: 'k_euler' },
-            models: ['stable_diffusion'],
+            prompt: qualityPrompt,
+            params: {
+              width: 640,
+              height: 384,
+              steps: 30,
+              n: 1,
+              sampler_name: 'k_dpmpp_2m',
+              cfg_scale: 7,
+              karras: true,
+              negative_prompt: negativePrompt,
+            },
+            models: ['Deliberate', 'DreamShaper', 'stable_diffusion'],
             r2: false,
             shared: true,
           },
@@ -600,12 +611,12 @@ async function generateImage(prompt, slug, index, bundleDir) {
 
       // 640×384 PNG/JPEG → 1280×720 WEBP 업스케일
       await sharpLib(Buffer.from(b64, 'base64'))
-        .resize(1280, 720, { fit: 'cover', position: 'centre' })
-        .webp({ quality: 85 })
+        .resize(1280, 720, { fit: 'cover', position: 'centre', kernel: 'lanczos3' })
+        .webp({ quality: 90, effort: 5 })
         .toFile(destPath);
 
       const stat = fs.statSync(destPath);
-      if (stat.size < 20000) throw new Error(`파일 크기 너무 작음 (${stat.size}B)`);
+      if (stat.size < 15000) throw new Error(`파일 크기 너무 작음 (${stat.size}B)`);
 
       log('✅', `  Stable Horde 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
       return { localPath: `/images/${filename}`, sourceUrl: 'stablehorde' };
@@ -711,31 +722,56 @@ ${subtopicLine}
 각 섹션의 톤: 비교분석/장단점/경험담/튜토리얼 중 명시`
   );
 
-  // JSON 파싱 (2단계: 코드블록 → 인라인 JSON → 재시도)
+  // JSON 파싱 (3단계: 코드블록 → 중첩JSON → 개별 필드 추출 → 재시도 턴)
   let topic = { title: '', slug: '', keyword: '', description: '' };
   let t2Parsed = false;
-  try {
-    const m = t2.match(/```json\s*([\s\S]*?)```/);
-    if (m) { topic = { ...topic, ...JSON.parse(m[1]) }; t2Parsed = true; }
-    else {
-      const m2 = t2.match(/\{[^{}]*"title"\s*:[^{}]*\}/);
-      if (m2) { topic = { ...topic, ...JSON.parse(m2[0]) }; t2Parsed = true; }
-    }
-  } catch {}
 
-  // 파싱 실패 시 재시도 (추가 턴)
+  const tryParseJson = (text) => {
+    // 1) ```json 코드블록
+    const m1 = text.match(/```json\s*([\s\S]*?)```/s);
+    if (m1) { try { return JSON.parse(m1[1]); } catch {} }
+    // 2) 첫 번째 { } 블록 (중첩 포함)
+    const start = text.indexOf('{');
+    if (start >= 0) {
+      let depth = 0, end = -1;
+      for (let i = start; i < text.length; i++) {
+        if (text[i] === '{') depth++;
+        else if (text[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+      }
+      if (end > start) { try { return JSON.parse(text.slice(start, end + 1)); } catch {} }
+    }
+    // 3) 개별 필드 추출 (파싱 완전 실패 시 최후 수단)
+    const titleM = text.match(/"title"\s*:\s*"([^"]+)"/);
+    const slugM  = text.match(/"slug"\s*:\s*"([a-z0-9-]+)"/);
+    const kwM    = text.match(/"keyword"\s*:\s*"([^"]+)"/);
+    const descM  = text.match(/"description"\s*:\s*"([^"]+)"/);
+    if (titleM && slugM) {
+      return {
+        title: titleM[1], slug: slugM[1],
+        keyword: kwM?.[1] ?? '', description: descM?.[1] ?? '',
+      };
+    }
+    return null;
+  };
+
+  const parsed = tryParseJson(t2);
+  if (parsed?.title && parsed?.slug) {
+    topic = { ...topic, ...parsed };
+    t2Parsed = true;
+  }
+
+  // 파싱 실패 시 재시도 턴
   if (!t2Parsed || !topic.title || !topic.slug) {
     log('⚠️', '[Turn 2] JSON 파싱 실패 → 재시도 중...');
     const t2Retry = await session.send(
       `앞에서 선택한 주제의 JSON 정보만 아래 형식 그대로 출력해줘. 다른 텍스트 없이 JSON 코드 블록만.\n\n` +
       `\`\`\`json\n{"title":"SEO최적화제목(28자이내)","slug":"english-slug-lowercase-hyphens","keyword":"핵심키워드","description":"160자이내설명"}\n\`\`\``
     );
-    try {
-      const m3 = t2Retry.match(/```json\s*([\s\S]*?)```/);
-      const jsonStr = m3 ? m3[1] : (t2Retry.match(/\{[\s\S]*?\}/)?.[0] ?? '{}');
-      const parsed = JSON.parse(jsonStr);
-      if (parsed.title && parsed.slug) { topic = { ...topic, ...parsed }; t2Parsed = true; }
-    } catch {}
+    const retryParsed = tryParseJson(t2Retry);
+    if (retryParsed?.title && retryParsed?.slug) {
+      topic = { ...topic, ...retryParsed };
+      t2Parsed = true;
+    }
   }
 
   if (!t2Parsed || !topic.title || !topic.slug) {
@@ -809,7 +845,24 @@ ${subtopicLine}
 
 규칙: 코드블록 안에 마크다운 본문만 넣을 것. front matter 없이. 코드블록 앞뒤로 설명·요약 없이.`
   );
-  const finalBody = extractFinalMarkdown(_t5Raw);
+  let finalBody = extractFinalMarkdown(_t5Raw);
+
+  // H2 부족 감지 → 즉시 재추출 (가장 흔한 실패 원인)
+  if ((finalBody.match(/^## /gm) ?? []).length < 3) {
+    log('⚠️', `[Turn 5] H2 ${(finalBody.match(/^## /gm) ?? []).length}개 감지 → 재출력 요청`);
+    const _t5Retry = await session.send(
+      `직전에 수정한 최종 마크다운 본문 전체를 아래 코드블록에 그대로 출력해줘.\n` +
+      `## H2 헤딩이 반드시 4개 이상 포함되어야 함. front matter 없이.\n\n` +
+      `\`\`\`markdown\n[전체 본문]\n\`\`\``
+    );
+    const retried = extractFinalMarkdown(_t5Retry);
+    if ((retried.match(/^## /gm) ?? []).length >= 3) {
+      finalBody = retried;
+      log('✅', '[Turn 5] 재출력으로 H2 복구 성공');
+    } else {
+      log('⚠️', `[Turn 5] 재출력도 H2 부족 (${(retried.match(/^## /gm) ?? []).length}개) — 품질 게이트로 최종 판정`);
+    }
+  }
 
   // ── TURN 6: 이미지 프롬프트 생성 (본문 2장 + 썸네일 1장) ────────────────
   log('🎨', '[Turn 6] 이미지 프롬프트 생성 중 (본문 2장 + 썸네일)...');
