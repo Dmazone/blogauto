@@ -1,0 +1,75 @@
+{{- if .IsPage -}}
+<!-- 텐핑 소문박스 스크립트 -->
+<script async src="//ads.tenping.kr/scripts/adsbytenping.min.js"></script>
+<!-- 카카오 애드핏 스크립트 -->
+<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+<script>
+(function() {
+  var ADS = [
+    // [0] 텐핑 큰 형태
+    '<div class="ad-unit ad-tenping" style="margin:28px auto;max-width:768px;text-align:center;">' +
+      '<tenping class="adsbytenping" style="width:100%;max-width:768px;margin:0px auto;display:block;" ' +
+      'tenping-ad-display-type="1LawCE8FqKOhetXZhMopsQ%3d%3d" ' +
+      'tenping-ad-client="BdnhcMfPBvtcqWy4TeF3452t47SWFwraO4StFWXx1U%2fSBFm9k9OQo1uJHpkxwqxi"></tenping>' +
+    '</div>',
+
+    // [1] 쿠팡파트너스 1 — 코드 삽입 필요
+    '<div class="ad-unit ad-coupang" style="margin:28px auto;max-width:768px;text-align:center;">' +
+      '<!-- COUPANG_PARTNERS_AD_1 -->' +
+    '</div>',
+
+    // [2] 애드핏 320x100 (DAN-6d7fObmADg0ebdyw)
+    '<div class="ad-unit ad-adfit" style="margin:28px auto;max-width:768px;text-align:center;">' +
+      '<ins class="kakao_ad_area" style="display:none;" ' +
+      'data-ad-unit="DAN-6d7fObmADg0ebdyw" data-ad-width="320" data-ad-height="100"></ins>' +
+    '</div>',
+
+    // [3] 텐핑 작은 형태
+    '<div class="ad-unit ad-tenping" style="margin:28px auto;max-width:768px;text-align:center;">' +
+      '<tenping class="adsbytenping" style="width:100%;max-width:768px;margin:0px auto;display:block;" ' +
+      'tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d" ' +
+      'tenping-ad-client="BdnhcMfPBvtcqWy4TeF3452t47SWFwraO4StFWXx1U%2fSBFm9k9OQo1uJHpkxwqxi"></tenping>' +
+    '</div>',
+
+    // [4] 쿠팡파트너스 2 — 코드 삽입 필요
+    '<div class="ad-unit ad-coupang" style="margin:28px auto;max-width:768px;text-align:center;">' +
+      '<!-- COUPANG_PARTNERS_AD_2 -->' +
+    '</div>',
+
+    // [5] 애드핏 320x100 (DAN-jzmk9rPd9goT1dXv)
+    '<div class="ad-unit ad-adfit" style="margin:28px auto;max-width:768px;text-align:center;">' +
+      '<ins class="kakao_ad_area" style="display:none;" ' +
+      'data-ad-unit="DAN-jzmk9rPd9goT1dXv" data-ad-width="320" data-ad-height="100"></ins>' +
+    '</div>',
+  ];
+
+  function injectAds() {
+    var content = document.querySelector('.post-content');
+    if (!content) return;
+    var h2s = content.querySelectorAll('h2');
+    if (h2s.length === 0) return;
+
+    for (var i = 0; i < ADS.length && i < h2s.length; i++) {
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = ADS[i];
+      h2s[i].parentNode.insertBefore(wrapper.firstChild, h2s[i].nextSibling);
+    }
+
+    // 애드핏 재호출
+    if (window.kakaoAdFit && typeof window.kakaoAdFit.display === 'function') {
+      window.kakaoAdFit.display();
+    }
+    // 텐핑 재호출
+    if (typeof window.tp_adsbytenpingInit === 'function') {
+      window.tp_adsbytenpingInit();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectAds);
+  } else {
+    injectAds();
+  }
+})();
+</script>
+{{- end -}}
