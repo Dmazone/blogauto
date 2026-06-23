@@ -585,11 +585,12 @@ async function generateImage(prompt, slug, index, bundleDir) {
 // Hugo front matter 조립
 // ────────────────────────────────────────────────────────────────────────────
 function buildFrontMatter(section, topic, outline, dateOverride) {
+  const lc = getLangConfig(section);
   const date = dateOverride ?? new Date().toISOString().split('.')[0] + '+09:00';
   const description = (
     outline.meta_description ||
     topic.description ||
-    `${topic.keyword}에 대한 2026년 최신 정보와 트렌드를 알아보세요.`
+    lc.descFallback(topic.keyword)
   ).slice(0, 160);
 
   // 중복 제거 및 섹션명·키워드 기반 태그
@@ -597,7 +598,7 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
   const tags = [...new Set(rawTags.filter(Boolean))].slice(0, 6);
 
   const thumbUrl = `${topic.slug}-thumb.webp`;
-  const coverAlt = `${topic.title} 썸네일`;
+  const coverAlt = lc.coverAlt(topic.title);
 
   return (
     `---\n` +
@@ -630,10 +631,78 @@ function gitPush(title) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// 언어별 설정 (한국어 기본 / 일본어 / 영어)
+// ────────────────────────────────────────────────────────────────────────────
+function getLangConfig(section) {
+  const lang = section.language ?? 'ko';
+  if (lang === 'ja') return {
+    lang: 'ja',
+    label: '日本語',
+    cultureCenter: '日本',
+    koreanLink: '韓国との関係や韓国の視点も自然に織り交ぜる',
+    titleMaxLen: '30文字以内',
+    titleSeoRules: [
+      '- 核心キーワードをタイトルの先頭近くに配置',
+      '- 数字（年/ランキング/個数）、疑問形（「〜か？」）、メリット強調（「完全まとめ」「徹底解説」）のいずれか1つ以上',
+      '- クリックを誘うキーワード（「本当の」「知られざる」「2026年最新」「完全版」など）',
+      '- 30文字以内（Google検索結果の省略防止）',
+    ],
+    writingInstruction: '⚠️ この記事は全文日本語で執筆すること。韓国語・英語は一切使用禁止。',
+    lengthGuide: '1,500〜2,500文字（空白除く）',
+    forbiddenExpr: '「さまざまな」「重要です」「見ていきましょう」「最後に」「〜です。〜です。」の単調な繰り返し',
+    hashtagNote: '日本語ハッシュタグを7個以上（例：#日本トレンド #2026 #韓国 ...）',
+    qualityCheck5: '5. **自然な日本語** — 直訳調の表現を除去、流暢な日本語に修正',
+    descFallback: (kw) => `${kw}に関する2026年最新情報とトレンドをご紹介します。`,
+    coverAlt: (title) => `${title} サムネイル`,
+  };
+  if (lang === 'en') return {
+    lang: 'en',
+    label: 'English',
+    cultureCenter: 'Western/global',
+    koreanLink: 'Include Korean perspective or connection where naturally relevant',
+    titleMaxLen: '60 characters max',
+    titleSeoRules: [
+      '- Place the main keyword near the beginning of the title',
+      '- Include a number, question, or benefit phrase ("Complete Guide", "Top 5", "Why...")',
+      '- Use engaging words ("Best", "Hidden", "2026", "Essential", "Ultimate")',
+      '- Under 60 characters (prevents truncation in Google search results)',
+    ],
+    writingInstruction: '⚠️ Write the ENTIRE article in English only. No Korean or Japanese text anywhere.',
+    lengthGuide: '1,200~2,000 words',
+    forbiddenExpr: '"various", "it\'s important to note", "let\'s look at", "in conclusion", "needless to say"',
+    hashtagNote: 'English hashtags 7 or more (e.g.: #GlobalTrends #Korea #2026 ...)',
+    qualityCheck5: '5. **Natural English** — Remove awkward phrasing, ensure fluent native-level English',
+    descFallback: (kw) => `Explore the latest 2026 trends and insights on ${kw}.`,
+    coverAlt: (title) => `${title} thumbnail`,
+  };
+  return {
+    lang: 'ko',
+    label: '한국어',
+    cultureCenter: '한국',
+    koreanLink: '',
+    titleMaxLen: '28자 이내',
+    titleSeoRules: [
+      '- 핵심 키워드를 제목 앞쪽 배치',
+      '- 숫자(년도/순위/개수), 의문형("~인가", "~할까"), 이익 강조("완전 정리", "핵심만") 중 1개 이상',
+      '- 클릭 유도 감성 단어 포함 ("진짜", "숨은", "바뀌는", "충분한" 등)',
+      '- 28자 이내 (구글 검색결과 잘림 방지)',
+    ],
+    writingInstruction: '',
+    lengthGuide: '1,500~2,500자 (공백 제외)',
+    forbiddenExpr: '"다양한" "중요합니다" "살펴보겠습니다" "마지막으로" "~드립니다" 영어 직역체',
+    hashtagNote: '한국어 해시태그 7개 이상 (예: #키워드1 #키워드2 #키워드3 ...)',
+    qualityCheck5: '5. **한국어 자연스러움** — 번역체 표현 제거',
+    descFallback: (kw) => `${kw}에 대한 2026년 최신 정보와 트렌드를 알아보세요.`,
+    coverAlt: (title) => `${title} 썸네일`,
+  };
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 // 웹 파이프라인 (브라우저 모드 전용) — 6턴 멀티턴 대화
 // ────────────────────────────────────────────────────────────────────────────
 async function runWebPipeline(section, dateOverride) {
   const session = _geminiImpl._session; // GeminiSession 객체
+  const lc = getLangConfig(section);
   const existing = existingSlugsForSection(section).join(', ') || '없음';
   const subtopicLine = section.subtopics
     ? `오늘 서브토픽: ${section.subtopics[Math.floor(Date.now() / 86400000) % section.subtopics.length]}`
@@ -644,8 +713,9 @@ async function runWebPipeline(section, dateOverride) {
   session._turnCount = 0; // 새 대화
   const todayKst = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
   await session.send(
-    `[섹션: ${section.name}] 오늘 날짜: ${todayKst}
+    `[섹션: ${section.name}] [작성 언어: ${lc.label}] 오늘 날짜: ${todayKst}
 ${subtopicLine}
+${lc.lang !== 'ko' ? `⚠️ 이 섹션은 ${lc.label}로 전체 포스팅을 작성합니다. ${lc.cultureCenter} 중심 주제를 선정하되, ${lc.koreanLink}.` : ''}
 
 구글 검색으로 이 섹션에서 현재 가장 화제가 되는 트렌드 주제를 3개 조사해줘.
 각 주제별로: ① 왜 지금 핫한지 ② 독자 관심도 ③ 구글 애드센스 노출 가능성 평가
@@ -659,17 +729,14 @@ ${subtopicLine}
 
 [JSON 블록]
 \`\`\`json
-{"title":"SEO최적화제목(28자이내)","slug":"english-slug-here","keyword":"핵심키워드","description":"핵심키워드+독자혜택 160자이내"}
+{"title":"${lc.lang === 'ko' ? 'SEO최적화제목(28자이내)' : `Title in ${lc.label} (${lc.titleMaxLen})`}","slug":"english-slug-here","keyword":"${lc.lang === 'ko' ? '핵심키워드' : 'main keyword in ' + lc.label}","description":"description under 160 chars in ${lc.label}"}
 \`\`\`
 
 제목 SEO 필수 규칙:
-- 핵심 키워드를 제목 앞쪽 배치
-- 숫자(년도/순위/개수), 의문형("~인가", "~할까"), 이익 강조("완전 정리", "핵심만") 중 1개 이상
-- 클릭 유도 감성 단어 포함 ("진짜", "숨은", "바뀌는", "충분한" 등)
-- 28자 이내 (구글 검색결과 잘림 방지)
+${lc.titleSeoRules.join('\n')}
 
 [SEO 아웃라인]
-## H2 섹션 4개, 각 H2 아래 ### H3 2~3개
+${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}## H2 섹션 4개, 각 H2 아래 ### H3 2~3개
 각 섹션의 톤: 비교분석/장단점/경험담/튜토리얼 중 명시`
   );
 
@@ -747,26 +814,26 @@ ${subtopicLine}
   // ── TURN 3: 본문 집필 ──────────────────────────────────────────────────────
   log('✍️', '[Turn 3] 본문 집필 중...');
   await session.send(
-    `아웃라인대로 Hugo 마크다운 본문을 작성해줘. front matter 없이.
+    `${lc.writingInstruction ? lc.writingInstruction + '\n\n' : ''}아웃라인대로 Hugo 마크다운 본문을 작성해줘. front matter 없이.
 
 [Technical SEO 구조 — 100% 준수 필수]
 ① 도입부 2~3문장: 첫 문단 안에 핵심 키워드 자연스럽게 포함
 ② 도입부 바로 아래 (빈 줄 없이):
-   ![${topic.title} 대표이미지](${img1Url})
+   ![${topic.title}](${img1Url})
 ③ 헤딩 규칙 — 절대 준수:
    - ## (H2) 4개, 각 H2 아래 ### (H3) 2~3개
    - # (H1) 본문에 절대 금지 (제목이 H1)
    - "1. 제목", "2. 제목" 같은 숫자 번호 방식 금지 — 반드시 ## ### 마크다운 문법만
 ④ 두 번째 ## 섹션 바로 아래 (빈 줄 없이):
-   ![${topic.keyword} 관련이미지](${img2Url})
+   ![${topic.keyword}](${img2Url})
 ⑤ 본문 안 적절한 위치에: [관련 글 보기](/posts/${section.dir}/)
-⑥ 분량: 1,500~2,500자 (공백 제외)
+⑥ 분량: ${lc.lengthGuide}
 ⑦ **볼드**, > 인용구, - 불릿 적극 활용 (가독성·체류시간 향상)
 ⑧ 출처 없는 수치·통계 금지, 구체적 사례 반드시 포함
-⑨ 맨 마지막 줄: 해시태그 7개 이상 (예: #키워드1 #키워드2 #키워드3 ...)
+⑨ 맨 마지막 줄: ${lc.hashtagNote}
 
 [금지 표현]
-"다양한" "중요합니다" "살펴보겠습니다" "마지막으로" "~드립니다" 영어 직역체`
+${lc.forbiddenExpr}`
   );
 
   // ── TURN 4: 애드센스 품질 자체검토 ───────────────────────────────────────
@@ -774,13 +841,13 @@ ${subtopicLine}
   await session.send(
     `방금 쓴 글을 다시 읽고, 아래 항목을 모두 점검해서 수정해줘:
 
-1. **AI 냄새** — "다양한", "중요합니다", "살펴보겠습니다", "마지막으로" 등 금지 표현 제거
+1. **AI 냄새** — ${lc.forbiddenExpr} 등 금지 표현 제거
 2. **뻔한 문장** — 교과서적이거나 누구나 아는 정보는 더 생생하고 독창적으로
 3. **애드센스 위험 요소** — 광고성 표현, 근거 없는 주장, 얕은 정보 수정
 4. **이미지 마크다운** — ![...](${img1Url}) 와 ![...](${img2Url}) 두 개 모두 본문에 있는지 확인, 없으면 추가
-5. **한국어 자연스러움** — 번역체 표현 제거
+${lc.qualityCheck5}
 6. **헤딩 구조** — ## H2 4개와 ### H3가 올바른 마크다운 문법으로 사용됐는지 확인 (숫자 번호 방식이면 ## 문법으로 교체)
-7. **해시태그** — 글 맨 마지막 줄에 #태그 7개 이상 있는지 확인, 없으면 반드시 추가
+7. **해시태그** — 글 맨 마지막 줄에 ${lc.hashtagNote} 확인, 없으면 반드시 추가
 
 수정 후 어떤 부분을 바꿨는지 2~3줄로 요약해줘.`
   );

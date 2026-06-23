@@ -4,26 +4,29 @@
 
 - **블로그**: 트렌드줌 | GitHub Pages + Hugo (PaperMod) | `https://dmazone.github.io/blogauto`
 - **목적**: 구글 애드센스 수익화 + 제휴마케팅
-- **언어**: 한국어 (기술 용어 영어 병기)
+- **언어**: 한국어 기본 / 글로벌 섹션은 일본어·영어 원문
 
 ---
 
-## 섹션 구조 (10개)
+## 섹션 구조 (12개)
 
-| 섹션 ID | 이름 | 디렉토리 |
-|---|---|---|
-| latest-tech | 최신기술동향 | content/posts/latest-tech/ |
-| economy | 경제 | content/posts/economy/ |
-| society | 사회 | content/posts/society/ |
-| humanities | 인문 | content/posts/humanities/ |
-| entertainment | 연예이슈 | content/posts/entertainment/ |
-| health | 건강 | content/posts/health/ |
-| it-devices | IT기기 | content/posts/it-devices/ |
-| kr-realestate | 한국부동산 | content/posts/kr-realestate/ |
-| world-travel | 세계여행지 | content/posts/world-travel/ |
-| sports | 스포츠 | content/posts/sports/ |
+| 섹션 ID | 이름 | 디렉토리 | 언어 | 그룹 |
+|---|---|---|---|---|
+| latest-tech | 최신기술동향 | content/posts/latest-tech/ | 한국어 | 1(홀수) |
+| economy | 경제 | content/posts/economy/ | 한국어 | 1(홀수) |
+| society | 사회 | content/posts/society/ | 한국어 | 1(홀수) |
+| humanities | 인문 | content/posts/humanities/ | 한국어 | 1(홀수) |
+| entertainment | 연예이슈 | content/posts/entertainment/ | 한국어 | 1(홀수) |
+| japan-trends | 日本トレンド | content/posts/japan-trends/ | **일본어** | 1(홀수) |
+| health | 건강 | content/posts/health/ | 한국어 | 2(짝수) |
+| it-devices | IT기기 | content/posts/it-devices/ | 한국어 | 2(짝수) |
+| kr-realestate | 한국부동산 | content/posts/kr-realestate/ | 한국어 | 2(짝수) |
+| world-travel | 세계여행지 | content/posts/world-travel/ | 한국어 | 2(짝수) |
+| sports | 스포츠 | content/posts/sports/ | 한국어 | 2(짝수) |
+| us-trends | Global Trends | content/posts/us-trends/ | **영어** | 2(짝수) |
 
 > 건강 섹션: 운동 → 식단 → 질병 3일 주기 롤링
+> 글로벌 섹션(japan-trends, us-trends): 해당 문화권 중심 + 한국 연관성 포함. 제목·본문·해시태그 모두 해당 언어로만 작성.
 
 ---
 
@@ -43,8 +46,8 @@
 
 | 시각 (KST) | 스킬 | 내용 |
 |---|---|---|
-| 22:00 | `/post-daily` | 5개 섹션 포스팅 생성 + 예약발행 설정 |
-| 07:00~09:00 | GitHub Actions | 포스팅 순차 공개 (30분 간격) |
+| 22:00 | `/post-daily` | 6개 섹션 포스팅 생성 + 예약발행 설정 (한국어 5+글로벌 1) |
+| 07:00~09:30 | GitHub Actions | 포스팅 순차 공개 (30분 간격) |
 | 08:00 | `/verify-posts` | 발행 점검 + 오류 자동 수정 |
 | 10:00 | `/threads-post` | 스레드 게시 + 스하리·반하리 리포스트 |
 

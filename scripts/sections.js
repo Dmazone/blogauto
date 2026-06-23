@@ -107,6 +107,29 @@ export const SECTIONS = [
     toneHint: '팬 관점의 흥미로운 분석, 경기 결과보다 맥락·의미·배경 해석 중심',
     imageStyle: 'sports action concept, athlete in dynamic motion blur, stadium lights dramatic atmosphere, bold saturated colors, cinematic sports photography, highly detailed',
   },
+  // ── 글로벌 섹션 ───────────────────────────────────────────────────────────
+  {
+    id: 'japan-trends',
+    group: 1,
+    language: 'ja',
+    name: '日本トレンド',
+    dir: 'japan-trends',
+    menuUrl: '/posts/japan-trends/',
+    searchContext: '日本の最新トレンド、文化、エンタメ、食、観光、テクノロジー、日韓関係。韓国とのつながりを意識しながら日本発のホットな話題を紹介。',
+    toneHint: '日本の読者目線で読みやすく、韓国との文化的つながりも自然に織り交ぜる。信頼性の高い情報、具体的な事例を中心に',
+    imageStyle: 'Japanese lifestyle and culture concept, minimalist Japanese aesthetic, cherry blossom and neon Tokyo elements, soft pastel with vibrant accent tones, cinematic photography style, highly detailed',
+  },
+  {
+    id: 'us-trends',
+    group: 2,
+    language: 'en',
+    name: 'Global Trends',
+    dir: 'us-trends',
+    menuUrl: '/posts/us-trends/',
+    searchContext: 'Global trends in tech, entertainment, lifestyle, economy, and culture from the US and Western world. Korean connection and K-culture global impact included.',
+    toneHint: 'Engaging English writing for global readers. Authoritative yet accessible tone. Include Korean angle and perspective where naturally relevant.',
+    imageStyle: 'global lifestyle and trends concept, modern international urban setting, diverse contemporary aesthetic, bold vivid colors, editorial photography style, cinematic wide angle, highly detailed',
+  },
 ];
 
 /** 섹션 ID로 섹션 찾기 */

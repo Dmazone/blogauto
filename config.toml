@@ -104,6 +104,16 @@ canonifyURLs = true
     url = "/blogauto/posts/sports/"
     weight = 100
   [[menu.main]]
+    identifier = "japan-trends"
+    name = "🇯🇵 日本"
+    url = "/blogauto/posts/japan-trends/"
+    weight = 105
+  [[menu.main]]
+    identifier = "us-trends"
+    name = "🌐 Global"
+    url = "/blogauto/posts/us-trends/"
+    weight = 106
+  [[menu.main]]
     identifier = "search"
     name = "검색"
     url = "/blogauto/search/"

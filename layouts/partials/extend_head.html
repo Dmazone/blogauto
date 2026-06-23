@@ -46,6 +46,21 @@
 <script async src="https://ads-partners.coupang.com/g.js"></script>
 
 <style>
+/* ====== 번역 버튼 ====== */
+.gtrans-btns { display: flex; gap: 4px; margin-left: 8px; flex-shrink: 0; }
+.gtrans-btn {
+  padding: 4px 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.07);
+  color: var(--primary, #e0e0e0);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.gtrans-btn:hover { background: rgba(255,255,255,0.18); }
+
 /* ====== 전역 검색바 (헤더 내부 행) ====== */
 .global-search-bar {
   padding: 6px 16px;
