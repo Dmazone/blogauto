@@ -2,10 +2,8 @@
  * fix_missing_images.mjs — 누락 이미지 자동 감지 & 복구
  *
  * content/posts 전체를 스캔하여 index.md는 있으나 이미지가 누락/손상된
- * 포스팅을 자동 감지 후 Stable Horde로 재생성.
- *
- * Stable Horde 익명 키 제한: 640px 이하, 초당 2개 rate limit
- * 순차 제출(600ms 간격) + 병렬 폴링
+ * 포스팅을 자동 감지 후 Pollinations.ai로 재생성.
+ * (무료, API 키 불필요, 1280×720 직접 생성)
  */
 import https from 'https';
 import fs from 'fs';
@@ -75,102 +73,58 @@ function scanMissingImages() {
   return missing;
 }
 
-// ── Stable Horde API 호출 ─────────────────────────────────────────────────
-function apiCall(method, p, body) {
-  return new Promise((res, rej) => {
-    const pl = body ? JSON.stringify(body) : null;
-    const req = https.request({
-      hostname: 'stablehorde.net', path: p, method,
-      headers: {
-        'Content-Type': 'application/json', apikey: '0000000000',
-        ...(pl ? { 'Content-Length': Buffer.byteLength(pl) } : {})
-      },
-      timeout: 30000,
-    }, r => {
-      let d = '';
-      r.on('data', c => d += c);
-      r.on('end', () => {
-        try { res({ s: r.statusCode, b: JSON.parse(d) }); }
-        catch { res({ s: r.statusCode, b: d }); }
-      });
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ── Pollinations.ai 이미지 다운로드 ───────────────────────────────────────
+function downloadImage(url) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, { timeout: 120000 }, res => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP ${res.statusCode}`));
+        return;
+      }
+      const chunks = [];
+      res.on('data', c => chunks.push(c));
+      res.on('end', () => resolve(Buffer.concat(chunks)));
+      res.on('error', reject);
     });
-    req.on('error', rej);
-    req.on('timeout', () => { req.destroy(); rej(new Error('timeout')); });
-    if (pl) req.write(pl);
-    req.end();
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-const NEG_PROMPT = 'text, watermark, logo, blurry, low quality, distorted, deformed, ugly, worst quality, jpeg artifacts, noise, grainy, oversaturated, duplicate';
-
-// ── 단일 이미지 제출 ───────────────────────────────────────────────────────
-async function submitOne(img) {
+// ── 단일 이미지 생성 + 저장 ────────────────────────────────────────────────
+async function generateOne(img) {
   const dest = path.join(ROOT, img.dir, img.file);
   if (fs.existsSync(dest) && fs.statSync(dest).size > MIN_SIZE) {
-    return { img, jobId: null, skip: true };
+    console.log(`  ⏭️  ${img.file} 존재 (스킵)`);
+    return true;
   }
 
-  const qualityPrompt = `best quality, masterpiece, highly detailed, sharp focus, ${img.prompt}`;
+  const qualityPrompt = `best quality, highly detailed, sharp focus, ${img.prompt}, photorealistic, 16:9 landscape`;
+  const encodedPrompt = encodeURIComponent(qualityPrompt);
+  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}`;
 
-  let retries = 3;
-  while (retries-- > 0) {
-    const sub = await apiCall('POST', '/api/v2/generate/async', {
-      prompt: qualityPrompt,
-      params: {
-        width: 640,
-        height: 384,
-        steps: 30,
-        n: 1,
-        sampler_name: 'k_dpmpp_2m',
-        cfg_scale: 7,
-        karras: true,
-        negative_prompt: NEG_PROMPT,
-      },
-      models: ['Deliberate', 'DreamShaper', 'stable_diffusion'],
-      r2: false,
-      shared: true,
-    });
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      console.log(`  🖼️  ${img.file} 생성 중... (시도 ${attempt}/2)`);
+      const buf = await downloadImage(url);
+      fs.mkdirSync(path.join(ROOT, img.dir), { recursive: true });
+      await sharp(buf)
+        .resize(1280, 720, { fit: 'cover', position: 'centre' })
+        .webp({ quality: 90, effort: 5 })
+        .toFile(dest);
 
-    if (sub.s === 202) {
-      console.log(`  📤 ${img.file} (job ${String(sub.b.id).slice(0, 8)}...)`);
-      return { img, jobId: sub.b.id, skip: false };
+      const size = fs.statSync(dest).size;
+      if (size < MIN_SIZE) throw new Error(`파일 크기 너무 작음 (${size}B)`);
+      console.log(`  ✅ ${img.file} (${Math.round(size / 1024)}KB)`);
+      return true;
+    } catch (err) {
+      console.log(`  ❌ ${img.file} 시도 ${attempt} 실패: ${err.message}`);
+      if (attempt < 2) await sleep(3000);
     }
-    if (sub.s === 429) { await sleep(1000); continue; }
-    console.log(`  ❌ ${img.file} 제출 실패 ${sub.s}`);
-    return { img, jobId: null, skip: false };
   }
-  return { img, jobId: null, skip: false };
-}
-
-// ── 폴링 + 저장 ────────────────────────────────────────────────────────────
-async function pollAndSave({ img, jobId, skip }) {
-  if (skip) { console.log(`  ⏭️  ${img.file} 존재 (스킵)`); return true; }
-  if (!jobId) return false;
-
-  const dest = path.join(ROOT, img.dir, img.file);
-  const deadline = Date.now() + 1_800_000; // 30분
-
-  while (Date.now() < deadline) {
-    await sleep(15000);
-    const c = await apiCall('GET', `/api/v2/generate/check/${jobId}`);
-    if (c.b?.faulted) { console.log(`  ❌ ${img.file} faulted`); return false; }
-    if (c.b?.done) break;
-  }
-
-  const result = await apiCall('GET', `/api/v2/generate/status/${jobId}`);
-  const b64 = result.b?.generations?.[0]?.img;
-  if (!b64) { console.log(`  ❌ ${img.file} no data`); return false; }
-
-  fs.mkdirSync(path.join(ROOT, img.dir), { recursive: true });
-  await sharp(Buffer.from(b64, 'base64'))
-    .resize(1280, 720, { fit: 'cover', kernel: 'lanczos3' })
-    .webp({ quality: 90, effort: 5 })
-    .toFile(dest);
-
-  console.log(`  ✅ ${img.file} (${Math.round(fs.statSync(dest).size / 1024)}KB)`);
-  return true;
+  return false;
 }
 
 // ── 실행 ───────────────────────────────────────────────────────────────────
@@ -181,21 +135,16 @@ if (flatImages.length === 0) {
   process.exit(0);
 }
 
-console.log(`\n🚀 누락 이미지 ${flatImages.length}장 감지 → 복구 시작\n`);
+console.log(`\n🚀 누락 이미지 ${flatImages.length}장 감지 → Pollinations.ai로 복구 시작\n`);
 flatImages.forEach(img => console.log(`  · ${img.dir}/${img.file}`));
 console.log('');
 
-console.log('STEP 1: 순차 제출 중 (600ms 간격)...');
-const jobs = [];
+// 순차 처리 (rate limit 대응 — 요청 간 1초 간격)
+let done = 0, failed = 0;
 for (const img of flatImages) {
-  jobs.push(await submitOne(img));
-  await sleep(600);
+  const ok = await generateOne(img);
+  ok ? done++ : failed++;
+  await sleep(1000);
 }
 
-const pending = jobs.filter(j => j.jobId);
-console.log(`\nSTEP 2: ${pending.length}개 작업 병렬 폴링...\n`);
-const results = await Promise.all(jobs.map(pollAndSave));
-
-let done = 0, failed = 0;
-results.forEach(ok => ok ? done++ : failed++);
 console.log(`\n✅ 전체 완료 — 성공 ${done}개 / 실패 ${failed}개`);

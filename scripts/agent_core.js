@@ -500,7 +500,7 @@ async function generateContextualImagePrompts(section, topic, body) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// STEP 8b: Flow(ImageFX) → NanoBanana → Pollinations 순서 이미지 생성
+// STEP 8b: Flow(ImageFX) → NanoBanana → Pollinations.ai 순서 이미지 생성
 // ────────────────────────────────────────────────────────────────────────────
 const FLOW_SESSION_FILE = path.join(__dirname, '..', '.flow-session', 'session.json');
 
@@ -548,80 +548,30 @@ async function generateImage(prompt, slug, index, bundleDir) {
     }
   }
 
-  // 3) Stable Horde (완전 무료, API 키 불필요 — 크라우드소싱 SD)
-  // ⚠️ 익명 키 제한: width/height 각 640 이하, 초당 2개, 폴링 최대 30분
+  // 3) Pollinations.ai (무료, API 키 불필요, 1280×720 직접 생성)
   const sharpLib = (await import('sharp')).default;
-  const negativePrompt = 'text, watermark, logo, blurry, low quality, distorted, deformed, ugly, worst quality, jpeg artifacts, noise, grainy, oversaturated, duplicate';
-  const qualityPrompt = `best quality, masterpiece, highly detailed, sharp focus, ${prompt}`;
+  const qualityPrompt = `best quality, highly detailed, sharp focus, ${prompt}, photorealistic, 16:9 landscape`;
 
   for (let attempt = 1; attempt <= 2; attempt++) {
-    log('🖼️', `  Stable Horde 이미지 생성 중: ${filename} (시도 ${attempt}/2)`);
+    log('🖼️', `  Pollinations.ai 이미지 생성 중: ${filename} (시도 ${attempt}/2)`);
     try {
-      // 제출 (429 rate limit 시 1회 재시도)
-      let submitRes;
-      for (let i = 0; i < 3; i++) {
-        submitRes = await axios.post(
-          'https://stablehorde.net/api/v2/generate/async',
-          {
-            prompt: qualityPrompt,
-            params: {
-              width: 640,
-              height: 384,
-              steps: 30,
-              n: 1,
-              sampler_name: 'k_dpmpp_2m',
-              cfg_scale: 7,
-              karras: true,
-              negative_prompt: negativePrompt,
-            },
-            models: ['Deliberate', 'DreamShaper', 'stable_diffusion'],
-            r2: false,
-            shared: true,
-          },
-          { headers: { 'Content-Type': 'application/json', apikey: '0000000000' }, timeout: 30000 }
-        );
-        if (submitRes.status === 202) break;
-        if (submitRes.status === 429) { await new Promise(r => setTimeout(r, 1500)); continue; }
-        throw new Error(`제출 실패 ${submitRes.status}: ${JSON.stringify(submitRes.data).slice(0,100)}`);
-      }
-      if (submitRes.status !== 202) throw new Error(`제출 실패 (재시도 소진) ${submitRes.status}`);
+      const encodedPrompt = encodeURIComponent(qualityPrompt);
+      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}`;
+      const imgRes = await axios.get(url, { responseType: 'arraybuffer', timeout: 120000 });
+      if (imgRes.status !== 200) throw new Error(`HTTP ${imgRes.status}`);
 
-      const jobId = submitRes.data.id;
-      log('🖼️', `  Job ID: ${jobId} (큐 대기 최대 30분)`);
-
-      // 완료까지 폴링 (최대 30분 — 익명 키 대기시간 15~20분 대응)
-      const deadline = Date.now() + 1_800_000;
-      while (Date.now() < deadline) {
-        await new Promise(r => setTimeout(r, 15000));
-        const check = await axios.get(
-          `https://stablehorde.net/api/v2/generate/check/${jobId}`,
-          { headers: { apikey: '0000000000' }, timeout: 15000 }
-        );
-        if (check.data.faulted) throw new Error('Stable Horde faulted');
-        if (check.data.done) break;
-      }
-
-      // 결과 수령
-      const result = await axios.get(
-        `https://stablehorde.net/api/v2/generate/status/${jobId}`,
-        { headers: { apikey: '0000000000' }, timeout: 30000 }
-      );
-      const b64 = result.data.generations?.[0]?.img;
-      if (!b64) throw new Error('이미지 데이터 없음 (큐 타임아웃 가능성)');
-
-      // 640×384 PNG/JPEG → 1280×720 WEBP 업스케일
-      await sharpLib(Buffer.from(b64, 'base64'))
-        .resize(1280, 720, { fit: 'cover', position: 'centre', kernel: 'lanczos3' })
+      await sharpLib(Buffer.from(imgRes.data))
+        .resize(1280, 720, { fit: 'cover', position: 'centre' })
         .webp({ quality: 90, effort: 5 })
         .toFile(destPath);
 
       const stat = fs.statSync(destPath);
       if (stat.size < 15000) throw new Error(`파일 크기 너무 작음 (${stat.size}B)`);
 
-      log('✅', `  Stable Horde 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
-      return { localPath: `/images/${filename}`, sourceUrl: 'stablehorde' };
+      log('✅', `  Pollinations.ai 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
+      return { localPath: `/images/${filename}`, sourceUrl: 'pollinations' };
     } catch (err) {
-      log('⚠️', `  Stable Horde 시도 ${attempt} 실패: ${err.message}`);
+      log('⚠️', `  Pollinations.ai 시도 ${attempt} 실패: ${err.message}`);
       if (attempt < 2) await new Promise(r => setTimeout(r, 5000));
     }
   }
