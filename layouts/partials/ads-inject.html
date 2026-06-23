@@ -67,7 +67,7 @@
     var h2s = content.querySelectorAll('h2');
     if (h2s.length === 0) return;
 
-    // 광고 순서: 텐핑큰 / 쿠팡1 / 애드핏1 / 텐핑작은 / 쿠팡2 / 애드핏2
+    // 광고 순서: 텐핑/쿠팡/애드핏 × 3세트 (H2 개수만큼 배치, 최대 9개)
     var builders = [
       function() { return makeTenping('1LawCE8FqKOhetXZhMopsQ%3d%3d'); },
       function() { return makeCoupang(); },
@@ -75,6 +75,9 @@
       function() { return makeTenping('UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d'); },
       function() { return makeCoupang(); },
       function() { return makeAdfit('DAN-jzmk9rPd9goT1dXv', 320, 100); },
+      function() { return makeTenping('1LawCE8FqKOhetXZhMopsQ%3d%3d'); },
+      function() { return makeCoupang(); },
+      function() { return makeAdfit('DAN-6d7fObmADg0ebdyw', 320, 100); },
     ];
 
     var coupangSlots = [];

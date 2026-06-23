@@ -91,6 +91,9 @@
   {{- end }}
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>
+{{- if eq (mod (add $index 1) 3) 0 }}
+{{- partial "list-ads.html" . }}
+{{- end }}
 {{- end }}
 
 {{- if gt $paginator.TotalPages 1 }}

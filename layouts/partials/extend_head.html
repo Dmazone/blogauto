@@ -39,3 +39,105 @@
 }
 </script>
 {{- end -}}
+
+<!-- 광고 스크립트 전역 로드 (사이드바·목록 페이지 포함) -->
+<script async src="//ads.tenping.kr/scripts/adsbytenping.min.js"></script>
+<script async src="//t1.daumcdn.net/kas/static/ba.min.js"></script>
+<script async src="https://ads-partners.coupang.com/g.js"></script>
+
+<style>
+/* ====== 전역 검색바 ====== */
+.global-search-bar {
+  background: var(--header-bg, rgba(20,20,21,0.97));
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 8px 16px;
+}
+.gsb-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+.gsb-inner form {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  align-items: center;
+}
+.gsb-input {
+  flex: 1;
+  padding: 8px 16px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.07);
+  color: var(--primary, #e0e0e0);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.gsb-input:focus { border-color: rgba(255,255,255,0.4); }
+.gsb-input::placeholder { color: rgba(255,255,255,0.3); }
+.gsb-btn {
+  padding: 8px 16px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.07);
+  color: var(--primary, #e0e0e0);
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.gsb-btn:hover { background: rgba(255,255,255,0.15); }
+
+/* ====== 사이드바 광고 ====== */
+.sidebar-ad { display: none; }
+@media (min-width: 1200px) {
+  .sidebar-ad {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 130px;
+    width: 160px;
+    z-index: 50;
+    gap: 20px;
+  }
+  .sidebar-ad-left  { left:  calc(50% - 560px); }
+  .sidebar-ad-right { right: calc(50% - 560px); }
+}
+
+/* ====== 목록 페이지 광고 ====== */
+.list-ad-strip {
+  margin: 8px 0 16px;
+  padding: 12px;
+  background: rgba(128,128,128,0.04);
+  border: 1px solid rgba(128,128,128,0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+.ad-label {
+  display: block;
+  font-size: 10px;
+  color: rgba(128,128,128,0.4);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.lad-unit { margin: 8px auto; max-width: 680px; }
+</style>
+
+<script>
+/* 검색 페이지: URL ?q= 자동 채우기 */
+(function() {
+  if (window.location.pathname.indexOf('/search') === -1) return;
+  window.addEventListener('DOMContentLoaded', function() {
+    var q = new URLSearchParams(window.location.search).get('q');
+    if (!q) return;
+    var inp = document.getElementById('searchInput');
+    if (inp) {
+      inp.value = q;
+      inp.dispatchEvent(new KeyboardEvent('keyup', {bubbles: true}));
+    }
+  });
+})();
+</script>

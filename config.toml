@@ -39,6 +39,19 @@ canonifyURLs = true
     name = "github"
     url = "https://github.com/"
 
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    limit = 20
+    keys = ["title", "permalink", "summary", "content"]
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
 [menu]
   [[menu.main]]
     identifier = "latest-tech"
@@ -90,6 +103,11 @@ canonifyURLs = true
     name = "스포츠"
     url = "/blogauto/posts/sports/"
     weight = 100
+  [[menu.main]]
+    identifier = "search"
+    name = "검색"
+    url = "/blogauto/search/"
+    weight = 110
 
 [taxonomies]
   category = "categories"

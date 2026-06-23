@@ -1,22 +1,19 @@
-{{ if .Site.Params.walineServerUrl }}
-<div id="waline-comment"></div>
-<link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css" />
-<script type="module">
-  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-  init({
-    el: '#waline-comment',
-    serverURL: '{{ .Site.Params.walineServerUrl }}',
-    lang: 'ko',
-    login: 'enable',
-    dark: 'auto',
-    pageSize: 20,
-    comment: true,
-    reaction: ['👍', '❤️', '😂', '🎉'],
-    requiredMeta: [],
-    wordLimit: [0, 1000],
-    imageUploader: false,
-    highlighter: false,
-    texRenderer: false,
-  });
-</script>
-{{ end }}
+<div class="comments-section" style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(128,128,128,0.2);">
+  <h3 style="margin-bottom:16px;font-size:1.1rem;">댓글</h3>
+  <script src="https://giscus.app/client.js"
+    data-repo="Dmazone/blogauto"
+    data-repo-id="R_kgDOSMKI2A"
+    data-category="General"
+    data-category-id="DIC_kwDOSMKI2M4C93Ub"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="preferred_color_scheme"
+    data-lang="ko"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>

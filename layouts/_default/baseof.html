@@ -1,0 +1,63 @@
+{{- if lt hugo.Version "0.146.0" }}
+{{- errorf "=> hugo v0.146.0 or greater is required for hugo-PaperMod to build " }}
+{{- end -}}
+
+<!DOCTYPE html>
+{{- $theme := site.Params.defaultTheme | default "auto" }}
+{{- if eq $theme "dark" }}
+<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="dark">
+{{- else if eq $theme "light" }}
+<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="light">
+{{- else }}
+<html lang="{{ site.Language }}" dir="{{ .Language.LanguageDirection | default "auto" }}" data-theme="auto">
+{{- end }}
+
+<head>
+    {{- partial "head.html" . }}
+</head>
+
+{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) }}
+<body class="list" id="top">
+{{- else }}
+<body id="top">
+{{- end }}
+    {{ partialCached "header.html" . .Page -}}
+    <div class="sidebar-ad sidebar-ad-left">
+      {{- partial "sidebar-ads.html" . }}
+    </div>
+    <div class="sidebar-ad sidebar-ad-right">
+      {{- partial "sidebar-ads.html" . }}
+    </div>
+    <main class="main">
+        {{- block "main" . }}{{ end }}
+    </main>
+    {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
+    <script>
+    (function() {
+      // 목록 페이지 쿠팡 광고 주입
+      function injectListCoupang() {
+        if (!window.PartnersCoupang) { setTimeout(injectListCoupang, 300); return; }
+        document.querySelectorAll('.lad-coupang').forEach(function(slot) {
+          if (slot.childElementCount > 0) return;
+          var before = document.body.lastElementChild;
+          new window.PartnersCoupang.G({"id":999595,"template":"carousel","trackingCode":"AF8691300","width":"680","height":"140","tsource":""});
+          var after = document.body.lastElementChild;
+          if (after !== before) slot.appendChild(after);
+        });
+      }
+      // 사이드바 및 목록 페이지 광고 초기화
+      function initPageAds() {
+        injectListCoupang();
+        if (typeof window.tp_adsbytenpingInit === 'function') window.tp_adsbytenpingInit();
+        if (window.kakaoAdFit && typeof window.kakaoAdFit.display === 'function') window.kakaoAdFit.display();
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPageAds);
+      } else {
+        initPageAds();
+      }
+    })();
+    </script>
+</body>
+
+</html>
