@@ -46,29 +46,16 @@
 <script async src="https://ads-partners.coupang.com/g.js"></script>
 
 <style>
-/* ====== 전역 검색바 (최상단 고정) ====== */
+/* ====== 전역 검색바 (헤더 내부 행) ====== */
 .global-search-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1100;
-  background: var(--code-bg, #1c1d22);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding: 8px 16px;
-  height: 50px;
-  box-sizing: border-box;
+  padding: 6px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-/* PaperMod 헤더를 검색바 아래 50px 위치에 고정 */
-.header { top: 50px !important; }
-/* 고정 검색바만큼 body 상단 여백 확보 */
-body { padding-top: 50px; }
 .gsb-inner {
   max-width: 760px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  height: 100%;
 }
 .gsb-inner form {
   display: flex;
@@ -78,26 +65,25 @@ body { padding-top: 50px; }
 }
 .gsb-input {
   flex: 1;
-  padding: 6px 16px;
+  padding: 6px 14px;
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
+  border-radius: 16px;
   background: rgba(255,255,255,0.07);
   color: var(--primary, #e0e0e0);
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
   transition: border-color 0.2s;
 }
 .gsb-input:focus { border-color: rgba(255,255,255,0.4); }
 .gsb-input::placeholder { color: rgba(255,255,255,0.3); }
 .gsb-btn {
-  padding: 6px 16px;
+  padding: 6px 12px;
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
+  border-radius: 16px;
   background: rgba(255,255,255,0.07);
   color: var(--primary, #e0e0e0);
   cursor: pointer;
   font-size: 13px;
-  white-space: nowrap;
   transition: background 0.2s;
 }
 .gsb-btn:hover { background: rgba(255,255,255,0.15); }
@@ -109,9 +95,9 @@ body { padding-top: 50px; }
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 130px;
+    top: 160px;
     width: 160px;
-    z-index: 50;
+    z-index: 40;
     gap: 20px;
   }
   .sidebar-ad-left  { left:  calc(50% - 560px); }

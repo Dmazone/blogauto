@@ -1,15 +1,14 @@
-<!-- 전역 검색바 -->
-<div class="global-search-bar">
-  <div class="gsb-inner">
-    <form action="{{ "search" | absURL }}" method="get" role="search">
-      <input class="gsb-input" type="search" name="q"
-        placeholder="제목, 본문 검색..." autocomplete="off" aria-label="전체 검색">
-      <button class="gsb-btn" type="submit">🔍 검색</button>
-    </form>
-  </div>
-</div>
-
 <header class="header">
+    <!-- 전역 검색바 (헤더 내부 첫 행) -->
+    <div class="global-search-bar">
+      <div class="gsb-inner">
+        <form action="{{ "search" | absURL }}" method="get" role="search">
+          <input class="gsb-input" type="search" name="q"
+            placeholder="제목, 본문 검색..." autocomplete="off" aria-label="전체 검색">
+          <button class="gsb-btn" type="submit">🔍</button>
+        </form>
+      </div>
+    </div>
     <nav class="header-nav">
         <div class="logo">
             {{- $label_text := (site.Params.label.text | default site.Title) }}
