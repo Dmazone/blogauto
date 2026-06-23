@@ -47,15 +47,15 @@ function scanMissingImages() {
       const checks = [
         {
           file: `${slug}-01.webp`,
-          prompt: `${title}, introductory concept scene, ${imgStyle}, no text overlay`,
+          prompt: `${imgStyle}, ${title} introductory concept scene, no text overlay, landscape 16:9`,
         },
         {
           file: `${slug}-02.webp`,
-          prompt: `${title}, comparison analysis data visualization, ${imgStyle}, no text overlay`,
+          prompt: `${imgStyle}, ${title} comparison analysis visualization, different composition from image 1, no text overlay, landscape 16:9`,
         },
         {
           file: `${slug}-thumb.webp`,
-          prompt: `${title} editorial magazine cover, bold colors, ${imgStyle}, no text overlay`,
+          prompt: `${imgStyle}, ${title} editorial cover concept, bold symbolic design, no text overlay, landscape 16:9`,
         },
       ];
 
@@ -101,9 +101,9 @@ async function generateOne(img) {
     return true;
   }
 
-  const qualityPrompt = `best quality, highly detailed, sharp focus, ${img.prompt}, photorealistic, 16:9 landscape`;
+  const qualityPrompt = `${img.prompt}, highly detailed, sharp focus, 16:9 landscape --no text, watermark, logo, blurry, cropped`;
   const encodedPrompt = encodeURIComponent(qualityPrompt);
-  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}`;
+  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&seed=${Date.now()}`;
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {

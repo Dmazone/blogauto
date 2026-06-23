@@ -440,6 +440,9 @@ async function generateContextualImagePrompts(section, topic, body) {
   const style = section.imageStyle ??
     'minimalist blog illustration, clean white background, flat design, ultra HD quality, no text overlay';
 
+  // 섹션 스타일의 핵심 첫 구절 (Flux는 프롬프트 앞 단어에 가장 높은 가중치 부여)
+  const styleAnchor = style.split(',')[0].trim();
+
   const matches = [...body.matchAll(/!\[([^\]]*)\]\(([^)]*)\)/g)].slice(0, 2);
   const clean = (s) => s.replace(/[#*`>_~]/g, '').replace(/\s+/g, ' ').trim();
   const contexts = matches.map((m, i) => {
@@ -449,52 +452,49 @@ async function generateContextualImagePrompts(section, topic, body) {
     return { idx: i + 1, alt: m[1], before, after };
   });
 
-  const thumbStyle = 'editorial magazine cover, bold colors, no text overlay, landscape 16:9 wide format';
-
+  // 이미지 없이도 섹션 스타일 앵커를 유지하는 폴백
   if (!contexts.length) {
     return [
-      `${topic.keyword} concept illustration, ${style}`,
-      `${topic.keyword} visual representation, ${style}`,
-      `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`,
+      `${style}, ${topic.keyword} introductory concept scene, no text overlay, landscape 16:9`,
+      `${style}, ${topic.keyword} comparison analysis visualization, different composition, no text overlay, landscape 16:9`,
+      `${style}, ${topic.keyword} editorial cover concept, bold symbolic design, no text overlay, landscape 16:9`,
     ];
   }
 
   log('🎨', '  Gemini 맥락 기반 이미지 프롬프트 생성 중...');
 
   const raw = await geminiCall(
-    `아래 블로그 글의 이미지 삽입 위치 앞뒤 내용을 분석해서, 각 위치에 딱 맞는 구체적인 이미지 생성 프롬프트를 영어로 만들어줘.\n` +
-    `추가로 블로그 글 전체를 대표하는 썸네일 프롬프트도 만들어줘.\n\n` +
-    `블로그 주제: "${topic.title}" (키워드: ${topic.keyword})\n` +
-    `본문 이미지 스타일: ${style}\n` +
-    `썸네일 스타일: ${thumbStyle}\n\n` +
+    `아래 블로그 글의 이미지 위치에 맞는 영어 이미지 생성 프롬프트 3개를 만들어줘.\n\n` +
+    `[섹션] ${section.name} (${section.id})\n` +
+    `[글 주제] "${topic.title}" (키워드: ${topic.keyword})\n` +
+    `[섹션 스타일 — 모든 프롬프트 반드시 이 구절로 시작]: ${style}\n\n` +
     contexts.map((c) =>
       `[본문 이미지 ${c.idx}]\nalt: ${c.alt}\n앞 내용: ${c.before}\n뒤 내용: ${c.after}`
     ).join('\n\n---\n\n') +
-    `\n\n[조건]\n` +
-    `- 앞뒤 내용에서 핵심 개념·장면을 파악해 구체적으로 묘사\n` +
-    `- "a developer doing X", "diagram showing Y" 처럼 구체적으로\n` +
-    `- 각 프롬프트는 영어 1~2문장\n` +
-    `- 모든 이미지: landscape wide 16:9 format 필수 (세로·정사각형 절대 금지)\n` +
-    `- 본문이미지1: 개념 설명형 (introductory concept scene)\n` +
-    `- 본문이미지2: 비교·분석형 (comparison or data visualization scene), 이미지1과 시각적으로 확실히 다르게\n` +
-    `- 썸네일: 주제를 상징하는 커버, 사람 얼굴 중심 지양, 사물·개념·아이콘 중심\n\n` +
-    `JSON만: {"prompts":["본문이미지1","본문이미지2","썸네일"]}`,
-    { temperature: 0.6 }
+    `\n\n[규칙]\n` +
+    `1. 모든 프롬프트를 반드시 섹션 스타일 앵커로 시작: "${styleAnchor}, [구체 묘사]"\n` +
+    `2. 앞뒤 내용에서 핵심 장면·개념을 구체적으로 묘사 ("a person doing X", "diagram of Y")\n` +
+    `3. 영어 1~2문장, landscape 16:9, 텍스트·워터마크 없음\n` +
+    `4. 본문이미지1: 도입 개념형 / 본문이미지2: 비교·분석형 (이미지1과 시각 구도 다르게)\n` +
+    `5. 썸네일: 섹션 특성 명확한 커버, 얼굴 중심 지양, 사물·아이콘·개념 중심\n` +
+    `6. 섹션이 다른 글(경제 글에 건강 이미지 등)과 절대 혼동되지 않아야 함\n\n` +
+    `JSON만 출력: {"prompts":["본문이미지1","본문이미지2","썸네일"]}`,
+    { temperature: 0.5 }
   );
 
   try {
     const jsonStr = raw.match(/\{[\s\S]*\}/)?.[0] ?? '{}';
     const result  = JSON.parse(jsonStr);
     const prompts = result.prompts ?? [];
-    while (prompts.length < 2) prompts.push(`${topic.keyword} concept, ${style}`);
-    if (prompts.length < 3) prompts.push(`${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`);
+    while (prompts.length < 2) prompts.push(`${style}, ${topic.keyword} concept scene, landscape 16:9`);
+    if (prompts.length < 3) prompts.push(`${style}, ${topic.keyword} editorial cover, bold symbolic design, landscape 16:9`);
     log('✅', `  프롬프트 생성 완료 (본문 2장 + 썸네일 1장)`);
     return prompts;
   } catch {
     return [
-      `${topic.keyword} concept illustration, ${style}`,
-      `${topic.keyword} visual representation, ${style}`,
-      `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`,
+      `${style}, ${topic.keyword} introductory concept scene, no text overlay, landscape 16:9`,
+      `${style}, ${topic.keyword} comparison analysis visualization, different composition, no text overlay, landscape 16:9`,
+      `${style}, ${topic.keyword} editorial cover concept, bold symbolic design, no text overlay, landscape 16:9`,
     ];
   }
 }
@@ -549,14 +549,15 @@ async function generateImage(prompt, slug, index, bundleDir) {
   }
 
   // 3) Pollinations.ai (무료, API 키 불필요, 1280×720 직접 생성)
+  // enhance=false: AI 프롬프트 재작성 비활성화 — 섹션 스타일 그대로 유지
   const sharpLib = (await import('sharp')).default;
-  const qualityPrompt = `best quality, highly detailed, sharp focus, ${prompt}, photorealistic, 16:9 landscape`;
+  const qualityPrompt = `${prompt}, highly detailed, sharp focus, 16:9 landscape --no text, watermark, logo, blurry, cropped`;
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     log('🖼️', `  Pollinations.ai 이미지 생성 중: ${filename} (시도 ${attempt}/2)`);
     try {
       const encodedPrompt = encodeURIComponent(qualityPrompt);
-      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}`;
+      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&seed=${Date.now()}`;
       const imgRes = await axios.get(url, { responseType: 'arraybuffer', timeout: 120000 });
       if (imgRes.status !== 200) throw new Error(`HTTP ${imgRes.status}`);
 
