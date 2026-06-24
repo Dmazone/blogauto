@@ -34,18 +34,41 @@
     {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
     <script>
     (function() {
-      // 목록 페이지 쿠팡 광고 주입
+      // 목록 페이지 쿠팡 광고 — MutationObserver로 iframe을 슬롯에 정확히 이동
       function injectListCoupang() {
         if (!window.PartnersCoupang) { setTimeout(injectListCoupang, 300); return; }
-        document.querySelectorAll('.lad-coupang').forEach(function(slot) {
-          if (slot.childElementCount > 0) return;
-          var before = document.body.lastElementChild;
+        var slots = Array.prototype.slice.call(
+          document.querySelectorAll('.lad-coupang')
+        ).filter(function(s) { return s.childElementCount === 0; });
+        if (!slots.length) return;
+
+        var idx = 0;
+        function processNext() {
+          if (idx >= slots.length) return;
+          var slot = slots[idx++];
+          // MutationObserver로 body에 추가되는 새 엘리먼트 포착 → 슬롯으로 이동
+          var obs = new MutationObserver(function(mutations) {
+            for (var i = 0; i < mutations.length; i++) {
+              var added = mutations[i].addedNodes;
+              for (var j = 0; j < added.length; j++) {
+                var node = added[j];
+                if (node.nodeType === 1) {
+                  obs.disconnect();
+                  slot.appendChild(node);
+                  setTimeout(processNext, 100);
+                  return;
+                }
+              }
+            }
+          });
+          obs.observe(document.body, { childList: true });
           new window.PartnersCoupang.G({"id":999595,"template":"carousel","trackingCode":"AF8691300","width":"680","height":"140","tsource":""});
-          var after = document.body.lastElementChild;
-          if (after !== before) slot.appendChild(after);
-        });
+          // 2초 내 응답 없으면 다음 슬롯으로
+          setTimeout(function() { obs.disconnect(); processNext(); }, 2000);
+        }
+        processNext();
       }
-      // 사이드바 및 목록 페이지 광고 초기화
+
       function initPageAds() {
         injectListCoupang();
         if (typeof window.tp_adsbytenpingInit === 'function') window.tp_adsbytenpingInit();
