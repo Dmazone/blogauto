@@ -473,10 +473,10 @@ async function generateContextualImagePrompts(section, topic, body) {
     ).join('\n\n---\n\n') +
     `\n\n[규칙]\n` +
     `1. 모든 프롬프트를 반드시 섹션 스타일 앵커로 시작: "${styleAnchor}, [구체 묘사]"\n` +
-    `2. 앞뒤 내용에서 핵심 장면·개념을 구체적으로 묘사 ("a person doing X", "diagram of Y")\n` +
+    `2. 앞뒤 내용에서 핵심 장면·개념을 구체적으로 묘사 ("a smartphone showing X", "diagram of Y")\n` +
     `3. 영어 1~2문장, landscape 16:9, 텍스트·워터마크 없음\n` +
     `4. 본문이미지1: 도입 개념형 / 본문이미지2: 비교·분석형 (이미지1과 시각 구도 다르게)\n` +
-    `5. 썸네일: 섹션 특성 명확한 커버, 얼굴 중심 지양, 사물·아이콘·개념 중심\n` +
+    `5. 썸네일: ⛔ NO face, NO person, NO woman, NO man, NO portrait, NO human body (절대 금지). 반드시 사물·아이콘·개념·장면·추상 디자인만. 프롬프트에 "no face, no person, no human" 명시 필수.\n` +
     `6. 섹션이 다른 글(경제 글에 건강 이미지 등)과 절대 혼동되지 않아야 함\n\n` +
     `JSON만 출력: {"prompts":["본문이미지1","본문이미지2","썸네일"]}`,
     { temperature: 0.5 }
@@ -551,13 +551,15 @@ async function generateImage(prompt, slug, index, bundleDir) {
   // 3) Pollinations.ai (무료, API 키 불필요, 1280×720 직접 생성)
   // enhance=false: AI 프롬프트 재작성 비활성화 — 섹션 스타일 그대로 유지
   const sharpLib = (await import('sharp')).default;
-  const qualityPrompt = `${prompt}, highly detailed, sharp focus, 16:9 landscape --no text, watermark, logo, blurry, cropped`;
+  // 썸네일/본문 모두 얼굴·인물 완전 배제 (Flux는 프롬프트 내 negative 키워드로 억제)
+  const qualityPrompt = `${prompt}, highly detailed, sharp focus, 16:9 landscape, no text, no watermark, no logo, no people, no face, no portrait, no human figure, no person`;
+  const negativeParam = encodeURIComponent('face,person,woman,man,human,portrait,people,body,nude');
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     log('🖼️', `  Pollinations.ai 이미지 생성 중: ${filename} (시도 ${attempt}/2)`);
     try {
       const encodedPrompt = encodeURIComponent(qualityPrompt);
-      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&seed=${Date.now()}`;
+      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&seed=${Date.now()}&negative=${negativeParam}`;
       const imgRes = await axios.get(url, { responseType: 'arraybuffer', timeout: 120000 });
       if (imgRes.status !== 200) throw new Error(`HTTP ${imgRes.status}`);
 
@@ -896,12 +898,15 @@ ${lc.qualityCheck5}
 [이미지 1 — 도입부 직후] 글의 첫 번째 주요 개념·현상을 구체적으로 시각화하는 장면.
   → 앞뒤 본문 내용을 파악해서 해당 개념이 실제로 어떻게 보이는지 묘사.
   → "a developer doing X", "diagram showing Y" 처럼 구체적 장면으로.
+  → ⚠️ NO FACE, NO PORTRAIT, NO PERSON. Objects, scenes, icons only.
 [이미지 2 — 2번째 H2 직후] 비교·분석·데이터 또는 두 번째 핵심 내용을 시각화.
   → 두 가지를 나란히 비교하거나, 차트·흐름도 스타일의 장면.
   → 이미지 1과 시각적으로 명확히 달라야 함 (색감, 구도, 소재 모두 다르게).
+  → ⚠️ NO FACE, NO PORTRAIT, NO PERSON.
 [썸네일] 글 전체를 한눈에 상징하는 커버 이미지.
-  → 사람 얼굴 중심 NO, 개념·사물·장면·아이콘 중심으로.
-  → bold colors, no text overlay, 16:9 landscape.
+  → ⛔ ABSOLUTE PROHIBITION: no face, no person, no woman, no man, no human body, no portrait. ZERO human subjects.
+  → ✅ ONLY: objects, icons, symbols, abstract design, scene, landscape, product, concept art.
+  → bold colors, no text overlay, 16:9 landscape, strictly no human whatsoever.
 
 JSON만 출력 (prompts 배열은 반드시 3개):
 \`\`\`json
@@ -911,9 +916,9 @@ JSON만 출력 (prompts 배열은 반드시 3개):
 
   const defaultStyle = section.imageStyle ?? 'blog editorial illustration, clean design, professional';
   let imgPrompts = [
-    `${topic.keyword} concept visualization, landscape 16:9, ${defaultStyle}, no text overlay`,
-    `${topic.keyword} comparison analysis chart, landscape 16:9, ${defaultStyle}, no text overlay`,
-    `${topic.keyword} editorial magazine cover, bold colors, no text overlay, landscape 16:9`,
+    `${topic.keyword} concept visualization, landscape 16:9, ${defaultStyle}, no text overlay, no face, no person, no portrait`,
+    `${topic.keyword} comparison analysis chart, landscape 16:9, ${defaultStyle}, no text overlay, no face, no person`,
+    `${topic.keyword} editorial magazine cover, bold colors, no text overlay, landscape 16:9, no face, no person, no human, abstract symbolic design`,
   ];
   try {
     const m = t6.match(/```json\s*([\s\S]*?)```/);
