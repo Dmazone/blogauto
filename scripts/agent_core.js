@@ -656,6 +656,8 @@ function getLangConfig(section) {
     qualityCheck5: '5. **自然な日本語** — 直訳調の表現を除去、流暢な日本語に修正',
     descFallback: (kw) => `${kw}に関する2026年最新情報とトレンドをご紹介します。`,
     coverAlt: (title) => `${title} サムネイル`,
+    t5Prompt: `最終的な完成本文を、必ず以下のコードブロック形式で出力してください：\n\n\`\`\`markdown\n[完成したマークダウン本文全体]\n\`\`\`\n\n⛔ 絶対禁止：コードブロックなしで直接出力、front matter の追加、説明・要約の追加。\n✅ 必須：\`\`\`markdown で始まり\`\`\`で終わるコードブロック形式のみで出力。`,
+    t5RetryPrompt: `コードブロックで囲まずに出力したようです。必ず以下の形式を守ってください：\n\n\`\`\`markdown\n完成したマークダウン全体（## H2見出し4個以上含む）\n\`\`\`\n\nfront matter なし。コードブロック外の説明なし。## 見出しなしで出力すると保存不可。`,
   };
   if (lang === 'en') return {
     lang: 'en',
@@ -676,6 +678,8 @@ function getLangConfig(section) {
     qualityCheck5: '5. **Natural English** — Remove awkward phrasing, ensure fluent native-level English',
     descFallback: (kw) => `Explore the latest 2026 trends and insights on ${kw}.`,
     coverAlt: (title) => `${title} thumbnail`,
+    t5Prompt: `Output the final completed article body, ONLY in this exact code block format:\n\n\`\`\`markdown\n[Full markdown body here]\n\`\`\`\n\n⛔ STRICTLY FORBIDDEN: outputting without a code block, adding front matter, adding explanations.\n✅ REQUIRED: output ONLY inside a \`\`\`markdown ... \`\`\` code block.`,
+    t5RetryPrompt: `You seem to have output without a code block. You MUST follow this format:\n\n\`\`\`markdown\nFull markdown body (with 4+ ## H2 headings)\n\`\`\`\n\nNo front matter. No explanation outside the code block. Content without ## headings cannot be saved.`,
   };
   return {
     lang: 'ko',
@@ -856,31 +860,53 @@ ${lc.qualityCheck5}
 
   // ── TURN 5: 최종 마크다운 추출 ────────────────────────────────────────────
   log('📝', '[Turn 5] 최종 마크다운 추출 중...');
-  const _t5Raw = await session.send(
-    `최종 완성된 본문을 반드시 아래 형식의 코드블록으로 출력해줘:
-
-\`\`\`markdown
-[완성된 마크다운 본문 전체]
-\`\`\`
-
-규칙: 코드블록 안에 마크다운 본문만 넣을 것. front matter 없이. 코드블록 앞뒤로 설명·요약 없이.`
-  );
+  const _t5Prompt = lc.t5Prompt ??
+    `최종 완성된 본문을 반드시 아래 형식의 코드블록으로 출력해줘:\n\n` +
+    `\`\`\`markdown\n[완성된 마크다운 본문 전체]\n\`\`\`\n\n` +
+    `⛔ 절대 금지: 코드블록 없이 직접 출력, front matter 포함, 설명·요약 추가.\n` +
+    `✅ 반드시: \`\`\`markdown 으로 시작해서 \`\`\` 로 끝나는 코드블록 형식으로만 출력.`;
+  const _t5Raw = await session.send(_t5Prompt);
   let finalBody = extractFinalMarkdown(_t5Raw);
 
   // H2 부족 감지 → 즉시 재추출 (가장 흔한 실패 원인)
   if ((finalBody.match(/^## /gm) ?? []).length < 3) {
     log('⚠️', `[Turn 5] H2 ${(finalBody.match(/^## /gm) ?? []).length}개 감지 → 재출력 요청`);
-    const _t5Retry = await session.send(
-      `직전에 수정한 최종 마크다운 본문 전체를 아래 코드블록에 그대로 출력해줘.\n` +
-      `## H2 헤딩이 반드시 4개 이상 포함되어야 함. front matter 없이.\n\n` +
-      `\`\`\`markdown\n[전체 본문]\n\`\`\``
-    );
+    const _t5RetryPrompt = lc.t5RetryPrompt ??
+      `코드블록으로 감싸지 않고 출력한 것 같아. 반드시 아래 형식을 지켜줘:\n\n` +
+      `\`\`\`markdown\n완성된 마크다운 전체 (## H2 헤딩 4개 이상 포함)\n\`\`\`\n\n` +
+      `front matter 없이. 코드블록 외 설명 없이. ## 헤딩 없이 출력하면 저장 불가.`;
+    const _t5Retry = await session.send(_t5RetryPrompt);
     const retried = extractFinalMarkdown(_t5Retry);
     if ((retried.match(/^## /gm) ?? []).length >= 3) {
       finalBody = retried;
       log('✅', '[Turn 5] 재출력으로 H2 복구 성공');
     } else {
-      log('⚠️', `[Turn 5] 재출력도 H2 부족 (${(retried.match(/^## /gm) ?? []).length}개) — 품질 게이트로 최종 판정`);
+      log('⚠️', `[Turn 5] 재출력도 H2 부족 (${(retried.match(/^## /gm) ?? []).length}개) — DOM 직접 추출 시도`);
+
+      // 최후 수단: 브라우저 DOM에서 <pre> 블록 직접 추출 (innerText가 ## 손실시킨 경우)
+      if (session.page) {
+        try {
+          const domText = await session.page.evaluate(() => {
+            const pres = document.querySelectorAll('pre code, pre');
+            for (let i = pres.length - 1; i >= 0; i--) {
+              const t = (pres[i].textContent || '').trim();
+              if (t.length > 500 && t.includes('##')) return t;
+            }
+            return null;
+          });
+          if (domText) {
+            const domExtracted = extractFinalMarkdown(domText);
+            if ((domExtracted.match(/^## /gm) ?? []).length >= 3) {
+              finalBody = domExtracted;
+              log('✅', '[Turn 5] DOM 직접 추출로 H2 복구 성공');
+            } else {
+              log('⚠️', `[Turn 5] DOM 추출도 H2 부족 — 품질 게이트로 최종 판정`);
+            }
+          }
+        } catch (e) {
+          log('⚠️', `[Turn 5] DOM 추출 오류: ${e.message}`);
+        }
+      }
     }
   }
 

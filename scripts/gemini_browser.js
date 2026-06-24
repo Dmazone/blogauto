@@ -389,15 +389,39 @@ export class GeminiSession {
         const all = await this.page.locator(sel).all();
         if (all.length > 0) {
           const last = all[all.length - 1];
+
+          // 1순위: <pre code> textContent 우선 — innerText는 ## 마크다운 기호를 손실시킴
+          // (Gemini가 ```markdown``` 코드블록으로 응답 시 <pre><code>에 ## 보존됨)
+          const codeText = await last.evaluate((el) => {
+            const preCode = el.querySelector('pre code');
+            const pre     = el.querySelector('pre');
+            const target  = preCode || pre;
+            if (target) {
+              const t = (target.textContent || '').trim();
+              // 코드블록 내용이 충분히 길면 우선 반환
+              if (t.length > 300) return t;
+            }
+            return null;
+          }).catch(() => null);
+
+          if (codeText && codeText.length > 300) return codeText;
+
+          // 2순위: innerText 폴백 (코드블록 없는 응답)
           const text = await last.innerText({ timeout: 5000 });
           if (text.trim().length > 20) return text.trim();
         }
       } catch {}
     }
 
-    // 최후 수단: JS로 추출
+    // 최후 수단: JS로 추출 (페이지 전체에서 가장 긴 <pre> 블록 탐색)
     try {
       return await this.page.evaluate(() => {
+        // <pre><code> 안의 긴 콘텐츠 우선 (마크다운 ## 보존)
+        const pres = document.querySelectorAll('pre code, pre');
+        for (let i = pres.length - 1; i >= 0; i--) {
+          const t = (pres[i].textContent || '').trim();
+          if (t.length > 300) return t;
+        }
         const candidates = [
           '[data-message-author-role="model"]',
           '.model-response',
