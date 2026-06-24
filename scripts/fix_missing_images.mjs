@@ -101,9 +101,10 @@ async function generateOne(img) {
     return true;
   }
 
-  const qualityPrompt = `${img.prompt}, highly detailed, sharp focus, 16:9 landscape --no text, watermark, logo, blurry, cropped`;
-  const encodedPrompt = encodeURIComponent(qualityPrompt);
-  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&seed=${Date.now()}`;
+  const positivePrompt = `${img.prompt}, masterpiece, best quality, highly detailed, sharp focus, professional photography, vivid colors, perfect composition, 16:9 landscape`;
+  const negativeParam  = encodeURIComponent('blur,blurry,low quality,pixelated,noise,grainy,jpeg artifacts,overexposed,underexposed,watermark,text overlay,logo,signature,border,frame,face,person,woman,man,human,portrait,people,body,nude,ugly,deformed,bad anatomy,cropped');
+  const encodedPrompt  = encodeURIComponent(positivePrompt);
+  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}&negative=${negativeParam}`;
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
@@ -112,7 +113,7 @@ async function generateOne(img) {
       fs.mkdirSync(path.join(ROOT, img.dir), { recursive: true });
       await sharp(buf)
         .resize(1280, 720, { fit: 'cover', position: 'centre' })
-        .webp({ quality: 90, effort: 5 })
+        .webp({ quality: 92, effort: 6 })
         .toFile(dest);
 
       const size = fs.statSync(dest).size;

@@ -455,9 +455,9 @@ async function generateContextualImagePrompts(section, topic, body) {
   // 이미지 없이도 섹션 스타일 앵커를 유지하는 폴백
   if (!contexts.length) {
     return [
-      `${style}, ${topic.keyword} introductory concept scene, no text overlay, landscape 16:9`,
-      `${style}, ${topic.keyword} comparison analysis visualization, different composition, no text overlay, landscape 16:9`,
-      `${style}, ${topic.keyword} editorial cover concept, bold symbolic design, no text overlay, landscape 16:9`,
+      `${styleAnchor}, ${topic.keyword} related objects on clean surface, sharp focus, wide angle landscape`,
+      `${styleAnchor}, ${topic.keyword} detailed environmental shot from different angle, dramatic lighting, landscape 16:9`,
+      `${styleAnchor}, bold ${topic.keyword} themed icon or product closeup, vivid colors, strong composition, landscape 16:9`,
     ];
   }
 
@@ -465,19 +465,17 @@ async function generateContextualImagePrompts(section, topic, body) {
 
   const raw = await geminiCall(
     `아래 블로그 글의 이미지 위치에 맞는 영어 이미지 생성 프롬프트 3개를 만들어줘.\n\n` +
-    `[섹션] ${section.name} (${section.id})\n` +
-    `[글 주제] "${topic.title}" (키워드: ${topic.keyword})\n` +
-    `[섹션 스타일 — 모든 프롬프트 반드시 이 구절로 시작]: ${style}\n\n` +
+    `[섹션] ${section.name} / [키워드] ${topic.keyword}\n` +
+    `[섹션 시각 스타일]: ${style}\n\n` +
     contexts.map((c) =>
-      `[본문 이미지 ${c.idx}]\nalt: ${c.alt}\n앞 내용: ${c.before}\n뒤 내용: ${c.after}`
+      `[본문 이미지 ${c.idx}]\n앞 내용: ${c.before}\n뒤 내용: ${c.after}`
     ).join('\n\n---\n\n') +
     `\n\n[규칙]\n` +
-    `1. 모든 프롬프트를 반드시 섹션 스타일 앵커로 시작: "${styleAnchor}, [구체 묘사]"\n` +
-    `2. 앞뒤 내용에서 핵심 장면·개념을 구체적으로 묘사 ("a smartphone showing X", "diagram of Y")\n` +
-    `3. 영어 1~2문장, landscape 16:9, 텍스트·워터마크 없음\n` +
-    `4. 본문이미지1: 도입 개념형 / 본문이미지2: 비교·분석형 (이미지1과 시각 구도 다르게)\n` +
-    `5. 썸네일: ⛔ NO face, NO person, NO woman, NO man, NO portrait, NO human body (절대 금지). 반드시 사물·아이콘·개념·장면·추상 디자인만. 프롬프트에 "no face, no person, no human" 명시 필수.\n` +
-    `6. 섹션이 다른 글(경제 글에 건강 이미지 등)과 절대 혼동되지 않아야 함\n\n` +
+    `1. 구조: "${styleAnchor}, [구체적 사물/장면 묘사], [배경], [구도/조명]"\n` +
+    `2. ⛔ "concept", "visualization", "abstract" 같은 추상어 금지 — 반드시 실물 사물·장면으로\n` +
+    `3. ⛔ "no face", "no person" 등 부정어 프롬프트에 넣지 말 것 (별도 처리됨)\n` +
+    `4. 본문이미지2: 이미지1과 색감·구도·소재 완전히 다르게\n` +
+    `5. 영어 1~2문장, 섹션 스타일 앵커로 시작\n\n` +
     `JSON만 출력: {"prompts":["본문이미지1","본문이미지2","썸네일"]}`,
     { temperature: 0.5 }
   );
@@ -548,24 +546,30 @@ async function generateImage(prompt, slug, index, bundleDir) {
     }
   }
 
-  // 3) Pollinations.ai (무료, API 키 불필요, 1280×720 직접 생성)
-  // enhance=false: AI 프롬프트 재작성 비활성화 — 섹션 스타일 그대로 유지
+  // 3) Pollinations.ai — enhance=true로 Flux 최적화 프롬프트 자동 적용 (품질 향상)
   const sharpLib = (await import('sharp')).default;
-  // 썸네일/본문 모두 얼굴·인물 완전 배제 (Flux는 프롬프트 내 negative 키워드로 억제)
-  const qualityPrompt = `${prompt}, highly detailed, sharp focus, 16:9 landscape, no text, no watermark, no logo, no people, no face, no portrait, no human figure, no person`;
-  const negativeParam = encodeURIComponent('face,person,woman,man,human,portrait,people,body,nude');
+
+  // positive prompt: 구체적 장면 묘사 + 품질 부스터 (부정어는 negative 파라미터로만)
+  const positivePrompt = `${prompt}, masterpiece, best quality, highly detailed, sharp focus, professional photography, vivid colors, perfect composition, 16:9 landscape`;
+  // negative: 품질 저하 요소 + 얼굴/인물 완전 배제
+  const negativeParam = encodeURIComponent(
+    'blur,blurry,low quality,pixelated,noise,grainy,jpeg artifacts,overexposed,underexposed,' +
+    'watermark,text overlay,logo,signature,border,frame,' +
+    'face,person,woman,man,human,portrait,people,body,nude,ugly,deformed,bad anatomy,cropped'
+  );
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     log('🖼️', `  Pollinations.ai 이미지 생성 중: ${filename} (시도 ${attempt}/2)`);
     try {
-      const encodedPrompt = encodeURIComponent(qualityPrompt);
-      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&seed=${Date.now()}&negative=${negativeParam}`;
+      const encodedPrompt = encodeURIComponent(positivePrompt);
+      // enhance=true: Pollinations LLM이 Flux용 프롬프트로 최적화 → 선명도·품질 대폭 향상
+      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}&negative=${negativeParam}`;
       const imgRes = await axios.get(url, { responseType: 'arraybuffer', timeout: 120000 });
       if (imgRes.status !== 200) throw new Error(`HTTP ${imgRes.status}`);
 
       await sharpLib(Buffer.from(imgRes.data))
         .resize(1280, 720, { fit: 'cover', position: 'centre' })
-        .webp({ quality: 90, effort: 5 })
+        .webp({ quality: 92, effort: 6 })
         .toFile(destPath);
 
       const stat = fs.statSync(destPath);
@@ -913,38 +917,43 @@ ${lc.qualityCheck5}
   // ── TURN 6: 이미지 프롬프트 생성 (본문 2장 + 썸네일 1장) ────────────────
   log('🎨', '[Turn 6] 이미지 프롬프트 생성 중 (본문 2장 + 썸네일)...');
   const t6 = await session.send(
-    `글에 삽입된 이미지 2개와 블로그 커버 썸네일 1개를 위한 AI 이미지 생성 프롬프트를 만들어줘.
+    `위 글의 이미지 2개와 썸네일 1개를 위한 AI 이미지 생성 프롬프트 3개를 영어로 만들어줘.
 
-⚠️ 필수 규칙:
-- 프롬프트는 반드시 영어로만 작성. 한국어 한 글자도 포함 금지.
-- 모든 이미지: 가로 와이드 landscape 16:9 비율 필수 (세로·정사각형 금지)
-- 이미지 스타일: ${section.imageStyle}
+[섹션 시각 스타일 — 반드시 각 프롬프트에 반영]: ${section.imageStyle}
 
-이미지별 용도와 내용:
-[이미지 1 — 도입부 직후] 글의 첫 번째 주요 개념·현상을 구체적으로 시각화하는 장면.
-  → 앞뒤 본문 내용을 파악해서 해당 개념이 실제로 어떻게 보이는지 묘사.
-  → "a developer doing X", "diagram showing Y" 처럼 구체적 장면으로.
-  → ⚠️ NO FACE, NO PORTRAIT, NO PERSON. Objects, scenes, icons only.
-[이미지 2 — 2번째 H2 직후] 비교·분석·데이터 또는 두 번째 핵심 내용을 시각화.
-  → 두 가지를 나란히 비교하거나, 차트·흐름도 스타일의 장면.
-  → 이미지 1과 시각적으로 명확히 달라야 함 (색감, 구도, 소재 모두 다르게).
-  → ⚠️ NO FACE, NO PORTRAIT, NO PERSON.
-[썸네일] 글 전체를 한눈에 상징하는 커버 이미지.
-  → ⛔ ABSOLUTE PROHIBITION: no face, no person, no woman, no man, no human body, no portrait. ZERO human subjects.
-  → ✅ ONLY: objects, icons, symbols, abstract design, scene, landscape, product, concept art.
-  → bold colors, no text overlay, 16:9 landscape, strictly no human whatsoever.
+⛔ 절대 금지 (이 단어들 쓰면 무조건 실패):
+- "concept", "visualization", "abstract", "idea", "symbol", "metaphor" 같은 추상 단어
+- "no face", "no person" 등 부정어 — 이건 별도 처리되므로 프롬프트에 넣지 말 것
+- 한국어 단어 1개라도 포함
 
-JSON만 출력 (prompts 배열은 반드시 3개):
+✅ 필수 — 프롬프트 구조: "[구체적 사물/장면이 무엇을 하는지] in [배경/환경], [섹션 스타일], [구도/조명]"
+예시 (경제 글): "Stock ticker board displaying upward arrows in a modern trading floor, economy and finance concept bold blue and gold palette, dramatic wide angle"
+예시 (건강 글): "Fresh vegetables and protein foods arranged on a wooden cutting board beside a measuring tape, health and wellness concept clean composition, natural side lighting"
+예시 (IT기기 글): "Slim laptop and smartphone side by side on dark glossy surface, modern consumer electronics product shot, studio lighting cinematic"
+
+[이미지 1 — 도입부 직후]
+→ 이 글의 첫 번째 핵심 내용을 구체적 사물·장면으로 시각화
+→ 글 도입부를 읽고 "이 장면을 찍은 사진"처럼 묘사
+
+[이미지 2 — 두 번째 ## 섹션 직후]
+→ 이 글의 두 번째 핵심 주제를 구체적 장면으로 시각화
+→ 이미지 1과 색감·구도·소재 완전히 다르게
+
+[썸네일 — 블로그 커버]
+→ 글 전체 주제를 대표하는 오브젝트·아이콘·장면
+→ bold 색상, 강렬한 구도
+
+JSON만 출력 (keys: prompts, 배열 3개):
 \`\`\`json
-{"prompts":["body_image_1_landscape_16:9","body_image_2_landscape_16:9","thumbnail_landscape_16:9"]}
+{"prompts":["image1_prompt","image2_prompt","thumbnail_prompt"]}
 \`\`\``
   );
 
   const defaultStyle = section.imageStyle ?? 'blog editorial illustration, clean design, professional';
   let imgPrompts = [
-    `${topic.keyword} concept visualization, landscape 16:9, ${defaultStyle}, no text overlay, no face, no person, no portrait`,
-    `${topic.keyword} comparison analysis chart, landscape 16:9, ${defaultStyle}, no text overlay, no face, no person`,
-    `${topic.keyword} editorial magazine cover, bold colors, no text overlay, landscape 16:9, no face, no person, no human, abstract symbolic design`,
+    `${topic.keyword} related objects and scene on clean surface, ${defaultStyle}, sharp focus, wide angle landscape`,
+    `${topic.keyword} detailed product or environment shot from different angle, ${defaultStyle}, dramatic lighting, landscape 16:9`,
+    `${topic.keyword} bold symbolic icon or object representing the topic, ${defaultStyle}, vivid colors, strong composition, landscape 16:9`,
   ];
   try {
     const m = t6.match(/```json\s*([\s\S]*?)```/);
