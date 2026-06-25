@@ -70,20 +70,48 @@
         processNext();
       }
 
-      // 사이드바 쿠팡 광고 — 텐핑 광고 사이 슬롯에 주입
+      // 우측 사이드바 쿠팡 광고
       function injectSidebarCoupang() {
         var slot = document.querySelector('.sidebar-coupang-slot');
         if (!slot || slot.childElementCount > 0) return;
         if (!window.PartnersCoupang) { setTimeout(injectSidebarCoupang, 300); return; }
-        var before = document.body.lastElementChild;
+        var obs = new MutationObserver(function(mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            var added = mutations[i].addedNodes;
+            for (var j = 0; j < added.length; j++) {
+              var node = added[j];
+              if (node.nodeType === 1) { obs.disconnect(); slot.appendChild(node); return; }
+            }
+          }
+        });
+        obs.observe(document.body, { childList: true });
         new window.PartnersCoupang.G({"id":999595,"template":"carousel","trackingCode":"AF8691300","width":"160","height":"140","tsource":""});
-        var after = document.body.lastElementChild;
-        if (after !== before) { slot.appendChild(after); }
+        setTimeout(function() { obs.disconnect(); }, 2000);
+      }
+
+      // 좌측 사이드바 쿠팡 광고 — 최근글 하단
+      function injectLeftSidebarCoupang() {
+        var slot = document.querySelector('.sidebar-left-coupang-slot');
+        if (!slot || slot.childElementCount > 0) return;
+        if (!window.PartnersCoupang) { setTimeout(injectLeftSidebarCoupang, 300); return; }
+        var obs = new MutationObserver(function(mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            var added = mutations[i].addedNodes;
+            for (var j = 0; j < added.length; j++) {
+              var node = added[j];
+              if (node.nodeType === 1) { obs.disconnect(); slot.appendChild(node); return; }
+            }
+          }
+        });
+        obs.observe(document.body, { childList: true });
+        new window.PartnersCoupang.G({"id":999595,"template":"carousel","trackingCode":"AF8691300","width":"160","height":"140","tsource":""});
+        setTimeout(function() { obs.disconnect(); }, 2000);
       }
 
       function initPageAds() {
         injectListCoupang();
         injectSidebarCoupang();
+        injectLeftSidebarCoupang();
         if (typeof window.tp_adsbytenpingInit === 'function') window.tp_adsbytenpingInit();
         if (window.kakaoAdFit && typeof window.kakaoAdFit.display === 'function') window.kakaoAdFit.display();
       }
