@@ -382,43 +382,28 @@ input, button, select, textarea {
 #menu a                      { font-weight: 500 !important; }
 
 /* ════════════════════════════════════════════════
-   다크/라이트 모드 토글 버튼 — 텍스트 레이블 추가
+   다크/라이트 모드 토글 버튼 — JP/🌐 동일 사이즈 아이콘 전용
    ════════════════════════════════════════════════ */
 #theme-toggle {
-  display: inline-flex !important;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 12px 4px 8px !important;
-  border: 1px solid rgba(128,128,128,0.3) !important;
-  border-radius: 20px !important;
-  background: transparent !important;
-  color: inherit !important;
-  font-family: var(--font-sans) !important;
-  white-space: nowrap;
-  min-height: 30px;
-  transition: background 0.2s, border-color 0.2s;
+  padding: 0 !important;
+  width: 32px !important;
+  gap: 0 !important;
   cursor: pointer;
 }
-#theme-toggle:hover {
-  background: rgba(128,128,128,0.1) !important;
-  border-color: rgba(128,128,128,0.45) !important;
+#theme-toggle::after { content: none !important; }
+#theme-toggle svg { flex-shrink: 0; pointer-events: none; }
+/* 다크 모드: sun 아이콘(라이트로 전환 예고) → 따뜻한 앰버 */
+[data-theme="dark"] #theme-toggle .sun  { stroke: #fbbf24 !important; }
+/* 라이트 모드: moon 아이콘(다크로 전환 예고) → 차가운 슬레이트 */
+[data-theme="light"] #theme-toggle .moon { stroke: #475569 !important; }
+[data-theme="light"] #theme-toggle {
+  border-color: rgba(0,0,0,0.15) !important;
+  background: rgba(0,0,0,0.04) !important;
+  color: #334155 !important;
 }
-#theme-toggle svg { flex-shrink: 0; }
-[data-theme="dark"] #theme-toggle::after {
-  content: "라이트모드";
-  font-size: 11px;
-  font-weight: 600;
-  opacity: 0.85;
-}
-[data-theme="light"] #theme-toggle::after {
-  content: "다크모드";
-  font-size: 11px;
-  font-weight: 600;
-  opacity: 0.85;
-}
-@media (max-width: 480px) {
-  [data-theme="dark"] #theme-toggle::after  { content: "라이트"; }
-  [data-theme="light"] #theme-toggle::after { content: "다크"; }
+[data-theme="light"] #theme-toggle:hover {
+  background: rgba(0,0,0,0.1) !important;
+  border-color: rgba(0,0,0,0.25) !important;
 }
 
 /* ════════════════════════════════════════════════
