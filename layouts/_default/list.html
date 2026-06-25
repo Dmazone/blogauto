@@ -92,9 +92,9 @@
   {{- end }}
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>
-{{- if eq (mod (add $index 1) 3) 0 }}
-{{- /* 3포스트마다 광고 1개, 텐핑→쿠팡→카카오 순환 */}}
-{{- $slot := mod (div (add $index 1) 3) 3 }}
+{{- if eq (mod (add $index 1) 4) 0 }}
+{{- /* 4포스트마다 광고 1개 (2열 그리드 짝수 유지), 텐핑→쿠팡→카카오 순환 */}}
+{{- $slot := mod (div (add $index 1) 4) 3 }}
 {{- if eq $slot 1 }}
 <div class="hpb-mobile-insert">
   <a href="https://dmazone.github.io/obabwan" class="hpb-card hpb-c1" target="_blank" rel="noopener noreferrer">
