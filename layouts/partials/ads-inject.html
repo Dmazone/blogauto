@@ -82,13 +82,16 @@
 
     var coupangSlots = [];
 
-    for (var i = 0; i < builders.length && i < h2s.length; i++) {
-      var node = builders[i]();
+    /* H2 2개마다 광고 1개 삽입 (index 1, 3, 5...) */
+    var builderIndex = 0;
+    for (var i = 1; i < h2s.length && builderIndex < builders.length; i += 2) {
+      var node = builders[builderIndex]();
       h2s[i].parentNode.insertBefore(node, h2s[i].nextSibling);
 
       if (node.classList.contains('ad-coupang')) {
         coupangSlots.push(node);
       }
+      builderIndex++;
     }
 
     // 쿠팡 광고 주입 (g.js 로드 후 실행)

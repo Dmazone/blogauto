@@ -23,7 +23,7 @@
 {{- end }}
     {{ partialCached "header.html" . .Page -}}
     <div class="sidebar-ad sidebar-ad-left">
-      {{- partial "sidebar-ads.html" . }}
+      {{- partial "sidebar-left.html" . }}
     </div>
     <div class="sidebar-ad sidebar-ad-right">
       {{- partial "sidebar-ads.html" . }}
@@ -32,6 +32,7 @@
         {{- block "main" . }}{{ end }}
     </main>
     {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
+    <script src="https://ads-partners.coupang.com/g.js" async></script>
     <script>
     (function() {
       // 목록 페이지 쿠팡 광고 — MutationObserver로 iframe을 슬롯에 정확히 이동
@@ -69,8 +70,20 @@
         processNext();
       }
 
+      // 사이드바 쿠팡 광고 — 텐핑 광고 사이 슬롯에 주입
+      function injectSidebarCoupang() {
+        var slot = document.querySelector('.sidebar-coupang-slot');
+        if (!slot || slot.childElementCount > 0) return;
+        if (!window.PartnersCoupang) { setTimeout(injectSidebarCoupang, 300); return; }
+        var before = document.body.lastElementChild;
+        new window.PartnersCoupang.G({"id":999595,"template":"carousel","trackingCode":"AF8691300","width":"160","height":"140","tsource":""});
+        var after = document.body.lastElementChild;
+        if (after !== before) { slot.appendChild(after); }
+      }
+
       function initPageAds() {
         injectListCoupang();
+        injectSidebarCoupang();
         if (typeof window.tp_adsbytenpingInit === 'function') window.tp_adsbytenpingInit();
         if (window.kakaoAdFit && typeof window.kakaoAdFit.display === 'function') window.kakaoAdFit.display();
       }

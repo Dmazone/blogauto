@@ -1,4 +1,7 @@
 <meta name="google-site-verification" content="aGAY_kwsExs_qvC3QdZjOKXU4Jq4o2BISQnTHsfdoW0" />
+<!-- Pretendard Variable — 무료 최고품질 한국어 웹폰트 -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 {{- if .IsPage -}}
 {{- $baseURL := strings.TrimSuffix "/" .Site.BaseURL -}}
 {{- $title := .Title -}}
@@ -348,6 +351,411 @@ ul#menu > li > a {
 /* ══ TOC (목차) ══ */
 @media (max-width: 640px) {
   #TableOfContents { font-size: 13px; }
+}
+
+/* ════════════════════════════════════════════════
+   PRETENDARD 폰트 전역 적용
+   ════════════════════════════════════════════════ */
+:root {
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+body,
+.post-content, .entry-header, .entry-content, .entry-footer,
+.post-header, .post-title, .post-meta, .post-footer,
+.header, #menu, .pagination, .paginav,
+input, button, select, textarea {
+  font-family: var(--font-sans) !important;
+}
+
+/* ════════════════════════════════════════════════
+   타이포그래피 — 볼드 계층 정리
+   ════════════════════════════════════════════════ */
+.post-title                  { font-weight: 800 !important; letter-spacing: -0.02em; }
+.post-content h2             { font-weight: 750 !important; letter-spacing: -0.015em; }
+.post-content h3             { font-weight: 700 !important; }
+.post-content h4             { font-weight: 650 !important; }
+.post-content strong,
+.post-content b              { font-weight: 700 !important; }
+.entry-header h2             { font-weight: 700 !important; letter-spacing: -0.01em; }
+.logo a                      { font-weight: 800 !important; letter-spacing: -0.02em; }
+#menu a                      { font-weight: 500 !important; }
+
+/* ════════════════════════════════════════════════
+   다크/라이트 모드 토글 버튼 — 텍스트 레이블 추가
+   ════════════════════════════════════════════════ */
+#theme-toggle {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px 4px 8px !important;
+  border: 1px solid rgba(128,128,128,0.3) !important;
+  border-radius: 20px !important;
+  background: transparent !important;
+  color: inherit !important;
+  font-family: var(--font-sans) !important;
+  white-space: nowrap;
+  min-height: 30px;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+#theme-toggle:hover {
+  background: rgba(128,128,128,0.1) !important;
+  border-color: rgba(128,128,128,0.45) !important;
+}
+#theme-toggle svg { flex-shrink: 0; }
+[data-theme="dark"] #theme-toggle::after {
+  content: "라이트모드";
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+[data-theme="light"] #theme-toggle::after {
+  content: "다크모드";
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+@media (max-width: 480px) {
+  [data-theme="dark"] #theme-toggle::after  { content: "라이트"; }
+  [data-theme="light"] #theme-toggle::after { content: "다크"; }
+}
+
+/* ════════════════════════════════════════════════
+   포스트 목록 — 2컬럼 카드 그리드
+   ════════════════════════════════════════════════ */
+.post-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+.post-list-grid .first-entry  { grid-column: 1 / -1; }
+.post-list-grid .list-ad-strip { grid-column: 1 / -1; }
+
+/* 그리드 카드 스타일 */
+.post-list-grid .post-entry {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--entry);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.post-list-grid .post-entry:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.14);
+}
+.post-list-grid .post-entry .entry-cover {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.post-list-grid .post-entry .entry-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  transition: transform 0.32s ease;
+}
+.post-list-grid .post-entry:hover .entry-cover img {
+  transform: scale(1.04);
+}
+.post-list-grid .post-entry .entry-header {
+  padding: 14px 16px 4px !important;
+}
+.post-list-grid .post-entry .entry-content {
+  padding: 0 16px !important;
+  flex: 1;
+}
+.post-list-grid .post-entry .entry-footer {
+  padding: 6px 16px 14px !important;
+  margin-top: auto;
+}
+.post-list-grid .post-entry .entry-header h2 {
+  font-size: 15.5px !important;
+  line-height: 1.45;
+  margin: 0 !important;
+  font-weight: 700 !important;
+}
+.post-list-grid .post-entry .entry-content p {
+  font-size: 13px !important;
+  line-height: 1.7;
+  color: var(--secondary);
+  margin: 6px 0 !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* featured 첫 카드 */
+.post-list-grid .first-entry {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--entry);
+}
+.post-list-grid .first-entry .entry-cover {
+  aspect-ratio: auto;
+  max-height: 400px;
+}
+
+/* 모바일: 1컬럼 */
+@media (max-width: 640px) {
+  .post-list-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* ════════════════════════════════════════════════
+   이전/다음 포스트 내비게이션 — 썸네일 포함
+   ════════════════════════════════════════════════ */
+.paginav {
+  display: flex;
+  gap: 12px;
+  margin: 2.2em 0 1.5em !important;
+  flex-wrap: nowrap;
+}
+.paginav a {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px;
+  text-decoration: none !important;
+  transition: background 0.2s, border-color 0.2s;
+  background: var(--entry);
+  overflow: hidden;
+}
+.paginav a:hover {
+  background: var(--code-bg) !important;
+  border-color: var(--primary) !important;
+}
+.paginav-thumb {
+  width: 72px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--border);
+}
+.paginav-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.paginav-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.paginav-label {
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+}
+.paginav-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.paginav .next { justify-content: flex-end; text-align: right; }
+.paginav .next .paginav-text { align-items: flex-end; }
+@media (max-width: 540px) {
+  .paginav { flex-direction: column; }
+  .paginav .next { justify-content: flex-start; text-align: left; }
+  .paginav .next .paginav-text { align-items: flex-start; }
+  .paginav-thumb { width: 60px; height: 40px; }
+}
+
+/* ════════════════════════════════════════════════
+   관련 포스트 섹션
+   ════════════════════════════════════════════════ */
+.related-posts {
+  margin: 2.5em 0 1.5em;
+  padding-top: 1.8em;
+  border-top: 1px solid var(--border);
+}
+.related-posts-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 1em;
+  color: var(--primary);
+}
+.related-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .related-posts-grid { grid-template-columns: 1fr; gap: 10px; }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  .related-posts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.related-post-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  overflow: hidden;
+  text-decoration: none !important;
+  background: var(--entry);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.related-post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+.related-post-cover {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+.related-post-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.28s ease;
+}
+.related-post-card:hover .related-post-cover img { transform: scale(1.04); }
+.related-post-info { padding: 10px 12px 12px; }
+.related-post-info h4 {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  margin: 0 0 5px;
+  color: var(--primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.related-post-date { font-size: 11px; color: var(--secondary); opacity: 0.75; }
+
+/* ════════════════════════════════════════════════
+   좌측 사이드바 — 최근 글 위젯
+   ════════════════════════════════════════════════ */
+.sidebar-widget { padding: 0; }
+.sidebar-widget-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(128,128,128,0.55);
+  margin: 0 0 10px;
+}
+.sidebar-recent-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar-recent-list li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(128,128,128,0.1);
+}
+.sidebar-recent-list li:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.sidebar-recent-list a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none !important;
+}
+.sidebar-recent-list .sr-title {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sidebar-recent-list .sr-date {
+  font-size: 10px;
+  color: var(--secondary);
+  opacity: 0.65;
+}
+.sidebar-recent-list a:hover .sr-title { text-decoration: underline; }
+
+/* ════════════════════════════════════════════════
+   공유 버튼 — 간격/크기 정리
+   ════════════════════════════════════════════════ */
+.share-buttons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 1.2em 0 !important;
+  align-items: center;
+}
+.share-buttons li { margin: 0 !important; }
+.share-buttons li a,
+.share-buttons li a svg {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 8px !important;
+}
+.share-btn-custom {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 8px !important;
+}
+
+/* ════════════════════════════════════════════════
+   본문 광고 최대 높이 제한
+   ════════════════════════════════════════════════ */
+.ad-unit {
+  max-height: 300px !important;
+  overflow: hidden !important;
+}
+.ad-unit.ad-coupang { max-height: 180px !important; }
+.ad-unit.ad-adfit   { max-height: 120px !important; }
+
+/* ════════════════════════════════════════════════
+   푸터 개선
+   ════════════════════════════════════════════════ */
+.footer {
+  padding: 2em 0 1em;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* ════════════════════════════════════════════════
+   반응형 보조 — 태블릿 (641~1024px)
+   ════════════════════════════════════════════════ */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .post-list-grid { gap: 18px; }
+  .post-list-grid .post-entry .entry-header h2 { font-size: 14.5px !important; }
+  .paginav { gap: 10px; }
+  .paginav-thumb { width: 60px; height: 40px; }
 }
 </style>
 

@@ -1,6 +1,6 @@
 ﻿#!/usr/bin/env node
 /**
- * daily_runner.js — 10개 섹션 하루 1개씩 예약발행
+ * daily_runner.js — 12개 섹션 하루 6개씩 예약발행 (홀/짝 그룹 교대)
  *
  * 사용법:
  *   node scripts/daily_runner.js                    # 브라우저 모드 (제미나이 웹, Gem)
@@ -8,10 +8,11 @@
  *   node scripts/daily_runner.js --only economy,health  # 특정 섹션만
  *
  * 예약발행 원리:
- *   - 10개 글을 연속으로 생성
- *   - 각 글의 publishDate = 09:00, 09:05, ..., 09:45 KST
+ *   - 그룹 1(홀수날): latest-tech, economy, society, humanities, entertainment, japan-trends
+ *   - 그룹 2(짝수날): health, it-devices, kr-realestate, world-travel, sports, us-trends
+ *   - 각 글의 publishDate = 07:00, 07:30, ..., 09:30 KST (30분 간격 × 6개)
  *   - Hugo 빌드 시 publishDate가 지난 글만 포함
- *   - scheduled-deploy.yml 이 5분마다 재빌드 → 글 하나씩 공개
+ *   - scheduled-deploy.yml 이 30분마다 재빌드 → 글 하나씩 공개
  */
 
 import { runForSection, setGeminiBrowserSession } from './agent_core.js';
@@ -245,7 +246,7 @@ async function sendTelegramDailyReport(posts, successCount, failCount, publishNo
 
   const lines = [
     `✅ 트렌드줌 ${publishNow ? '즉시발행' : '예약발행'} 완료!`,
-    `📅 ${publishNow ? `발행 완료: ${todayStr} (즉시 공개)` : `발행 예정: ${tomorrow} 07:00~09:00 KST`}`,
+    `📅 ${publishNow ? `발행 완료: ${todayStr} (즉시 공개)` : `발행 예정: ${tomorrow} 07:00~09:30 KST`}`,
     `성공 ${successCount}개 / 실패 ${failCount}개`,
     '',
   ];

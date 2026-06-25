@@ -8,10 +8,7 @@
           <button class="gsb-btn" type="submit">🔍</button>
         </form>
         <div class="gtrans-btns">
-          <button class="gtrans-btn" title="日本語で見る"
-            onclick="window.open('https://translate.google.com/translate?sl=ko&tl=ja&u='+encodeURIComponent(location.href),'_blank')">🇯🇵</button>
-          <button class="gtrans-btn" title="View in English"
-            onclick="window.open('https://translate.google.com/translate?sl=ko&tl=en&u='+encodeURIComponent(location.href),'_blank')">🌐</button>
+          {{- range site.Menus.main -}}{{- if eq .Identifier "japan-trends" -}}<a class="gtrans-btn" href="{{ .URL | absLangURL }}" title="日本語コンテンツ">JP</a>{{- end -}}{{- if eq .Identifier "us-trends" -}}<a class="gtrans-btn" href="{{ .URL | absLangURL }}" title="English Content">🌐</a>{{- end -}}{{- end }}
         </div>
       </div>
     </div>

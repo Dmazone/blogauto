@@ -1,0 +1,13 @@
+<div class="sidebar-widget">
+  <p class="sidebar-widget-title">최근 글</p>
+  <ul class="sidebar-recent-list">
+    {{- range first 8 (where site.RegularPages "Type" "in" site.Params.mainSections) }}
+    <li>
+      <a href="{{ .Permalink }}">
+        <span class="sr-title">{{ .Title }}</span>
+        <span class="sr-date">{{ .Date.Format "01.02" }}</span>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</div>

@@ -1,0 +1,51 @@
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- if and (gt (len $pages) 1) (in $pages . ) }}
+<nav class="paginav">
+  {{- with $pages.Next . }}
+  {{- $pg := . }}
+  {{- $imgSrc := "" }}
+  {{- with $pg.Params.cover.image }}
+    {{- $res := $pg.Resources.GetMatch (printf "*%s*" .) }}
+    {{- if $res }}
+      {{- $imgSrc = $res.Permalink }}
+    {{- else }}
+      {{- $imgSrc = . }}
+    {{- end }}
+  {{- end }}
+  <a class="prev" href="{{ $pg.Permalink }}">
+    {{- if $imgSrc }}
+    <div class="paginav-thumb">
+      <img src="{{ $imgSrc }}" alt="{{ $pg.Title }}" loading="lazy">
+    </div>
+    {{- end }}
+    <div class="paginav-text">
+      <span class="title paginav-label">« {{ i18n "prev_page" }}</span>
+      <span class="paginav-title">{{- $pg.Title -}}</span>
+    </div>
+  </a>
+  {{- end }}
+  {{- with $pages.Prev . }}
+  {{- $pg := . }}
+  {{- $imgSrc := "" }}
+  {{- with $pg.Params.cover.image }}
+    {{- $res := $pg.Resources.GetMatch (printf "*%s*" .) }}
+    {{- if $res }}
+      {{- $imgSrc = $res.Permalink }}
+    {{- else }}
+      {{- $imgSrc = . }}
+    {{- end }}
+  {{- end }}
+  <a class="next" href="{{ $pg.Permalink }}">
+    {{- if $imgSrc }}
+    <div class="paginav-thumb">
+      <img src="{{ $imgSrc }}" alt="{{ $pg.Title }}" loading="lazy">
+    </div>
+    {{- end }}
+    <div class="paginav-text">
+      <span class="title paginav-label">{{ i18n "next_page" }} »</span>
+      <span class="paginav-title">{{- $pg.Title -}}</span>
+    </div>
+  </a>
+  {{- end }}
+</nav>
+{{- end }}

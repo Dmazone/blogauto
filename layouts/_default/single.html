@@ -44,6 +44,8 @@
 
   {{- partial "ads-inject.html" . }}
 
+  {{- partial "related_posts.html" . }}
+
   {{- if (.Param "comments") }}
   {{- partial "comments.html" . }}
   {{- end }}

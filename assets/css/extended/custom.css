@@ -1,6 +1,5 @@
 /* ===================================================
-   PC 가독성 최적화 — Velog / Medium 벤치마크 기반
-   한국어 기술 블로그에 맞춘 여백·행간 설정
+   타이포그래피 — Pretendard 기반 가독성 최적화
 =================================================== */
 
 /* 본문 기본 타이포그래피 */
@@ -9,6 +8,7 @@
   line-height: 1.9;
   word-break: keep-all;
   overflow-wrap: break-word;
+  font-weight: 400;
 }
 
 /* 단락 간격 */
@@ -17,30 +17,37 @@
   margin-bottom: 1.7em;
 }
 
-/* 제목 계층 — 크기는 테마 유지, 위아래 여백만 추가 */
+/* 제목 계층 — Pretendard 볼드 + 여백 */
 .post-content h1 {
   margin-top: 3em;
   margin-bottom: 1em;
-  line-height: 1.4;
+  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: -0.025em;
 }
 
 .post-content h2 {
   margin-top: 2.8em;
   margin-bottom: 0.9em;
-  line-height: 1.4;
-  padding-bottom: 0.3em;
+  line-height: 1.38;
+  font-weight: 750;
+  letter-spacing: -0.018em;
+  padding-bottom: 0.35em;
   border-bottom: 1px solid var(--border);
 }
 
 .post-content h3 {
   margin-top: 2.2em;
   margin-bottom: 0.7em;
-  line-height: 1.45;
+  line-height: 1.42;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .post-content h4 {
   margin-top: 1.8em;
   margin-bottom: 0.6em;
+  font-weight: 650;
 }
 
 /* 리스트 간격 */

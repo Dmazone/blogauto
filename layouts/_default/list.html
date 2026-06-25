@@ -53,6 +53,7 @@
 {{- end }}
 
 {{- $term := .Data.Term }}
+<div class="post-list-grid">
 {{- range $index, $page := $paginator.Pages }}
 
 {{- $class := "post-entry" }}
@@ -124,6 +125,7 @@
 {{- end }}
 {{- end }}
 {{- end }}
+</div>{{/* end .post-list-grid */}}
 
 {{- if gt $paginator.TotalPages 1 }}
 <footer class="page-footer">

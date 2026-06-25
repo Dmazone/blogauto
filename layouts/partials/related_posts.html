@@ -1,0 +1,46 @@
+{{- $current := . }}
+{{- $cat := "" }}
+{{- with index $current.Params.categories 0 }}
+  {{- $cat = . }}
+{{- end }}
+
+{{- $related := slice }}
+{{- if $cat }}
+  {{- range site.RegularPages }}
+    {{- if and (ne .Permalink $current.Permalink) (in .Params.categories $cat) }}
+      {{- $related = $related | append . }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- $related = first 3 $related }}
+
+{{- if gt (len $related) 0 }}
+<div class="related-posts">
+  <h3 class="related-posts-title">같이 읽으면 좋은 글</h3>
+  <div class="related-posts-grid">
+    {{- range $related }}
+    {{- $pg := . }}
+    {{- $imgSrc := "" }}
+    {{- with $pg.Params.cover.image }}
+      {{- $res := $pg.Resources.GetMatch (printf "*%s*" .) }}
+      {{- if $res }}
+        {{- $imgSrc = $res.Permalink }}
+      {{- else }}
+        {{- $imgSrc = . }}
+      {{- end }}
+    {{- end }}
+    <a href="{{ $pg.Permalink }}" class="related-post-card">
+      {{- if $imgSrc }}
+      <div class="related-post-cover">
+        <img src="{{ $imgSrc }}" alt="{{ $pg.Title }}" loading="lazy">
+      </div>
+      {{- end }}
+      <div class="related-post-info">
+        <h4>{{ $pg.Title }}</h4>
+        <span class="related-post-date">{{ $pg.Date.Format "2006.01.02" }}</span>
+      </div>
+    </a>
+    {{- end }}
+  </div>
+</div>
+{{- end }}
