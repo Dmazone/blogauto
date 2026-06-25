@@ -113,11 +113,6 @@ canonifyURLs = true
     name = "🌐 Global"
     url = "/blogauto/posts/us-trends/"
     weight = 106
-  [[menu.main]]
-    identifier = "search"
-    name = "검색"
-    url = "/blogauto/search/"
-    weight = 110
 
 [taxonomies]
   category = "categories"
