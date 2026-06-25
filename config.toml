@@ -33,7 +33,7 @@ canonifyURLs = true
 
   [params.homeInfoParams]
     Title = "오늘의 트렌드, 여기서 다 본다"
-    Content = "기술·경제·사회·건강·연예·스포츠·부동산·여행·인문·IT기기\n매일 최신 트렌드 10편이 업데이트됩니다"
+    Content = "기술·경제·사회·건강·연예·스포츠·부동산·여행·인문·IT기기\n매일 최신 트렌드 업데이트"
 
   [[params.socialIcons]]
     name = "github"
