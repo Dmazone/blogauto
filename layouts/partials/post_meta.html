@@ -8,6 +8,12 @@
 {{- $scratch.Add "meta" (slice (printf "<span>%s</span>" (i18n "read_time" .ReadingTime | default (printf "%d min" .ReadingTime)))) }}
 {{- end }}
 
+{{- with .Params.categories }}
+{{- $cat := index . 0 }}
+{{- $catURL := printf "categories/%s/" ($cat | urlize) | absURL }}
+{{- $scratch.Add "meta" (slice (printf "<a class=\"post-cat\" href=\"%s\">#%s</a>" $catURL $cat)) }}
+{{- end }}
+
 {{- if not (.Param "hideAuthor") -}}
 {{- with (partial "author.html" .) }}
 {{- $scratch.Add "meta" (slice (printf "<span>%s</span>" .)) }}
