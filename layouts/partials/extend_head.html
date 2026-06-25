@@ -104,66 +104,59 @@ ul#menu > li > a {
   align-items: center;
 }
 
-/* ── 모바일 세로(portrait): 4×3 그리드 ── */
+/* ── 모바일 공통 그리드 기반 ── */
 @media (max-width: 768px) {
-  .header-nav { padding: 2px 6px 2px; }
+  .header-nav { padding: 2px 6px; }
   ul#menu {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
+    grid-auto-rows: 22px !important;
     overflow: visible !important;
     flex-wrap: unset !important;
-    white-space: normal !important;
     padding: 0 !important;
     gap: 2px;
     width: 100%;
     margin: 0 !important;
     list-style: none;
+    align-items: stretch;
   }
-  ul#menu > li { flex-shrink: unset; margin-inline-start: 0 !important; }
+  ul#menu > li { margin-inline-start: 0 !important; overflow: hidden; }
   ul#menu > li > a {
+    height: 22px !important;
+    min-height: unset !important;
+    max-height: 22px !important;
+    padding: 0 3px !important;
     font-size: 10.5px !important;
-    padding: 4px 2px !important;
-    min-height: 24px !important;
+    line-height: 22px !important;
     justify-content: center !important;
-    white-space: normal !important;
+    white-space: nowrap !important;
     text-align: center;
     border-radius: 4px;
     background: rgba(128,128,128,0.07);
     display: flex !important;
     align-items: center !important;
+    overflow: hidden;
   }
   ul#menu > li > a:hover { background: rgba(128,128,128,0.18); }
   [data-theme="light"] ul#menu > li > a { background: rgba(0,0,0,0.05); }
 }
 @media (max-width: 480px) {
-  ul#menu > li > a { font-size: 10px !important; padding: 3px 1px !important; min-height: 22px !important; }
+  ul#menu { grid-auto-rows: 20px !important; }
+  ul#menu > li > a { height: 20px !important; max-height: 20px !important; font-size: 10px !important; line-height: 20px !important; }
 }
 
-/* ── 모바일 가로(landscape): 6×2 그리드 ── */
+/* ── 모바일 가로(landscape ≤1024px): 6×2 그리드 ── */
 @media (max-width: 1024px) and (orientation: landscape) {
   .header-nav { padding: 2px 6px; }
   ul#menu {
-    display: grid !important;
     grid-template-columns: repeat(6, 1fr) !important;
-    overflow: visible !important;
-    flex-wrap: unset !important;
-    white-space: normal !important;
-    padding: 0 !important;
-    gap: 2px;
-    width: 100%;
-    margin: 0 !important;
+    grid-auto-rows: 20px !important;
   }
   ul#menu > li > a {
+    height: 20px !important;
+    max-height: 20px !important;
     font-size: 10px !important;
-    padding: 3px 1px !important;
-    min-height: 22px !important;
-    justify-content: center !important;
-    white-space: normal !important;
-    text-align: center;
-    border-radius: 4px;
-    background: rgba(128,128,128,0.07);
-    display: flex !important;
-    align-items: center !important;
+    line-height: 20px !important;
   }
 }
 
