@@ -728,9 +728,16 @@ async function main() {
     process.exit(0);
   }
 
-  // 게시할 포스팅: 전체 중 랜덤 1개만 선택
-  const selectedPost = posts[Math.floor(Math.random() * posts.length)];
-  log('🚀', `threads_poster 시작 — 오늘의 게시글: "${selectedPost.title}" | shariOnly=${shariOnly}`);
+  // 게시할 포스팅: 아직 Threads에 올리지 않은 것 중 첫 번째 (순서 유지)
+  const tlogForSelect = loadThreadsLog();
+  const isFirstPostToday = !posts.some(p => tlogForSelect[p.url]);
+  const selectedPost = posts.find(p => !tlogForSelect[p.url]);
+  if (!selectedPost) {
+    log('✅', `오늘 포스팅 ${posts.length}개 모두 Threads에 게시 완료`);
+    process.exit(0);
+  }
+
+  log('🚀', `threads_poster 시작 — [${posts.indexOf(selectedPost) + 1}/${posts.length}] "${selectedPost.title}" | 오늘 첫 게시=${isFirstPostToday}`);
 
   let successPost = 0;
   let totalShari  = 0;
@@ -761,8 +768,8 @@ async function main() {
     }
   }
 
-  // ── ② 스하리 (모집글 검색 → 찾아가서 스하리+팔로우) — 브라우저 자동화 ──
-  if (!postOnly) {
+  // ── ② 스하리 — 하루 첫 게시(10:00)일 때만 실행 (반복 실행 시 스킵) ──────
+  if (!postOnly && isFirstPostToday) {
     log('', '─'.repeat(55));
     const poster = new ThreadsPoster();
     try {
@@ -775,6 +782,8 @@ async function main() {
     } finally {
       await poster.close();
     }
+  } else if (!postOnly && !isFirstPostToday) {
+    log('⏭️', '스하리 스킵 — 오늘 첫 게시가 아님 (10:00 실행분에서 이미 처리)');
   }
 
   // 결과 요약

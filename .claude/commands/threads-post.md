@@ -1,20 +1,20 @@
 # /threads-post — 스레드 게시 & 스하리
 
-매일 10:00 KST, Task Scheduler가 자동 실행. 이 스킬은 수동 트리거 또는 재실행 용.
+매일 10:00~15:00 KST, Task Scheduler가 1시간 간격으로 6회 자동 실행.
+이 스킬은 수동 트리거 또는 재실행 용.
 
 ---
 
-## STEP 0 — Chrome 디버그 모드 + paydma.action 로그인 확인
+## 동작 방식
 
-```powershell
-(Invoke-WebRequest -Uri http://localhost:9222/json -UseBasicParsing -ErrorAction SilentlyContinue).StatusCode
-```
+| 실행 시각 | 동작 |
+|---|---|
+| 10:00 (1번째) | 포스팅 1개 게시 (API) + 스하리 5개 (브라우저) |
+| 11:00~15:00 (2~6번째) | 포스팅 1개 게시 (API) — 스하리 스킵 |
 
-- **200** → 연결됨
-- **오류** → `scripts\chrome_debug.bat` 실행 후 일반 Chrome에서 **paydma.action** 계정으로 Threads 로그인
-
-> ⚠️ 크로미움(Playwright 자체 브라우저)이 아닌 **일반 Chrome**에서 로그인할 것.  
-> 로그인 후 스크립트가 자동으로 계정을 확인하고 5분 내 대기 후 진행.
+- 포스팅 순서: `posts_log.json` 배열 순서 (07:00→07:30→…→09:30 발행 순)
+- 이미 게시된 URL은 `data/threads_log.json`으로 중복 차단 (7일)
+- 오늘 6개 모두 완료되면 자동 종료
 
 ---
 
@@ -27,19 +27,33 @@ node scripts/threads_poster.js
 **옵션:**
 | 플래그 | 설명 |
 |---|---|
-| (없음) | 홍보글 게시 1개 + 스하리 15개 |
-| `--post-only` | 홍보글 게시만 |
-| `--shari-only` | 스하리만 |
-
-스크립트가 자동으로:
-1. Chrome CDP 연결 → Threads 로그인 확인 → **paydma.action 계정 검증**
-2. suspended 감지 시 즉시 중단 + 텔레그램 알림
-3. 오늘 포스팅 중 랜덤 1개 선택 → 홍보글 3버전 생성 (Claude Haiku) → 게시
-4. 스하리 키워드 검색 → 좋아요 + 리포스트 + 팔로우 + 댓글 (15개 목표)
+| (없음) | 다음 미게시 포스팅 1개 + 스하리 (첫 실행 시만) |
+| `--post-only` | 포스팅만 (스하리 스킵) |
+| `--shari-only` | 스하리만 (포스팅 스킵) |
 
 ---
 
-## STEP 2 — 로그 모니터링
+## STEP 2 — Task Scheduler 설정 (최초 1회)
+
+아래 PowerShell을 **관리자 권한**으로 실행:
+
+```powershell
+$scriptDir = "C:\Users\Paydma\00_Claude_CODE\BlogAuto"
+$nodeExe   = (Get-Command node).Source
+$action    = New-ScheduledTaskAction -Execute $nodeExe -Argument "scripts/threads_poster.js" -WorkingDirectory $scriptDir
+$settings  = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Hours 1)
+$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive
+
+foreach ($hour in 10..15) {
+  $trigger = New-ScheduledTaskTrigger -Daily -At "${hour}:00"
+  Register-ScheduledTask -TaskName "ThreadsPost_${hour}00" -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Force
+}
+Write-Host "Task Scheduler 등록 완료 (10:00~15:00 매시간)"
+```
+
+---
+
+## STEP 3 — 로그 모니터링
 
 ```powershell
 Get-Content "logs\threads-$(Get-Date -Format 'yyyy-MM-dd').log" -Wait -Tail 30
@@ -53,8 +67,7 @@ Get-Content "logs\threads-$(Get-Date -Format 'yyyy-MM-dd').log" -Wait -Tail 30
 
 | 증상 | 처리 |
 |---|---|
-| Chrome CDP 연결 실패 | `chrome_debug.bat` 실행 후 재시도 |
-| paydma.action 계정 불일치 | 텔레그램 알림 → 5분 내 계정 교체하면 자동 재개 |
+| 토큰 만료 | `data/threads_log.json` 확인 → 토큰 재발급 후 `.env` 업데이트 |
+| 스하리 Chrome 실패 | `node scripts/threads_setup.js` 실행 후 로그인 |
 | 계정 정지(suspended) | 즉시 중단 + 텔레그램 경고 (본인인증 필요) |
-| 연속 실패 3회 | 자동 중단 + 텔레그램 경고 |
-| 중복 게시 방지 | `data/threads_log.json` 으로 7일간 중복 체크 |
+| 중복 게시 방지 | `data/threads_log.json`으로 7일간 중복 체크 |
