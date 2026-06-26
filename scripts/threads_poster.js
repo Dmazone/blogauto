@@ -47,16 +47,15 @@ const log = (emoji, msg) => {
 
 
 /**
- * 사람처럼 불규칙한 딜레이
- * 30%: 빠름(1~3초), 40%: 보통(4~10초), 20%: 느림(11~25초), 10%: 아주느림(26~50초)
+ * 사람처럼 불규칙한 딜레이 (봇 신고 최소화를 위해 전반적으로 느리게)
+ * 20%: 보통(15~40초), 50%: 느림(45~120초), 30%: 아주느림(130~240초)
  */
 function humanWait() {
   const r = Math.random();
   let ms;
-  if (r < 0.30)      ms = rand(3000, 9000);
-  else if (r < 0.70) ms = rand(12000, 30000);
-  else if (r < 0.90) ms = rand(33000, 75000);
-  else               ms = rand(78000, 150000);
+  if (r < 0.20)      ms = rand(15000, 40000);
+  else if (r < 0.70) ms = rand(45000, 120000);
+  else               ms = rand(130000, 240000);
   log('⏱️', `대기 ${(ms/1000).toFixed(1)}초...`);
   return wait(ms);
 }
@@ -770,7 +769,7 @@ async function main() {
   if (!postOnly) {
     log('', '─'.repeat(55));
     try {
-      const count = await poster.doShari(15);
+      const count = await poster.doShari(5);
       totalShari  = count;
     } catch (err) {
       log('❌', `스하리 실패: ${err.message}`);
