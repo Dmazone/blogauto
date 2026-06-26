@@ -701,7 +701,8 @@ class ThreadsPoster {
 
   async close() {
     try { await this.page?.close(); } catch {}
-    log('🔒', 'Threads 탭 종료');
+    try { await this.context?.close(); } catch {}
+    log('🔒', 'Threads 세션 종료');
   }
 }
 
@@ -799,7 +800,8 @@ async function main() {
   log('📱', '텔레그램 알림 전송 완료');
 }
 
-main().catch(err => {
-  console.error('❌ threads_poster 치명적 오류:', err.message);
+main().catch(async err => {
+  log('❌', `threads_poster 치명적 오류: ${err.message}`);
+  await sendTelegram(`❌ threads_poster 실행 실패!\n${err.message}`).catch(() => {});
   process.exit(1);
 });
