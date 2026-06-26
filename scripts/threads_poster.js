@@ -15,6 +15,7 @@
  */
 
 import { connectChrome } from './connect_chrome.js';
+import { postToThreads } from './threads_api.js';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'fs';
 import { sendTelegram } from './telegram.js';
 
@@ -731,17 +732,15 @@ async function main() {
   const selectedPost = posts[Math.floor(Math.random() * posts.length)];
   log('🚀', `threads_poster 시작 — 오늘의 게시글: "${selectedPost.title}" | shariOnly=${shariOnly}`);
 
-  const poster   = new ThreadsPoster();
-  await poster.init();
-
   let successPost = 0;
   let totalShari  = 0;
   const results   = [];
 
-  // ── ① 블로그 홍보글 게시 (랜덤 1개) ──────────────────────────────────────
+  // ── ① 블로그 홍보글 게시 — 공식 API (봇 탐지 없음) ──────────────────────
   if (!shariOnly) {
     log('', '─'.repeat(55));
     log('📰', `오늘의 포스팅: ${selectedPost.title}`);
+    log('🌐', 'Threads 공식 API로 게시 중...');
 
     const mdPath = path.join(
       __dirname, '..', 'content', 'posts',
@@ -751,32 +750,32 @@ async function main() {
 
     try {
       const versions = await generateThreadsText(selectedPost, blogContent);
-      const text     = versions[0];
-      await poster.postThread(text, selectedPost.url);
+      const text     = `${versions[0]}\n${selectedPost.url}`;
+      await postToThreads(text);
       successPost++;
       results.push({ title: selectedPost.title, url: selectedPost.url, posted: true });
-      log('✅', `게시 완료: ${selectedPost.title}`);
+      log('✅', `API 게시 완료: ${selectedPost.title}`);
     } catch (err) {
-      log('❌', `게시 실패: ${err.message}`);
+      log('❌', `API 게시 실패: ${err.message}`);
       results.push({ title: selectedPost.title, url: selectedPost.url, posted: false });
     }
-
-    // 게시 후 스하리 전 여유 시간
-    await humanWait();
   }
 
-  // ── ② 스하리 (모집글 검색 → 찾아가서 스하리+팔로우) ─────────────────────
+  // ── ② 스하리 (모집글 검색 → 찾아가서 스하리+팔로우) — 브라우저 자동화 ──
   if (!postOnly) {
     log('', '─'.repeat(55));
+    const poster = new ThreadsPoster();
     try {
+      await poster.init();
+      await humanWait(); // 게시 후 자연스러운 간격
       const count = await poster.doShari(5);
       totalShari  = count;
     } catch (err) {
       log('❌', `스하리 실패: ${err.message}`);
+    } finally {
+      await poster.close();
     }
   }
-
-  await poster.close();
 
   // 결과 요약
   log('', '='.repeat(55));
