@@ -865,6 +865,42 @@ input, button, select, textarea {
 .ad-unit.ad-adfit   { max-height: 120px !important; }
 
 /* ════════════════════════════════════════════════
+   헤더 틀고정 (sticky)
+   ════════════════════════════════════════════════ */
+.header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 200 !important;
+  background: var(--theme) !important;
+}
+
+/* ════════════════════════════════════════════════
+   검색창 라이트모드 가시성
+   ════════════════════════════════════════════════ */
+[data-theme="light"] .gsb-input {
+  border: 1px solid rgba(0,0,0,0.18) !important;
+  background: rgba(0,0,0,0.04) !important;
+  color: #1e293b !important;
+}
+[data-theme="light"] .gsb-input::placeholder {
+  color: rgba(0,0,0,0.38) !important;
+}
+[data-theme="light"] .gsb-input:focus {
+  border-color: rgba(0,0,0,0.35) !important;
+}
+[data-theme="light"] .gsb-btn {
+  border: 1px solid rgba(0,0,0,0.15) !important;
+  background: rgba(0,0,0,0.04) !important;
+  color: #334155 !important;
+}
+[data-theme="light"] .gsb-btn:hover {
+  background: rgba(0,0,0,0.09) !important;
+}
+[data-theme="light"] .global-search-bar {
+  border-top: 1px solid rgba(0,0,0,0.08) !important;
+}
+
+/* ════════════════════════════════════════════════
    푸터 개선
    ════════════════════════════════════════════════ */
 .footer {
