@@ -48,13 +48,19 @@ const SEL = {
     'button[aria-label="생성 중지"]',
     '[data-test-id="stop-button"]',
   ],
-  // 새 대화 버튼
+  // 새 대화 버튼 (Gem 모드 + 일반 모드 통합)
   newChat: [
-    'a[href="/app"]',
     'button[aria-label="New chat"]',
     'button[aria-label="새 채팅"]',
+    'button[aria-label="New conversation"]',
+    'button[aria-label="새 대화"]',
+    'button[aria-label="Start new chat"]',
     '[data-test-id="new-chat-button"]',
+    '[data-test-id="new-conversation-button"]',
+    'a[href="/app"]',
     'a[href*="/app"]:not([href*="gem"])',
+    'button[aria-label*="new" i]',
+    'button[title*="new" i]',
   ],
   // 모델 응답 컨테이너 (마지막 것만 추출)
   response: [
@@ -199,14 +205,26 @@ export class GeminiSession {
     await wait(2500);
 
     // Gem URL에서 "새 채팅" 버튼을 클릭하여 이전 대화 오염 방지
+    // 버튼 미발견 시 홈 경유 하드 리셋 (Gem이 이전 대화 자동 재개하는 경우 대응)
+    let newChatClicked = false;
     try {
       const newChatEl = await this._tryFind(SEL.newChat);
       if (newChatEl) {
         await newChatEl.click();
         await wait(1500);
         log('💬', '새 채팅 버튼 클릭 → 대화 초기화');
+        newChatClicked = true;
       }
-    } catch { /* 버튼 없으면 URL 이동만으로 초기화된 것으로 간주 */ }
+    } catch { /* ignore */ }
+
+    if (!newChatClicked && this.gemUrl) {
+      // Gem 모드에서 새 채팅 버튼 미발견 → 홈 → Gem 재진입으로 강제 초기화
+      log('⚠️', '새 채팅 버튼 미발견 → 홈 경유 하드 리셋');
+      await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
+      await wait(2000);
+      await this.page.goto(this.gemUrl, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => {});
+      await wait(2000);
+    }
 
     // 입력창이 실제로 로드될 때까지 대기 (최대 30초)
     // 20분 대기 후 페이지 상태가 불안정한 경우 대응
@@ -406,7 +424,36 @@ export class GeminiSession {
 
           if (codeText && codeText.length > 300) return codeText;
 
-          // 2순위: innerText 폴백 (코드블록 없는 응답)
+          // 2순위: HTML→마크다운 역변환
+          // Gemini가 코드블록 없이 마크다운을 렌더링하면 innerText에서 ## 기호가 사라짐
+          // h2/h3 태그가 있는 경우 DOM을 순회해 ## 마크다운으로 복원
+          const mdFromHtml = await last.evaluate((el) => {
+            const hasHeadings = el.querySelector('h2, h3');
+            if (!hasHeadings) return null;
+
+            function nodeToMd(node) {
+              if (!node) return '';
+              if (node.nodeType === 3) return node.textContent || '';
+              const tag = (node.tagName || '').toLowerCase();
+              if (['script', 'style', 'button', 'svg', 'path'].includes(tag)) return '';
+              if (tag === 'h1') return `\n# ${(node.innerText || '').trim()}\n\n`;
+              if (tag === 'h2') return `\n## ${(node.innerText || '').trim()}\n\n`;
+              if (tag === 'h3') return `\n### ${(node.innerText || '').trim()}\n\n`;
+              if (tag === 'li') return `\n- ${(node.innerText || '').trim()}`;
+              if (tag === 'blockquote') return `\n> ${(node.innerText || '').trim()}\n`;
+              if (tag === 'p') return `\n${(node.innerText || '').trim()}\n`;
+              if (tag === 'br') return '\n';
+              // 나머지 태그는 자식 순회
+              return Array.from(node.childNodes).map(nodeToMd).join('');
+            }
+
+            const md = nodeToMd(el);
+            return (md.includes('##') && md.length > 300) ? md : null;
+          }).catch(() => null);
+
+          if (mdFromHtml && mdFromHtml.length > 300) return mdFromHtml;
+
+          // 3순위: innerText 폴백 (코드블록 없는 응답)
           const text = await last.innerText({ timeout: 5000 });
           if (text.trim().length > 20) return text.trim();
         }

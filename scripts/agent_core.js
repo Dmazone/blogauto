@@ -888,14 +888,41 @@ ${lc.qualityCheck5}
     } else {
       log('⚠️', `[Turn 5] 재출력도 H2 부족 (${(retried.match(/^## /gm) ?? []).length}개) — DOM 직접 추출 시도`);
 
-      // 최후 수단: 브라우저 DOM에서 <pre> 블록 직접 추출 (innerText가 ## 손실시킨 경우)
+      // 최후 수단: 브라우저 DOM에서 직접 추출 (innerText가 ## 손실시킨 경우)
       if (session.page) {
         try {
           const domText = await session.page.evaluate(() => {
+            // 1) <pre code> 코드블록에서 ## 찾기
             const pres = document.querySelectorAll('pre code, pre');
             for (let i = pres.length - 1; i >= 0; i--) {
               const t = (pres[i].textContent || '').trim();
               if (t.length > 500 && t.includes('##')) return t;
+            }
+
+            // 2) 렌더링된 h2 태그로부터 마크다운 역변환
+            //    Gemini가 코드블록 없이 HTML로 렌더링한 경우 대응
+            const allH2 = document.querySelectorAll('h2');
+            if (allH2.length >= 2) {
+              function nodeToMd(node) {
+                if (!node) return '';
+                if (node.nodeType === 3) return node.textContent || '';
+                const tag = (node.tagName || '').toLowerCase();
+                if (['script', 'style', 'button', 'svg', 'path'].includes(tag)) return '';
+                if (tag === 'h1') return `\n# ${(node.innerText || '').trim()}\n\n`;
+                if (tag === 'h2') return `\n## ${(node.innerText || '').trim()}\n\n`;
+                if (tag === 'h3') return `\n### ${(node.innerText || '').trim()}\n\n`;
+                if (tag === 'li') return `\n- ${(node.innerText || '').trim()}`;
+                if (tag === 'blockquote') return `\n> ${(node.innerText || '').trim()}\n`;
+                if (tag === 'p') return `\n${(node.innerText || '').trim()}\n`;
+                if (tag === 'br') return '\n';
+                return Array.from(node.childNodes).map(nodeToMd).join('');
+              }
+              const containers = document.querySelectorAll('message-content, .model-response-text, [data-message-author-role="model"]');
+              if (containers.length > 0) {
+                const last = containers[containers.length - 1];
+                const md = nodeToMd(last);
+                if (md.includes('##') && md.length > 300) return md;
+              }
             }
             return null;
           });
