@@ -466,16 +466,17 @@ async function generateContextualImagePrompts(section, topic, body) {
   const raw = await geminiCall(
     `아래 블로그 글의 이미지 위치에 맞는 영어 이미지 생성 프롬프트 3개를 만들어줘.\n\n` +
     `[섹션] ${section.name} / [키워드] ${topic.keyword}\n` +
-    `[섹션 시각 스타일]: ${style}\n\n` +
+    `[섹션 시각 분위기 — 색감·조명·품질만 참조. 특정 오브젝트 사용 금지]: ${style}\n\n` +
     contexts.map((c) =>
       `[본문 이미지 ${c.idx}]\n앞 내용: ${c.before}\n뒤 내용: ${c.after}`
     ).join('\n\n---\n\n') +
     `\n\n[규칙]\n` +
-    `1. 구조: "${styleAnchor}, [구체적 사물/장면 묘사], [배경], [구도/조명]"\n` +
-    `2. ⛔ "concept", "visualization", "abstract" 같은 추상어 금지 — 반드시 실물 사물·장면으로\n` +
-    `3. ⛔ "no face", "no person" 등 부정어 프롬프트에 넣지 말 것 (별도 처리됨)\n` +
-    `4. 본문이미지2: 이미지1과 색감·구도·소재 완전히 다르게\n` +
-    `5. 영어 1~2문장, 섹션 스타일 앵커로 시작\n\n` +
+    `1. 오브젝트·장면은 반드시 글 내용에서 결정 — 섹션 imageStyle 오브젝트 금지\n` +
+    `2. 프롬프트 구조: "[글 내용 직결 구체적 사물/장면] in [배경], [섹션 분위기 색감·조명]"\n` +
+    `3. ⛔ "concept", "visualization", "abstract" 같은 추상어 금지 — 반드시 실물 사물·장면으로\n` +
+    `4. ⛔ "no face", "no person" 등 부정어 프롬프트에 넣지 말 것 (별도 처리됨)\n` +
+    `5. 이미지1, 이미지2, 썸네일 — 세 장 모두 완전히 다른 오브젝트·배경·색조\n` +
+    `6. 영어 1~2문장으로 작성\n\n` +
     `JSON만 출력: {"prompts":["본문이미지1","본문이미지2","썸네일"]}`,
     { temperature: 0.5 }
   );
@@ -919,29 +920,48 @@ ${lc.qualityCheck5}
   const t6 = await session.send(
     `위 글의 이미지 2개와 썸네일 1개를 위한 AI 이미지 생성 프롬프트 3개를 영어로 만들어줘.
 
-[섹션 시각 스타일 — 반드시 각 프롬프트에 반영]: ${section.imageStyle}
+[섹션 시각 분위기 — 색감·조명·품질 레퍼런스만. 특정 오브젝트는 여기서 정하지 않음]:
+${section.imageStyle}
 
-⛔ 절대 금지 (이 단어들 쓰면 무조건 실패):
+⛔ 절대 금지 — 아래 중 하나라도 해당하면 무조건 실패:
 - "concept", "visualization", "abstract", "idea", "symbol", "metaphor" 같은 추상 단어
-- "no face", "no person" 등 부정어 — 이건 별도 처리되므로 프롬프트에 넣지 말 것
+- "no face", "no person" 등 부정어 — 이건 별도 처리됨, 프롬프트에 넣지 말 것
 - 한국어 단어 1개라도 포함
+- 3장의 이미지가 같거나 유사한 오브젝트·사물·장면을 공유 (예: 셋 다 책, 셋 다 회로기판, 셋 다 그래프)
+- 섹션 imageStyle에 나온 특정 오브젝트를 그대로 사용 (예: circuit board, library, stock chart)
 
-✅ 필수 — 프롬프트 구조: "[구체적 사물/장면이 무엇을 하는지] in [배경/환경], [섹션 스타일], [구도/조명]"
-예시 (경제 글): "Stock ticker board displaying upward arrows in a modern trading floor, economy and finance concept bold blue and gold palette, dramatic wide angle"
-예시 (건강 글): "Fresh vegetables and protein foods arranged on a wooden cutting board beside a measuring tape, health and wellness concept clean composition, natural side lighting"
-예시 (IT기기 글): "Slim laptop and smartphone side by side on dark glossy surface, modern consumer electronics product shot, studio lighting cinematic"
+✅ 핵심 원칙:
+1. 오브젝트·장면은 반드시 이 글의 실제 내용에서 결정 — 섹션 스타일이 아님
+2. 섹션 이미지 스타일은 색감·분위기·조명만 참조
+3. 프롬프트 구조: "[글 내용 직결 구체적 사물/장면] in [배경/환경], [섹션 분위기 색감·조명]"
+4. 각 이미지는 서로 완전히 다른 오브젝트, 배경, 구도, 색조
+
+예시 — 경제/국채투자 글:
+  이미지1: "Government bond certificate placed on dark marble table with pen and glasses beside it, bold blue and gold tones, dramatic side lighting, cinematic"
+  이미지2: "Financial planner reviewing yield curve data on printed report at an office desk, coffee mug nearby, warm professional lighting"
+  썸네일: "Row of sealed government bond folders stacked on shelf, bold blue and gold atmosphere, sharp product-style"
+
+예시 — 인문/텍스트힙 글:
+  이미지1: "Young woman writing carefully in handmade notebook at a minimalist cafe wooden table, warm amber light, focused"
+  이미지2: "Curated independent bookstore shelf with handwritten recommendation cards on book covers, soft warm depth-of-field"
+  썸네일: "Fountain pen resting diagonally on open handwritten journal, wooden surface, warm golden hour light, editorial"
+
+예시 — IT기기/이어폰 글:
+  이미지1: "Premium wireless earbuds in their charging case on matte dark surface, studio light from above, product photography"
+  이미지2: "Person plugging earbuds into ear while reading on a commuter train, shallow depth of field, lifestyle editorial"
+  썸네일: "Single earbud closeup showing silicon ear tip and mesh driver, dark background, precision macro photography"
 
 [이미지 1 — 도입부 직후]
-→ 이 글의 첫 번째 핵심 내용을 구체적 사물·장면으로 시각화
-→ 글 도입부를 읽고 "이 장면을 찍은 사진"처럼 묘사
+→ 글의 첫 번째 핵심 주제에서 가장 구체적인 사물·장면 1개 선택
+→ 이 글을 읽지 않은 독자도 "무슨 글인지" 즉시 알 수 있는 장면
 
 [이미지 2 — 두 번째 ## 섹션 직후]
-→ 이 글의 두 번째 핵심 주제를 구체적 장면으로 시각화
-→ 이미지 1과 색감·구도·소재 완전히 다르게
+→ 글의 두 번째 핵심 주제에서 완전히 다른 사물·장면 선택
+→ ⛔ 이미지1과 오브젝트·색감·구도 모두 달라야 함 (같은 유형의 사물 금지)
 
 [썸네일 — 블로그 커버]
-→ 글 전체 주제를 대표하는 오브젝트·아이콘·장면
-→ bold 색상, 강렬한 구도
+→ 글 전체를 상징하는 아이콘적 사물·장면 1개, bold 색상, 강렬한 구도
+→ ⛔ 이미지1, 이미지2와 또 다른 오브젝트 사용
 
 JSON만 출력 (keys: prompts, 배열 3개):
 \`\`\`json

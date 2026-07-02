@@ -41,22 +41,29 @@ function scanMissingImages() {
       const content = fs.readFileSync(indexMd, 'utf-8');
       const titleMatch = content.match(/^title:\s*"?([^"\n]+)"?/m);
       const title = (titleMatch?.[1] ?? postDir).replace(/\\"/g, '"').trim();
+      const tagsMatch = content.match(/^tags:\s*\[([^\]]+)\]/m);
+      const tags = tagsMatch ? tagsMatch[1].replace(/"/g, '').split(',').map(t => t.trim()) : [];
+      const descMatch = content.match(/^description:\s*"?([^"\n]+)"?/m);
       const slug = postDir;
       const relDir = `content/posts/${sectionDir}/${postDir}`;
 
+      // slug에서 영어 키워드 추출 (한국어 제목 대신)
+      const slugKeywords = slug.replace(/-\d{4,}$/g, '').replace(/-/g, ' ').trim();
+
+      // 이미지별 다른 씬 접근 (같은 오브젝트 반복 방지)
+      const scenes = [
+        // 01: 사물/제품 중심 — 글의 핵심 주제 오브젝트
+        `${slugKeywords} key object closeup on clean surface, ${imgStyle}, sharp focus, product-style, landscape 16:9`,
+        // 02: 환경/상황 중심 — 글의 두 번째 주제를 인물 없이 환경으로
+        `environment and setting related to ${slugKeywords}, interior or outdoor scene, ${imgStyle}, wide angle, landscape 16:9`,
+        // thumb: 아이콘/상징 중심 — 전체 주제 상징 오브젝트, bold 구도
+        `bold iconic ${slugKeywords} themed object on contrasting background, ${imgStyle}, strong graphic composition, landscape 16:9`,
+      ];
+
       const checks = [
-        {
-          file: `${slug}-01.webp`,
-          prompt: `${imgStyle}, ${title} introductory concept scene, no text overlay, landscape 16:9`,
-        },
-        {
-          file: `${slug}-02.webp`,
-          prompt: `${imgStyle}, ${title} comparison analysis visualization, different composition from image 1, no text overlay, landscape 16:9`,
-        },
-        {
-          file: `${slug}-thumb.webp`,
-          prompt: `${imgStyle}, ${title} editorial cover concept, bold symbolic design, no text overlay, landscape 16:9`,
-        },
+        { file: `${slug}-01.webp`, prompt: scenes[0] },
+        { file: `${slug}-02.webp`, prompt: scenes[1] },
+        { file: `${slug}-thumb.webp`, prompt: scenes[2] },
       ];
 
       for (const check of checks) {
