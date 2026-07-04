@@ -205,6 +205,15 @@ export class GeminiSession {
         await this.page.goto(this.gemUrl, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
       }
       await wait(2500);
+      // Gem URL 도착 후에도 기존 대화가 재개된 경우를 대비해 새 채팅 버튼 클릭 시도
+      try {
+        const newChatEl = await this._tryFind(SEL.newChat);
+        if (newChatEl) {
+          await newChatEl.click();
+          await wait(1500);
+          log('💬', 'Gem 새 채팅 버튼 클릭 (기존 대화 재개 방지)');
+        }
+      } catch { /* 버튼 없으면 URL 이동만으로 초기화 */ }
 
     // ── 일반 채팅 모드: 새 채팅 버튼 클릭
     } else {
