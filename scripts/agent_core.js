@@ -738,7 +738,9 @@ ${lc.lang !== 'ko' ? `⚠️ 이 섹션은 ${lc.label}로 전체 포스팅을 �
   const t2 = await session.send(
     `가장 잠재력 있는 주제 1개를 선택하고, 아래 형식으로 출력해줘.
 
-[JSON 블록]
+⚠️ 첫 번째 출력은 반드시 JSON 코드 블록이어야 함. JSON 없이 다른 내용부터 시작하면 파싱 실패 처리됨.
+
+[JSON 블록 — 첫 번째로 출력]
 \`\`\`json
 {"title":"${lc.lang === 'ko' ? 'SEO최적화제목(28자이내)' : `Title in ${lc.label} (${lc.titleMaxLen})`}","slug":"english-slug-here","keyword":"${lc.lang === 'ko' ? '핵심키워드' : 'main keyword in ' + lc.label}","description":"description under 160 chars in ${lc.label}"}
 \`\`\`
@@ -746,7 +748,7 @@ ${lc.lang !== 'ko' ? `⚠️ 이 섹션은 ${lc.label}로 전체 포스팅을 �
 제목 SEO 필수 규칙:
 ${lc.titleSeoRules.join('\n')}
 
-[SEO 아웃라인]
+[SEO 아웃라인 — JSON 출력 후에 작성]
 ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}## H2 섹션 4개, 각 H2 아래 ### H3 2~3개
 각 섹션의 톤: 비교분석/장단점/경험담/튜토리얼 중 명시`
   );
@@ -941,6 +943,16 @@ ${lc.qualityCheck5}
       }
     }
   }
+
+  // CommonMark에서 CJK 괄호 인접 **bold** 미렌더링 수정
+  // **「text」** → 「**text**」 (Goldmark 호환 형태)
+  finalBody = finalBody
+    .replace(/\*\*「([^」\n]*)」\*\*/g, '「**$1**」')
+    .replace(/\*\*『([^』\n]*)』\*\*/g, '『**$1**』')
+    .replace(/\*\*【([^】\n]*)】\*\*/g, '【**$1**】')
+    .replace(/\*\*〔([^〕\n]*)〕\*\*/g, '〔**$1**〕')
+    .replace(/\*\*〈([^〉\n]*)〉\*\*/g, '〈**$1**〉')
+    .replace(/\*\*《([^》\n]*)》\*\*/g, '《**$1**》');
 
   // ── TURN 6: 이미지 프롬프트 생성 (본문 2장 + 썸네일 1장) ────────────────
   log('🎨', '[Turn 6] 이미지 프롬프트 생성 중 (본문 2장 + 썸네일)...');
