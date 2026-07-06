@@ -36,6 +36,12 @@
 
   {{- if .Content }}
   <div class="post-content md-content">
+    <div class="ad-unit ad-adfit" style="margin:0 auto 20px;max-width:768px;text-align:center;">
+      <ins class="kakao_ad_area" style="display:block;"
+        data-ad-unit="DAN-rQKAp2HPhLvIgyeA"
+        data-ad-width="320"
+        data-ad-height="100"></ins>
+    </div>
     {{- if not (.Param "disableAnchoredHeadings") }}
     {{- partial "anchored_headings.html" .Content -}}
     {{- else }}{{ .Content }}{{ end }}
