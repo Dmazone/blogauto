@@ -35,12 +35,40 @@
     var h2s = content.querySelectorAll('h2');
     if (h2s.length === 0) return;
 
-    /* H2 2개마다 텐핑 광고 1개 삽입 (index 1, 3, 5...) */
-    var slotIdx = 0;
-    for (var i = 1; i < h2s.length && slotIdx < TENPING_TYPES.length; i += 2) {
-      var node = makeTenping(TENPING_TYPES[slotIdx]);
-      h2s[i].parentNode.insertBefore(node, h2s[i].nextSibling);
-      slotIdx++;
+    /* 각 H2 섹션 파악: 이미지 포함 여부 + 삽입 가능 요소 목록 */
+    var sections = [];
+    for (var i = 0; i < h2s.length; i++) {
+      var h2 = h2s[i];
+      var nextH2 = h2s[i + 1] || null;
+      var sectionEls = [];
+      var el = h2.nextElementSibling;
+      while (el && el !== nextH2) {
+        if (!el.classList.contains('ad-unit')) sectionEls.push(el);
+        el = el.nextElementSibling;
+      }
+      var hasImg = sectionEls.some(function(e) { return e.querySelector && e.querySelector('img'); });
+      /* P 또는 H3 뒤에만 광고 삽입 가능 (blockquote·ul·ol 앞뒤 제외) */
+      var insertable = sectionEls.filter(function(e) { return e.tagName === 'P' || e.tagName === 'H3'; });
+      sections.push({ h2: h2, hasImg: hasImg, insertable: insertable });
+    }
+
+    /* 이미지 없는 섹션 중 삽입 가능 요소 2개 이상인 것만 추출 */
+    var candidates = sections.filter(function(s) { return !s.hasImg && s.insertable.length >= 2; });
+
+    /* 전체 섹션 분포를 고려해 2개 균등 선택 */
+    var targets = [];
+    if (candidates.length >= 2) {
+      var step = Math.max(1, Math.floor(candidates.length / 2));
+      targets = [candidates[0], candidates[step]];
+    } else if (candidates.length === 1) {
+      targets = [candidates[0]];
+    }
+
+    /* 각 섹션 중간 P/H3 요소 뒤에 텐핑 광고 삽입 */
+    for (var j = 0; j < targets.length && j < TENPING_TYPES.length; j++) {
+      var insertable = targets[j].insertable;
+      var midEl = insertable[Math.floor(insertable.length / 2)];
+      midEl.parentNode.insertBefore(makeTenping(TENPING_TYPES[j]), midEl.nextSibling);
     }
   }
 
