@@ -16,6 +16,9 @@ canonifyURLs = true
 
 [params]
   author = "트렌드줌"
+
+  [params.footer]
+    text = "[개인정보처리방침](/blogauto/privacy/)"
   description = "최신기술·경제·사회·인문·연예·건강·IT기기·부동산·여행·스포츠까지. 오늘의 트렌드를 한눈에."
   keywords = ["최신기술동향", "경제이슈", "사회이슈", "IT기기", "한국부동산", "세계여행지", "건강정보", "스포츠뉴스", "연예이슈", "인문학"]
   defaultTheme = "auto"
