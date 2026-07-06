@@ -51,30 +51,48 @@
     {{- $AD1 := `<div class="ad-unit ad-tenping" style="margin:28px auto;max-width:768px;text-align:center;"><tenping class="adsbytenping" style="width:100%;max-width:768px;margin:0px auto;display:block;" tenping-ad-display-type="1LawCE8FqKOhetXZhMopsQ%3d%3d" tenping-ad-client="BdnhcMfPBvtcqWy4TeF3452t47SWFwraO4StFWXx1U%2fSBFm9k9OQo1uJHpkxwqxi"></tenping></div>` -}}
     {{- $AD2 := `<div class="ad-unit ad-tenping" style="margin:28px auto;max-width:768px;text-align:center;"><tenping class="adsbytenping" style="width:100%;max-width:768px;margin:0px auto;display:block;" tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d" tenping-ad-client="BdnhcMfPBvtcqWy4TeF3452t47SWFwraO4StFWXx1U%2fSBFm9k9OQo1uJHpkxwqxi"></tenping></div>` -}}
     {{- $parts := split $c "<h2" -}}
-    {{- $adIdx := 0 -}}
-    {{- $result := index $parts 0 -}}
-    {{- range $i, $part := $parts -}}
-      {{- if gt $i 0 -}}
-        {{- $hasImg := strings.Contains $part "<img" -}}
-        {{- if and (not $hasImg) (lt $adIdx 2) -}}
-          {{- $ad := $AD1 -}}{{- if eq $adIdx 1 -}}{{- $ad = $AD2 -}}{{- end -}}
-          {{- $pparts := split $part "</p>" -}}
-          {{- $total := len $pparts -}}
-          {{- $mid := div $total 2 -}}
-          {{- $sec := "" -}}
-          {{- range $j, $pp := $pparts -}}
-            {{- $sec = print $sec $pp -}}
-            {{- if lt $j (sub $total 1) -}}{{- $sec = print $sec "</p>" -}}{{- end -}}
-            {{- if and (eq $j $mid) (lt $j (sub $total 1)) -}}{{- $sec = print $sec $ad -}}{{- end -}}
+    {{- if gt (len $parts) 1 -}}
+      {{- /* H2 섹션 기반 삽입 */ -}}
+      {{- $adIdx := 0 -}}
+      {{- $result := index $parts 0 -}}
+      {{- range $i, $part := $parts -}}
+        {{- if gt $i 0 -}}
+          {{- $hasImg := strings.Contains $part "<img" -}}
+          {{- if and (not $hasImg) (lt $adIdx 2) -}}
+            {{- $ad := $AD1 -}}{{- if eq $adIdx 1 -}}{{- $ad = $AD2 -}}{{- end -}}
+            {{- $pparts := split $part "</p>" -}}
+            {{- $total := len $pparts -}}
+            {{- $mid := sub $total 2 -}}
+            {{- $sec := "" -}}
+            {{- range $j, $pp := $pparts -}}
+              {{- $sec = print $sec $pp -}}
+              {{- if lt $j (sub $total 1) -}}{{- $sec = print $sec "</p>" -}}{{- end -}}
+              {{- if and (eq $j $mid) (lt $j (sub $total 1)) -}}{{- $sec = print $sec $ad -}}{{- end -}}
+            {{- end -}}
+            {{- if lt $total 2 -}}{{- $sec = print $sec $ad -}}{{- end -}}
+            {{- $result = print $result "<h2" $sec -}}
+            {{- $adIdx = add $adIdx 1 -}}
+          {{- else -}}
+            {{- $result = print $result "<h2" $part -}}
           {{- end -}}
-          {{- $result = print $result "<h2" $sec -}}
-          {{- $adIdx = add $adIdx 1 -}}
-        {{- else -}}
-          {{- $result = print $result "<h2" $part -}}
         {{- end -}}
       {{- end -}}
+      {{ $result | safeHTML }}
+    {{- else -}}
+      {{- /* H2 없는 경우: P 태그 기준 1/3, 2/3 지점 삽입 */ -}}
+      {{- $pparts := split $c "</p>" -}}
+      {{- $total := len $pparts -}}
+      {{- $p1 := div $total 3 -}}
+      {{- $p2 := mul 2 (div $total 3) -}}
+      {{- $result := "" -}}
+      {{- range $j, $pp := $pparts -}}
+        {{- $result = print $result $pp -}}
+        {{- if lt $j (sub $total 1) -}}{{- $result = print $result "</p>" -}}{{- end -}}
+        {{- if and (eq $j $p1) (lt $j (sub $total 1)) -}}{{- $result = print $result $AD1 -}}{{- end -}}
+        {{- if and (eq $j $p2) (lt $j (sub $total 1)) (ne $p2 $p1) -}}{{- $result = print $result $AD2 -}}{{- end -}}
+      {{- end -}}
+      {{ $result | safeHTML }}
     {{- end -}}
-    {{ $result | safeHTML }}
   </div>
   {{- end }}
 
