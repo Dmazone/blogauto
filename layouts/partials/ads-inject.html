@@ -27,7 +27,7 @@
     w.style.cssText = 'margin:28px auto;max-width:768px;text-align:center;';
     var ins = document.createElement('ins');
     ins.className = 'kakao_ad_area';
-    ins.style.display = 'none';
+    ins.style.display = 'block';
     ins.setAttribute('data-ad-unit', dan);
     ins.setAttribute('data-ad-width', String(width));
     ins.setAttribute('data-ad-height', String(height));
@@ -39,26 +39,11 @@
     var w = document.createElement('div');
     w.className = 'ad-unit ad-coupang';
     w.style.cssText = 'margin:28px auto;max-width:768px;text-align:center;overflow:hidden;';
+    // PartnersCoupang.G는 currentScript 기준으로 주입 → script 태그로 직접 실행
+    var s = document.createElement('script');
+    s.textContent = 'if(window.PartnersCoupang){new window.PartnersCoupang.G({"id":999595,"template":"carousel","trackingCode":"AF8691300","width":"680","height":"140","tsource":""});}';
+    w.appendChild(s);
     return w;
-  }
-
-  function injectCoupangInto(container) {
-    if (!window.PartnersCoupang) return;
-    // g.js 위젯은 호출 시점 기준으로 body에 추가되므로 이후 container로 이동
-    var before = document.body.lastElementChild;
-    new window.PartnersCoupang.G({
-      "id": 999595,
-      "template": "carousel",
-      "trackingCode": "AF8691300",
-      "width": "680",
-      "height": "140",
-      "tsource": ""
-    });
-    // 새로 추가된 요소를 container 안으로 이동
-    var after = document.body.lastElementChild;
-    if (after !== before) {
-      container.appendChild(after);
-    }
   }
 
   function injectAds() {
@@ -67,8 +52,9 @@
     var h2s = content.querySelectorAll('h2');
     if (h2s.length === 0) return;
 
-    // 광고 순서: 텐핑/쿠팡/애드핏 × 3세트 (H2 개수만큼 배치, 최대 9개)
+    // 광고 순서: AdFit → 텐핑 → 쿠팡 × 3세트 (H2 2개마다 1개)
     var builders = [
+      function() { return makeAdfit('DAN-rQKAp2HPhLvIgyeA', 320, 100); },
       function() { return makeTenping('1LawCE8FqKOhetXZhMopsQ%3d%3d'); },
       function() { return makeCoupang(); },
       function() { return makeAdfit('DAN-rQKAp2HPhLvIgyeA', 320, 100); },
@@ -77,36 +63,17 @@
       function() { return makeAdfit('DAN-rQKAp2HPhLvIgyeA', 320, 100); },
       function() { return makeTenping('1LawCE8FqKOhetXZhMopsQ%3d%3d'); },
       function() { return makeCoupang(); },
-      function() { return makeAdfit('DAN-rQKAp2HPhLvIgyeA', 320, 100); },
     ];
-
-    var coupangSlots = [];
 
     /* H2 2개마다 광고 1개 삽입 (index 1, 3, 5...) */
     var builderIndex = 0;
     for (var i = 1; i < h2s.length && builderIndex < builders.length; i += 2) {
       var node = builders[builderIndex]();
       h2s[i].parentNode.insertBefore(node, h2s[i].nextSibling);
-
-      if (node.classList.contains('ad-coupang')) {
-        coupangSlots.push(node);
-      }
       builderIndex++;
     }
 
-    // 쿠팡 광고 주입 (g.js 로드 후 실행)
-    function tryInjectCoupang() {
-      if (window.PartnersCoupang) {
-        coupangSlots.forEach(function(slot) {
-          injectCoupangInto(slot);
-        });
-      } else {
-        setTimeout(tryInjectCoupang, 300);
-      }
-    }
-    if (coupangSlots.length > 0) tryInjectCoupang();
-
-    // 애드핏 재호출
+    // 애드핏 재호출 (동적 생성 ins 태그 활성화)
     if (window.kakaoAdFit && typeof window.kakaoAdFit.display === 'function') {
       window.kakaoAdFit.display();
     }
