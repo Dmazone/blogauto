@@ -123,6 +123,8 @@ canonifyURLs = true
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+    [markup.goldmark.extensions]
+      strikethrough = false
   [markup.highlight]
     noClasses = false
     style = "monokai"

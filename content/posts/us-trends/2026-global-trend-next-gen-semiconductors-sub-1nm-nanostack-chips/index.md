@@ -55,7 +55,7 @@ Every single plan to manufacture sub-1nm chips relies entirely on a single Dutch
 
 | Metric / Feature | Standard EUV (0.33 NA) | High-NA EUV (0.55 NA) |
 | :--- | :--- | :--- |
-| **Resolution Limit** | ~13nm | ~8nm |
+| **Resolution Limit** | \~13nm | \~8nm |
 | **Die Yield Per Hour** | Baseline | 15% Higher (Single Exposure) |
 | **Primary System Users** | Intel, TSMC, Samsung | Restricted Allocation for 2026 |
 
