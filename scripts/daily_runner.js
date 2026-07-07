@@ -148,8 +148,8 @@ async function main() {
     log('📅', `발행 예약: ${dateStr}`);
 
     let sectionSuccess = false;
-    // 최대 2회 시도 (첫 실패 시 3분 후 재시도)
-    for (let attempt = 1; attempt <= 2; attempt++) {
+    // 최대 3회 시도 (첫 실패 시 3분 후 재시도)
+    for (let attempt = 1; attempt <= 3; attempt++) {
       try {
         const result = await runForSection(section, { subtopic, dateOverride: dateStr, skipSns: false });
         successCount++;

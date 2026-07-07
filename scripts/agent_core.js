@@ -944,6 +944,21 @@ ${lc.qualityCheck5}
     }
   }
 
+  // 최후 복구: 아직도 H2 < 3 이면 "숫자. 제목" / "숫자) 제목" 패턴을 ## 로 변환
+  if ((finalBody.match(/^## /gm) ?? []).length < 3) {
+    const converted = finalBody.replace(
+      /^(?:\d+[.)】]|\[?\d+\]?\.?)\s+([^\n]{4,60})\s*$/gm,
+      (_, title) => `## ${title}`
+    );
+    const convertedH2 = (converted.match(/^## /gm) ?? []).length;
+    if (convertedH2 >= 3) {
+      finalBody = converted;
+      log('✅', `[Turn 5] 숫자 번호 → ## 변환으로 H2 복구 (${convertedH2}개)`);
+    } else {
+      log('⚠️', `[Turn 5] 변환 후에도 H2 ${convertedH2}개 — 품질 게이트 최종 판정`);
+    }
+  }
+
   // CommonMark에서 CJK 괄호 인접 **bold** 미렌더링 수정
   // **「text」** → 「**text**」 (Goldmark 호환 형태)
   finalBody = finalBody
