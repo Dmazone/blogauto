@@ -344,7 +344,25 @@ export class GeminiSession {
       await this.page.keyboard.press('Enter');
     }
 
-    // 응답 대기
+    // 전송 전 현재 응답 요소 수 기록 (재추출 방지)
+    const prevRespCount = await this.page.evaluate((sels) => {
+      let n = 0;
+      for (const s of sels) n += document.querySelectorAll(s).length;
+      return n;
+    }, SEL.response).catch(() => 0);
+
+    // 새 응답 요소가 추가될 때까지 대기 (최대 15초)
+    await this.page.waitForFunction(
+      ([sels, prev]) => {
+        let n = 0;
+        for (const s of sels) n += document.querySelectorAll(s).length;
+        return n > prev;
+      },
+      [SEL.response, prevRespCount],
+      { timeout: 15000 }
+    ).catch(() => {}); // 타임아웃 시 그냥 진행
+
+    // 응답 완료 대기
     await this._waitForCompletion(timeout);
 
     // 응답 추출
