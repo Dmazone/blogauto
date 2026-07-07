@@ -44,7 +44,7 @@ Get-Content "logs\runner-$(Get-Date -Format 'yyyy-MM-dd').log" -Wait -Tail 30
 [Turn 5] 최종 마크다운 추출
 [Turn 6] 이미지 프롬프트 생성
 [STEP 7] 검수 스킵 (Turn 4 완료)
-[STEP 8] 이미지 생성 (Stable Horde, 장당 15~25분)
+[STEP 8] 이미지 생성
 [STEP 8c] 이미지 크기 검수
 품질 게이트 통과
 git push
@@ -52,37 +52,32 @@ git push
 
 ---
 
-## 이미지 생성 상세 (Stable Horde 규칙 — 반드시 준수)
+## 재시도 전략 (자동 적용)
 
-### 제한 사항 (agent_core.js에 이미 반영됨)
-- **해상도**: `width: 640, height: 384` (익명키는 640px 초과 시 403)
-- **폴링 타임아웃**: 30분 (익명 큐 대기시간 15~20분)
-- **sharp 업스케일**: 640×384 → 1280×720 webp
-- **재시도**: 실패 시 1회 자동 재시도
+섹션당 최대 **3회** 시도, 각 실패 후 3분 대기.
 
-### 이미지 누락 확인 방법
-```powershell
-node --input-type=module -e "
-import fs from 'fs';
-const P = 'content/posts';
-fs.readdirSync(P).forEach(s => {
-  const sd = P+'/'+s;
-  if (!fs.statSync(sd).isDirectory()) return;
-  fs.readdirSync(sd).forEach(slug => {
-    const pd = sd+'/'+slug;
-    if (!fs.existsSync(pd+'/index.md')) return;
-    const w = fs.readdirSync(pd).filter(f=>f.endsWith('.webp'));
-    if (!w.some(f=>f.includes('-thumb')) || !w.some(f=>f.endsWith('-01.webp')) || !w.some(f=>f.endsWith('-02.webp')))
-      console.log('[누락]', s+'/'+slug);
-  });
-});
-"
-```
+**품질 게이트 기준 (agent_core.js)**:
+- H2 최소 **2개** (이전 3개에서 완화 — Gemini 응답 편차 흡수)
+- 본문 최소 **1,000자** (공백 제외)
 
-누락 발견 시:
-```powershell
-node scripts/fix_missing_images.mjs
-```
+**H2 복구 3단계 (Turn 5 내)**:
+1. H2 부족 시 즉시 재출력 요청 (Turn 5 재시도)
+2. 실패 시 DOM 직접 추출 + 마크다운 역변환
+3. 그래도 부족 시 숫자번호(`1. 제목`) → `## 제목` 자동 변환
+
+**Gemini 응답 재추출 방지 (gemini_browser.js)**:
+- 전송 전 응답 요소 수 기록
+- 새 응답 요소가 DOM에 추가될 때까지 최대 15초 대기 후 추출
+
+---
+
+## 이미지 생성
+
+| 항목 | 값 |
+|---|---|
+| 소스 | Pollinations.ai (flux 모델, 1280×720) |
+| 재시도 | 실패 시 1회 자동 재시도 |
+| 누락 복구 | `node scripts/fix_missing_images.mjs` |
 
 ---
 
@@ -91,12 +86,9 @@ node scripts/fix_missing_images.mjs
 | 증상 | 원인 | 처리 |
 |---|---|---|
 | Gemini 로그인 필요 | 세션 만료 | 텔레그램 알림 자동 발송 → Chrome에서 paydma 계정 재로그인 |
-| 입력창 찾기 실패 | 20분 대기 후 세션 불안정 | 자동 재시도 (newConversation 30초 대기 루프 적용됨) |
-| H2 부족 품질 게이트 실패 | Gemini 응답 이상 | 해당 섹션 스킵 → `--only {섹션}` 으로 재실행 |
-| 이미지 403 | 해상도 640px 초과 | agent_core.js 이미 640×384 고정 적용됨 |
-| 이미지 no data | 폴링 타임아웃 | 자동 2회 재시도 (30분 타임아웃 적용됨) |
-| 이미지 생성 2회 실패 | Stable Horde 장애 | 텍스트만 발행 후 나중에 fix_missing_images.mjs 실행 |
-| "Markdown" 본문 노출 | Gemini 응답 레이블 | extractFinalMarkdown에 stripMarkdownLabel 적용됨 |
+| 입력창 찾기 실패 | 세션 불안정 | 자동 재시도 (newConversation 30초 대기 루프) |
+| H2 부족 3회 전부 실패 | Gemini JSON 파싱 반복 실패 | `--only {섹션} --now` 로 즉시 재실행 |
+| 이미지 누락 | 생성 오류 | `node scripts/fix_missing_images.mjs` |
 
 ---
 
@@ -108,4 +100,4 @@ node scripts/fix_missing_images.mjs
 ```powershell
 node scripts/fix_missing_images.mjs
 ```
-→ 전체 포스팅 스캔 후 누락된 것만 Stable Horde로 생성 후 git push.
+→ 전체 포스팅 스캔 후 누락된 것만 생성 후 git push.

@@ -162,9 +162,9 @@ async function main() {
         sectionSuccess = true;
         break;
       } catch (err) {
-        log('❌', `${section.name} 실패 (시도 ${attempt}/2): ${err.message}`);
+        log('❌', `${section.name} 실패 (시도 ${attempt}/3): ${err.message}`);
         if (process.env.DEBUG) appendFileSync(LOG_FILE, err.stack + '\n', 'utf8');
-        if (attempt < 2) {
+        if (attempt < 3) {
           log('⏳', '3분 후 재시도...');
           await new Promise((resolve) => setTimeout(resolve, 3 * 60 * 1000));
         }

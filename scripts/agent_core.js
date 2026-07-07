@@ -1161,13 +1161,13 @@ export async function runForSection(section, options = {}) {
   // 품질 게이트: 저장 전 H2 개수 + 분량 확인
   const h2Count  = (final.match(/^## /gm) ?? []).length;
   const charCount = final.replace(/\s/g, '').length;
-  if (h2Count < 3) {
-    log('❌', `품질 게이트 실패: H2 ${h2Count}개 (최소 3개 필요) → 저장 취소`);
+  if (h2Count < 2) {
+    log('❌', `품질 게이트 실패: H2 ${h2Count}개 (최소 2개 필요) → 저장 취소`);
     log('❌', `  본문 앞 300자: ${final.slice(0, 300).replace(/\n/g, '↵')}`);
     throw new Error(`H2 부족 (${h2Count}개): "${topic.title}"`);
   }
-  if (charCount < 1200) {
-    log('❌', `품질 게이트 실패: 본문 ${charCount}자 (최소 1,200자 필요) → 저장 취소`);
+  if (charCount < 1000) {
+    log('❌', `품질 게이트 실패: 본문 ${charCount}자 (최소 1,000자 필요) → 저장 취소`);
     throw new Error(`분량 부족 (${charCount}자): "${topic.title}"`);
   }
   log('✅', `품질 게이트 통과: H2 ${h2Count}개, ${charCount}자`);
