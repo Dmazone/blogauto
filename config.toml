@@ -8,7 +8,10 @@ paginate = 10
 enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
-canonifyURLs = true
+canonifyURLs = false
+
+[minify]
+  disableXML = true
 
 [services]
   [services.googleAnalytics]

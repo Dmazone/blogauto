@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dmazone.github.io/blogauto/sitemap.xml
