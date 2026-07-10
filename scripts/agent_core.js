@@ -90,6 +90,24 @@ async function geminiCall(prompt, opts = {}) {
   return await withRetry(() => _geminiImpl(prompt), 3, 5000);
 }
 
+/** 해당 섹션 최근 포스팅 title+slug 목록 (내부 링크 생성용) */
+function getRecentPostsForSection(section, limit = 4) {
+  const dir = path.join(POSTS_DIR, section.dir);
+  if (!fs.existsSync(dir)) return [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const posts = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const indexPath = path.join(dir, entry.name, 'index.md');
+    if (!fs.existsSync(indexPath)) continue;
+    const content = fs.readFileSync(indexPath, 'utf-8');
+    const titleMatch = content.match(/^title:\s*"([^"]+)"/m);
+    if (titleMatch) posts.push({ slug: entry.name, title: titleMatch[1] });
+  }
+  posts.sort((a, b) => b.slug.localeCompare(a.slug));
+  return posts.slice(0, limit);
+}
+
 /** 해당 섹션에 이미 존재하는 슬러그 목록 (.md 파일 + 페이지 번들 디렉토리 모두 포함) */
 function existingSlugsForSection(section) {
   const dir = path.join(POSTS_DIR, section.dir);
@@ -729,7 +747,13 @@ ${subtopicLine}
 ${lc.lang !== 'ko' ? `⚠️ 이 섹션은 ${lc.label}로 전체 포스팅을 작성합니다. ${lc.cultureCenter} 중심 주제를 선정하되, ${lc.koreanLink}.` : ''}
 
 구글 검색으로 이 섹션에서 현재 가장 화제가 되는 트렌드 주제를 3개 조사해줘.
-각 주제별로: ① 왜 지금 핫한지 ② 독자 관심도 ③ 구글 애드센스 노출 가능성 평가
+각 주제별로:
+① 왜 지금 핫한지 (구체적 사건·날짜 포함)
+② 실제로 구글에서 검색할 법한 검색어 예시 2개 (예: "삼성전자 빚투 언제 풀리나", "HBM4 양산 시점")
+③ 구글 애드센스 노출 가능성 평가
+④ 추천 제목 방향: 의문형("~인가?") / 숫자형("3가지", "Best 5") / 반전형("~라면 틀렸다") 중 1개
+
+⚠️ "경제 트렌드", "최신 기술" 같은 광범위한 주제는 검색량이 없음 — 반드시 구체적 인물·기업·사건 기반 롱테일 키워드 중심으로 선정
 이미 발행된 슬러그(중복 금지): ${existing}`
   );
 
@@ -806,15 +830,15 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
   }
 
   if (!t2Parsed || !topic.title || !topic.slug) {
-    log('❌', '[Turn 2] JSON 재시도도 실패 — 타임스탬프 슬러그로 대체');
+    // 폴백 제목으로 발행하면 SEO 가치 0 + 메타텍스트 노출 위험 → 즉시 실패 처리
+    throw new Error(`Turn 2 JSON 파싱 완전 실패 — "${section.name}" 주제 확정 불가 (재시도 필요)`);
   }
 
   // 슬러그 중복 방지
   const existing2 = existingSlugsForSection(section);
-  if (!topic.slug || existing2.includes(topic.slug)) {
-    topic.slug = `${section.dir}-${Date.now()}`;
+  if (existing2.includes(topic.slug)) {
+    topic.slug = `${topic.slug}-${Date.now().toString().slice(-6)}`;
   }
-  if (!topic.title) topic.title = `${section.name} 최신 트렌드`;
   if (!topic.keyword) topic.keyword = section.name;
   if (!topic.description) topic.description = '';
 
@@ -826,11 +850,20 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
 
   // ── TURN 3: 본문 집필 ──────────────────────────────────────────────────────
   log('✍️', '[Turn 3] 본문 집필 중...');
+  const recentPosts = getRecentPostsForSection(section);
+  const internalLinksHint = recentPosts.length > 0
+    ? `⑤ 내부 링크 — 아래 실제 포스팅 중 주제와 연관된 것 1~2개를 본문에 자연스럽게 삽입:\n` +
+      recentPosts.map(p => `   - [${p.title}](/posts/${section.dir}/${p.slug}/)`).join('\n') +
+      `\n   (연관 없으면 [${section.name} 전체 글 보기](/posts/${section.dir}/) 삽입)`
+    : `⑤ 본문 안 적절한 위치에: [${section.name} 전체 글 보기](/posts/${section.dir}/)`;
+  const toneInstruction = section.viralTone
+    ? `\n[톤 — 이 섹션 전용]\n${section.viralTone}\n`
+    : '';
   await session.send(
     `${lc.writingInstruction ? lc.writingInstruction + '\n\n' : ''}아웃라인대로 Hugo 마크다운 본문을 작성해줘. front matter 없이.
-
+${toneInstruction}
 [Technical SEO 구조 — 100% 준수 필수]
-① 도입부 2~3문장: 첫 문단 안에 핵심 키워드 자연스럽게 포함
+① 도입부 2~3문장: 첫 문단 안에 핵심 키워드 자연스럽게 포함 (LSI 키워드도 1개 이상)
 ② 도입부 바로 아래 (빈 줄 없이):
    ![${topic.title}](${img1Url})
 ③ 헤딩 규칙 — 절대 준수:
@@ -838,8 +871,8 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
    - # (H1) 본문에 절대 금지 (제목이 H1)
    - "1. 제목", "2. 제목" 같은 숫자 번호 방식 금지 — 반드시 ## ### 마크다운 문법만
 ④ 두 번째 ## 섹션 바로 아래 (빈 줄 없이):
-   ![${topic.keyword}](${img2Url})
-⑤ 본문 안 적절한 위치에: [관련 글 보기](/posts/${section.dir}/)
+   ![${topic.keyword} 관련 이미지](${img2Url})
+${internalLinksHint}
 ⑥ 분량: ${lc.lengthGuide}
 ⑦ **볼드**, > 인용구, - 불릿 적극 활용 (가독성·체류시간 향상)
 ⑧ 출처 없는 수치·통계 금지, 구체적 사례 반드시 포함
@@ -1157,6 +1190,14 @@ export async function runForSection(section, options = {}) {
     log('⚠️', `  검수 결과 앞 200자: ${final.slice(0, 200).replace(/\n/g, '↵')}`);
     final = preReviewBody;
   }
+
+  // 이미지 alt 텍스트 자동 보완 — 빈 alt는 SEO 손해
+  final = final.replace(/!\[\s*\]\(([^)]+)\)/g, (_, src) => {
+    const isThumb = src.includes('-thumb');
+    const is01    = src.includes('-01.');
+    const altText = isThumb ? topic.title : (is01 ? topic.title : topic.keyword);
+    return `![${altText}](${src})`;
+  });
 
   // 품질 게이트: 저장 전 H2 개수 + 분량 확인
   const h2Count  = (final.match(/^## /gm) ?? []).length;
