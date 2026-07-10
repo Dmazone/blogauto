@@ -8,7 +8,7 @@ paginate = 10
 enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
-canonifyURLs = false
+canonifyURLs = true
 
 [minify]
   disableXML = true
