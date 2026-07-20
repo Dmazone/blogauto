@@ -82,10 +82,27 @@ function scanMissingImages() {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// ── Pollinations.ai 이미지 다운로드 ───────────────────────────────────────
+// ── Pollinations.ai 이미지 다운로드 (리다이렉트 + 브라우저 헤더 지원) ────────
 function downloadImage(url) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { timeout: 120000 }, res => {
+    const options = {
+      timeout: 120000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        'Accept': 'image/webp,image/apng,image/*,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
+        'Referer': 'https://pollinations.ai/',
+      },
+    };
+    const req = https.get(url, options, res => {
+      if (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307) {
+        downloadImage(res.headers.location).then(resolve).catch(reject);
+        return;
+      }
+      if (res.statusCode === 429) {
+        reject(new Error('RATE_LIMIT'));
+        return;
+      }
       if (res.statusCode !== 200) {
         reject(new Error(`HTTP ${res.statusCode}`));
         return;
@@ -110,7 +127,8 @@ async function generateOne(img) {
 
   const positivePrompt = `${img.prompt}, no text, no watermark, no logo, no people, landscape 16:9`;
   const encodedPrompt  = encodeURIComponent(positivePrompt);
-  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=false&seed=${Date.now()}`;
+  const seed = Math.floor(Math.random() * 9999) + 1;
+  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=false&seed=${seed}`;
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
@@ -127,10 +145,13 @@ async function generateOne(img) {
       console.log(`  ✅ ${img.file} (${Math.round(size / 1024)}KB)`);
       return true;
     } catch (err) {
-      console.log(`  ❌ ${img.file} 시도 ${attempt} 실패: ${err.message}`);
-      const isRateLimit = err.message.includes('429') || err.message.includes('500');
-      const delay = isRateLimit ? 30000 : 10000;
-      if (attempt < 3) await sleep(delay);
+      const isRateLimit = err.message === 'RATE_LIMIT';
+      console.log(`  ❌ ${img.file} 시도 ${attempt} 실패: ${isRateLimit ? '429 Rate Limit' : err.message}`);
+      if (attempt < 3) {
+        const delay = isRateLimit ? 120000 : 45000;
+        console.log(`  ⏳ ${delay / 1000}초 대기...`);
+        await sleep(delay);
+      }
     }
   }
   return false;
@@ -148,12 +169,12 @@ console.log(`\n🚀 누락 이미지 ${flatImages.length}장 감지 → Pollinat
 flatImages.forEach(img => console.log(`  · ${img.dir}/${img.file}`));
 console.log('');
 
-// 순차 처리 (rate limit 대응 — 요청 간 5초 간격)
+// 순차 처리 (rate limit 대응 — 요청 간 60초 간격)
 let done = 0, failed = 0;
 for (const img of flatImages) {
   const ok = await generateOne(img);
   ok ? done++ : failed++;
-  await sleep(5000);
+  if (done + failed < flatImages.length) await sleep(30000);
 }
 
 console.log(`\n✅ 전체 완료 — 성공 ${done}개 / 실패 ${failed}개`);
