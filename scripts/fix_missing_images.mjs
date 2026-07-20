@@ -108,10 +108,9 @@ async function generateOne(img) {
     return true;
   }
 
-  const positivePrompt = `${img.prompt}, masterpiece, best quality, highly detailed, sharp focus, professional photography, vivid colors, perfect composition, 16:9 landscape`;
-  const negativeParam  = encodeURIComponent('blur,blurry,low quality,pixelated,noise,grainy,jpeg artifacts,overexposed,underexposed,watermark,text overlay,logo,signature,border,frame,face,person,woman,man,human,portrait,people,body,nude,ugly,deformed,bad anatomy,cropped');
+  const positivePrompt = `${img.prompt}, no text, no watermark, no logo, no people, landscape 16:9`;
   const encodedPrompt  = encodeURIComponent(positivePrompt);
-  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}&negative=${negativeParam}`;
+  const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=false&seed=${Date.now()}`;
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
