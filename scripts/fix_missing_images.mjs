@@ -113,9 +113,9 @@ async function generateOne(img) {
   const encodedPrompt  = encodeURIComponent(positivePrompt);
   const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}&negative=${negativeParam}`;
 
-  for (let attempt = 1; attempt <= 2; attempt++) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      console.log(`  🖼️  ${img.file} 생성 중... (시도 ${attempt}/2)`);
+      console.log(`  🖼️  ${img.file} 생성 중... (시도 ${attempt}/3)`);
       const buf = await downloadImage(url);
       fs.mkdirSync(path.join(ROOT, img.dir), { recursive: true });
       await sharp(buf)
@@ -129,7 +129,9 @@ async function generateOne(img) {
       return true;
     } catch (err) {
       console.log(`  ❌ ${img.file} 시도 ${attempt} 실패: ${err.message}`);
-      if (attempt < 2) await sleep(3000);
+      const isRateLimit = err.message.includes('429') || err.message.includes('500');
+      const delay = isRateLimit ? 30000 : 10000;
+      if (attempt < 3) await sleep(delay);
     }
   }
   return false;
@@ -147,12 +149,12 @@ console.log(`\n🚀 누락 이미지 ${flatImages.length}장 감지 → Pollinat
 flatImages.forEach(img => console.log(`  · ${img.dir}/${img.file}`));
 console.log('');
 
-// 순차 처리 (rate limit 대응 — 요청 간 1초 간격)
+// 순차 처리 (rate limit 대응 — 요청 간 5초 간격)
 let done = 0, failed = 0;
 for (const img of flatImages) {
   const ok = await generateOne(img);
   ok ? done++ : failed++;
-  await sleep(1000);
+  await sleep(5000);
 }
 
 console.log(`\n✅ 전체 완료 — 성공 ${done}개 / 실패 ${failed}개`);

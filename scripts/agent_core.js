@@ -772,7 +772,8 @@ ${lc.lang !== 'ko' ? `⚠️ 이 섹션은 ${lc.label}로 전체 포스팅을 �
   log('📐', '[Turn 2] 주제 확정 + 아웃라인...');
   const t2 = await session.send(
     `오늘(${todayKst}) 기준 가장 신선하고 검색 잠재력 높은 주제 1개를 선택해줘.
-선택 기준: ① 이슈 날짜가 최근 72시간\~7일 이내 ② 지금 이 순간도 독자가 검색하고 싶을 정도로 현재 진행형
+선택 기준: ① 이슈 날짜가 최근 7일 이내 ② 독자가 지금 검색할 만한 현재 진행형 이슈
+※ 완벽한 주제가 없어도 조사한 3개 중 가장 최신·신선한 주제 1개를 반드시 선택할 것 (선택 불가 상태 출력 금지)
 
 ⚠️ 첫 번째 출력은 반드시 JSON 코드 블록이어야 함. JSON 없이 다른 내용부터 시작하면 파싱 실패 처리됨.
 
@@ -829,11 +830,15 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
 
   // 파싱 실패 시 재시도 턴
   if (!t2Parsed || !topic.title || !topic.slug) {
+    log('⚠️', `[Turn 2] JSON 파싱 실패 → 실제 응답(${t2.length}자): ${t2.slice(0, 300).replace(/\n/g, ' ')}`);
     log('⚠️', '[Turn 2] JSON 파싱 실패 → 재시도 중...');
     const t2Retry = await session.send(
-      `앞에서 선택한 주제의 JSON 정보만 아래 형식 그대로 출력해줘. 다른 텍스트 없이 JSON 코드 블록만.\n\n` +
-      `\`\`\`json\n{"title":"SEO최적화제목(28자이내)","slug":"english-slug-lowercase-hyphens","keyword":"핵심키워드","description":"160자이내설명"}\n\`\`\``
+      `앞서 조사한 주제 중 가장 최신 이슈 1개를 선택해서 아래 JSON 형식으로만 출력해줘.\n` +
+      `조건을 완벽히 충족하는 주제가 없어도 가장 적합한 주제 1개를 반드시 선택해야 함.\n` +
+      `JSON 코드 블록 외 다른 텍스트 일절 금지.\n\n` +
+      `\`\`\`json\n{"title":"SEO최적화제목(${lc.lang === 'ko' ? '28자이내' : '60 chars max'})","slug":"english-slug-lowercase-hyphens","keyword":"핵심키워드","description":"160자이내설명"}\n\`\`\``
     );
+    log('⚠️', `[Turn 2 Retry] 응답(${t2Retry.length}자): ${t2Retry.slice(0, 300).replace(/\n/g, ' ')}`);
     const retryParsed = tryParseJson(t2Retry);
     if (retryParsed?.title && retryParsed?.slug) {
       topic = { ...topic, ...retryParsed };
