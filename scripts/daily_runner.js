@@ -22,7 +22,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { writeFileSync, mkdirSync, appendFileSync } from 'fs';
-import { spawn } from 'child_process';
+import { spawn, execFileSync } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
@@ -210,6 +210,44 @@ async function main() {
     log('✅', '스레드 게시 + 스하리 완료');
   } else if (successCount > 0) {
     log('📌', '예약 발행 모드 — threads_poster는 10:00 KST /threads-post 스킬로 별도 실행');
+  }
+
+  // ── 이미지 누락 자동 복구 (포스팅 완료 직후 항상 실행) ───────────────────
+  if (successCount > 0) {
+    log('🖼️', '이미지 누락 최종 점검 자동 실행 중...');
+    await new Promise((resolve) => {
+      const fixProc = spawn(process.execPath, [path.join(__dirname, 'fix_missing_images.mjs')], {
+        cwd: path.join(__dirname, '..'),
+        stdio: 'inherit',
+        detached: false,
+      });
+      fixProc.on('close', (code) => {
+        if (code === 0) log('✅', '이미지 누락 점검 완료');
+        else log('⚠️', `이미지 누락 점검 종료 (코드: ${code})`);
+        resolve();
+      });
+      fixProc.on('error', (err) => {
+        log('⚠️', `이미지 누락 점검 실행 오류: ${err.message}`);
+        resolve();
+      });
+    });
+
+    // fix_missing_images가 생성한 이미지 파일이 있으면 커밋 + 푸시
+    const ROOT = path.join(__dirname, '..');
+    try {
+      execFileSync('git', ['add', 'content/'], { cwd: ROOT, stdio: 'pipe' });
+      const status = execFileSync('git', ['status', '--porcelain'], { cwd: ROOT }).toString().trim();
+      if (status) {
+        execFileSync('git', ['commit', '-m', 'fix: 누락 이미지 자동 복구'], { cwd: ROOT, stdio: 'inherit' });
+        execFileSync('git', ['push'], { cwd: ROOT, stdio: 'inherit' });
+        log('✅', '누락 이미지 복구 커밋 & 푸시 완료');
+        await sendTelegram('🖼️ 누락 이미지 자동 복구 완료 — GitHub 재배포 시작');
+      } else {
+        log('✅', '누락 이미지 없음 — 모든 이미지 정상');
+      }
+    } catch (err) {
+      log('⚠️', `이미지 복구 커밋 실패: ${err.message}`);
+    }
   }
 }
 

@@ -565,25 +565,18 @@ async function generateImage(prompt, slug, index, bundleDir) {
     }
   }
 
-  // 3) Pollinations.ai — enhance=true로 Flux 최적화 프롬프트 자동 적용 (품질 향상)
+  // 3) Pollinations.ai — flux 모델, 4자리 seed (13자리 Date.now() → HTTP 500 유발)
   const sharpLib = (await import('sharp')).default;
 
-  // positive prompt: 구체적 장면 묘사 + 품질 부스터 (부정어는 negative 파라미터로만)
-  const positivePrompt = `${prompt}, masterpiece, best quality, highly detailed, sharp focus, professional photography, vivid colors, perfect composition, 16:9 landscape`;
-  // negative: 품질 저하 요소 + 얼굴/인물 완전 배제
-  const negativeParam = encodeURIComponent(
-    'blur,blurry,low quality,pixelated,noise,grainy,jpeg artifacts,overexposed,underexposed,' +
-    'watermark,text overlay,logo,signature,border,frame,' +
-    'face,person,woman,man,human,portrait,people,body,nude,ugly,deformed,bad anatomy,cropped'
-  );
+  const positivePrompt = `${prompt}, no text, no watermark, no logo, no people, masterpiece, best quality, highly detailed, sharp focus, vivid colors, 16:9 landscape`;
 
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    log('🖼️', `  Pollinations.ai 이미지 생성 중: ${filename} (시도 ${attempt}/2)`);
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    log('🖼️', `  Pollinations.ai 이미지 생성 중: ${filename} (시도 ${attempt}/3)`);
     try {
       const encodedPrompt = encodeURIComponent(positivePrompt);
-      // enhance=true: Pollinations LLM이 Flux용 프롬프트로 최적화 → 선명도·품질 대폭 향상
-      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=true&seed=${Date.now()}&negative=${negativeParam}`;
-      const imgRes = await axios.get(url, { responseType: 'arraybuffer', timeout: 120000 });
+      const seed = Math.floor(Math.random() * 9999) + 1;
+      const url = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1280&height=720&model=flux&nologo=true&enhance=false&seed=${seed}`;
+      const imgRes = await axios.get(url, { responseType: 'arraybuffer', timeout: 120000, maxRedirects: 5 });
       if (imgRes.status !== 200) throw new Error(`HTTP ${imgRes.status}`);
 
       await sharpLib(Buffer.from(imgRes.data))
@@ -597,12 +590,17 @@ async function generateImage(prompt, slug, index, bundleDir) {
       log('✅', `  Pollinations.ai 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
       return { localPath: `/images/${filename}`, sourceUrl: 'pollinations' };
     } catch (err) {
+      const isRateLimit = err.message?.includes('429') || err.response?.status === 429;
       log('⚠️', `  Pollinations.ai 시도 ${attempt} 실패: ${err.message}`);
-      if (attempt < 2) await new Promise(r => setTimeout(r, 5000));
+      if (attempt < 3) {
+        const delay = isRateLimit ? 120000 : 30000;
+        log('⏳', `  ${delay / 1000}초 대기 후 재시도...`);
+        await new Promise(r => setTimeout(r, delay));
+      }
     }
   }
 
-  log('⚠️', `  이미지 생성 2회 실패 — ${filename} 없이 텍스트만 발행`);
+  log('⚠️', `  이미지 생성 3회 실패 — ${filename} 없이 텍스트만 발행`);
   return { localPath: '', sourceUrl: '' };
 }
 
