@@ -37,6 +37,8 @@ canonifyURLs = true
   comments = true
   walineServerUrl = ""  # Vercel 배포 후 URL 입력: https://your-app.vercel.app
 
+  aliexpressAffId = ""  # 알리익스프레스 파트너스 Promotion Link code — 입력 시 제휴 수익 활성화
+
   [params.homeInfoParams]
     Title = "오늘의 트렌드, 여기서 다 본다"
     Content = "기술·경제·사회·건강·연예·스포츠·부동산·여행·인문·IT기기\n매일 최신 트렌드 업데이트"

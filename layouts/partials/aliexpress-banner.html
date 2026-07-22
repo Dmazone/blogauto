@@ -1,0 +1,40 @@
+{{- /*
+  aliexpress-banner.html
+  섹션별 알리익스프레스 제휴 배너 (포스팅 하단)
+  ALIEXPRESS_AFF_ID Hugo 파라미터 설정 시 제휴 링크 활성화
+  config.toml → [params] aliexpressAffId = "YOUR_AFF_ID"
+*/ -}}
+{{- $aff := site.Params.aliexpressAffId | default "" -}}
+{{- $cat := .File.Dir | path.Base -}}
+
+{{- $map := dict
+  "it-devices"    (dict "kw" "smartphone accessories gadget" "label" "최신 IT기기 특가" "emoji" "📱")
+  "health"        (dict "kw" "health fitness equipment" "label" "건강용품 특가" "emoji" "💪")
+  "world-travel"  (dict "kw" "travel accessories luggage" "label" "여행용품 특가" "emoji" "✈️")
+  "sports"        (dict "kw" "sports outdoor equipment" "label" "스포츠용품 특가" "emoji" "🏃")
+  "kr-realestate" (dict "kw" "home interior storage" "label" "홈인테리어 특가" "emoji" "🏠")
+  "economy"       (dict "kw" "office desk accessories" "label" "오피스용품 특가" "emoji" "💼")
+  "latest-tech"   (dict "kw" "tech gadget electronics" "label" "최신 테크 특가" "emoji" "🔧")
+  "entertainment" (dict "kw" "kpop merchandise fan goods" "label" "엔터 굿즈 특가" "emoji" "🎤")
+  "humanities"    (dict "kw" "books stationery creative" "label" "도서·문구 특가" "emoji" "📚")
+  "society"       (dict "kw" "daily life household" "label" "생활용품 특가" "emoji" "🛒")
+-}}
+
+{{- $info := index $map $cat -}}
+{{- if $info -}}
+{{- $kw := $info.kw | urlize -}}
+{{- $href := "" -}}
+{{- if $aff -}}
+  {{- $href = printf "https://s.click.aliexpress.com/e/%s?bz=%s" $aff $kw -}}
+{{- else -}}
+  {{- $href = printf "https://www.aliexpress.com/w/wholesale-%s.html" $kw -}}
+{{- end -}}
+<div class="aliexpress-banner" style="margin:20px auto 8px;max-width:680px;border:1px solid rgba(255,165,0,0.3);border-radius:10px;padding:12px 16px;background:linear-gradient(135deg,rgba(255,102,0,0.08),rgba(255,165,0,0.05));display:flex;align-items:center;gap:12px;text-decoration:none;" >
+  <span style="font-size:28px;flex-shrink:0;">{{ $info.emoji }}</span>
+  <div style="flex:1;min-width:0;">
+    <div style="font-weight:700;font-size:14px;color:#ff6600;">{{ $info.label }} — 알리익스프레스</div>
+    <div style="font-size:12px;color:rgba(128,128,128,0.8);margin-top:2px;">관련 상품 최저가 비교</div>
+  </div>
+  <a href="{{ $href }}" target="_blank" rel="noopener sponsored" style="flex-shrink:0;background:#ff6600;color:#fff;padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;">보러 가기 →</a>
+</div>
+{{- end -}}
