@@ -5,7 +5,7 @@
   config.toml → [params] aliexpressAffId = "YOUR_AFF_ID"
 */ -}}
 {{- $aff := site.Params.aliexpressAffId | default "" -}}
-{{- $cat := .File.Dir | path.Base -}}
+{{- $cat := .Section -}}
 
 {{- $map := dict
   "it-devices"    (dict "kw" "smartphone accessories gadget" "label" "최신 IT기기 특가" "emoji" "📱")
