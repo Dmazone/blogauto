@@ -21,7 +21,7 @@ import { sendTelegram } from './telegram.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { writeFileSync, mkdirSync, appendFileSync } from 'fs';
+import { writeFileSync, mkdirSync, appendFileSync, existsSync } from 'fs';
 import { spawn, execFileSync } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -210,6 +210,22 @@ async function main() {
     log('✅', '스레드 게시 + 스하리 완료');
   } else if (successCount > 0) {
     log('📌', '예약 발행 모드 — threads_poster는 10:00 KST /threads-post 스킬로 별도 실행');
+  }
+
+  // ── 네이버 블로그 미러링 (쿠키 파일이 있을 때만 자동 실행) ─────────────────
+  const naverCookiePath = path.join(__dirname, '..', 'data', 'naver-cookies.json');
+  if (successCount > 0 && existsSync(naverCookiePath)) {
+    log('🗞️', '네이버 블로그 미러링 시작...');
+    await new Promise((resolve) => {
+      const proc = spawn(process.execPath, [path.join(__dirname, 'naver_mirror.mjs')], {
+        cwd: path.join(__dirname, '..'), stdio: 'inherit', detached: false,
+      });
+      proc.on('close', (code) => {
+        log(code === 0 ? '✅' : '⚠️', `네이버 미러링 종료 (코드: ${code})`);
+        resolve();
+      });
+      proc.on('error', (err) => { log('⚠️', `네이버 미러링 오류: ${err.message}`); resolve(); });
+    });
   }
 
   // ── 이미지 누락 자동 복구 (포스팅 완료 직후 항상 실행) ───────────────────
