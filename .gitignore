@@ -28,6 +28,10 @@ data/posts_log.json
 
 # Naver session
 data/naver_state.json
+data/naver-cookies.json
+data/naver-profile/
+data/naver_mirrored.json
+data/debug-screenshots/
 
 # 작업 중 생성된 스크린샷 (git 추적 제외)
 screenshots/
