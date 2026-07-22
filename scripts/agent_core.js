@@ -785,7 +785,7 @@ ${lc.titleSeoRules.join('\n')}
 
 [SEO 아웃라인 — JSON 출력 후에 작성]
 ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}## H2 섹션 4개, 각 H2 아래 ### H3 2~3개
-각 섹션의 톤: 비교분석/장단점/경험담/튜토리얼 중 명시`
+각 섹션의 톤(내부 메모용 — 본문에 출력 절대 금지): 비교분석/장단점/경험담/튜토리얼 중 선택`
   );
 
   // JSON 파싱 (3단계: 코드블록 → 중첩JSON → 개별 필드 추출 → 재시도 턴)
@@ -872,7 +872,7 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
       `\n   (연관 없으면 [${section.name} 전체 글 보기](/posts/${section.dir}/) 삽입)`
     : `⑤ 본문 안 적절한 위치에: [${section.name} 전체 글 보기](/posts/${section.dir}/)`;
   const toneInstruction = section.viralTone
-    ? `\n[톤 — 이 섹션 전용]\n${section.viralTone}\n`
+    ? `\n[톤 — 내부 지침 전용, 본문에 절대 출력 금지]\n${section.viralTone}\n`
     : '';
   await session.send(
     `${lc.writingInstruction ? lc.writingInstruction + '\n\n' : ''}아웃라인대로 Hugo 마크다운 본문을 작성해줘. front matter 없이.
