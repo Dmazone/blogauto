@@ -168,8 +168,15 @@ async function main() {
   for await (const chunk of process.stdin) input += chunk;
 
   const parsed = JSON.parse(input);
+  // Gemini 응답 잔재 제거: JSON{ 헤더, > 톤: 지시어, --- 구분선 등
+  parsed.body = (parsed.body ?? '')
+    .replace(/^JSON\{[^\n]*\}\s*\n?/gm, '')
+    .replace(/^>?\s*톤:.*\n?/gm, '')
+    .replace(/^---+\s*\n?/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
   // 한국어 범위 표기 ~ 자동 이스케이프 (goldmark 취소선 오인식 방지)
-  parsed.body = (parsed.body ?? '').replace(/(?<!\\)(?<!~)~(?!~)/g, '\\~');
+  parsed.body = parsed.body.replace(/(?<!\\)(?<!~)~(?!~)/g, '\\~');
   const { sectionId, topic, outline, body, imgPrompts = [], dateOverride } = parsed;
   const section = getSectionById(sectionId);
   if (!section) throw new Error(`알 수 없는 섹션: ${sectionId}`);
