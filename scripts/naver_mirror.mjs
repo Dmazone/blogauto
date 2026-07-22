@@ -104,10 +104,13 @@ function scanPosts({ daysBack = 1, slug: targetSlug = null } = {}) {
       const stat = fs.statSync(indexPath);
       if (!targetSlug && stat.mtime < cutoff) continue;
 
-      const raw = fs.readFileSync(indexPath, 'utf-8');
+      // BOM 제거 후 파싱 (Windows 저장 파일에 ﻿ 포함되는 경우 대응)
+      const raw = fs.readFileSync(indexPath, 'utf-8').replace(/^﻿/, '');
       const titleM = raw.match(/^title:\s*"?([^"\n]+)"?/m);
       const tagsM  = raw.match(/^tags:\s*\[([^\]]+)\]/m);
-      const body   = raw.replace(/^---[\s\S]+?---\n*/m, '').trim();
+      // front matter 추출: 두 번째 --- 이후 내용만 body로
+      const fmEnd = raw.indexOf('\n---', 3);
+      const body  = fmEnd >= 0 ? raw.slice(fmEnd + 4).trim() : raw.trim();
 
       if (['japan-trends', 'us-trends'].includes(sectionDir)) continue;
 
