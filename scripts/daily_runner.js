@@ -212,21 +212,6 @@ async function main() {
     log('📌', '예약 발행 모드 — threads_poster는 10:00 KST /threads-post 스킬로 별도 실행');
   }
 
-  // ── 티스토리 미러링 (토큰 설정 시 자동 실행) ────────────────────────────
-  if (successCount > 0 && process.env.TISTORY_ACCESS_TOKEN && process.env.TISTORY_BLOG) {
-    log('🪞', '티스토리 미러링 시작...');
-    await new Promise((resolve) => {
-      const proc = spawn(process.execPath, [path.join(__dirname, 'tistory_mirror.mjs')], {
-        cwd: path.join(__dirname, '..'), stdio: 'inherit', detached: false,
-      });
-      proc.on('close', (code) => {
-        log(code === 0 ? '✅' : '⚠️', `티스토리 미러링 종료 (코드: ${code})`);
-        resolve();
-      });
-      proc.on('error', (err) => { log('⚠️', `티스토리 오류: ${err.message}`); resolve(); });
-    });
-  }
-
   // ── 이미지 누락 자동 복구 (포스팅 완료 직후 항상 실행) ───────────────────
   if (successCount > 0) {
     log('🖼️', '이미지 누락 최종 점검 자동 실행 중...');
