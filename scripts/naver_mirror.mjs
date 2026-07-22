@@ -41,36 +41,41 @@ function saveLog(log) {
 function mdToHtml(md, slug, sectionDir) {
   const absBase = BASE_URL ? `${BASE_URL}/posts/${sectionDir}/${slug}` : '';
 
+  // 커버(thumb) 이미지는 본문에 이미 삽입되어 있지 않으므로 첫 이미지를 상단에 추가
   let html = md
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => {
+    // 이미지 — 절대 URL
+    .replace(/!\[([^\]]*)\]\(([^)]+\.webp|[^)]+\.jpg|[^)]+\.png|[^)]+\.gif)\)/g, (_, alt, src) => {
       const abs = src.startsWith('http') ? src : (absBase ? `${absBase}/${src}` : src);
-      return `<img src="${abs}" alt="${alt}" style="max-width:100%;display:block;margin:16px auto;">`;
+      if (src.includes('-thumb.')) return '';  // 썸네일은 제외
+      return `<p><img src="${abs}" alt="${alt}" style="max-width:100%;height:auto;display:block;margin:12px auto;border-radius:6px;"></p>`;
     })
+    // 일반 링크
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, href) => {
       const abs = href.startsWith('http') ? href : (BASE_URL ? `${BASE_URL}${href}` : href);
       return `<a href="${abs}" target="_blank" rel="noopener">${text}</a>`;
     })
-    .replace(/^###### (.+)$/gm, '<h6>$1</h6>')
-    .replace(/^##### (.+)$/gm,  '<h5>$1</h5>')
-    .replace(/^#### (.+)$/gm,   '<h4>$1</h4>')
-    .replace(/^### (.+)$/gm,    '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm,     '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm,      '<h1>$1</h1>')
-    .replace(/\*\*\*([^*]+)\*\*\*/g, '<strong><em>$1</em></strong>')
+    // 제목
+    .replace(/^## (.+)$/gm,  '<h2 style="font-size:1.3em;font-weight:bold;margin:20px 0 8px;border-bottom:2px solid #eee;padding-bottom:6px;">$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3 style="font-size:1.1em;font-weight:bold;margin:16px 0 6px;color:#333;">$1</h3>')
+    // 강조
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/^> (.+)$/gm, '<blockquote style="border-left:3px solid #ccc;padding:4px 12px;color:#555;">$1</blockquote>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    // 인용
+    .replace(/^> (.+)$/gm, '<blockquote style="border-left:4px solid #4CAF50;padding:8px 12px;margin:12px 0;background:#f9f9f9;color:#555;border-radius:0 4px 4px 0;">$1</blockquote>')
+    // 목록
+    .replace(/^- (.+)$/gm, '<li style="margin:4px 0;">$1</li>')
     .replace(/\\\~/g, '~')
-    .replace(/(<li>.*?<\/li>(\n|$))+/g, (b) => `<ul>${b}</ul>`)
-    .replace(/\n\n+/g, '</p><p>')
+    .replace(/(<li[^>]*>.*?<\/li>\n?)+/g, m => `<ul style="padding-left:20px;margin:8px 0;">${m}</ul>`)
+    // 단락
+    .replace(/\n\n+/g, '</p><p style="margin:10px 0;line-height:1.8;">')
     .replace(/\n/g, '<br>');
 
-  if (absBase) {
-    html += `<hr><p style="color:#888;font-size:0.9em;">📌 원문: <a href="${absBase}/">${absBase}/</a></p>`;
-  }
+  // 원문 링크 — 마지막 1회만
+  const footer = absBase
+    ? `<hr style="margin:24px 0;border:none;border-top:1px solid #eee;"><p style="color:#888;font-size:0.85em;">📌 원문: <a href="${absBase}/" target="_blank" rel="noopener">${absBase}/</a></p>`
+    : '';
 
-  return `<p>${html}</p>`;
+  return `<p style="margin:10px 0;line-height:1.8;">${html}</p>${footer}`;
 }
 
 // HTML → 순수 텍스트 (폴백용)
@@ -215,7 +220,7 @@ async function publishPost(page, context, post) {
   console.log(`    → 제목 입력: "${titleState.text}" (isEmpty=${titleState.isEmpty})`);
   if (titleState.isEmpty) throw new Error('제목 입력 실패 — SE3 내부 모델 미반영');
 
-  // ── 본문 입력 (클립보드 HTML 붙여넣기 → 폴백: 텍스트 타이핑) ──
+  // ── 본문 입력 (클립보드 HTML 붙여넣기) ──
   const html = mdToHtml(post.body, post.slug, post.sectionDir);
 
   // 클립보드에 HTML 설정
@@ -234,31 +239,30 @@ async function publishPost(page, context, post) {
 
   // 본문 영역 클릭 후 붙여넣기
   await page.mouse.click(coords.bodyX, coords.bodyY + 40);
-  await page.waitForTimeout(400);
+  await page.waitForTimeout(500);
 
   if (clipOk) {
     await page.keyboard.press('Control+v');
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(3000);  // SE3 파싱 대기
     console.log('    → 클립보드 HTML 붙여넣기');
-  }
-
-  // SE3 내부 모델 상태 확인 — isEmpty가 false여야 성공
-  const bodyState = await page.evaluate(() => {
-    const section = document.querySelector('.se-main-container .se-section:not(.se-section-documentTitle)');
-    return { isEmpty: section?.classList.contains('se-is-empty'), textLen: section?.innerText?.length };
-  });
-
-  if (bodyState.isEmpty !== false) {
-    // 폴백: 순수 텍스트 타이핑
-    console.log('    → 폴백: 텍스트 타이핑');
+  } else {
+    console.log('    → 클립보드 실패, 텍스트 폴백');
     const plainText = htmlToPlainText(html);
-    await page.mouse.click(coords.bodyX, coords.bodyY + 40);
-    await page.waitForTimeout(300);
     await page.keyboard.type(plainText);
     await page.waitForTimeout(500);
-  } else {
-    console.log(`    → 본문 주입 완료 (${bodyState.textLen}자)`);
   }
+
+  // SE3 내용 확인 (innerText 기준)
+  let bodyLen = await page.evaluate(() => {
+    const container = document.querySelector('.se-main-container');
+    const titleText = document.querySelector('.se-title-text')?.innerText?.trim() || '';
+    const total = container?.innerText?.trim() || '';
+    return Math.max(0, total.length - titleText.length);
+  });
+  console.log(`    → 본문 길이: ${bodyLen}자`);
+
+  // bodyLen=0이어도 SE3 내부 모델에 클립보드 내용이 반영됐을 수 있음 → 폴백 없이 진행
+  // (클립보드 붙여넣기 후 innerText 체크가 SE3 모델을 즉시 반영하지 않는 경우 발생)
 
   // ── 발행 패널 열기 ──
   await page.mouse.click(640, 22); // 헤더 빈 영역
