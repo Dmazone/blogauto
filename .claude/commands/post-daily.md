@@ -1,6 +1,6 @@
 # /post-daily — 트렌드줌 블로그 포스팅
 
-매일 22:00 KST, Task Scheduler가 자동 실행. 이 스킬은 수동 트리거 또는 재실행 용.
+매일 01:00 KST, Task Scheduler가 자동 실행. 이 스킬은 수동 트리거 또는 재실행 용.
 
 ---
 

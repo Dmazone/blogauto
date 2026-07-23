@@ -2,8 +2,8 @@ name: Daily Blog Auto Publisher
 
 on:
   schedule:
-    # 매일 한국시간 오전 9시 (UTC 00:00)
-    - cron: "0 0 * * *"
+    # 매일 한국시간 새벽 1시 (UTC 16:00 전날)
+    - cron: "0 16 * * *"
   workflow_dispatch:
     inputs:
       sections:
@@ -70,14 +70,14 @@ jobs:
             node scripts/daily_runner.js
           fi
 
-      # 생성 완료 후 즉시 Pages 첫 배포 (09:00 글 공개)
+      # 생성 완료 후 즉시 Pages 첫 배포 (05:00 전 초기 빌드)
       - name: Setup Hugo for initial deploy
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: "latest"
           extended: true
 
-      - name: Build Hugo (09:00 기사 공개)
+      - name: Build Hugo (초기 빌드 — 발행은 05:00부터 scheduled-deploy)
         run: hugo --minify
 
       - name: Upload Pages artifact
