@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "norway-brazil-shock-haaland-quarterfinals-2026-thumb.webp"
   alt: "노르웨이 브라진 격파 8강 진출, 진짜 비결 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

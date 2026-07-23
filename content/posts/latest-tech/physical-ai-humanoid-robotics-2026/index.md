@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "physical-ai-humanoid-robotics-2026-thumb.webp"
   alt: "피지컬 AI 로봇 진짜 상용화될까? 2026 트렌드 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

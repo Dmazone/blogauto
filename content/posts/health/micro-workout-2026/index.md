@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "micro-workout-2026-thumb.webp"
   alt: "2026 틈새 운동: 10분으로 진짜 최대 효과? 핵심 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

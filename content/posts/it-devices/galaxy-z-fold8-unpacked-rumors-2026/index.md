@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "galaxy-z-fold8-unpacked-rumors-2026-thumb.webp"
   alt: "갤럭시Z폴드8 3가지변화 진짜바뀌나 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

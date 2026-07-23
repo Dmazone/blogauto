@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "physical-ai-home-robot-trend-2026-thumb.webp"
   alt: "피지컬 AI 가전 2026 진짜 바뀌는 가전 트렌드 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "july-private-gbon-investment-strategy-2026-thumb.webp"
   alt: "2026 국채 투자, 지금 사면 진짜 이득일까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

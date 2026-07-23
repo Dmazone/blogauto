@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "sme-loan-delinquency-rate-highest-2026-thumb.webp"
   alt: "대출 연체율 10년만 최고치, 내 돈 지킬 진짜 전략 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "senior-age-limit-70-benefits-2026-thumb.webp"
   alt: "노인 나이 70세 상향? 바뀌는 혜택 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

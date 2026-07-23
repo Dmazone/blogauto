@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "entertainment-1783436808754-thumb.webp"
   alt: "연예이슈 최신 트렌드 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

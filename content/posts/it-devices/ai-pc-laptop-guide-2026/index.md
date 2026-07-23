@@ -9,6 +9,7 @@ tags: ["AIPC", "노트북추천", "코어울트라", "애플M4", "2026노트북"
 cover:
   image: "ai-pc-laptop-guide-2026-thumb.webp"
   alt: "AI PC 가이드 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

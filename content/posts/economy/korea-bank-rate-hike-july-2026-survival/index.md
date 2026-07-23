@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-bank-rate-hike-july-2026-survival-thumb.webp"
   alt: "2026년 기준금리 인상, 대출자 생존법 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

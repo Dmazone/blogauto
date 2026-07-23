@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-low-spend-core-z-generation-trend-japan-korea-thumb.webp"
   alt: "2026年最新！低消費コアが日韓の若者にウケる本当の理由 サムネイル"
+  relative: true
   hiddenInSingle: true
 ---
 

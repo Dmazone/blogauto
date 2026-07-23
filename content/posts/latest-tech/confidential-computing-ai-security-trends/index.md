@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "confidential-computing-ai-security-trends-thumb.webp"
   alt: "2026 기밀 컴퓨팅, 진짜 AI 보안의 핵심일까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

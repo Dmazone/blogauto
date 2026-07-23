@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "practical-ethical-consumption-guide-2026-thumb.webp"
   alt: "진짜 돈 아끼는 2026 실용 소비 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

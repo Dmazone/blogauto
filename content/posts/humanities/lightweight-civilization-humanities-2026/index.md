@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "lightweight-civilization-humanities-2026-thumb.webp"
   alt: "경량문명 인문학, AI 시대 생존을 위한 진짜 무기는? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

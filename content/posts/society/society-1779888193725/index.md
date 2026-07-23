@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "society-1779888193725-thumb.webp"
   alt: "시니어 빚투 노후 자산 관리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

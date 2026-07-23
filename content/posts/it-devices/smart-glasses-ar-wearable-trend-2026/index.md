@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "smart-glasses-ar-wearable-trend-2026-thumb.webp"
   alt: "스마트 글래스 2026 진짜 쓸만할까? 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

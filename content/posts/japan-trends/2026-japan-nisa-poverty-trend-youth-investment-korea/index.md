@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-japan-nisa-poverty-trend-youth-investment-korea-thumb.webp"
   alt: "2026最新「NISA貧乏」とは？日韓の若者が陥る投資の罠 サムネイル"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "kim-shin-young-diet-yo-yo-talk-2026-thumb.webp"
   alt: "김신영 다이어트 요요, 13년 유지 비결 진짜 바뀔까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

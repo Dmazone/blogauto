@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "seoul-apartment-triple-increase-housing-cost-2026-thumb.webp"
   alt: "2026 서울 아파트 폭등, 지금 월세가 답일까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "unconventional-accommodations-historical-stays-2026-thumb.webp"
   alt: "2026 이색 숙소 여행, 숨은 인생 역대급 호텔 5곳 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

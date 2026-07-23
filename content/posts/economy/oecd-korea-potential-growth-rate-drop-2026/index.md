@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "oecd-korea-potential-growth-rate-drop-2026-thumb.webp"
   alt: "OECD 경고, 내년 한국 1.5% 붕괴 진짜 위기일까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-japan-extreme-heat-kanto-40c-heatstroke-countermeasures-thumb.webp"
   alt: "関東40度超え猛暑！酷暑日を乗り切る最新熱中症対策5選 サムネイル"
+  relative: true
   hiddenInSingle: true
 ---
 

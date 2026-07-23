@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "early-dementia-treatment-brain-health-2026-thumb.webp"
   alt: "치매 치료 신약, 뇌 건강 지키는 숨은 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "supertiny-gan-charger-travel-tech-2026-thumb.webp"
   alt: "GaN 충전기, 2026년 진짜 사야 할 숨은 꿀템 3선 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

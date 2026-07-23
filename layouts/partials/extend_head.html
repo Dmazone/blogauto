@@ -975,17 +975,29 @@ input, button, select, textarea {
   window.addEventListener('resize', applyHeaderOffset);
 })();
 
-/* 검색 페이지: URL ?q= 자동 채우기 */
+/* 검색 페이지: URL ?q= 자동 검색 — fuse.js XHR 완료 후 재시도 */
 (function() {
   if (window.location.pathname.indexOf('/search') === -1) return;
-  window.addEventListener('DOMContentLoaded', function() {
-    var q = new URLSearchParams(window.location.search).get('q');
-    if (!q) return;
+  var q = new URLSearchParams(window.location.search).get('q');
+  if (!q) return;
+  document.addEventListener('DOMContentLoaded', function() {
     var inp = document.getElementById('searchInput');
-    if (inp) {
+    if (inp) inp.value = q;
+  });
+  window.addEventListener('load', function() {
+    var tries = 0;
+    function trySearch() {
+      var inp = document.getElementById('searchInput');
+      var resList = document.getElementById('searchResults');
+      if (!inp) return;
       inp.value = q;
       inp.dispatchEvent(new KeyboardEvent('keyup', {bubbles: true}));
+      tries++;
+      if (tries < 8 && (!resList || !resList.firstChild)) {
+        setTimeout(trySearch, 350);
+      }
     }
+    setTimeout(trySearch, 100);
   });
 })();
 </script>

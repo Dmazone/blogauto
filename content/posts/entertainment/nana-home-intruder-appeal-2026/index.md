@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "nana-home-intruder-appeal-2026-thumb.webp"
   alt: "나나 자택 침입범, 징역 7년 불복? 진짜 속사정 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

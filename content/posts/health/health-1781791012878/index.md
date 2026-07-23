@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "health-1781791012878-thumb.webp"
   alt: "건강 최신 트렌드 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

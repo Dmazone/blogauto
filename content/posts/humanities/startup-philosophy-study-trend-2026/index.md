@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "startup-philosophy-study-trend-2026-thumb.webp"
   alt: "스타트업 철학 붐, 진짜 생존 무기일까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

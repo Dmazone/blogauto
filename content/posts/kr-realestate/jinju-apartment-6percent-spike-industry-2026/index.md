@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "jinju-apartment-6percent-spike-industry-2026-thumb.webp"
   alt: "진주 아파트 6% 폭등 진짜 이유 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

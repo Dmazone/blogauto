@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-rate-change-2026-thumb.webp"
   alt: "2026년 한국 금리, 진짜 바뀌나? 주식·부동산 영향 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-agent-educational-psychology-ethics-thumb.webp"
   alt: "AI 에이전트 심리 분석, 인간을 대체할까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

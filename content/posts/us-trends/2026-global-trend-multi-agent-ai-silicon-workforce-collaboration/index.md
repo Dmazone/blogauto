@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-global-trend-multi-agent-ai-silicon-workforce-collaboration-thumb.webp"
   alt: "2026 Multi-Agent AI: Guide to the New Silicon Workforce thumbnail"
+  relative: true
   hiddenInSingle: true
 ---
 

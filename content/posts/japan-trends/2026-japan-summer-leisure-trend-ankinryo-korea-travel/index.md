@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-japan-summer-leisure-trend-ankinryo-korea-travel-thumb.webp"
   alt: "2026年最新！夏の安近涼トレンドで韓国旅行が選ばれる理由 サムネイル"
+  relative: true
   hiddenInSingle: true
 ---
 

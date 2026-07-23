@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "georgia-travel-2026-guide-thumb.webp"
   alt: "2026 조지아 여행: 왜 뜰까? 항공/비자 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

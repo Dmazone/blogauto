@@ -8,6 +8,7 @@ description: "봄마다 괴롭히는 알레르기 비염과 피부 트러블의 
 cover:
   image: "spring-allergy-symptoms-2026-thumb.webp"
   alt: "봄철 알레르기 증상 대처법 2026"
+  relative: true
   hiddenInSingle: true
 ---
 

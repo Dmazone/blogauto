@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "galaxy-s26-red-screen-display-issue-2026-thumb.webp"
   alt: "2026 갤럭시 S26 붉은 화면 불량? 해결책 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

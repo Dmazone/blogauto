@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ready-core-survival-strategy-2026-thumb.webp"
   alt: "레디코어 라이프: 2026년 진짜 생존 전략 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

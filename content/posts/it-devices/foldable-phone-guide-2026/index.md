@@ -8,6 +8,7 @@ description: "2026년 폴더블폰 시장의 최신 트렌드와 주요 제품�
 cover:
   image: "foldable-phone-guide-2026-thumb.webp"
   alt: "2026 폴더블폰 구매 가이드"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "blood-sugar-spike-diet-sequence-2026-thumb.webp"
   alt: "혈당 스파이크 막는 식사 순서 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

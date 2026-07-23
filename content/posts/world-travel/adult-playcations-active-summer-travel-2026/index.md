@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "adult-playcations-active-summer-travel-2026-thumb.webp"
   alt: "2026 진짜 핫한 플레이케이션 숙소 추천 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

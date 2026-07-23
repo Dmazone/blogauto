@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "slow-reading-ai-literacy-2026-thumb.webp"
   alt: "진짜 문해력 키우는 느린 독서법 핵심 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

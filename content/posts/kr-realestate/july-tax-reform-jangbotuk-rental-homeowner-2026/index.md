@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "july-tax-reform-jangbotuk-rental-homeowner-2026-thumb.webp"
   alt: "바뀌는 장보특! 1주택 실거주 세제 개편안 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

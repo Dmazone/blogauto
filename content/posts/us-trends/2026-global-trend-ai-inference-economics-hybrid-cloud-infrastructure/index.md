@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-global-trend-ai-inference-economics-hybrid-cloud-infrastructure-thumb.webp"
   alt: "AI Inference Cost Crisis: 2026 Hybrid Cloud Strategy thumbnail"
+  relative: true
   hiddenInSingle: true
 ---
 

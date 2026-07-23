@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "july-tax-code-revision-jongbuse-2026-thumb.webp"
   alt: "보유세 바뀌는 2026 세법개정안 완전정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

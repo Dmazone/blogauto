@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-self-employed-survival-crisis-thumb.webp"
   alt: "2026 자영업 폐업 지원금 진짜 받는 법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

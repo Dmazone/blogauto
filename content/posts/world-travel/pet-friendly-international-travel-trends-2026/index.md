@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "pet-friendly-international-travel-trends-2026-thumb.webp"
   alt: "2026 반려견 해외여행 진짜 바뀌는 규정과 필수 준비물 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

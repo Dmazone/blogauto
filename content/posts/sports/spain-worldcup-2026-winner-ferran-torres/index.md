@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "spain-worldcup-2026-winner-ferran-torres-thumb.webp"
   alt: "2026 월드컵 스페인 우승의 3가지 이유 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

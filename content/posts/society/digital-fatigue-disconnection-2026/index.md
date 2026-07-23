@@ -9,6 +9,7 @@ tags: ["디지털피로", "스마트폰중독", "디지털디톡스", "사회트
 cover:
   image: "digital-fatigue-disconnection-2026-thumb.webp"
   alt: "디지털 피로 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

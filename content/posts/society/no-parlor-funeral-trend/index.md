@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "no-parlor-funeral-trend-thumb.webp"
   alt: "무빈소 장례 진짜 확산, 장단점 비용 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

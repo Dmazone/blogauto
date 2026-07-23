@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "leekangin-transfer-market-2026-worldcup-thumb.webp"
   alt: "이강인 2026 이적설 진짜 행선지는? 빅클럽 3곳 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "humanities-1779888866386-thumb.webp"
   alt: "AI 시대 인문학 생존 전략 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

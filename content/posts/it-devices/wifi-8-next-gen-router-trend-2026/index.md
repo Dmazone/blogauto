@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "wifi-8-next-gen-router-trend-2026-thumb.webp"
   alt: "Wi-Fi 8 공유기 진짜 살까? 2026 차세대 네트워크 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

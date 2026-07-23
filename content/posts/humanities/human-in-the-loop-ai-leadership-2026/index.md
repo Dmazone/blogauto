@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "human-in-the-loop-ai-leadership-2026-thumb.webp"
   alt: "AI 지휘력 키우는 3가지 방법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

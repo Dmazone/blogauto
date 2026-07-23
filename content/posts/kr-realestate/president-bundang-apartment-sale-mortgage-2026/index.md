@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "president-bundang-apartment-sale-mortgage-2026-thumb.webp"
   alt: "대통령 29억 분당 매도와 17억 근저당 설정의 시사점 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

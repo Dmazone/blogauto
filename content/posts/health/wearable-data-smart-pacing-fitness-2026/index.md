@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "wearable-data-smart-pacing-fitness-2026-thumb.webp"
   alt: "2026 스마트워치 운동 진짜 효과 보는 법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

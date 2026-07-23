@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-parking-etf-strategy-thumb.webp"
   alt: "파킹형 ETF, 2026년 숨은 수익 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

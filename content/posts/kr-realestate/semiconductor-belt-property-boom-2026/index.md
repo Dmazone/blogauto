@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "semiconductor-belt-property-boom-2026-thumb.webp"
   alt: "반도체 벨트 집값 20억 돌파, 진짜 살 타이밍일까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

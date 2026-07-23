@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "silicon-workforce-process-redesign-thumb.webp"
   alt: "2026년 바뀌는 AI 동료와 진짜 일 잘하는 법 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

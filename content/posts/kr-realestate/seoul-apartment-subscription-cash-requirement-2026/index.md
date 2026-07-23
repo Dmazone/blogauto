@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "seoul-apartment-subscription-cash-requirement-2026-thumb.webp"
   alt: "서울 청약 현금 7억? 진짜 바뀌는 대출 규제 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "sk-hynix-etf-volatility-2026-thumb.webp"
   alt: "SK하이닉스 40조 ETF 투자, 지금 사도 안전할까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

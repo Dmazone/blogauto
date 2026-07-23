@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "low-birth-housing-2026-thumb.webp"
   alt: "저출생 주거정책 2026, 청년의 현실은? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

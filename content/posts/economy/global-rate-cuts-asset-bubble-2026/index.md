@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "global-rate-cuts-asset-bubble-2026-thumb.webp"
   alt: "2026 금리 인하, 자산 버블 진짜 대처법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

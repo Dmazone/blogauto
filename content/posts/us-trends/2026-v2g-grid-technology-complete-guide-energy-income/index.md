@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-v2g-grid-technology-complete-guide-energy-income-thumb.webp"
   alt: "V2G Grid Technology: 2026 Complete Guide to Energy Income thumbnail"
+  relative: true
   hiddenInSingle: true
 ---
 

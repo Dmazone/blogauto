@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-high-oil-price-saving-strategies-thumb.webp"
   alt: "2026 고유가 시대, 진짜 안 오르는 숨은 절약법 핵심 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "hyrox-hybrid-fitness-trend-2026-thumb.webp"
   alt: "하이록스 대회 준비, 2026 트렌드 운동 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

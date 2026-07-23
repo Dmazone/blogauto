@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "galaxy-s26-ai-features-2026-thumb.webp"
   alt: "갤럭시 S26 AI 기능, 실제로 얼마나 쓸 만한가? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "relationship-humanities-solo-era-2026-thumb.webp"
   alt: "외로움 극복하는 관계인문학 핵심 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

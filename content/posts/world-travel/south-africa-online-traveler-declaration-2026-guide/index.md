@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "south-africa-online-traveler-declaration-2026-guide-thumb.webp"
   alt: "2026 남아공 필수 신고서 작성법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

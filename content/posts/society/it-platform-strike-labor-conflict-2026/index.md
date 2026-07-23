@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "it-platform-strike-labor-conflict-2026-thumb.webp"
   alt: "카카오 파업과 네이버 교섭, 진짜 바뀌는 것 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

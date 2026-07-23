@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-ai-travel-planner-budget-itinerary-guide-thumb.webp"
   alt: "2026 AI 여행 플래너로 꿀 빠는 가성비 일정 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

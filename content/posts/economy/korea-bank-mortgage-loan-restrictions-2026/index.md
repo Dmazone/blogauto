@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-bank-mortgage-loan-restrictions-2026-thumb.webp"
   alt: "바뀌는 가계대출 규제, 2026 주담대 제한 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

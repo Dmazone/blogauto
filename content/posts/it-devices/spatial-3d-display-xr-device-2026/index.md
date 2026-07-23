@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "spatial-3d-display-xr-device-2026-thumb.webp"
   alt: "2026 차세대 XR 기기 바뀌는 미래 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

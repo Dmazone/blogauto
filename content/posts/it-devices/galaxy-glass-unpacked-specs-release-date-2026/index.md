@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "galaxy-glass-unpacked-specs-release-date-2026-thumb.webp"
   alt: "갤럭시 글라스 출시일과 가격 스펙 총정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

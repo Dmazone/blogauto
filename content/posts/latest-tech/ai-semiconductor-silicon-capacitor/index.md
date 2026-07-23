@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-semiconductor-silicon-capacitor-thumb.webp"
   alt: "AI 반도체 실리콘 커패시터 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

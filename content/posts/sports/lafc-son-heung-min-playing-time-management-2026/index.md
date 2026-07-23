@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "lafc-son-heung-min-playing-time-management-2026-thumb.webp"
   alt: "손흥민 LAFC 출전시간 제한 조치 감독이 밝힌 3가지 이유 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

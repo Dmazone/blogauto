@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "context-aware-smart-home-hub-2026-thumb.webp"
   alt: "바뀌는 스마트홈 가전, 2026 상황인지 허브 추천 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

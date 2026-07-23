@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "me-conomy-lifestyle-trend-2026-thumb.webp"
   alt: "진짜 나를 찾는 2026 미코노미 트렌드 핵심 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

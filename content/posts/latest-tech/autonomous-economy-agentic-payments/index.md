@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "autonomous-economy-agentic-payments-thumb.webp"
   alt: "AI 결제 시대, 바뀌는 마케팅 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -8,6 +8,7 @@ description: "2026년 5월 대유행 중인 마이코플라스마 폐렴의 핵�
 cover:
   image: "mycoplasma-pneumonia-2026-thumb.webp"
   alt: "마이코플라스마 폐렴 항생제 내성 대처"
+  relative: true
   hiddenInSingle: true
 ---
 

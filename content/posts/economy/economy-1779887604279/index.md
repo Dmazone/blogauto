@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "economy-1779887604279-thumb.webp"
   alt: "코스피 8000 AI 반도체 투자 전략 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

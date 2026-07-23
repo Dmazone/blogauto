@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "hongmyungbo-tactics-criticism-2026-thumb.webp"
   alt: "홍명보 전술 부재 2026 진짜 바뀔까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "stoic-philosophy-anxiety-2026-thumb.webp"
   alt: "스토아 철학 2026, 불안한 시대를 사는 법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

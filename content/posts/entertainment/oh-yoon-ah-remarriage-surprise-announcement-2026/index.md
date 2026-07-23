@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "oh-yoon-ah-remarriage-surprise-announcement-2026-thumb.webp"
   alt: "오윤아 재혼 11년만의 진짜 이유 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

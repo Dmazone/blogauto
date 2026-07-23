@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "critical-thinking-questioning-skills-2026-thumb.webp"
   alt: "문해력 위기 탈출법, 2026년 진짜 살아남는 질문의 기술 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-global-trend-next-gen-semiconductors-sub-1nm-nanostack-chips-thumb.webp"
   alt: "Sub-1nm Chips: Why Nanostack Tech Wins 2026 thumbnail"
+  relative: true
   hiddenInSingle: true
 ---
 

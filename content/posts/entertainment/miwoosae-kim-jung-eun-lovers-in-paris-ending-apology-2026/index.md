@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "miwoosae-kim-jung-eun-lovers-in-paris-ending-apology-2026-thumb.webp"
   alt: "미우새 김정은 파리의연인 엔딩 사과 진짜 이유 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

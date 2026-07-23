@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-slow-travel-culinary-hidden-gems-thumb.webp"
   alt: "2026 진짜 뜨는 슬로우 여행지 Best 3 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

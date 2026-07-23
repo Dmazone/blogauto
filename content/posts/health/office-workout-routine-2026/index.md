@@ -9,6 +9,7 @@ tags: ["직장인운동", "틈새운동", "운동루틴", "건강관리", "홈�
 cover:
   image: "office-workout-routine-2026-thumb.webp"
   alt: "직장인 운동 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "writing-therapy-ai-era-2026-thumb.webp"
   alt: "AI 시대 글쓰기 치유법 완전정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

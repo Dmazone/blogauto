@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-bubble-samsung-skhynix-stock-outlook-2026-thumb.webp"
   alt: "AI 거품론? 삼성 SK하이닉스 2026 하반기 주가 전망은 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "capital-waste-landfill-ban-crisis-2026-thumb.webp"
   alt: "2026 쓰레기 대란 진짜 오나? 수도권 매립 금지 핵심 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

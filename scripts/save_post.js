@@ -65,7 +65,9 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
     `${topic.keyword}에 대한 2026년 최신 정보와 트렌드를 알아보세요.`
   ).slice(0, 160);
   const rawTags = [topic.keyword, section.name, ...(topic.tags ?? [])];
-  const tags = [...new Set(rawTags.filter(Boolean))].slice(0, 6);
+  const tags = [...new Set(
+    rawTags.filter(Boolean).flatMap(t => t.split(',').map(s => s.trim()).filter(Boolean))
+  )].slice(0, 6);
   const thumbUrl = `${topic.slug}-thumb.webp`;
   return (
     `---\n` +
@@ -80,6 +82,7 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
     `cover:\n` +
     `  image: "${thumbUrl}"\n` +
     `  alt: "${topic.title} 썸네일"\n` +
+    `  relative: true\n` +
     `  hiddenInSingle: true\n` +
     `---\n\n`
   );
@@ -102,7 +105,7 @@ async function generateImage(prompt, slug, index, bundleDir) {
     } catch (err) { log('⚠️', `  Flow 실패 → Pollinations fallback`); }
   }
 
-  const polUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1200&height=630&nologo=true&model=flux`;
+  const polUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1280&height=720&nologo=true&enhance=false&model=flux`;
   await withRetry(async () => {
     const res = await axios.get(polUrl, { responseType: 'arraybuffer', timeout: 150000 });
     fs.writeFileSync(destPath, Buffer.from(res.data));
@@ -171,7 +174,7 @@ async function main() {
   // Gemini 응답 잔재 제거: JSON{ 헤더, > 톤: 지시어, --- 구분선 등
   parsed.body = (parsed.body ?? '')
     .replace(/^JSON\{[^\n]*\}\s*\n?/gm, '')
-    .replace(/^>?\s*톤:.*\n?/gm, '')
+    .replace(/^>?\s*(?:작성\s*)?톤:.*\n?/gm, '')
     .replace(/^---+\s*\n?/gm, '')
     .replace(/\n{3,}/g, '\n\n')
     .trim();

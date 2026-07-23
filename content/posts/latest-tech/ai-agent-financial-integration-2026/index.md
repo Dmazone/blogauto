@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-agent-financial-integration-2026-thumb.webp"
   alt: "AI 에이전트 금융 결합 트렌드 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ultra-processed-foods-chronic-inflammation-2026-thumb.webp"
   alt: "초가공식품 만성 염증 유발하는 진짜 이유와 3단계 해독법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

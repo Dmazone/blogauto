@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "worldcup-2026-golden-boot-race-messi-mbappe-thumb.webp"
   alt: "메시 음바페 월드컵 득점왕 경쟁, 2026 골든부트는 누구? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

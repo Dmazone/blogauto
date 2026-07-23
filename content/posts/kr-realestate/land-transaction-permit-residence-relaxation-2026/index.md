@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "land-transaction-permit-residence-relaxation-2026-thumb.webp"
   alt: "바뀌는 토지거래허가 실거주 완화 총정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

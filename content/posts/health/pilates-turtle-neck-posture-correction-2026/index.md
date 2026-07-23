@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "pilates-turtle-neck-posture-correction-2026-thumb.webp"
   alt: "2026 필라테스 거북목 교정 효과 진짜 있을까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

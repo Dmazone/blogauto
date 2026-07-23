@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "global-ai-energy-infrastructure-boom-2026-thumb.webp"
   alt: "AI 전력망 수혜주 진짜 2026 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

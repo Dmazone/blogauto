@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "cursor-acquisition-grok-coding-disruption-thumb.webp"
   alt: "Grok4.5 커서 인수! 개발자 밥그릇 바뀔까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

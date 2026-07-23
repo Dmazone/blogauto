@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-companion-relationship-economy-2026-thumb.webp"
   alt: "사람은 피곤해? 2026 AI 동반자 진짜 매력 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

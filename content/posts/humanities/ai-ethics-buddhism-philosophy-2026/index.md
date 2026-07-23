@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-ethics-buddhism-philosophy-2026-thumb.webp"
   alt: "AI윤리 해답, 진짜 불교 철학인가 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "cu-seoul-low-sugar-high-protein-diet-2026-thumb.webp"
   alt: "CU 저당 간편식 출시! 편의점 꿀조합 다이어트 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

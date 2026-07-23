@@ -8,6 +8,7 @@ description: "2026년 달라진 청약 제도와 당첨 확률을 높이는 실�
 cover:
   image: "apartment-subscription-guide-2026-thumb.webp"
   alt: "2026 아파트 청약 당첨 전략"
+  relative: true
   hiddenInSingle: true
 ---
 

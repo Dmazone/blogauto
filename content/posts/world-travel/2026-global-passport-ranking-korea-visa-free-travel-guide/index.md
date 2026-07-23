@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-global-passport-ranking-korea-visa-free-travel-guide-thumb.webp"
   alt: "2026 여권 순위 발표! 한국 2위로 바뀐 무비자 국가는? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

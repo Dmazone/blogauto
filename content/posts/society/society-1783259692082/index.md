@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "society-1783259692082-thumb.webp"
   alt: "사회 최신 트렌드 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

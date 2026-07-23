@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "latest-tech-1779887043461-thumb.webp"
   alt: "소버린 클라우드 데이터 주권 2026 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

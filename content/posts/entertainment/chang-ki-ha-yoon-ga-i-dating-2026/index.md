@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "chang-ki-ha-yoon-ga-i-dating-2026-thumb.webp"
   alt: "장기하 윤가이 18살 극복 진짜 열애 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

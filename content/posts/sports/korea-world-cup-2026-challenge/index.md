@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-world-cup-2026-challenge-thumb.webp"
   alt: "2026 FIFA 월드컵 한국의 도전, 결국 어떻게 됐나? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "one-half-household-lifestyle-2026-thumb.webp"
   alt: "3가지 사례로 본 1.5가구 트렌드와 외로움 해소법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "smart-case-ai-earbuds-trend-2026-thumb.webp"
   alt: "바뀌는 AI 이어폰 케이스 진짜 살까? 2026 핵심만 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

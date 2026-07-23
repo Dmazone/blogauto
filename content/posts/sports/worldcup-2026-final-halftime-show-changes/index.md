@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "worldcup-2026-final-halftime-show-changes-thumb.webp"
   alt: "월드컵 결승 하프타임쇼 라인업 및 시간 변경 진짜 이유 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

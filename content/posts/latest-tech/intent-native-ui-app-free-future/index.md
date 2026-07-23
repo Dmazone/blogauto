@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "intent-native-ui-app-free-future-thumb.webp"
   alt: "앱 사라지는 진짜 미래? 인텐트 기반 UI 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

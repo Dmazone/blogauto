@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ultra-processed-food-diet-habits-2026-thumb.webp"
   alt: "초가공식품 다이어트 식단 습관 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

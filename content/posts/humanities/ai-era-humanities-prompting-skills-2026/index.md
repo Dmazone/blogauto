@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-era-humanities-prompting-skills-2026-thumb.webp"
   alt: "AI 시대 진짜 살아남는 '질문의 인문학' 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

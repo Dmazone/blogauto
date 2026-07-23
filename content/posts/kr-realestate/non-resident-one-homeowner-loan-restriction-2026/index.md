@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "non-resident-one-homeowner-loan-restriction-2026-thumb.webp"
   alt: "비거주 1주택 대출 제한, 내 전세대출도 줄어들까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "multimodal-ai-systems-evolution-2026-thumb.webp"
   alt: "2026 진짜 바뀌는 멀티모달 AI 핵심 기술 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

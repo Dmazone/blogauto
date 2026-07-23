@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "loan-cliff-mortgage-bypass-2026-thumb.webp"
   alt: "대출 절벽 2026 하반기 잔금대출 우회로 진짜 없나 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

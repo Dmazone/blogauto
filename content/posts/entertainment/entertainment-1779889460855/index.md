@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "entertainment-1779889460855-thumb.webp"
   alt: "BTS 2026 AMA 올해의 아티스트 수상 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "screen-automation-ai-agentic-device-2026-thumb.webp"
   alt: "화면 자동화 AI 기기 진짜 바뀔까 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

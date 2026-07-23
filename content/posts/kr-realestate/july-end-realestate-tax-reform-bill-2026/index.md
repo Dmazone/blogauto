@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "july-end-realestate-tax-reform-bill-2026-thumb.webp"
   alt: "2026년 바뀌는 부동산 세제 개편 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

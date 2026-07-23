@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-human-in-the-loop-survival-2026-thumb.webp"
   alt: "AI 시대 생존 전략, 휴먼인더루프 완전 정리(진짜 중요) 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

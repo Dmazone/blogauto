@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "stress-dsr-stage3-loan-limit-2026-thumb.webp"
   alt: "바뀌는 스트레스 DSR 3단계 대출 한도 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

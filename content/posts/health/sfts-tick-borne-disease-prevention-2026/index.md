@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "sfts-tick-borne-disease-prevention-2026-thumb.webp"
   alt: "SFTS 진드기 증상 2026 완전정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

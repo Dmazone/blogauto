@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "moon-chae-won-wedding-dress-2026-thumb.webp"
   alt: "문채원 결혼 웨딩화보 속 3가지 드레스 브랜드 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

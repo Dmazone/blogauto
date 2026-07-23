@@ -9,6 +9,7 @@ tags: ["2026년 한국 경제성장률", "한국경제", "반도체수출", "내
 cover:
   image: "korea-economy-gdp-growth-2026-thumb.webp"
   alt: "한국 경제성장률 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "won-dollar-1540-fx-investment-thumb.webp"
   alt: "환율 1540원 돌파! 달러 투자 지금 할까? 핵심만 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

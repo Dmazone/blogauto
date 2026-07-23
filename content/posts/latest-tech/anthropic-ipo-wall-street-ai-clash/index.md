@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "anthropic-ipo-wall-street-ai-clash-thumb.webp"
   alt: "앤스로픽 IPO! AI 주식 시장 판도 바뀔까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

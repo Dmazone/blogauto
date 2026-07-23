@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "heat-exhaustion-heatstroke-symptoms-prevention-2026-thumb.webp"
   alt: "폭염 온열질환자 1000명 돌파! 열탈진 증상과 예방법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

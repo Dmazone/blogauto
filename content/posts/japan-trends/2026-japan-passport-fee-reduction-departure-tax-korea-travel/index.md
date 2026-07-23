@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-japan-passport-fee-reduction-departure-tax-korea-travel-thumb.webp"
   alt: "パスポート値下げ裏の罠？2026年最新の出国税3倍と渡韓への影響 サムネイル"
+  relative: true
   hiddenInSingle: true
 ---
 

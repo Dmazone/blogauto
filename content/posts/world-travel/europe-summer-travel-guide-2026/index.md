@@ -8,6 +8,7 @@ description: "2026년 유럽 여름 여행을 준비하는 분들을 위한 완�
 cover:
   image: "europe-summer-travel-guide-2026-thumb.webp"
   alt: "유럽 여름 여행 가이드 2026"
+  relative: true
   hiddenInSingle: true
 ---
 

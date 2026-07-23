@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "active-ageing-longevity-fitness-2026-thumb.webp"
   alt: "2026 웰에이징 운동, 안 늙는 몸 만드는 숨은 비결 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -9,6 +9,7 @@ tags: ["동남아여행", "일본여행", "해외여행2026", "여행트렌드",
 cover:
   image: "southeast-asia-japan-travel-2026-thumb.webp"
   alt: "동남아 일본 여행 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

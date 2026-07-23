@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "seoul-jeonse-highest-spike-12years-2026-thumb.webp"
   alt: "서울 전셋값 12년만 폭등, 내 전세금 지킬 숨은 대책 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

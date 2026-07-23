@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "zero-click-era-autonomy-2026-thumb.webp"
   alt: "제로 클릭 2026, 내 자유의지는 진짜 살아있을까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

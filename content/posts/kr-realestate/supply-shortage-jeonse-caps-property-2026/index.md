@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "supply-shortage-jeonse-caps-property-2026-thumb.webp"
   alt: "공급절벽 2026 아파트 시장, 진짜 전세가 매매가 밀어 올릴까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

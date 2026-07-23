@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-era-human-proof-creativity-2026-thumb.webp"
   alt: "AI 시대 인간증명, 진짜 창작의 조건 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "world-travel-1783348391782-thumb.webp"
   alt: "세계여행지 최신 트렌드 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-government-free-chatbot-2026-thumb.webp"
   alt: "2026 정부 무료 챗봇 '모두의 AI' 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

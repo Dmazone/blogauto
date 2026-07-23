@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "intermittent-fasting-diet-2026-thumb.webp"
   alt: "간헐적 단식 식단, 2026년 최신 방법 총정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

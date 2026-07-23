@@ -9,6 +9,7 @@ tags: ["K드라마", "넷플릭스", "한류", "2026드라마", "연예트렌드
 cover:
   image: "kdrama-global-2026-thumb.webp"
   alt: "K드라마 글로벌 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

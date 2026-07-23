@@ -8,6 +8,7 @@ description: "2026년 넷플릭스 글로벌 차트를 장악한 K-드라마의 
 cover:
   image: "netflix-kdrama-global-2026-thumb.webp"
   alt: "넷플릭스 K-드라마 글로벌 흥행 2026"
+  relative: true
   hiddenInSingle: true
 ---
 

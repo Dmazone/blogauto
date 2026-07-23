@@ -8,6 +8,7 @@ description: "개막이 임박한 2026 북중미 월드컵 대한민국 국가�
 cover:
   image: "2026-worldcup-korea-analysis-thumb.webp"
   alt: "2026 북중미 월드컵 한국 대표팀 전력 분석"
+  relative: true
   hiddenInSingle: true
 ---
 

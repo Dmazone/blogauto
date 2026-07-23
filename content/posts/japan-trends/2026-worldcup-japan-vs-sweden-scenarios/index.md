@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-worldcup-japan-vs-sweden-scenarios-thumb.webp"
   alt: "2026年W杯日本代表の突破条件は？韓国の反応と最新勝敗まとめ サムネイル"
+  relative: true
   hiddenInSingle: true
 ---
 

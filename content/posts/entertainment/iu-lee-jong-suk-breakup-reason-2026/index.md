@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "iu-lee-jong-suk-breakup-reason-2026-thumb.webp"
   alt: "아이유 이종석 결별 진짜이유 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

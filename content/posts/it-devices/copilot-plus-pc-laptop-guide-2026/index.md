@@ -8,6 +8,7 @@ description: "2026년 최신 코파일럿 플러스 PC 성능을 완벽히 비�
 cover:
   image: "copilot-plus-pc-laptop-guide-2026-thumb.webp"
   alt: "코파일럿 플러스 PC 온디바이스 AI 노트북 선택 기준"
+  relative: true
   hiddenInSingle: true
 ---
 

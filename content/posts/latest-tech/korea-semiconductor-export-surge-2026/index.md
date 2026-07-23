@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-semiconductor-export-surge-2026-thumb.webp"
   alt: "7월 반도체 193% 폭증, AI 거품론 진짜 끝일까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

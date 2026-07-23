@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-japan-060-number-korea-voice-message-trend-thumb.webp"
   alt: "060番号は詐欺か？2026年最新の日韓スマホ通話文化を徹底解説 サムネイル"
+  relative: true
   hiddenInSingle: true
 ---
 

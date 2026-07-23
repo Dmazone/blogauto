@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "mountain-vibes-alpine-summer-escape-2026-thumb.webp"
   alt: "산악 바이브 여행, 2026 진짜 시원한 해외 명소 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

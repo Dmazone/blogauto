@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-wcup-japan-korea-soccer-asia-challenge-thumb.webp"
   alt: "2026年W杯日韓戦はなぜ消滅？アジアサッカーの本当の課題 サムネイル"
+  relative: true
   hiddenInSingle: true
 ---
 

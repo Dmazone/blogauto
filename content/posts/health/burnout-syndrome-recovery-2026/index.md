@@ -8,6 +8,7 @@ description: "만성 피로와 무기력증에 시달리는 직장인을 위한 
 cover:
   image: "burnout-syndrome-recovery-2026-thumb.webp"
   alt: "번아웃 증후군 극복하는 직장인 뇌 휴식법"
+  relative: true
   hiddenInSingle: true
 ---
 

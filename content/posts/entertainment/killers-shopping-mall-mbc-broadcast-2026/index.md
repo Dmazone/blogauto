@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "killers-shopping-mall-mbc-broadcast-2026-thumb.webp"
   alt: "킬러들의 쇼핑몰 MBC 편성 진짜 이유 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

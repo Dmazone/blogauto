@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "july-tax-reform-holding-capital-gains-2026-thumb.webp"
   alt: "바뀌는 부동산 세금, 2026년 7월 전 꼭 팔아야 할까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

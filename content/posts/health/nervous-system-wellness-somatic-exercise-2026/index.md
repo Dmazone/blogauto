@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "nervous-system-wellness-somatic-exercise-2026-thumb.webp"
   alt: "신경계 웰니스 스트레스 완화 운동법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

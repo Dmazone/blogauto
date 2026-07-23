@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "galaxy-z-flip8-battery-upgrade-2026-thumb.webp"
   alt: "진짜 가벼워진 갤럭시 Z 플립8 배터리 4300mAh 체감 성능은? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

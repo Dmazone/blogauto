@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "summer-travel-cities-2026-thumb.webp"
   alt: "2026년 여름 해외여행 추천 도시 5곳 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -9,6 +9,7 @@ tags: ["가계부채", "한국경제", "금리인하", "부동산대출", "재�
 cover:
   image: "korea-household-debt-2026-thumb.webp"
   alt: "한국 가계부채 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

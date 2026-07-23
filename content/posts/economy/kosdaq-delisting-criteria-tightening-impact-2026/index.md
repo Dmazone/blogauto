@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "kosdaq-delisting-criteria-tightening-impact-2026-thumb.webp"
   alt: "코스닥 상장폐지 강화 진짜 당할까? 영향 분석 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

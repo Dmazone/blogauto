@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-era-humanities-originalism-2026-thumb.webp"
   alt: "AI 시대 진짜 인간의 무기, 근본이즘 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

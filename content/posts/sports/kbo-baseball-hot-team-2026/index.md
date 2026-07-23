@@ -8,6 +8,7 @@ description: "2026 KBO 리그 시즌 중반전, 선두권 경쟁과 다크호스
 cover:
   image: "kbo-baseball-hot-team-2026-thumb.webp"
   alt: "KBO 2026 뜨거운 팀 분석"
+  relative: true
   hiddenInSingle: true
 ---
 

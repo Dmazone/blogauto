@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-worldcup-2026-scenarios-round16-thumb.webp"
   alt: "2026 월드컵 16강 경우의 수 완전 정리: 한국 진짜 올라갈까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

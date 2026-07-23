@@ -8,6 +8,7 @@ description: "2026년 여름 해외여행 트렌드로 급부상한 쿨케이션
 cover:
   image: "2026-coolcation-summer-travel-trends-thumb.webp"
   alt: "2026 쿨케이션 여름 해외여행지 분석"
+  relative: true
   hiddenInSingle: true
 ---
 

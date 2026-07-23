@@ -9,6 +9,7 @@ tags: ["서울부동산", "아파트시장", "부동산전망", "수도권부동
 cover:
   image: "seoul-realestate-outlook-2026-thumb.webp"
   alt: "서울 부동산 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

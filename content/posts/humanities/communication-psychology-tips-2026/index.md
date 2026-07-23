@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "communication-psychology-tips-2026-thumb.webp"
   alt: "소통 심리학 핵심만! 진짜 인생 바뀌는 대화법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

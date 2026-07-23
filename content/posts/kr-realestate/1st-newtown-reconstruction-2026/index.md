@@ -8,6 +8,7 @@ description: "2026년 1기 신도시 선도지구 재건축 시장의 현주소�
 cover:
   image: "1st-newtown-reconstruction-2026-thumb.webp"
   alt: "2026 1기 신도시 재건축 선도지구 투자"
+  relative: true
   hiddenInSingle: true
 ---
 

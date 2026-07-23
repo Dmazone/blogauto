@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "originalism-authenticity-trend-2026-thumb.webp"
   alt: "진짜에 열광하는 2026 근본이즘 트렌드 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

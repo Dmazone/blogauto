@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "zero-trust-ai-security-future-2026-thumb.webp"
   alt: "제로 트러스트 보안, AI 시대 바뀌는 핵심은? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

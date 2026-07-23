@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "fiber-maxxing-gut-health-2026-thumb.webp"
   alt: "장 건강 식단 2026년 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

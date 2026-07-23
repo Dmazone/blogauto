@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ki-an84-netflix-variety-2026-thumb.webp"
   alt: "기안84 기안장 넷플릭스 3가지 성공 요인 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

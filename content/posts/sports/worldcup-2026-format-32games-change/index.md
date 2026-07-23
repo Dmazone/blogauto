@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "worldcup-2026-format-32games-change-thumb.webp"
   alt: "2026 월드컵 바뀌는 32강 방식 완벽 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

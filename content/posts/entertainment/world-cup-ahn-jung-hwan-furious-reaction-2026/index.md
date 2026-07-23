@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "world-cup-ahn-jung-hwan-furious-reaction-2026-thumb.webp"
   alt: "월드컵 충격패 안정환 분노 폭발 진짜 이유 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

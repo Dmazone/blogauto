@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "celebrity-political-color-controversy-2026-thumb.webp"
   alt: "2026 연예인 정치색 진짜 조심해야 하는 이유 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

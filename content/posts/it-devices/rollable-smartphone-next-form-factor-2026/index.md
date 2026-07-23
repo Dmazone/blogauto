@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "rollable-smartphone-next-form-factor-2026-thumb.webp"
   alt: "롤러블폰 출시 임박, 2026년 진짜 바뀔까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "heo-nam-jun-actor-brand-reputation-first-place-2026-thumb.webp"
   alt: "허남준 1위 진짜 비결 3가지 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

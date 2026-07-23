@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "dusking-summer-night-travel-trends-2026-thumb.webp"
   alt: "2026 폭염 피하는 야간 여행 코스 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -9,6 +9,7 @@ tags: ["스토아철학", "마르쿠스아우렐리우스", "인문학", "자기
 cover:
   image: "stoicism-modern-life-2026-thumb.webp"
   alt: "스토아철학 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

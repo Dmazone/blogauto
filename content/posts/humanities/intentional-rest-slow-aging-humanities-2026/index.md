@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "intentional-rest-slow-aging-humanities-2026-thumb.webp"
   alt: "저속노화 라이프 2026 핵심만 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

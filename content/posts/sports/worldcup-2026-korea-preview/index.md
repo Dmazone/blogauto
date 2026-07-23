@@ -9,6 +9,7 @@ tags: ["월드컵2026", "한국축구", "FIFA월드컵", "손흥민", "축구대
 cover:
   image: "worldcup-2026-korea-preview-thumb.webp"
   alt: "2026 월드컵 한국 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

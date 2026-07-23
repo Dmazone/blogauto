@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-worldcup-squad-2026-thumb.webp"
   alt: "한국 월드컵 26인 최종 명단: 진짜 누가 뽑힐까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

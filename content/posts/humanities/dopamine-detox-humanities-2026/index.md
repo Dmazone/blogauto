@@ -8,6 +8,7 @@ description: "2026년 5월 대한민국을 뒤흔드는 인문학 트렌드를 �
 cover:
   image: "dopamine-detox-humanities-2026-thumb.webp"
   alt: "도파민 디톡스와 인문학 트렌드 2026"
+  relative: true
   hiddenInSingle: true
 ---
 

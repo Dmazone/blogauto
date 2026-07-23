@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "text-hip-independent-humanities-2026-thumb.webp"
   alt: "텍스트힙 진짜 트렌드인가? 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

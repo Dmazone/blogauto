@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "seoul-apartment-timing-2026-thumb.webp"
   alt: "서울 아파트 2026, 지금 사야 할 타이밍인가? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

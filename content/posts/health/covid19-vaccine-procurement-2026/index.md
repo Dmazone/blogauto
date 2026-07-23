@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "covid19-vaccine-procurement-2026-thumb.webp"
   alt: "2026 코로나 백신 접종 대상일까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

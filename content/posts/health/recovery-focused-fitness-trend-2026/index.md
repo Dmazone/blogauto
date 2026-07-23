@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "recovery-focused-fitness-trend-2026-thumb.webp"
   alt: "2026 운동 트렌드 바뀐 이유, 3가지 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

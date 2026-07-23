@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "youth-safety-stranger-anxiety-2026-thumb.webp"
   alt: "2026년 안심 귀가 서비스 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

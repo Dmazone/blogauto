@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "on-device-npu-smart-home-appliances-2026-thumb.webp"
   alt: "2026 필수 AI 가전 NPU 진짜 장점 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

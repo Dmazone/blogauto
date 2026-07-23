@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "anti-tourism-secondary-cities-hidden-gems-2026-thumb.webp"
   alt: "2026 숨은 소도시 여행 트렌드 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

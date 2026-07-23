@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "gene-editing-ldl-cholesterol-therapy-2026-thumb.webp"
   alt: "콜레스테롤 유전자 치료, 2026년 진짜 바뀔까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

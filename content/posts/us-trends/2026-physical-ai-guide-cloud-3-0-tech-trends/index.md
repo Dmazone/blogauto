@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-physical-ai-guide-cloud-3-0-tech-trends-thumb.webp"
   alt: "2026 Physical AI Guide: Why Cloud 3.0 Changes Tech thumbnail"
+  relative: true
   hiddenInSingle: true
 ---
 

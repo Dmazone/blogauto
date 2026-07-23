@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-pc-new-chip-2026-thumb.webp"
   alt: "AI PC 성능 2026, 새 칩이 진짜 바꿀까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

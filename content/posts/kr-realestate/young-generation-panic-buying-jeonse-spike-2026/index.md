@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "young-generation-panic-buying-jeonse-spike-2026-thumb.webp"
   alt: "2030 영끌 재점화, 전세 폭등 속 진짜 살까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

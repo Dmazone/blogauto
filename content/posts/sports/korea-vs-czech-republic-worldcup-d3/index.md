@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-vs-czech-republic-worldcup-d3-thumb.webp"
   alt: "2026 월드컵 체코전 진짜 라인업과 이기는 시간대 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

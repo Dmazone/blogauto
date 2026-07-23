@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "messi-ronaldo-lastdance-2026-worldcup-thumb.webp"
   alt: "2026 월드컵 메날두 진짜 마지막 춤, 누가 웃을까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

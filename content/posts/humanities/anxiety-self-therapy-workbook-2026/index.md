@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "anxiety-self-therapy-workbook-2026-thumb.webp"
   alt: "불안 장애 셀프 워크북 3가지 핵심만 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

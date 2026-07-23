@@ -9,6 +9,7 @@ tags: ["AI에이전트", "자율형AI", "2026AI트렌드", "인공지능", "업�
 cover:
   image: "ai-agent-autonomous-2026-thumb.webp"
   alt: "2026 자율형 AI 에이전트 썸네일"
+  relative: true
   hiddenInSingle: true
 
 ---

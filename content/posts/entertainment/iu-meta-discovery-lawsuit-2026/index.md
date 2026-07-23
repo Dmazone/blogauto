@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "iu-meta-discovery-lawsuit-2026-thumb.webp"
   alt: "아이유 메타 고소, 익명 악플러 100% 잡힐까? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-heavy-data-nas-storage-2026-thumb.webp"
   alt: "진짜 속 터지는 AI 데이터, 2026 필수 스토리지 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

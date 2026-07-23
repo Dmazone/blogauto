@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "price-decoding-value-consumption-2026-thumb.webp"
   alt: "가치 소비 2026 진짜 바뀌는 가격 기준 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

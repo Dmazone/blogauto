@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "seoul-outskirts-apartment-300m-spike-2026-thumb.webp"
   alt: "봉천 길음 3억 폭등, 서울 외곽 신고가 터진 진짜 이유 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

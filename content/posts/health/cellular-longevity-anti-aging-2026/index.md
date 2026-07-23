@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "cellular-longevity-anti-aging-2026-thumb.webp"
   alt: "저속 노화 밥상, 2026년 진짜 바뀌는 노화 속도 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

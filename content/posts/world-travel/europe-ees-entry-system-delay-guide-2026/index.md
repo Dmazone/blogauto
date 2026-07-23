@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "europe-ees-entry-system-delay-guide-2026-thumb.webp"
   alt: "유럽 EES 입국 대란, 5시간 대기 안 하려면? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

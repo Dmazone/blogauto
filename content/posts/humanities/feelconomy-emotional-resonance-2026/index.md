@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "feelconomy-emotional-resonance-2026-thumb.webp"
   alt: "필코노미 진짜 뜻, 2026 트렌드 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

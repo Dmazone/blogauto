@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "inference-economics-hybrid-ai-infrastructure-thumb.webp"
   alt: "AI 비용 진짜 줄이는 2026 인프라 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "kbo-2026-5million-attendance-top3-race-thumb.webp"
   alt: "KBO 500만 관중 돌파, 2026 순위 싸움 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

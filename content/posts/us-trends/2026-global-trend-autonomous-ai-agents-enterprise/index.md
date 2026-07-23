@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-global-trend-autonomous-ai-agents-enterprise-thumb.webp"
   alt: "2026 AI Agents Guide: Why Your Business Must Adapt Now thumbnail"
+  relative: true
   hiddenInSingle: true
 ---
 

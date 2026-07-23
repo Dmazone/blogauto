@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-climate-crisis-extreme-heat-personal-cooling-tech-thumb.webp"
   alt: "2026 Heatwave: 5 Best Personal Cooling Tech Gadgets thumbnail"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-exchange-rate-crisis-2026-thumb.webp"
   alt: "환율 1500원대 돌파! 내 지갑 지키는 생존 재테크 전략 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

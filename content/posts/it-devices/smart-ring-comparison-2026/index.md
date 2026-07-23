@@ -8,6 +8,7 @@ description: "2026 스마트 링 시장을 양분하는 갤럭시 링 2세대와
 cover:
   image: "smart-ring-comparison-2026-thumb.webp"
   alt: "갤럭시 링 2세대 vs 오라 링 5세대 비교"
+  relative: true
   hiddenInSingle: true
 ---
 

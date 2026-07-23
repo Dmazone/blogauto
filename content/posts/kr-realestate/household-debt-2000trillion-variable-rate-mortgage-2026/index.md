@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "household-debt-2000trillion-variable-rate-mortgage-2026-thumb.webp"
   alt: "가계부채 2000조 돌파, 주담대 고정 vs 변동 진짜 이득은? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

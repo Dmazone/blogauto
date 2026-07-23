@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "us-ai-regulation-bigtech-stock-impact-2026-thumb.webp"
   alt: "미국 AI 규제 발표! 빅테크 주가 바뀔까 핵심 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

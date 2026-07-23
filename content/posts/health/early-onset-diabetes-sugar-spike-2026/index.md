@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "early-onset-diabetes-sugar-spike-2026-thumb.webp"
   alt: "젊은 당뇨 초기증상 3가지, 진짜 숨은 혈당 스파이크 완전정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

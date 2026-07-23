@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ambient-personalization-2026-thumb.webp"
   alt: "앰비언트 개인화, 2026년 진짜 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

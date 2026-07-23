@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "wearable-biometric-security-future-thumb.webp"
   alt: "웨어러블 생체인식 보안 결국 지문 추월한다 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-it-platform-labor-conflict-2026-thumb.webp"
   alt: "카카오 파업과 네이버 갈등, AI 전환의 그늘 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

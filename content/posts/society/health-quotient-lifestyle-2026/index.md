@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "health-quotient-lifestyle-2026-thumb.webp"
   alt: "2026 건강지능 높이는 진짜 맞춤형 관리법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

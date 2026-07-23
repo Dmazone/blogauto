@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "micro-retirement-sabbatical-slow-travel-2026-thumb.webp"
   alt: "2026 숨은 한달살기 추천 완전정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

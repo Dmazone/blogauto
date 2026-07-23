@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "glp1-companion-diet-nutrition-2026-thumb.webp"
   alt: "GLP-1 식단 3가지 핵심만 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

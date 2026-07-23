@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-jeonse-wolse-policy-key-thumb.webp"
   alt: "2026년 전세 월세, 정부 정책 숨은 핵심 3가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

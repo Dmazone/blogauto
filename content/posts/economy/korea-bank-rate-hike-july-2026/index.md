@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-bank-rate-hike-july-2026-thumb.webp"
   alt: "금리 인상 확정? 한은 전망 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

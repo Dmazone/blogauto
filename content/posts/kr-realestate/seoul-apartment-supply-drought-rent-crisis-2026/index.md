@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "seoul-apartment-supply-drought-rent-crisis-2026-thumb.webp"
   alt: "입주 가뭄 속 바뀌는 전세 대책 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

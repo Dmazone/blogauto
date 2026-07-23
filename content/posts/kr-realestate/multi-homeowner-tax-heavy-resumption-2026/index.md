@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "multi-homeowner-tax-heavy-resumption-2026-thumb.webp"
   alt: "바뀌는 양도세 중과 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

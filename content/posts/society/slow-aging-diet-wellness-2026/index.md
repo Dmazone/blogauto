@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "slow-aging-diet-wellness-2026-thumb.webp"
   alt: "2026 저속노화 식단 진짜 효과 있을까? 핵심 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-senior-pension-gg-consumer-2026-thumb.webp"
   alt: "바뀌는 노령연금 감액 기준 2026 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

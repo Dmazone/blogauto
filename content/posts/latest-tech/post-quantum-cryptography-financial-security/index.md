@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "post-quantum-cryptography-financial-security-thumb.webp"
   alt: "양자 암호 보안, 2026년 진짜 바뀌는 핵심 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

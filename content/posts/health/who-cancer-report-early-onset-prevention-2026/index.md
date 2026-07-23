@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "who-cancer-report-early-onset-prevention-2026-thumb.webp"
   alt: "2026 젊은 암 급증, 진짜 원인과 생존 식단 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

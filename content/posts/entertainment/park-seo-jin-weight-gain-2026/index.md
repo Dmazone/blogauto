@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "park-seo-jin-weight-gain-2026-thumb.webp"
   alt: "박서진 11kg 증량 진짜 성형 전 얼굴 보일까? 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

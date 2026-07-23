@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "edge-ai-chip-future-2026-thumb.webp"
   alt: "진짜 혁명? 엣지 AI 칩, 2026년 미래 5가지 변화 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

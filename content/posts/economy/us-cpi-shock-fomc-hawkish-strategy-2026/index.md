@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "us-cpi-shock-fomc-hawkish-strategy-2026-thumb.webp"
   alt: "금리 동결! 2026 고금리 버티는 숨은 생존법 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

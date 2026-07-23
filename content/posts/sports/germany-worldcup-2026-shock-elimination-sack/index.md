@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "germany-worldcup-2026-shock-elimination-sack-thumb.webp"
   alt: "독일 월드컵 탈락 진짜 이유! 2026 경질론 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

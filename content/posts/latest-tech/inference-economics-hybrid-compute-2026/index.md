@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "inference-economics-hybrid-compute-2026-thumb.webp"
   alt: "AI 비용 반값 줄이는 하이브리드 컴퓨팅 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

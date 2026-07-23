@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "netflix-korea-drama-2026-thumb.webp"
   alt: "넷플릭스 한국 드라마 2026, 지금 봐야 할 작품은? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

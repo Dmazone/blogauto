@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "nursing-hospital-caregiving-benefit-2026-thumb.webp"
   alt: "2027 요양병원 간병비 급여화 3가지 핵심 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -8,6 +8,7 @@ description: "2026년 5월 양도세 중과 유예 종료 이후 수도권 부�
 cover:
   image: "metropolitan-property-polarization-2026-thumb.webp"
   alt: "2026년 5월 수도권 부동산 양극화 해법"
+  relative: true
   hiddenInSingle: true
 ---
 

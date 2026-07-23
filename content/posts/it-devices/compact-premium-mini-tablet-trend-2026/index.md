@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "compact-premium-mini-tablet-trend-2026-thumb.webp"
   alt: "2026 미니 태블릿 진짜 추천하는 이유 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

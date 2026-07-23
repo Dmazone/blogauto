@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "kr-realestate-1781105123580-thumb.webp"
   alt: "한국부동산 최신 트렌드 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

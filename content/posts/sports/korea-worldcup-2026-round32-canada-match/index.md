@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "korea-worldcup-2026-round32-canada-match-thumb.webp"
   alt: "캐나다 축구 전력 완전 정리: 32강 맞대결 진짜 승자는? 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "fifa-world-cup-2026-host-cities-travel-guide-thumb.webp"
   alt: "2026 월드컵 도시 여행 핵심만 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "sovereign-ai-data-sovereignty-2026-thumb.webp"
   alt: "2026 소버린 AI 완전 정리: 왜 지금 진짜 바뀔까 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

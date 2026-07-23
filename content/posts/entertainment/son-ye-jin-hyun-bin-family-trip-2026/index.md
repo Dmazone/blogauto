@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "son-ye-jin-hyun-bin-family-trip-2026-thumb.webp"
   alt: "손예진 현빈 가족 여행, 진짜 소름 돋는 패션 정보 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

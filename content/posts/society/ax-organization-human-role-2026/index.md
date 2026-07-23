@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ax-organization-human-role-2026-thumb.webp"
   alt: "AX 조직 AI 시대 살아남는 숨은 핵심 2가지 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

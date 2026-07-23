@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "miles-on-milestones-celebration-travel-trends-2026-thumb.webp"
   alt: "2026 숨은 기념일 여행 완전 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

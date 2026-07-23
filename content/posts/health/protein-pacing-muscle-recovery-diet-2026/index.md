@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "protein-pacing-muscle-recovery-diet-2026-thumb.webp"
   alt: "2026 프로틴 페이싱 분배법 진짜 핵심만 정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

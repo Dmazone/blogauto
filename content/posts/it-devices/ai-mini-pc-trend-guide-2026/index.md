@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "ai-mini-pc-trend-guide-2026-thumb.webp"
   alt: "미니 PC 추천, 2026 진짜 바뀌는 AI 가성비 종결자 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 

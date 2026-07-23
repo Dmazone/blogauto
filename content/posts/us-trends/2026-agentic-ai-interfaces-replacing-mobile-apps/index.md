@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "2026-agentic-ai-interfaces-replacing-mobile-apps-thumb.webp"
   alt: "Why Agentic AI Interfaces Are Replacing Traditional Mobile Apps in 2026 thumbnail"
+  relative: true
   hiddenInSingle: true
 ---
 

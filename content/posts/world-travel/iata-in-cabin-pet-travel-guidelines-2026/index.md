@@ -10,6 +10,7 @@ draft: false
 cover:
   image: "iata-in-cabin-pet-travel-guidelines-2026-thumb.webp"
   alt: "2026 IATA 반려동물 비행기 탑승 바뀐 기준 완전정리 썸네일"
+  relative: true
   hiddenInSingle: true
 ---
 
