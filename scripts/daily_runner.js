@@ -195,6 +195,9 @@ async function main() {
   // ── posts_log.json 저장 (verify_posts.js가 다음날 읽음) ─────────────────
   savePostsLog(publishedPosts, targetSections.length);
 
+  // ── IndexNow 즉시 색인 요청 (Bing / Yahoo / DuckDuckGo) ─────────────────
+  if (publishedPosts.length > 0) await submitIndexNow(publishedPosts);
+
   // ── 텔레그램 완료 알림 ──────────────────────────────────────────────────
   await sendTelegramDailyReport(publishedPosts, successCount, failCount, publishNow);
 
@@ -266,6 +269,32 @@ async function main() {
     } catch (err) {
       log('⚠️', `이미지 복구 커밋 실패: ${err.message}`);
     }
+  }
+}
+
+// ── IndexNow — 발행된 URL을 빙/야후/덕덕고에 즉시 제출 ─────────────────────
+async function submitIndexNow(posts) {
+  if (!posts.length) return;
+  const key     = 'c025a607af5dbc0a7c80e1a5058761ad';
+  const baseUrl = (process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto').replace(/\/$/, '');
+  const urlList = posts
+    .filter(p => p.slug && p.sectionDir)
+    .map(p => `${baseUrl}/posts/${p.sectionDir}/${p.slug}/`);
+  if (!urlList.length) return;
+  try {
+    const res = await fetch('https://api.indexnow.org/indexnow', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        host:        'dmazone.github.io',
+        key,
+        keyLocation: `${baseUrl}/${key}.txt`,
+        urlList,
+      }),
+    });
+    log('🔍', `IndexNow 제출 완료 (HTTP ${res.status}): ${urlList.length}개 URL → Bing/Yahoo/DuckDuckGo`);
+  } catch (err) {
+    log('⚠️', `IndexNow 제출 실패: ${err.message}`);
   }
 }
 
