@@ -1299,25 +1299,51 @@ JSON만 출력:
 // Gemini 직접 이미지 생성 → DOM 추출 → webp 저장
 // 성공하면 true, 실패하면 false (폴백용 imgPrompts 반환)
 // ────────────────────────────────────────────────────────────────────────────
-async function generateImagesViaGemini(session, section, topic, bundleDir, imgPromptsFallback) {
+async function generateImagesViaGemini(session, section, topic, finalBody, bundleDir, imgPromptsFallback) {
   const slug = topic.slug;
   const sharpLib = (await import('sharp')).default;
 
+  // 기사 본문에서 H2 섹션 제목 추출 — 이미지가 실제 글 내용과 연결되도록
+  const h2s = (finalBody.match(/^## (.+)$/gm) ?? [])
+    .map(h => h.replace(/^## /, '').trim())
+    .filter(h => h.length > 1)
+    .slice(0, 3);
+
+  // H2 아래 첫 문장도 추출 (더 구체적인 맥락 제공)
+  const h2Contents = h2s.map((heading) => {
+    const pattern = new RegExp(`## ${heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\n+([^#\\n][^\\n]{10,})`);
+    const m = finalBody.match(pattern);
+    return m ? m[1].replace(/[*_`[\]()>]/g, '').trim().slice(0, 80) : '';
+  });
+
+  const sec1Title = h2s[0] ?? topic.keyword;
+  const sec1Ctx   = h2Contents[0] ?? '';
+  const sec2Title = h2s[1] ?? h2s[0] ?? topic.keyword;
+  const sec2Ctx   = h2Contents[1] ?? h2Contents[0] ?? '';
+
   log('🎨', '[STEP 8 / Gemini] "이미지 만들기" 버튼으로 이미지 생성 중...');
+  log('🎨', `  섹션1: "${sec1Title}" / 섹션2: "${sec2Title}"`);
 
   try {
-    // "이미지 만들기" 버튼 클릭 후 프롬프트 전송
+    // "이미지 만들기" 버튼 클릭 + 글 내용 기반 구체적 요청
     await session.useImageMaker(
-      `아래 블로그 글의 내용에 맞는 이미지 3장을 만들어줘.\n\n` +
-      `[이미지 1 — 도입부]\n` +
-      `글의 첫 번째 핵심 주제를 가장 구체적인 사물·장면으로. 독자가 "무슨 글인지" 즉시 알 수 있는 장면. 가로형 16:9.\n\n` +
-      `[이미지 2 — 본문]\n` +
-      `두 번째 핵심 주제를 완전히 다른 오브젝트·구도·색감으로. 이미지1과 겹치면 안 됨. 가로형 16:9.\n\n` +
-      `[이미지 3 — 썸네일]\n` +
-      `글 전체를 상징하는 강렬한 커버. bold 색상, 강한 구도, 이미지1·2와 다른 오브젝트. 가로형 16:9.\n\n` +
-      `글 키워드: ${topic.keyword}\n` +
-      `분위기: ${section.imageStyle}\n` +
-      `공통 조건: 텍스트·워터마크·로고 없이, 사람 얼굴 최소화`
+      `방금 네가 쓴 글 제목: "${topic.title}"\n\n` +
+      `이 글의 실제 내용을 기반으로 이미지 3장 만들어줘.\n` +
+      `(글의 내용을 이미 알고 있으니, 아래 섹션 제목과 맥락을 참고해서 그 내용에 딱 맞는 장면으로 만들어)\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `[이미지 1] 섹션 "${sec1Title}" 내용을 담은 구체적 장면\n` +
+      (sec1Ctx ? `맥락: ${sec1Ctx}\n` : '') +
+      `→ 이 섹션에서 가장 핵심적인 사물·상황을 실제로 촬영한 것처럼 표현\n` +
+      `→ 텍스트·로고 없이, 가로 16:9\n\n` +
+      `[이미지 2] 섹션 "${sec2Title}" 내용을 담은 구체적 장면\n` +
+      (sec2Ctx ? `맥락: ${sec2Ctx}\n` : '') +
+      `→ 이미지1과 완전히 다른 오브젝트·배경·색감 (같은 소재 반복 금지)\n` +
+      `→ 텍스트·로고 없이, 가로 16:9\n\n` +
+      `[이미지 3 — 썸네일] 이 글 전체를 한 장으로 상징하는 커버\n` +
+      `→ 이미지1·2와 다른 소재, bold 색감, 강한 구도\n` +
+      `→ 텍스트·로고 없이, 가로 16:9\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `공통: 사람 얼굴 클로즈업 금지. 분위기: ${section.imageStyle.split(',')[0]}`
     );
 
     const buffers = await session.extractImagesFromLastResponse(2, 60000);
@@ -1427,10 +1453,11 @@ export async function runForSection(section, options = {}) {
     `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`;
 
   // ① Gemini 브라우저 모드에서는 Gemini 직접 이미지 생성 시도
+  // final(본문)을 함께 전달 → H2 섹션 파싱으로 글 내용과 연관된 이미지 생성
   let geminiImageSuccess = false;
   if (_geminiImpl?._session) {
     geminiImageSuccess = await generateImagesViaGemini(
-      _geminiImpl._session, section, topic, bundleDir, [p1, p2, pThumb]
+      _geminiImpl._session, section, topic, final, bundleDir, [p1, p2, pThumb]
     );
   }
 
