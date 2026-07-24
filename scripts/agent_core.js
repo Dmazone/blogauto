@@ -1295,6 +1295,66 @@ JSON만 출력:
   };
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// Gemini 직접 이미지 생성 → DOM 추출 → webp 저장
+// 성공하면 true, 실패하면 false (폴백용 imgPrompts 반환)
+// ────────────────────────────────────────────────────────────────────────────
+async function generateImagesViaGemini(session, section, topic, bundleDir, imgPromptsFallback) {
+  const slug = topic.slug;
+  const sharpLib = (await import('sharp')).default;
+
+  log('🎨', '[STEP 8 / Gemini] Gemini 직접 이미지 생성 요청 중...');
+
+  try {
+    await session.send(
+      `위 블로그 글의 내용과 어울리는 이미지 3장을 만들어줘.\n\n` +
+      `[이미지 1 — 도입부]\n` +
+      `글의 첫 번째 핵심 주제를 가장 구체적인 사물·장면으로 시각화. 글 내용을 모르는 독자도 "무슨 글인지" 즉시 알 수 있는 장면.\n\n` +
+      `[이미지 2 — 본문]\n` +
+      `두 번째 핵심 주제를 완전히 다른 오브젝트·구도·색감으로 시각화. 이미지1과 겹치는 사물·분위기 금지.\n\n` +
+      `[이미지 3 — 썸네일]\n` +
+      `글 전체를 상징하는 강렬한 커버. 이미지1·2와 또 다른 오브젝트. bold 색상, 강한 구도.\n\n` +
+      `공통 조건: 16:9 가로형, 텍스트·워터마크·로고 없이, ${section.imageStyle}`
+    );
+
+    // 이미지가 DOM에 렌더링될 때까지 대기 (최대 60초)
+    await new Promise(r => setTimeout(r, 5000));
+    const buffers = await session.extractImagesFromLastResponse(2, 60000);
+
+    if (buffers.length < 2) {
+      log('⚠️', `  Gemini 이미지 추출 실패 (${buffers.length}장) → Pollinations 폴백`);
+      return false;
+    }
+
+    // sharp로 webp 변환 후 저장
+    const targets = [
+      { buf: buffers[0], index: 1 },
+      { buf: buffers[1], index: 2 },
+      { buf: buffers[2] ?? buffers[1], index: 'thumb' },
+    ];
+
+    for (const { buf, index } of targets) {
+      const filename = index === 'thumb' ? `${slug}-thumb.webp` : `${slug}-0${index}.webp`;
+      const destPath = path.join(bundleDir, filename);
+      try {
+        await sharpLib(buf)
+          .resize(1280, 720, { fit: 'cover', position: 'centre' })
+          .webp({ quality: 90, effort: 6 })
+          .toFile(destPath);
+        const stat = fs.statSync(destPath);
+        log('✅', `  Gemini 이미지 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
+      } catch (err) {
+        log('⚠️', `  ${filename} 저장 실패: ${err.message}`);
+      }
+    }
+
+    return true;
+  } catch (err) {
+    log('⚠️', `  Gemini 이미지 생성 오류: ${err.message} → Pollinations 폴백`);
+    return false;
+  }
+}
+
 // ── 브라우저 세션에 _session 참조 저장용 래퍼 ─────────────────────────────
 export function setGeminiBrowserSession(session) {
   if (session) {
@@ -1355,43 +1415,43 @@ export async function runForSection(section, options = {}) {
     return;
   }
 
-  // STEP 8: 이미지 생성 — 본문 2장 + 썸네일 1장 (포스팅 완료 직후 즉시)
+  // STEP 8: 이미지 생성 — Gemini 직접 생성 우선 → 실패 시 Pollinations 폴백
   log('🖼️', '[STEP 8] 이미지 생성 중 (본문 2장 + 썸네일 1장)...');
-  let img1 = { localPath: '', sourceUrl: '' };
+  fs.mkdirSync(bundleDir, { recursive: true });
+
   const imgStyle = section?.imageStyle ?? 'blog editorial illustration, clean design, professional';
   const p1 = prompts[0] ?? `${topic.keyword} concept illustration, ${imgStyle}`;
   const p2 = prompts[1] ?? `${topic.keyword} visual representation, ${imgStyle}`;
   const pThumb = prompts[2] ??
     `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`;
 
-  // 본문 이미지 1
-  try {
-    img1 = await generateImage(p1, topic.slug, 1, bundleDir);
-  } catch (err) {
-    log('⚠️', `  본문 이미지 1 생성 실패 (${err.message})`);
-  }
-  // 본문 이미지 2
-  try {
-    await generateImage(p2, topic.slug, 2, bundleDir);
-  } catch (err) {
-    log('⚠️', `  본문 이미지 2 생성 실패 (${err.message})`);
-  }
-  // 썸네일
-  try {
-    await generateImage(pThumb, topic.slug, 'thumb', bundleDir);
-    log('✅', `  썸네일 생성 완료`);
-  } catch (err) {
-    log('⚠️', `  썸네일 생성 실패 (${err.message})`);
+  // ① Gemini 브라우저 모드에서는 Gemini 직접 이미지 생성 시도
+  let geminiImageSuccess = false;
+  if (_geminiImpl?._session) {
+    geminiImageSuccess = await generateImagesViaGemini(
+      _geminiImpl._session, section, topic, bundleDir, [p1, p2, pThumb]
+    );
   }
 
-  // STEP 8c: Claude 비전으로 각 이미지 검수 → 불합격 시 재생성
-  log('🔍', '[STEP 8c] Claude 이미지 품질·주제 적합성 검수...');
-  const img1Path    = path.join(bundleDir, `${topic.slug}-01.webp`);
-  const img2Path    = path.join(bundleDir, `${topic.slug}-02.webp`);
-  const thumbPath   = path.join(bundleDir, `${topic.slug}-thumb.webp`);
-  await claudeCheckAndRegenImage(img1Path,   topic.title, '본문 이미지 1', p1,     topic.slug, 1,       bundleDir, section.name, topic.description);
-  await claudeCheckAndRegenImage(img2Path,   topic.title, '본문 이미지 2', p2,     topic.slug, 2,       bundleDir, section.name, topic.description);
-  await claudeCheckAndRegenImage(thumbPath,  topic.title, '썸네일',       pThumb, topic.slug, 'thumb', bundleDir, section.name, topic.description);
+  // ② Gemini 실패 또는 API 모드 → Flow / NanoBanana / Pollinations
+  if (!geminiImageSuccess) {
+    log('🖼️', '[STEP 8] Pollinations(폴백) 이미지 생성 중...');
+    try { await generateImage(p1, topic.slug, 1, bundleDir); }
+    catch (err) { log('⚠️', `  본문 이미지 1 실패: ${err.message}`); }
+    try { await generateImage(p2, topic.slug, 2, bundleDir); }
+    catch (err) { log('⚠️', `  본문 이미지 2 실패: ${err.message}`); }
+    try { await generateImage(pThumb, topic.slug, 'thumb', bundleDir); }
+    catch (err) { log('⚠️', `  썸네일 실패: ${err.message}`); }
+  }
+
+  // STEP 8c: 이미지 크기 검수 → 15KB 미만이면 재생성
+  log('🔍', '[STEP 8c] 이미지 크기 검수...');
+  const img1Path  = path.join(bundleDir, `${topic.slug}-01.webp`);
+  const img2Path  = path.join(bundleDir, `${topic.slug}-02.webp`);
+  const thumbPath = path.join(bundleDir, `${topic.slug}-thumb.webp`);
+  await claudeCheckAndRegenImage(img1Path,  topic.title, '본문 이미지 1', p1,     topic.slug, 1,       bundleDir, section.name, topic.description);
+  await claudeCheckAndRegenImage(img2Path,  topic.title, '본문 이미지 2', p2,     topic.slug, 2,       bundleDir, section.name, topic.description);
+  await claudeCheckAndRegenImage(thumbPath, topic.title, '썸네일',       pThumb, topic.slug, 'thumb', bundleDir, section.name, topic.description);
 
   // STEP 7: Claude 본문 완전 검수 & 직접 수정 (이미지 완료 후)
   const preReviewBody = final;

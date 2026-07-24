@@ -535,6 +535,72 @@ export class GeminiSession {
     return null;
   }
 
+  // ── Gemini 응답에서 생성된 이미지 추출 ──────────────────────────────────────
+  // Gemini가 이미지 생성 후 DOM에 <img> 태그로 렌더링한 것을 Buffer 배열로 반환
+  async extractImagesFromLastResponse(minCount = 1, maxWaitMs = 30000) {
+    const deadline = Date.now() + maxWaitMs;
+
+    while (Date.now() < deadline) {
+      // 마지막 모델 응답 컨테이너에서 img src 목록 수집
+      const srcs = await this.page.evaluate((sels) => {
+        let lastResp = null;
+        for (const sel of sels) {
+          const all = document.querySelectorAll(sel);
+          if (all.length > 0) { lastResp = all[all.length - 1]; break; }
+        }
+        if (!lastResp) {
+          const msgs = document.querySelectorAll('[data-message-author-role="model"]');
+          if (msgs.length > 0) lastResp = msgs[msgs.length - 1];
+        }
+        if (!lastResp) return [];
+        return Array.from(lastResp.querySelectorAll('img'))
+          .map(img => img.src)
+          .filter(src =>
+            src && src.length > 20 &&
+            !src.includes('data:image/svg') &&
+            !src.includes('favicon') &&
+            !src.includes('/icon') &&
+            !src.includes('profile')
+          );
+      }, SEL.response).catch(() => []);
+
+      if (srcs.length >= minCount) {
+        const buffers = [];
+        for (const src of srcs) {
+          try {
+            let buf;
+            if (src.startsWith('blob:')) {
+              // blob URL은 브라우저 컨텍스트 안에서 fetch 후 base64로 직렬화
+              const b64 = await this.page.evaluate(async (url) => {
+                const r = await fetch(url);
+                const blob = await r.blob();
+                return new Promise((res, rej) => {
+                  const reader = new FileReader();
+                  reader.onloadend = () => res(reader.result);
+                  reader.onerror = rej;
+                  reader.readAsDataURL(blob);
+                });
+              }, src);
+              const data = b64?.split(',')[1];
+              if (data) buf = Buffer.from(data, 'base64');
+            } else {
+              // 일반 URL (lh3.googleusercontent.com 등)
+              const axiosLib = (await import('axios')).default;
+              const r = await axiosLib.get(src, { responseType: 'arraybuffer', timeout: 30000 });
+              buf = Buffer.from(r.data);
+            }
+            if (buf && buf.length > 5000) buffers.push(buf);
+          } catch {}
+        }
+        if (buffers.length >= minCount) return buffers;
+      }
+
+      await wait(3000);
+    }
+
+    return []; // 추출 실패
+  }
+
   async close() {
     try { await this.context?.close(); } catch {}
     log('🔒', 'Gemini 세션 종료');
