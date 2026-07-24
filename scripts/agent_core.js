@@ -1303,22 +1303,23 @@ async function generateImagesViaGemini(session, section, topic, bundleDir, imgPr
   const slug = topic.slug;
   const sharpLib = (await import('sharp')).default;
 
-  log('🎨', '[STEP 8 / Gemini] Gemini 직접 이미지 생성 요청 중...');
+  log('🎨', '[STEP 8 / Gemini] "이미지 만들기" 버튼으로 이미지 생성 중...');
 
   try {
-    await session.send(
-      `위 블로그 글의 내용과 어울리는 이미지 3장을 만들어줘.\n\n` +
+    // "이미지 만들기" 버튼 클릭 후 프롬프트 전송
+    await session.useImageMaker(
+      `아래 블로그 글의 내용에 맞는 이미지 3장을 만들어줘.\n\n` +
       `[이미지 1 — 도입부]\n` +
-      `글의 첫 번째 핵심 주제를 가장 구체적인 사물·장면으로 시각화. 글 내용을 모르는 독자도 "무슨 글인지" 즉시 알 수 있는 장면.\n\n` +
+      `글의 첫 번째 핵심 주제를 가장 구체적인 사물·장면으로. 독자가 "무슨 글인지" 즉시 알 수 있는 장면. 가로형 16:9.\n\n` +
       `[이미지 2 — 본문]\n` +
-      `두 번째 핵심 주제를 완전히 다른 오브젝트·구도·색감으로 시각화. 이미지1과 겹치는 사물·분위기 금지.\n\n` +
+      `두 번째 핵심 주제를 완전히 다른 오브젝트·구도·색감으로. 이미지1과 겹치면 안 됨. 가로형 16:9.\n\n` +
       `[이미지 3 — 썸네일]\n` +
-      `글 전체를 상징하는 강렬한 커버. 이미지1·2와 또 다른 오브젝트. bold 색상, 강한 구도.\n\n` +
-      `공통 조건: 16:9 가로형, 텍스트·워터마크·로고 없이, ${section.imageStyle}`
+      `글 전체를 상징하는 강렬한 커버. bold 색상, 강한 구도, 이미지1·2와 다른 오브젝트. 가로형 16:9.\n\n` +
+      `글 키워드: ${topic.keyword}\n` +
+      `분위기: ${section.imageStyle}\n` +
+      `공통 조건: 텍스트·워터마크·로고 없이, 사람 얼굴 최소화`
     );
 
-    // 이미지가 DOM에 렌더링될 때까지 대기 (최대 60초)
-    await new Promise(r => setTimeout(r, 5000));
     const buffers = await session.extractImagesFromLastResponse(2, 60000);
 
     if (buffers.length < 2) {

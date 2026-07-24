@@ -535,6 +535,116 @@ export class GeminiSession {
     return null;
   }
 
+  // ── "이미지 만들기" 버튼 클릭 → 프롬프트 전송 → 이미지 생성 대기 ────────────
+  // Gemini 입력창 "+" 메뉴의 "이미지 만들기" 버튼을 클릭 후 프롬프트를 전송한다.
+  async useImageMaker(prompt) {
+    log('🎨', '이미지 만들기 버튼 클릭 시도...');
+
+    // ① "+" 또는 도구 버튼 클릭 → 메뉴 열기
+    const toolsOpened = await this.page.evaluate(() => {
+      // aria-label 또는 텍스트 기반으로 도구 버튼 탐색
+      const candidates = [...document.querySelectorAll('button')];
+      const target = candidates.find((btn) => {
+        const label = (btn.getAttribute('aria-label') || btn.title || '').toLowerCase();
+        const text  = (btn.textContent || '').trim();
+        return (
+          label.includes('도구') || label.includes('tool') ||
+          label.includes('attach') || label.includes('더 많은') ||
+          label.includes('more') || text === '+'
+        );
+      });
+      if (target) { target.click(); return true; }
+      return false;
+    }).catch(() => false);
+
+    if (!toolsOpened) {
+      // 폴백: 입력창 왼쪽 버튼들 중 가시적인 것 클릭
+      try {
+        const plusBtn = this.page.locator('button').filter({ hasText: '+' }).first();
+        if (await plusBtn.isVisible({ timeout: 2000 })) {
+          await plusBtn.click();
+        }
+      } catch {}
+    }
+
+    await wait(800);
+
+    // ② 메뉴에서 "이미지 만들기" 클릭
+    let imgBtnClicked = false;
+    try {
+      const imgBtn = this.page.getByText('이미지 만들기', { exact: true }).first();
+      if (await imgBtn.isVisible({ timeout: 3000 })) {
+        await imgBtn.click();
+        imgBtnClicked = true;
+        log('✅', '"이미지 만들기" 버튼 클릭 성공');
+      }
+    } catch {}
+
+    if (!imgBtnClicked) {
+      // 폴백: JS 텍스트 탐색
+      await this.page.evaluate(() => {
+        const all = [...document.querySelectorAll('button, [role="menuitem"], li')];
+        const t = all.find((el) => (el.textContent || '').includes('이미지 만들기'));
+        if (t) t.click();
+      }).catch(() => {});
+      await wait(500);
+      log('⚠️', '"이미지 만들기" 버튼 — JS 폴백 클릭');
+    }
+
+    await wait(1000);
+
+    // ③ 프롬프트 입력 (기존 send()와 동일한 입력 로직)
+    const inputEl = await this._findEl(SEL.input, '이미지 입력창');
+    await inputEl.click();
+    await wait(300);
+
+    let inserted = false;
+    try {
+      await this.page.evaluate((t) => {
+        const el = document.querySelector('rich-textarea .ql-editor')
+          || document.querySelector('[contenteditable="true"][aria-multiline="true"]')
+          || document.querySelector('div[role="textbox"][contenteditable="true"]');
+        if (el) { el.focus(); document.execCommand('insertText', false, t); }
+      }, prompt);
+      await wait(400);
+      const len = await inputEl.evaluate((el) => (el.innerText ?? '').trim().length);
+      if (len > 5) inserted = true;
+    } catch {}
+
+    if (!inserted) {
+      try {
+        await this.page.evaluate((t) => navigator.clipboard.writeText(t), prompt);
+        await inputEl.click();
+        await this.page.keyboard.press('Control+v');
+        await wait(500);
+      } catch {}
+    }
+
+    await wait(400);
+
+    // ④ 전송
+    const sendBtn = await this._tryFind(SEL.send);
+    if (sendBtn) {
+      const disabled = await sendBtn.evaluate(
+        (el) => el.disabled || el.getAttribute('aria-disabled') === 'true'
+      ).catch(() => false);
+      if (!disabled) {
+        await sendBtn.click();
+      } else {
+        await this.page.keyboard.press('Enter');
+      }
+    } else {
+      await this.page.keyboard.press('Enter');
+    }
+
+    this._turnCount++;
+    log('📤', `이미지 생성 요청 전송 (Turn ${this._turnCount})`);
+
+    // ⑤ 이미지 생성 완료 대기 (텍스트보다 오래 걸림 → 2분)
+    await this._waitForCompletion(120000);
+    await wait(3000); // 이미지 DOM 렌더링 여유
+  }
+
   // ── Gemini 응답에서 생성된 이미지 추출 ──────────────────────────────────────
   // Gemini가 이미지 생성 후 DOM에 <img> 태그로 렌더링한 것을 Buffer 배열로 반환
   async extractImagesFromLastResponse(minCount = 1, maxWaitMs = 30000) {
