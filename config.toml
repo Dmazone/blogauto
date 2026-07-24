@@ -117,6 +117,11 @@ canonifyURLs = true
     name = "🌐 Global"
     url = "/blogauto/posts/us-trends/"
     weight = 106
+  [[menu.main]]
+    identifier = "trending-picks"
+    name = "🛍️ 트렌드상품"
+    url = "/blogauto/posts/trending-picks/"
+    weight = 110
 
 [taxonomies]
   category = "categories"

@@ -8,7 +8,7 @@
 
 ---
 
-## 섹션 구조 (12개)
+## 섹션 구조 (13개)
 
 | 섹션 ID | 이름 | 디렉토리 | 언어 | 그룹 |
 |---|---|---|---|---|
@@ -24,9 +24,11 @@
 | world-travel | 세계여행지 | content/posts/world-travel/ | 한국어 | 2(짝수) |
 | sports | 스포츠 | content/posts/sports/ | 한국어 | 2(짝수) |
 | us-trends | Global Trends | content/posts/us-trends/ | **영어** | 2(짝수) |
+| trending-picks | 트렌드상품 | content/posts/trending-picks/ | 한국어 | **매일(group:0)** |
 
 > 건강 섹션: 운동 → 식단 → 질병 3일 주기 롤링
 > 글로벌 섹션(japan-trends, us-trends): 해당 문화권 중심 + 한국 연관성 포함. 제목·본문·해시태그 모두 해당 언어로만 작성.
+> 트렌드상품 섹션: group:0 — 매일 실행(Group1/Group2 구분 없음). 발행 순서 마지막(08:00 KST). 쿠팡 trackingCode AF8691300 링크 필수 포함.
 
 ---
 

@@ -1100,6 +1100,201 @@ JSON만 출력 (keys: prompts, 배열 3개):
   };
 }
 
+// ────────────────────────────────────────────────────────────────────────────
+// 상품 비교·추천 파이프라인 (trending-picks 섹션 전용)
+// ────────────────────────────────────────────────────────────────────────────
+async function runProductPipeline(section, dateOverride) {
+  const session = _geminiImpl._session;
+  const trackingCode = section.coupangTrackingCode ?? 'AF8691300';
+  const todayKst = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const existing = existingSlugsForSection(section).join(', ') || '없음';
+  const recentPosts = getRecentPostsForSection(section, 3);
+  const internalLinks = recentPosts.map(p =>
+    `- [${p.title}](/posts/${section.dir}/${p.slug}/)`
+  ).join('\n') || '없음';
+
+  session._turnCount = 0;
+
+  // ── TURN 1: 트렌딩 상품 카테고리 조사 ──────────────────────────────────────
+  log('🔍', '[Product Turn 1] 트렌딩 상품 카테고리 조사 중...');
+  await session.send(
+    `[섹션: 트렌드상품 비교·추천] [오늘 날짜: ${todayKst}]
+
+지금(${todayKst}) 한국에서 쿠팡·네이버쇼핑·SNS·유튜브에서 가장 화제인 상품 카테고리를 구글 검색으로 3개 조사해줘.
+
+조사 대상 영역:
+- 최신 전자기기 (스마트폰 액세서리, 이어폰, 스마트워치, 태블릿, PC주변기기 등)
+- 건강기기 (안마기, 체중계, 혈압계, 운동기기 등)
+- 디자인·라이프스타일 아이템 (미니멀 데스크셋업, 오피스용품, 인테리어 소품 등)
+- 스마트홈 (공기청정기, 로봇청소기, 스마트조명 등)
+
+각 카테고리별로:
+① 카테고리명 및 대표 상품 유형
+② 지금 뜨는 이유 — SNS 후기 급증, 신제품 출시, 계절 수요, 유튜버 리뷰 등 구체적 근거
+③ 실제 쿠팡에서 검색 가능한 대표 모델/브랜드 3개 이상 (모델명 구체적으로)
+④ 가격대 범위 (예: 3만원~8만원대)
+⑤ 핵심 구매 결정 포인트 (무엇을 보고 사는가)
+
+이미 발행된 슬러그(중복 금지): ${existing}`
+  );
+
+  // ── TURN 2: 주제 확정 + 아웃라인 ──────────────────────────────────────────
+  log('📐', '[Product Turn 2] 주제 확정 + 아웃라인...');
+  const t2 = await session.send(
+    `위 3개 카테고리 중 지금 가장 검색 수요가 높을 주제 1개를 선택해줘.
+
+⚠️ 첫 번째 출력은 반드시 JSON 코드 블록이어야 함.
+
+\`\`\`json
+{"title":"[카테고리] 추천 TOP3 — [핵심 포인트] (28자이내)","slug":"english-slug-here","keyword":"핵심 상품 카테고리 키워드","description":"핵심 키워드 + 독자 혜택 160자 이내"}
+\`\`\`
+
+제목 규칙:
+- "TOP3", "비교", "추천", 가격대 숫자 중 1개 이상 포함
+- 28자 이내
+- 예시: "2026 에어팟 대안 이어폰 TOP3 가성비 비교"
+
+[SEO 아웃라인 — JSON 출력 후에 작성]
+## H2 4개 구성:
+1. 지금 이 카테고리가 뜨는 이유 (시장 배경, 최신 트렌드)
+2. TOP3 상품 스펙 비교 (표 형식 포함)
+3. 예산대별 추천 (저가·중간·프리미엄 각 1개)
+4. 구매 전 반드시 확인할 체크포인트`
+  );
+
+  // JSON 파싱
+  let topic = { title: '', slug: '', keyword: '', description: '' };
+  const tryParseJson = (text) => {
+    const m1 = text.match(/```json\s*([\s\S]*?)```/s);
+    if (m1) { try { return JSON.parse(m1[1]); } catch {} }
+    const m2 = text.match(/\{[\s\S]*?\}/);
+    if (m2) { try { return JSON.parse(m2[0]); } catch {} }
+    return null;
+  };
+
+  const parsed = tryParseJson(t2);
+  if (parsed?.title && parsed?.slug) {
+    topic = parsed;
+  } else {
+    const today = todayKst.replace(/-/g, '');
+    topic = { title: '트렌드 상품 추천 TOP3', slug: `trending-picks-${today}`, keyword: '트렌드 상품 추천', description: '지금 가장 인기 있는 트렌드 상품 TOP3를 비교·추천합니다.' };
+  }
+
+  const slugExists = existingSlugsForSection(section);
+  if (slugExists.includes(topic.slug)) {
+    topic.slug = `${topic.slug}-${todayKst.replace(/-/g, '')}`;
+  }
+  log('✅', `상품 토픽 확정: "${topic.title}" (slug: ${topic.slug})`);
+
+  const img1Url = `${topic.slug}-01.webp`;
+  const img2Url = `${topic.slug}-02.webp`;
+
+  // ── TURN 3: 본문 집필 ────────────────────────────────────────────────────
+  log('✍️', '[Product Turn 3] 비교·추천 본문 집필 중...');
+  await session.send(
+    `위 아웃라인으로 트렌드 상품 비교·추천 글을 2,500자 이상 작성해줘.
+
+📌 글쓰기 핵심 원칙:
+1. 각 추천 상품마다:
+   - 실제 모델명·브랜드명·가격대 명시
+   - 핵심 스펙 2~3개 (수치 기반)
+   - 장점 2개, 단점 1개 솔직하게
+   - "이런 사람에게 추천" — 타겟 구매자 명확히
+   - 쿠팡 구매 링크 반드시 포함: [상품명 쿠팡에서 보기](https://www.coupang.com/np/search?q=상품명&sourceType=affiliate&trackingCode=${trackingCode})
+2. 비교표 1개 포함 (| 모델명 | 가격대 | 핵심 스펙 | 추천 대상 |)
+3. AI 냄새 0% — "다양한", "중요합니다", "살펴보겠습니다" 금지
+4. 독자가 바로 구매 결정 내릴 수 있는 실용적 정보 중심
+5. 이미지 마크다운 반드시 포함:
+   - 도입부 직후: ![${topic.keyword} 비교](${img1Url})
+   - 두 번째 ## 섹션 직후: ![${topic.keyword} 추천](${img2Url})
+${internalLinks !== '없음' ? `6. 내부 링크 1~2개 자연스럽게 삽입:\n${internalLinks}` : ''}
+
+글 마지막 줄: 한국어 해시태그 7개 이상 (#트렌드상품 #쿠팡추천 #${topic.keyword} ...)`
+  );
+
+  // ── TURN 4: 자체검수 ─────────────────────────────────────────────────────
+  log('🔍', '[Product Turn 4] 품질 자체검수 중...');
+  await session.send(
+    `방금 쓴 글을 다시 읽고 아래 항목 모두 점검 후 수정해줘:
+
+1. **쿠팡 링크** — 추천 상품마다 https://www.coupang.com/np/search?q=... 형식 링크가 있는지
+2. **가격·스펙 구체성** — 막연한 "저렴한", "고성능" 금지. 실제 수치로
+3. **AI 냄새** — "다양한", "중요합니다", "살펴보겠습니다" 완전 제거
+4. **비교표** — 마크다운 표(|) 형식 유지 확인
+5. **이미지 마크다운** — ![...](${img1Url}) 와 ![...](${img2Url}) 둘 다 본문에 있는지 확인, 없으면 추가
+6. **헤딩 구조** — ## H2 4개 이상, 올바른 마크다운 문법
+7. **해시태그** — 마지막 줄에 #해시태그 7개 이상 있는지
+
+수정 후 어떤 부분을 바꿨는지 2~3줄 요약.`
+  );
+
+  // ── TURN 5: 최종 마크다운 추출 ────────────────────────────────────────────
+  log('📝', '[Product Turn 5] 최종 마크다운 추출 중...');
+  const t5Raw = await session.send(
+    `최종 완성된 본문을 반드시 아래 형식의 코드블록으로 출력해줘:\n\n` +
+    `\`\`\`markdown\n[완성된 마크다운 본문 전체]\n\`\`\`\n\n` +
+    `⛔ 절대 금지: 코드블록 없이 직접 출력, front matter 포함, 설명·요약 추가.\n` +
+    `✅ 반드시: \`\`\`markdown 으로 시작해서 \`\`\` 로 끝나는 코드블록 형식으로만 출력.`
+  );
+  let finalBody = extractFinalMarkdown(t5Raw);
+
+  if ((finalBody.match(/^## /gm) ?? []).length < 3) {
+    log('⚠️', '[Product Turn 5] H2 부족 → 재출력 요청');
+    const t5Retry = await session.send(
+      `코드블록으로 감싸지 않고 출력한 것 같아. 반드시 아래 형식을 지켜줘:\n\n` +
+      `\`\`\`markdown\n완성된 마크다운 전체 (## H2 헤딩 4개 이상 포함)\n\`\`\`\n\n` +
+      `front matter 없이. 코드블록 외 설명 없이. ## 헤딩 없이 출력하면 저장 불가.`
+    );
+    const retried = extractFinalMarkdown(t5Retry);
+    if ((retried.match(/^## /gm) ?? []).length >= 3) finalBody = retried;
+  }
+
+  finalBody = finalBody.replace(/(?<!\\)(?<!~)~(?!~)/g, '\\~');
+
+  // ── TURN 6: 이미지 프롬프트 생성 ──────────────────────────────────────────
+  log('🎨', '[Product Turn 6] 이미지 프롬프트 생성 중...');
+  const t6 = await session.send(
+    `위 글의 이미지 2개와 썸네일 1개를 위한 AI 이미지 생성 프롬프트 3개를 영어로 만들어줘.
+
+[섹션 시각 분위기]: ${section.imageStyle}
+
+✅ 상품 사진 스타일 원칙:
+1. 실제 상품 외관을 묘사하는 구체적 장면 (예: "wireless earbuds in open charging case on dark matte surface")
+2. 3장 모두 완전히 다른 오브젝트·배경·구도
+3. 한국어 단어 1개도 금지
+4. "no text, no watermark, no logo" 반드시 포함
+5. 16:9 landscape
+
+JSON만 출력:
+\`\`\`json
+{"prompts":["image1_prompt","image2_prompt","thumbnail_prompt"]}
+\`\`\``
+  );
+
+  const defaultStyle = section.imageStyle ?? 'clean product photography, white background, studio lighting';
+  let imgPrompts = [
+    `${topic.keyword} product on clean matte surface, ${defaultStyle}, sharp focus, landscape 16:9, no text`,
+    `${topic.keyword} in use lifestyle setting, different angle and lighting, ${defaultStyle}, landscape 16:9, no text`,
+    `${topic.keyword} bold product hero shot, vivid colors, strong composition, ${defaultStyle}, landscape 16:9, no text`,
+  ];
+  try {
+    const m = t6.match(/```json\s*([\s\S]*?)```/s);
+    if (m) {
+      const p = JSON.parse(m[1]).prompts ?? [];
+      if (p.length >= 3) imgPrompts = p;
+    }
+  } catch {}
+
+  const outline = { meta_description: topic.description, sections: [], internal_link: { anchor: '관련 글', path: `/posts/${section.dir}/` } };
+
+  return {
+    topic:     { ...topic, track: section.dir },
+    outline,
+    finalBody,
+    imgPrompts,
+  };
+}
+
 // ── 브라우저 세션에 _session 참조 저장용 래퍼 ─────────────────────────────
 export function setGeminiBrowserSession(session) {
   if (session) {
@@ -1131,7 +1326,9 @@ export async function runForSection(section, options = {}) {
 
   // ── 브라우저 모드: 제미나이 Gem 멀티턴 파이프라인 ──────────────────────────
   if (_geminiImpl?._session) {
-    const result = await runWebPipeline(section, dateOverride);
+    const result = section.type === 'product'
+      ? await runProductPipeline(section, dateOverride)
+      : await runWebPipeline(section, dateOverride);
     topic   = result.topic;
     outline = result.outline;
     final   = result.finalBody;

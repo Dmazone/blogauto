@@ -109,6 +109,19 @@ export const SECTIONS = [
     toneHint: '팬 관점의 흥미로운 분석, 경기 결과보다 맥락·의미·배경 해석 중심. 선수명·팀명·날짜 구체적으로.',
     imageStyle: 'sports action atmosphere, dramatic stadium lighting, bold dynamic energy colors, cinematic sports photography, highly detailed photorealistic',
   },
+  // ── 트렌딩 상품 섹션 (group: 0 = 매일 실행, 두 그룹 모두) ─────────────────
+  {
+    id: 'trending-picks',
+    group: 0,
+    type: 'product',
+    name: '트렌드상품',
+    dir: 'trending-picks',
+    menuUrl: '/posts/trending-picks/',
+    searchContext: '쿠팡 최신 인기 전자기기, 디자인 아이템, 건강기기, 스마트홈, 라이프스타일 상품. 지금 SNS·유튜브에서 화제인 트렌드 상품 비교·추천.',
+    toneHint: '실사용자 관점 비교·분석. 스펙·가격·장단점 솔직하게. 누구에게 맞는지 명확히. 쿠팡 구매 링크 필수 포함.',
+    imageStyle: 'clean product photography atmosphere, pristine matte surface, precision studio lighting, sharp commercial quality, highly detailed',
+    coupangTrackingCode: 'AF8691300',
+  },
   // ── 글로벌 섹션 ───────────────────────────────────────────────────────────
   {
     id: 'japan-trends',

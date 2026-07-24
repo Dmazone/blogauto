@@ -97,12 +97,14 @@ async function main() {
   })();
 
   // 그룹 자동 선택 (홀수 날=1, 짝수 날=2) — --only 또는 --from 시 무시
+  // group: 0 섹션(trending-picks 등)은 매일 실행 — 그룹 섹션 뒤에 추가
   const todayGroup = getTodayGroup();
+  const dailySections = SECTIONS.filter(s => s.group === 0);
   const targetSections = onlyIds
     ? onlyIds.map((id) => getSectionById(id)).filter(Boolean)
     : fromIdx > 0
-      ? SECTIONS.filter(s => s.group === todayGroup).slice(fromIdx)
-      : SECTIONS.filter(s => s.group === todayGroup);
+      ? [...SECTIONS.filter(s => s.group === todayGroup), ...dailySections].slice(fromIdx)
+      : [...SECTIONS.filter(s => s.group === todayGroup), ...dailySections];
 
   // ── 브라우저 모드 초기화 ────────────────────────────────────────────────
   const { GeminiSession } = await import('./gemini_browser.js');
