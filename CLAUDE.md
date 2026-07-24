@@ -56,7 +56,7 @@
 | 01:00 | `node scripts/daily_runner.js` | 7개 섹션 포스팅 생성 + 예약발행 설정 |
 | 05:00~08:00 | GitHub Actions (scheduled-deploy) | 포스팅 30분 간격 순차 공개 (7개) |
 | 08:00 | `/verify-posts` | 발행 점검 + 오류 자동 수정 |
-| 10:00~15:00 | `/threads-post` | 1시간 간격 6회 게시 |
+| ~~10:00~15:00~~ | ~~`/threads-post`~~ | **보류** — 스케줄러 비활성화 상태 (재개 시 `schtasks /change /tn "\BlogAuto-Threads" /enable`) |
 
 **발행 시간표** (sectionIndex 0~6 → 05:00~08:00 KST):
 `05:00 / 05:30 / 06:00 / 06:30 / 07:00 / 07:30 / 08:00`
