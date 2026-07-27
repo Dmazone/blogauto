@@ -22,7 +22,8 @@
 
 {{- /* 조회수 — Firebase Realtime Database 미설정 시 숨김 */ -}}
 {{- if site.Params.firebaseDbUrl }}
-{{- $scratch.Add "meta" (slice "<span class=\"post-views\">👁 <span id=\"vc-num\">-</span></span>") }}
+{{- $vcSpan := printf "<span class=\"post-views\">👁 <span class=\"vc-num\" data-slug=\"%s\" data-db=\"%s\">-</span></span>" .Slug site.Params.firebaseDbUrl }}
+{{- $scratch.Add "meta" (slice $vcSpan) }}
 {{- end }}
 
 {{- with ($scratch.Get "meta") }}
@@ -32,22 +33,19 @@
 {{- if site.Params.firebaseDbUrl }}
 <script>
 (function () {
-  var slug = {{ .Slug | jsonify }};
-  var db   = {{ site.Params.firebaseDbUrl | jsonify }}.replace(/\/$/, "");
-  var url  = db + "/views/" + slug + ".json";
-
-  fetch(url)
-    .then(function (r) { return r.json(); })
-    .then(function (n) {
-      n = (n || 0) + 1;
-      fetch(url, { method: "PUT", body: JSON.stringify(n) });
-      var el = document.getElementById("vc-num");
-      if (el) el.textContent = n.toLocaleString("ko-KR");
-    })
-    .catch(function () {
-      var el = document.getElementById("vc-num");
-      if (el) el.textContent = "?";
-    });
+  document.querySelectorAll(".vc-num").forEach(function (el) {
+    var slug = el.getAttribute("data-slug");
+    var db   = el.getAttribute("data-db").replace(/\/$/, "");
+    var url  = db + "/views/" + slug + ".json";
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (n) {
+        n = (n || 0) + 1;
+        fetch(url, { method: "PUT", body: JSON.stringify(n) });
+        el.textContent = n.toLocaleString("ko-KR");
+      })
+      .catch(function () { el.textContent = "?"; });
+  });
 })();
 </script>
 {{- end }}
