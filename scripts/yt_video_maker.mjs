@@ -25,7 +25,6 @@ const WORK_BASE = path.join(ROOT, 'data', 'yt-work');
 const FFMPEG_PATH = process.env.FFMPEG_PATH ||
   'C:/Users/Paydma/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1.2-full_build/bin/ffmpeg.exe';
 const TTS_PS1 = path.join(__dirname, 'yt_tts.ps1');
-const FONT    = 'C\\:/Windows/Fonts/malgunbd.ttf';  // Malgun Gothic Bold, ffmpeg 이스케이프
 
 const log = (e, m) => console.log(`[yt-video] ${e}  ${m}`);
 
@@ -139,22 +138,14 @@ function generateNarrations({ title, description, products }) {
   ];
 }
 
-// ── 텍스트를 UTF-8 파일로 저장 (ffmpeg textfile= 용) ──────────────────────
-function writeText(filePath, text) {
-  fs.writeFileSync(filePath, text, 'utf-8');
-  return filePath.replace(/\\/g, '/').replace(/^([A-Za-z]):/, '$1\\:'); // ffmpeg 이스케이프
-}
-
 // ── 슬라이드 이미지 생성 (1080×1920 Shorts) ──────────────────────────────
+// ffmpeg: 블러 배경 합성 / PowerShell System.Drawing: 한국어 텍스트 오버레이
 function makeSlideImage({ sourceImage, workDir, slideIdx, topText, mainText, subText }) {
-  const src    = sourceImage.replace(/\\/g, '/');
-  const bgFile = path.join(workDir, `bg_${slideIdx}.png`);
-  const fgFile = path.join(workDir, `fg_${slideIdx}.png`);
+  const src     = sourceImage.replace(/\\/g, '/');
+  const bgFile  = path.join(workDir, `bg_${slideIdx}.png`);
+  const fgFile  = path.join(workDir, `fg_${slideIdx}.png`);
+  const baseFile = path.join(workDir, `base_${slideIdx}.png`);
   const outFile = path.join(workDir, `slide_${slideIdx}.png`);
-
-  const topF  = writeText(path.join(workDir, `top_${slideIdx}.txt`),  topText  || ' ');
-  const mainF = writeText(path.join(workDir, `main_${slideIdx}.txt`), mainText || ' ');
-  const subF  = writeText(path.join(workDir, `sub_${slideIdx}.txt`),  subText  || ' ');
 
   // 1. 블러 배경 (소스 이미지를 1080×1920으로 채우고 블러)
   ff(['-y', '-i', src,
@@ -164,20 +155,22 @@ function makeSlideImage({ sourceImage, workDir, slideIdx, topText, mainText, sub
   // 2. 전경 이미지 (1080 폭 유지, 비율 보존)
   ff(['-y', '-i', src, '-vf', 'scale=1080:-2', '-frames:v', '1', fgFile]);
 
-  // 3. 오버레이 + 텍스트 배너
-  const filter = [
-    `[0:v][1:v]overlay=0:(H-h)/2[base]`,
-    // 상단 배너 (어둡게)
-    `[base]drawbox=x=0:y=0:w=1080:h=220:color=0x000000AA:t=fill[tb]`,
-    `[tb]drawtext=fontfile=${FONT}:textfile=${topF}:fontcolor=white:fontsize=52:x=(w-text_w)/2:y=75[tt]`,
-    // 하단 배너 (레드)
-    `[tt]drawbox=x=0:y=1390:w=1080:h=530:color=0xBB0000BB:t=fill[bb]`,
-    `[bb]drawtext=fontfile=${FONT}:textfile=${mainF}:fontcolor=white:fontsize=60:x=(w-text_w)/2:y=1460[mt]`,
-    `[mt]drawtext=fontfile=${FONT}:textfile=${subF}:fontcolor=yellow:fontsize=50:x=(w-text_w)/2:y=1590[out]`,
-  ].join(';');
-
+  // 3. 오버레이 (배경 + 전경, 텍스트 없이)
   ff(['-y', '-i', bgFile, '-i', fgFile,
-    '-filter_complex', filter, '-map', '[out]', '-frames:v', '1', outFile]);
+    '-filter_complex', '[0:v][1:v]overlay=0:(H-h)/2[out]',
+    '-map', '[out]', '-frames:v', '1', baseFile]);
+
+  // 4. 텍스트 오버레이 — PowerShell System.Drawing (한국어 완벽 지원)
+  const ps = spawnSync('powershell', [
+    '-NonInteractive', '-ExecutionPolicy', 'Bypass',
+    '-File', path.join(__dirname, 'yt_text_overlay.ps1'),
+    '-InputPng',  baseFile,
+    '-OutputPng', outFile,
+    '-TopText',   topText  || '',
+    '-MainText',  mainText || '',
+    '-SubText',   subText  || '',
+  ], { encoding: 'utf-8' });
+  if (ps.status !== 0) throw new Error(`텍스트 오버레이 실패: ${ps.stderr}`);
 
   return outFile;
 }
