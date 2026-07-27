@@ -194,6 +194,18 @@ ul#menu > li > a {
   }
 }
 
+/* ── 모바일: JP/Global 중복 제거 + 트렌드상품 2칸 ── */
+@media (max-width: 768px) {
+  ul#menu > li[data-menu-id="japan-trends"],
+  ul#menu > li[data-menu-id="us-trends"] { display: none !important; }
+  ul#menu > li[data-menu-id="trending-picks"] { grid-column: span 2; }
+}
+@media (max-width: 1024px) and (orientation: landscape) {
+  ul#menu > li[data-menu-id="japan-trends"],
+  ul#menu > li[data-menu-id="us-trends"] { display: none !important; }
+  ul#menu > li[data-menu-id="trending-picks"] { grid-column: span 2; }
+}
+
 /* ══ 검색바 (챕터 항목 바로 밑) ══ */
 .global-search-bar {
   padding: 5px clamp(8px, 2vw, 16px);
