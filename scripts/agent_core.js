@@ -1532,7 +1532,7 @@ export async function runForSection(section, options = {}) {
         post:    { ...topic, track: section.dir },
         outline,
         validated,
-        imageUrl: img1.sourceUrl,
+        imageUrl: null,
         deployWaitSec: Number(process.env.SNS_DEPLOY_WAIT_SEC ?? 90),
       });
     } catch (err) {
