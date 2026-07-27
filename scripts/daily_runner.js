@@ -198,6 +198,24 @@ async function main() {
   // ── IndexNow 즉시 색인 요청 (Bing / Yahoo / DuckDuckGo) ─────────────────
   if (publishedPosts.length > 0) await submitIndexNow(publishedPosts);
 
+  // ── YouTube Shorts 자동 생성 + 업로드 (trending-picks 포스팅 완료 시) ────
+  const tpPost = publishedPosts.find(p => p.sectionId === 'trending-picks');
+  if (tpPost && process.env.YOUTUBE_REFRESH_TOKEN) {
+    log('🎬', `YouTube Shorts 생성 중: ${tpPost.slug}`);
+    try {
+      const { makeVideo }      = await import('./yt_video_maker.mjs');
+      const { uploadToYouTube } = await import('./yt_uploader.mjs');
+      const meta = await makeVideo(tpPost.slug);
+      const { videoUrl } = await uploadToYouTube(meta);
+      log('✅', `YouTube 업로드 완료: ${videoUrl}`);
+      await sendTelegram(`🎬 YouTube Shorts 업로드!\n제목: ${meta.title}\n링크: ${videoUrl}`);
+    } catch (err) {
+      log('⚠️', `YouTube Shorts 실패 (포스팅은 정상): ${err.message}`);
+    }
+  } else if (tpPost && !process.env.YOUTUBE_REFRESH_TOKEN) {
+    log('📌', 'YOUTUBE_REFRESH_TOKEN 미설정 — YouTube 업로드 건너뜀 (node scripts/yt_auth.mjs 로 인증)');
+  }
+
   // ── 텔레그램 완료 알림 ──────────────────────────────────────────────────
   await sendTelegramDailyReport(publishedPosts, successCount, failCount, publishNow);
 

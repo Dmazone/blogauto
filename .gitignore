@@ -36,3 +36,7 @@ data/debug-screenshots/
 # 작업 중 생성된 스크린샷 (git 추적 제외)
 screenshots/
 /*.png
+
+# YouTube 영상 작업 폴더 (용량 큰 MP4/WAV 제외)
+data/yt-output/
+data/yt-work/
