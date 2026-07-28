@@ -40,9 +40,10 @@ async function main() {
   });
   const p = await ctx.newPage();
 
-  // YouTube Studio
-  console.log('1️⃣ YouTube Studio 접속...');
-  await p.goto('https://studio.youtube.com', { waitUntil: 'domcontentloaded', timeout: 30000 });
+  // YouTube Studio — @dmalog 채널 직접 접속
+  const CHANNEL_ID = 'UCZA_nUdouXfwAF0vuSG74_w';
+  console.log('1️⃣ YouTube Studio 접속 (@dmalog)...');
+  await p.goto(`https://studio.youtube.com/channel/${CHANNEL_ID}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await wait(3000);
   await snap(p, '01_studio');
 

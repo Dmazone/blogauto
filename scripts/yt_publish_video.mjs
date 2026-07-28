@@ -7,7 +7,7 @@ import path from 'path';
 import os from 'os';
 
 const SESSION = path.join(os.homedir(), '.yt-ekaledma-session');
-const CHANNEL_ID = 'UCQ07-tWWRq4jcpOZbTQpscA';
+const CHANNEL_ID = 'UCZA_nUdouXfwAF0vuSG74_w'; // @dmalog (DMAZON)
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const snap = async (p, name) => {
   await p.screenshot({ path: `data/pv_${name}.png` });
