@@ -230,10 +230,10 @@ async function main() {
   await makeSeg('s0', post.thumb, [
     { text: '🔥 오늘의 추천 상품', top: 180, size: 54, color: '#FFD700' },
     { text: post.title,              top: 310, size: 60, color: '#FFFFFF' },
-    { text: '지금 가장 인기 있는 아이템', top: 700, size: 42, color: '#87CEEB' },
-    { text: '▼ 아래에서 확인하세요',      top: 790, size: 34, color: '#AAAAAA' },
+    { text: '지금 가장 핫한 아이템',   top: 700, size: 42, color: '#87CEEB' },
+    { text: '▼ 아래에서 확인해봐',     top: 790, size: 34, color: '#AAAAAA' },
   ],
-  `오늘의 추천 상품을 알려드릴게요. ${post.title}입니다! 지금 가장 인기 있는 아이템을 소개해드립니다.`,
+  `오늘의 추천 상품 알려줄게. ${post.title}! 지금 가장 인기 있는 아이템 소개해줄게.`,
   7);
 
   // ─── 슬라이드 1 : TOP3 상품 (12s) ───────────────────────────
@@ -246,7 +246,7 @@ async function main() {
     prodBlocks.push({ text: p.name,              top: y + 70,  size: 42, color: '#FFFFFF' });
     prodBlocks.push({ text: p.price,             top: y + 130, size: 36, color: '#87CEEB' });
   });
-  const prodNarr = `TOP 3 인기 상품 비교입니다. ` +
+  const prodNarr = `TOP 3 인기 상품 비교야. ` +
     post.products.map((p, i) => `${R[i]}는 ${p.name}, 가격은 ${p.price}.`).join(' ');
   await makeSeg('s1', post.img01, prodBlocks, prodNarr, 12);
 
@@ -257,16 +257,16 @@ async function main() {
     { text: '쿠팡 최저가 링크 포함 👇', top: 550, size: 40, color: '#87CEEB' },
     { text: '@dmalog',                 top: 1700, size: 46, color: '#FFFFFF' },
   ],
-  '자세한 비교와 쿠팡 최저가 링크는 트렌드줌 블로그에서 확인하세요! 설명란 링크를 클릭해 주세요.',
+  '자세한 비교랑 쿠팡 최저가 링크는 트렌드줌 블로그에서 확인해봐! 설명란 링크 클릭해봐.',
   10);
 
   // ─── 슬라이드 3 : 아웃트로 (5s) ────────────────────────────
   await makeSeg('s3', post.thumb, [
     { text: '구독 & 좋아요! 👍',    top: 740, size: 80, color: '#FFD700' },
-    { text: '🔔 알림도 켜주세요!', top: 870, size: 50, color: '#FFFFFF' },
-    { text: '@dmalog',             top: 1000, size: 54, color: '#87CEEB' },
+    { text: '🔔 알림도 켜놔!',    top: 870, size: 50, color: '#FFFFFF' },
+    { text: '@dmalog',            top: 1000, size: 54, color: '#87CEEB' },
   ],
-  '구독과 좋아요 부탁드립니다! 알림도 꼭 켜주세요. 감사합니다!',
+  '구독이랑 좋아요 눌러줘! 알림도 꼭 켜놔. 고마워!',
   5);
 
   await browser.close();
