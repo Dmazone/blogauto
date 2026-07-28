@@ -110,6 +110,27 @@ ekaledma@gmail.com에는 **@DmALOQ**(기본)와 **@dmalog**(DMAZON) 두 채널�
 업로드 스크립트 실행 전 반드시 studio.youtube.com에서 @dmalog 채널로 전환 확인.  
 잘못된 채널에 올리면 즉시 `yt_delete_final.mjs`로 삭제.
 
+### [지침] 슬라이드 배경 이미지 생성 표준 ★★★★★
+
+> **핵심 원칙**: 슬라이드 배경은 반드시 해당 상품과 연관도가 높은 이미지여야 한다.  
+> 쿠팡/외부 링크의 상품명을 파싱 → AI 이미지 생성 → 배경 적용 → 텍스트 오버레이 순으로 처리.
+
+| 순서 | 내용 |
+|---|---|
+| 1 | 포스팅 markdown에서 쿠팡 링크 `q=` 파라미터(상품명) 파싱 |
+| 2 | 상품명으로 **Pollinations.ai (flux, 1080×1920)** AI 이미지 **병렬** 생성 |
+| 3 | 15KB 미만 → 최대 2회 재시도 |
+| 4 | 생성 실패 시 → 포스팅 기존 이미지(thumb/01/02)로 폴백 |
+| 5 | 생성된 상품 이미지를 Playwright HTML 배경으로 사용 |
+| 6 | 텍스트는 HTML 오버레이로 렌더링 (한국어 □□□□ 버그 방지) |
+
+**슬라이드별 이미지 쿼리:**
+| 슬라이드 | 쿼리 |
+|---|---|
+| `bg_intro` (s0, s3) | 전체 상품명 조합 (`q1 + q2 + q3`) |
+| `bg_s1` (s1 TOP3) | 1위 상품명 (`products[0].imageQuery`) |
+| `bg_s2` (s2 CTA) | 2위 상품명 (`products[1].imageQuery`) |
+
 ### 기술 스택
 
 - **FFmpeg**: `C:\Users\Paydma\.vscode\extensions\kilocode.kilo-code-7.4.16-win32-x64\bin\ffmpeg.exe`
