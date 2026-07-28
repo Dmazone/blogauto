@@ -1,0 +1,565 @@
+{
+  "captured": [
+    {
+      "url": "https://adfit.kakao.com/api/v1/adunit?pubuserId=ADO&mediaId=&adunitTypeSeqs=&adunitIdOrName=&page=0&size=12",
+      "data": {
+        "content": [
+          {
+            "adunitId": "DAN-rQKAp2HPhLvIgyeA",
+            "name": "트렌드줌1",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "트렌드줌",
+            "mediaId": "MU9",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-23T17:45:20",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-jzmk9rPd9goT1dXv",
+            "name": "오밥완 회전중 모바일 배너",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "오밥완 메뉴추천 게임",
+            "mediaId": "MSm",
+            "mediaType": "WEB",
+            "mediaStatus": "PASS",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-22T13:10:41",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-6d7fObmADg0ebdyw",
+            "name": "NeeDON-하단띠배너",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "니돈니드온",
+            "mediaId": "MOx",
+            "mediaType": "WEB",
+            "mediaStatus": "PASS",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-11T14:26:29",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-zOmdh3TxPuQBjrgK",
+            "name": "NeeDON-전면배너",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 1737,
+                "name": "320x480 이미지",
+                "description": "모바일용 세로로 긴 직사각형 이미지",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": null,
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "니돈니드온",
+            "mediaId": "MOx",
+            "mediaType": "WEB",
+            "mediaStatus": "PASS",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-11T12:59:55",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-Ki8D52yunC7XUrsB",
+            "name": "리드림_하단배너_320x100",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "리드림 - AI 꿈 해몽",
+            "mediaId": "MJg",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-04T16:25:28",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-Ct38Nhmj4DcpL5FH",
+            "name": "리드림_인터스티셔_300x250",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 134,
+                "name": "300x250",
+                "description": "PC/M 겸용 정사각에 가까운 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "300x250",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "리드림 - AI 꿈 해몽",
+            "mediaId": "MJg",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-05-28T15:39:27",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-LUQ2hB2L4jjEadsN",
+            "name": "리드림_중하단배너_320x100",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "리드림 - AI 꿈 해몽",
+            "mediaId": "MJg",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-05-28T15:35:38",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-JHSnsJdxk3HlpDKr",
+            "name": "리드림_상단배너_320x50",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 139,
+                "name": "320x50",
+                "description": "모바일용 얇은 띠배너형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x100",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "리드림 - AI 꿈 해몽",
+            "mediaId": "MJg",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-05-28T15:31:16",
+            "canBackupAd": true
+          }
+        ],
+        "pageable": {
+          "pageNumber": 0,
+          "pageSize": 12,
+          "sort": {
+            "empty": true,
+            "sorted": false,
+            "unsorted": true
+          },
+          "offset": 0,
+          "paged": true,
+          "unpaged": false
+        },
+        "totalElements": 8,
+        "totalPages": 1,
+        "last": true,
+        "size": 12,
+        "number": 0,
+        "sort": {
+          "empty": true,
+          "sorted": false,
+          "unsorted": true
+        },
+        "numberOfElements": 8,
+        "first": true,
+        "empty": false
+      }
+    },
+    {
+      "url": "https://adfit.kakao.com/api/v1/adunit?pubuserId=ADO&mediaId=&adunitTypeSeqs=&adunitIdOrName=&page=0&size=12",
+      "data": {
+        "content": [
+          {
+            "adunitId": "DAN-rQKAp2HPhLvIgyeA",
+            "name": "트렌드줌1",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "트렌드줌",
+            "mediaId": "MU9",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-23T17:45:20",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-jzmk9rPd9goT1dXv",
+            "name": "오밥완 회전중 모바일 배너",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "오밥완 메뉴추천 게임",
+            "mediaId": "MSm",
+            "mediaType": "WEB",
+            "mediaStatus": "PASS",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-22T13:10:41",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-6d7fObmADg0ebdyw",
+            "name": "NeeDON-하단띠배너",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "니돈니드온",
+            "mediaId": "MOx",
+            "mediaType": "WEB",
+            "mediaStatus": "PASS",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-11T14:26:29",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-zOmdh3TxPuQBjrgK",
+            "name": "NeeDON-전면배너",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 1737,
+                "name": "320x480 이미지",
+                "description": "모바일용 세로로 긴 직사각형 이미지",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": null,
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "니돈니드온",
+            "mediaId": "MOx",
+            "mediaType": "WEB",
+            "mediaStatus": "PASS",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-11T12:59:55",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-Ki8D52yunC7XUrsB",
+            "name": "리드림_하단배너_320x100",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "리드림 - AI 꿈 해몽",
+            "mediaId": "MJg",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-06-04T16:25:28",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-Ct38Nhmj4DcpL5FH",
+            "name": "리드림_인터스티셔_300x250",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 134,
+                "name": "300x250",
+                "description": "PC/M 겸용 정사각에 가까운 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "300x250",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "리드림 - AI 꿈 해몽",
+            "mediaId": "MJg",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-05-28T15:39:27",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-LUQ2hB2L4jjEadsN",
+            "name": "리드림_중하단배너_320x100",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 140,
+                "name": "320x100",
+                "description": "모바일용 가로를 채우는 직사각형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x200",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "리드림 - AI 꿈 해몽",
+            "mediaId": "MJg",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-05-28T15:35:38",
+            "canBackupAd": true
+          },
+          {
+            "adunitId": "DAN-JHSnsJdxk3HlpDKr",
+            "name": "리드림_상단배너_320x50",
+            "adunitTypes": [
+              {
+                "adunitTypeSeq": 139,
+                "name": "320x50",
+                "description": "모바일용 얇은 띠배너형",
+                "productId": 1,
+                "productName": "배너",
+                "newBadge": false,
+                "recommendBadge": false,
+                "type": "BANNER",
+                "backupAdGuide": "640x100",
+                "useBackupAd": true,
+                "productCode": "BANNER"
+              }
+            ],
+            "adminStop": "N",
+            "backupAdType": null,
+            "adunitBackupAdForce": null,
+            "mediaName": "리드림 - AI 꿈 해몽",
+            "mediaId": "MJg",
+            "mediaType": "WEB",
+            "mediaStatus": "SUSPEND",
+            "ownTistory": false,
+            "mediationId": 1,
+            "mediationName": "WEB 기본 미디에이션",
+            "regdttm": "2026-05-28T15:31:16",
+            "canBackupAd": true
+          }
+        ],
+        "pageable": {
+          "pageNumber": 0,
+          "pageSize": 12,
+          "sort": {
+            "empty": true,
+            "unsorted": true,
+            "sorted": false
+          },
+          "offset": 0,
+          "unpaged": false,
+          "paged": true
+        },
+        "totalPages": 1,
+        "totalElements": 8,
+        "last": true,
+        "size": 12,
+        "number": 0,
+        "sort": {
+          "empty": true,
+          "unsorted": true,
+          "sorted": false
+        },
+        "numberOfElements": 8,
+        "first": true,
+        "empty": false
+      }
+    }
+  ],
+  "apis": []
+}

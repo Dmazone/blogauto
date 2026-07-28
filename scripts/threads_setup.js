@@ -63,15 +63,24 @@ async function main() {
   }
 
   console.log('⏳  로그인 대기 중 (최대 10분)...');
+  console.log('    (이 터미널은 그대로 두고 열린 Chrome 창에서 로그인하세요)');
 
   const deadline = Date.now() + 10 * 60 * 1000;
+  let lastUrl = '';
   while (Date.now() < deadline) {
     await wait(5000);
+
+    const curUrl = page.url();
+    if (curUrl !== lastUrl) {
+      console.log(`    현재 URL: ${curUrl}`);
+      lastUrl = curUrl;
+    }
+
     const loggedIn = await checkLogin(page).catch(() => false);
     if (loggedIn) {
       console.log('✅  paydma.action 로그인 확인됨!');
       console.log('💾  세션 저장 중...');
-      await wait(3000); // 세션 완전히 기록될 시간
+      await wait(3000);
       await context.close();
       console.log('🎉  완료! 이제 threads_poster.js가 자동으로 이 세션을 사용합니다.');
       return;
@@ -84,13 +93,26 @@ async function main() {
 }
 
 async function checkLogin(page) {
-  const url = page.url();
-  if (url.includes('/login') || url.includes('force_authentication')) return false;
-
-  return page.evaluate(() => {
-    const links = [...document.querySelectorAll('a[href]')];
-    return links.some(a => a.href.toLowerCase().includes('paydma.action'));
-  }).catch(() => false);
+  try {
+    const url = page.url();
+    // 로그인/인증 페이지면 미로그인
+    if (url.includes('/login') || url.includes('force_authentication') ||
+        url.includes('accounts.instagram') || url.includes('/signup')) {
+      return false;
+    }
+    // threads.com 도메인에 있으면 페이지 내용 확인
+    if (url.includes('threads.com')) {
+      return page.evaluate(() => {
+        const bodyText = document.body?.innerText ?? '';
+        const links = [...document.querySelectorAll('a[href]')];
+        return bodyText.includes('paydma.action') ||
+               links.some(a => a.href.toLowerCase().includes('paydma.action'));
+      }).catch(() => false);
+    }
+    return false;
+  } catch {
+    return false;
+  }
 }
 
 main().catch(err => {

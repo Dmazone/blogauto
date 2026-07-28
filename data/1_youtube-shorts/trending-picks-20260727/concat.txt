@@ -1,0 +1,4 @@
+file 'C:/Users/Paydma/00_Claude_CODE/BlogAuto/data/yt-work/trending-picks-20260727/seg_0.mp4'
+file 'C:/Users/Paydma/00_Claude_CODE/BlogAuto/data/yt-work/trending-picks-20260727/seg_1.mp4'
+file 'C:/Users/Paydma/00_Claude_CODE/BlogAuto/data/yt-work/trending-picks-20260727/seg_2.mp4'
+file 'C:/Users/Paydma/00_Claude_CODE/BlogAuto/data/yt-work/trending-picks-20260727/seg_3.mp4'

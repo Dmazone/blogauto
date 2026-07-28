@@ -1,0 +1,265 @@
+@charset "UTF-8";/* main 페이지 전용 */
+/* main reset */
+/* reset */
+article,aside,footer,header,hgroup,main,nav,section{display:block}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
+fieldset,img{border:0 none}
+dl,ul,ol,menu,li{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
+input,select,textarea,button{vertical-align:middle}
+input::-ms-clear{display:none}
+button{border:0 none;background-color:transparent;cursor:pointer}
+body{-webkit-text-size-adjust:100%;background:#fff}
+body,th,td,input,select,textarea,button{font-size:14px;line-height:1.5;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;color:#555;word-break:break-all}
+a{color:#111;text-decoration:none;cursor:pointer}
+a:active,a:hover{text-decoration:underline}
+a:active{background-color:transparent}
+address,caption,cite,code,dfn,em,var{font-style:normal;font-weight:400}
+img{vertical-align:top}
+strong,b,th,h1,h2,h3,h4,h5,h6{font-weight:700}
+button::-moz-focus-inner,input[type="reset"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="file"] > input[type="button"]::-moz-focus-inner{padding:0;border:0}
+/* global */
+#kakaoIndex{overflow:hidden;position:absolute;left:-9999px;width:0;height:1px;margin:0;padding:0}
+.ir_pm{display:block;overflow:hidden;font-size:0;line-height:0;text-indent:-9999px}
+/* pc용 */
+.ir_wa{display:block;overflow:hidden;position:relative;z-index:-1;width:100%;height:100%}
+.screen_out{overflow:hidden;position:absolute;width:0;height:0;line-height:0;text-indent:-9999px}
+.show{display:block}
+.hide{display:none}
+caption.screen_out{position:relative}
+/* Background Image - common 요소 */
+.ico_main{display:block;overflow:hidden;font-size:0;line-height:0;background:url(https://t1.daumcdn.net/biz/ui/adfit/main/ico_main.png) no-repeat;background-size:150px 150px;text-indent:-9999px;vertical-align:top}
+/* 대체텍스트가 있는 아이콘 */
+@media (max-width:900px){.ico_main{background:url(https://t1.daumcdn.net/biz/ui/adfit/main/m/ico_main.png) no-repeat;background-size:50px 50px} }
+/* main */
+/*공통 - gnb*/
+#kakaoHead{position:fixed;left:0;top:0;z-index:1100;width:100%;height:60px;background-color:#fff}
+#kakaoHead h1{float:left;position:relative;z-index:0;padding:23px 0 0 24px;font-weight:400;font-size:14px}
+#kakaoLogo{float:left;width:104px;height:16px;text-decoration:none;background:url(https://t1.daumcdn.net/biz/ui/adfit/main/logo_adfit2.png) no-repeat;background-size:104px 16px}
+.gnb_menu{position:absolute;top:13px;right:30px}
+.gnb_menu .link_gnb{float:left;font-size:14px;line-height:34px;color:#444}
+.gnb_menu .link_gnb .ico_gnb{float:right;width:10px;height:10px;margin:12px 0 0 3px;background-position:0 -35px}
+.gnb_menu .link_login{float:left;width:125px;height:34px;margin-left:20px;border:1px solid rgba(2,20,63,0.15);border-radius:5px;font-size:13px;color:#444;line-height:31px;text-align:center;box-sizing:border-box}
+.gnb_menu .link_login:hover{border:1px solid rgba(2,20,63,0.25);color:#222;font-weight:500;text-decoration:none}
+/*공통 - footer*/
+.kakao_foot{position:relative;height:54px;background:#fff}
+.kakao_copyright{position:absolute;top:19px;left:30px}
+.kakao_copyright .logo_corp{float:left;width:51px;height:16px}
+.kakao_copyright .logo_corp .ico_logo{display:block;height:16px;font-size:0;line-height:0;background:url(https://t1.daumcdn.net/biz/ui/adfit/main/logo_kakao.png);background-size:51px 16px}
+.txt_copyright{float:left;padding:1px 0 0 14px;font-size:12px;color:#818181;line-height:16px}
+.m_kakao_copyright{display:none}
+.m_kakao_copyright .txt_copyright{padding-top:11px;font-size:11px;line-height:16px;color:#02143F}
+.kakao_foot .list_policy{overflow:hidden;position:absolute;top:12px;right:32px}
+.kakao_foot .list_policy li{float:left;position:relative}
+.kakao_foot .list_policy li + li:after{position:absolute;top:9px;left:0;width:1px;height:14px;background:#E3E4E9;content:''}
+.kakao_foot .list_policy .link_policy{display:block;padding:5px 17px;font-size:13px;line-height:20px;color:#444}
+/*공통 - main*/
+#mArticle{padding:60px 0 0 0}
+.wrap_adfit{position:fixed;right:60px;bottom:114px;z-index:100}
+.wrap_adfit .btn_adfit{position:relative;display:inline-block;height:60px;line-height:60px;padding:0 74px 0 34px;margin-right:1px;border-radius:35px;font-size:18px;color:#fff;background:rgba(36,62,120,0.8)}
+.wrap_adfit .btn_adfit:hover{background:rgba(77,134,238,0.8);text-decoration:none}
+.wrap_adfit .btn_adfit .icon_plus{position:absolute;top:0;right:-1px;width:60px;height:60px;border-radius:30px;background:#19234B}
+.wrap_adfit .btn_adfit:hover .icon_plus{background:#2f6ad7}
+.wrap_adfit .btn_adfit .icon_plus .ico_main{display:block;width:18px;height:18px;margin:21px auto 0;background-position:-80px -35px}
+/*공통 -section*/
+.fw_bold{font-weight:700}
+/* 폰트굵게 */
+.m_view{display:none}
+.inner_section{max-width:1090px;margin:0 auto;padding:0 30px}
+/* 2025-10-15 수정 */
+.inner_section .tit_g{display:block;font-size:30px;line-height:43px;color:#222;font-weight:500;letter-spacing:-0.02em;text-align:center}
+.inner_section .desc_g{padding-top:7px;font-size:22px;line-height:36px;color:#444;font-weight:300;text-align:center}
+/* @media (max-width:1090px){    .inner_section{width:100%;box-sizing:border-box}
+} 2025-10-15 삭제 */
+@media (max-width:900px){/*공통 - m_gnb*/
+    #kakaoHead{height:50px}
+    #kakaoHead h1{padding:17px 0 0 21px}
+    #kakaoLogo{width:110px;background:url(https://t1.daumcdn.net/biz/ui/adfit/main/m/logo_adfit2.png) no-repeat;background-size:110px 16px}
+    .gnb_menu{display:none}
+    /*공통 - m_footer*/
+    .kakao_foot{overflow:hidden;height:90px}
+    .kakao_copyright{display:none}
+    .m_kakao_copyright{display:block}
+    .kakao_foot .list_policy{position:relative;top:auto;right:auto;padding-top:15px;margin-right:-15px}
+    .kakao_foot .list_policy li + li:after{height:10px}
+    .kakao_foot .list_policy .link_policy{padding:5px 15px;font-size:11px;line-height:16px}
+    /*공통 - m_main*/
+    #mArticle{padding-top:50px}
+    .wrap_adfit{display:none}
+    /*공통 - m_section*/
+    .m_view{display:block}
+    .pc_view{display:none}
+    /* 2025-10-15 추가 */
+    .inner_section{width:100%;padding-left:20px;padding-right:20px;box-sizing:border-box}
+    .inner_section .tit_g{font-size:18px;line-height:27px;text-align:left}
+    .inner_section .desc_g{padding-top:8px;font-size:14px;line-height:23px;text-align:left} }
+/*상단 배너*/
+.section_intro{min-height:452px;padding:81px 0 99px;background:#02143F;box-sizing:border-box}
+.section_intro .inner_section{width:100%;padding:0}
+.section_intro .tit_info{display:block;font-size:42px;line-height:62px;color:#fff;font-weight:700;text-align:center}
+.section_intro .desc_info{display:block;padding-top:19px;font-size:22px;line-height:34px;color:#fff;font-weight:300;text-align:center}
+.section_intro .wrap_info{padding-top:74px}
+.section_intro .img_intro{display:block;width:417px;height:49px;margin:0 auto;background:url(https://t1.daumcdn.net/biz/ui/adfit/main/img_intro.png) no-repeat;background-size:417px 49px}
+/*tab*/
+.section_tab{padding-top:75px;height:56px;text-align:center}
+.section_tab .list_tab{overflow:hidden;display:inline-block}
+.section_tab li{float:left;margin:0 16px}
+.section_tab li .link_tab{display:block;position:relative;height:33px;font-size:20px;line-height:30px;color:#444;font-weight:500;text-decoration:none}
+.section_tab li .link_tab:after{display:none;position:absolute;bottom:1px;left:0;right:0;height:1px;background:#444;content:''}
+.section_tab li:hover .link_tab:after{display:block}
+.section_tab li.on .link_tab{color:#4374CF}
+.section_tab li.on .link_tab:after{display:block;bottom:0;height:2px;background:#4374CF}
+.tab_fixed .inner_section{position:fixed;top:60px;left:0;right:0;z-index:10;width:100%;height:57px;padding:10px 0 9px;border-top:1px solid rgba(0,0,0,0.05);border-bottom:1px solid rgba(0,0,0,0.05);background:rgba(255,255,255,0.85);box-sizing:border-box}
+/*주요특징*/
+.section_cont .inner_section{padding-bottom:160px}
+.section_cont .item_cont{padding-top:160px}
+.section_cont .item_cont:first-child{padding-top:97px}
+.section_cont .tit_cont{display:block;font-size:30px;line-height:43px;color:#222;font-weight:500;letter-spacing:-0.02em}
+.section_cont .desc_cont{padding-top:7px;font-size:22px;line-height:38px;color:#444;font-weight:300;text-align:left}
+.section_cont .thumb_cont{padding-top:30px}
+.section_cont .thumb_cont .inner_thumb{width:100%;max-width:1090px;border-radius:20px;background:#F0F1F4}
+/* 2025-10-15 수정 */
+.section_cont .thumb_cont .thumb_g{width:100%}
+/* 2025-10-15 추가 시작 */
+/* 슬라이드 */
+.wrap_slide{padding-top:30px}
+.wrap_slide .inner_slide{overflow:hidden;position:relative;border-radius:20px;background:#F0F1F4}
+.wrap_slide .slide_box{display:flex;transition:transform 0.6s cubic-bezier(1,0.01,0.32,1)}
+.wrap_slide .slide_item{flex:0 0 100%;width:100%}
+.wrap_slide .slide_item .thumb_g{display:block;width:100%}
+/* 슬라이드 - 이전,다음 버튼 */
+.slide_controls .btn_control{position:absolute;top:50%;transform:translateY(-50%);width:60px;height:60px;border:2.5px solid rgba(165,177,197,0.85);border-radius:50%;box-sizing:border-box}
+.slide_controls .btn_prev{left:40px}
+.slide_controls .btn_next{right:40px}
+.slide_controls .btn_control:hover{border-color:#326EDC}
+.slide_controls .btn_control .ico_controls{display:block;width:14px;height:14px;margin-left:16px;border-top:3px solid rgba(165,177,197,0.85);border-right:3px solid rgba(165,177,197,0.85);-webkit-transform:rotate(45deg);transform:rotate(45deg)}
+.slide_controls .btn_control:hover .ico_controls{border-color:#326EDC}
+.slide_controls .btn_prev .ico_controls{margin-left:22px;-webkit-transform:rotate(45deg) scale(-1);transform:rotate(45deg) scale(-1)}
+/* 슬라이드 - 페이징 */
+.util_slide{padding:30px 10px 0}
+.util_slide .paging_slide .inner_paging{display:flex}
+.util_slide .paging_slide .btn_paging{width:30px;height:30px;margin-right:10px;padding-bottom:2px;border:1px solid rgba(165,177,197,0.85);border-radius:7px;font-weight:500;font-size:15px;color:#A5B1C5;background:#fff}
+.util_slide .paging_slide .btn_paging:hover,.util_slide .paging_slide .btn_paging[aria-current="true"]{border-color:#326EDC;color:#fff;background:#326EDC}
+/* 슬라이드 - 컨텐츠 */
+.util_slide .cont_slide{padding-top:20px;letter-spacing:-0.2px}
+.util_slide .cont_slide .tit_slide{display:block;font-weight:500;font-size:20px;line-height:30px;color:#326EDC}
+.util_slide .cont_slide .desc_slide{display:block;padding-top:7px;font-weight:300;font-size:20px;line-height:32px;min-height:84px}
+/* // 2025-10-15 추가 끝 */
+/*광고 시작하기*/
+.section_start{background:#F7F8F9}
+.section_start .inner_section{padding-top:166px;padding-bottom:160px}
+.section_start .list_start{padding-top:80px}
+.list_start li{position:relative;padding:29px 50px 31px 77px;border-radius:20px;background:#F0F1F4}
+.list_start li + li{margin-top:19px}
+.list_start .tit_start{display:block;font-size:22px;line-height:33px;color:#222;font-weight:500}
+.list_start .desc_start{padding-top:4px;font-size:20px;line-height:32px;color:#444;font-weight:300}
+.list_start .num_start{position:absolute;top:34px;left:31px;min-width:28px;height:24px;padding:0 6px;font-size:22px;line-height:22px;color:#222;font-weight:500;box-sizing:border-box;text-align:center}
+.list_start .num_start .ico_bracket{position:absolute;top:1px;left:0;width:4px;height:24px;background-position:-60px -35px}
+.list_start .num_start .ico_bracket2{position:absolute;top:1px;right:0;width:4px;height:24px;background-position:-70px -35px}
+.section_start .wrap_btn{padding-top:60px;text-align:center}
+.section_start .btn_start{position:relative;display:inline-block;height:70px;padding:0 76px 0 28px;border:2px solid #D2D8E2;border-radius:35px;font-size:22px;line-height:64px;color:#326EDC;box-sizing:border-box}
+.section_start .btn_start:hover{text-decoration:none}
+.section_start .btn_start .ico_arrow{position:absolute;top:50%;right:26px;width:20px;height:16px;margin-top:-8px;background-position:-15px -35px}
+/*도움받기*/
+.section_help{background:#F0F1F4}
+.section_help .inner_section{padding-top:160px;padding-bottom:163px}
+.section_help .list_help{padding-top:80px}
+.list_help li + li{margin-top:20px}
+.list_help .btn_help{position:relative;display:block;padding:27px 50px 30px 79px;border-radius:20px;background:#fff}
+.list_help .btn_help:hover{text-decoration:none}
+.list_help .ico_arrow{position:absolute;top:36px;right:37px;width:20px;height:16px;background-position:-15px -35px}
+.list_help .tit_help{display:block;font-size:22px;line-height:33px;color:#326EDC;font-weight:500}
+.list_help .desc_help{padding-top:8px;font-size:20px;line-height:33px;color:#444;font-weight:300}
+.list_help .ico_ch,.list_help .ico_qna,.list_help .ico_faq{position:absolute;top:30px;left:30px;width:32px;height:32px}
+.list_help .ico_ch{height:34px;background-position:-70px 0}
+.list_help .ico_qna{background-position:0 0}
+.list_help .ico_faq{background-position:-35px 0}
+/*SDK 가이드*/
+.section_guide{background:#326EDC url(https://t1.daumcdn.net/biz/ui/adfit/main/bg_main.png) no-repeat top center;background-size:1600px 597px}
+.section_guide .inner_section{padding-top:160px;padding-bottom:200px}
+.section_guide .tit_g{color:#fff}
+.section_guide .desc_g{padding-top:7px;color:#fff}
+.section_guide .list_guide{padding-top:60px}
+.list_guide li + li{margin-top:20px}
+.list_guide .btn_guide{position:relative;display:block;padding:28px 50px 26px 81px;border-radius:20px;border:1px solid rgba(255,255,255,0.6);background:rgba(255,255,255,0.1)}
+.list_guide .btn_guide:hover{text-decoration:none}
+.list_guide .ico_arrow{position:absolute;top:50%;right:37px;width:20px;height:16px;margin-top:-8px;background-position:-35px -35px}
+.list_guide .btn_guide .tit_guide{font-size:22px;line-height:33px;color:#fff;font-weight:400}
+.list_guide .ico_guide{position:absolute;top:27px;left:29px;width:32px;height:34px;background-position:0 -55px}
+@media (max-width:900px){/*m_상단 배너*/
+    .section_intro{width:100%;min-height:365px;padding:61px 0 70px}
+    .section_intro .tit_info{font-size:24px;line-height:32px;letter-spacing:-0.02em}
+    .section_intro .desc_info{padding-top:12px;font-size:14px;line-height:23px;letter-spacing:-0.02em}
+    .section_intro .wrap_info{padding-top:60px}
+    .section_intro .img_intro{width:252px;height:29px;background:url(https://t1.daumcdn.net/biz/ui/adfit/main/m/img_intro.png) no-repeat;background-size:252px 29px}
+    /*m_tab*/
+    .section_tab{overflow:hidden;padding-top:37px;height:47px;text-align:left}
+    .section_tab .inner_section{overflow:hidden;height:47px;padding:0}
+    .section_tab .wrap_tab{overflow-x:auto;overflow-y:auto;height:65px}
+    .section_tab .list_tab{overflow:hidden;padding:0 9px;white-space:nowrap}
+    .section_tab li{float:none;display:inline-block;margin:0 11px}
+    .section_tab li .link_tab{height:25px;font-size:15px;line-height:22px}
+    .tab_fixed .inner_section{top:50px}
+    .tab_fixed .wrap_tab{height:47px}
+    .tab_fixed li .link_tab{margin-top:10px}
+    /*m_주요특징*/
+    .section_cont .inner_section{padding-bottom:81px}
+    .section_cont .item_cont{padding-top:80px}
+    .section_cont .item_cont:first-child{padding-top:58px}
+    .section_cont .tit_cont{font-size:18px;line-height:27px}
+    .section_cont .desc_cont{padding-top:9px;font-size:14px;line-height:23px}
+    .section_cont .thumb_cont{overflow-x:auto;padding:29px 20px 0;margin-left:-20px;margin-right:-20px}
+    .section_cont .thumb_cont .inner_thumb{width:100%;min-width:545px;border-radius:12px}
+    /* 2025-10-15 수정 */
+    /* 2025-10-15 추가 시작 */
+    /* 슬라이드 */
+    .wrap_slide .inner_slide{border-radius:6px}
+    .wrap_slide .slide_box{display:flex;transition:transform 0.6s cubic-bezier(1,0.01,0.32,1)}
+    /* 슬라이드 - 이전,다음 버튼 */
+    .slide_controls .btn_control{width:30px;height:30px;border-width:1.5px}
+    .slide_controls .btn_prev{left:15px}
+    .slide_controls .btn_next{right:15px}
+    .slide_controls .btn_control .ico_controls{width:7px;height:7px;margin-left:8px;border-width:1.5px}
+    .slide_controls .btn_prev .ico_controls{margin-left:11px}
+    /* 슬라이드 - 페이징 */
+    .util_slide{padding:15px 5px 0}
+    .util_slide .paging_slide .btn_paging{width:18px;height:18px;margin-right:8px;padding-bottom:1px;border-width:0.5px;border-radius:4px;font-size:9px}
+    /* 슬라이드 - 컨텐츠 */
+    .util_slide .cont_slide{padding-top:14px;letter-spacing:-0.14px}
+    .util_slide .cont_slide .tit_slide{font-size:14px;line-height:20px}
+    .util_slide .cont_slide .desc_slide{padding-top:4px;font-size:13px;line-height:21px}
+    /* 2025-10-15 추가 끝 */
+    /*m_광고 시작하기*/
+    .section_start .list_start{padding-top:30px}
+    .section_start .inner_section{padding-top:70px;padding-bottom:70px}
+    .list_start li{padding:17px 20px 16px 44px;border-radius:10px}
+    .list_start li + li{margin-top:16px}
+    .list_start .tit_start{font-size:13px;line-height:19px}
+    .list_start .desc_start{padding-top:5px;font-size:12px;line-height:19px}
+    .list_start .num_start{top:20px;left:16px;min-width:17px;padding:0 4px;font-size:11px;line-height:12px}
+    .list_start .num_start .ico_bracket{position:absolute;top:0;left:0;width:3px;height:15px;background-position:-30px 0}
+    .list_start .num_start .ico_bracket2{position:absolute;top:0;right:0;width:3px;height:15px;background-position:-35px 0}
+    .section_start .wrap_btn{padding-top:31px}
+    .section_start .btn_start{height:40px;padding:1px 40px 0 18px;border:1px solid #D2D8E2;font-size:13px;line-height:36px}
+    .section_start .btn_start .ico_arrow{right:18px;width:13px;height:11px;margin-top:-5px;background-position:0 0}
+    /*m_도움받기*/
+    .section_help .inner_section{padding-top:70px;padding-bottom:70px}
+    .section_help .list_help{padding-top:29px}
+    .list_help li + li{margin-top:15px}
+    .list_help .btn_help{padding:17px 20px;border-radius:12px}
+    .list_help .tit_help .ico_main{display:none}
+    .list_help .ico_arrow{top:20px;right:18px;width:13px;height:11px;margin-top:0;background-position:0 0}
+    .list_help .tit_help{font-size:13px;line-height:19px}
+    .list_help .desc_help{padding-top:4px;font-size:13px;line-height:19px}
+    /*m_SDK 가이드*/
+    .section_guide{background:#326EDC url(https://t1.daumcdn.net/biz/ui/adfit/main/m/bg_main.png) no-repeat top center;background-size:100% auto}
+    .section_guide .inner_section{padding-top:70px;padding-bottom:89px}
+    .section_guide .desc_g{padding-top:8px}
+    .section_guide .list_guide{padding-top:29px}
+    .list_guide li + li{margin-top:15px}
+    /* 2025-10-15 추가 */
+    .list_guide .btn_guide{padding:17px 35px 17px 17px;border-radius:12px}
+    .list_guide .tit_guide .ico_main{display:none}
+    .list_guide .ico_arrow{right:18px;width:13px;height:11px;margin-top:-5px;background-position:-15px 0}
+    .list_guide .btn_guide .tit_guide{font-size:13px;line-height:19px} }

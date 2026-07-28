@@ -1,0 +1,15 @@
+2026/07/27-17:09:38.039 77c8 Reusing MANIFEST C:\Users\Paydma\00_Claude_CODE\BlogAuto\data\chrome-profile\Default\Local Storage\leveldb/MANIFEST-000001
+2026/07/27-17:09:38.043 77c8 Recovering log #29
+2026/07/27-17:09:38.045 77c8 Reusing old log C:\Users\Paydma\00_Claude_CODE\BlogAuto\data\chrome-profile\Default\Local Storage\leveldb/000029.log 
+2026/07/27-17:15:01.478 77c8 Level-0 table #33: started
+2026/07/27-17:15:01.483 77c8 Level-0 table #33: 21401 bytes OK
+2026/07/27-17:15:01.485 77c8 Delete type=0 #29
+2026/07/27-17:15:01.487 38fc Compacting 4@0 + 1@1 files
+2026/07/27-17:15:01.495 38fc Generated table #34@0: 2860 keys, 173915 bytes
+2026/07/27-17:15:01.495 38fc Compacted 4@0 + 1@1 files => 173915 bytes
+2026/07/27-17:15:01.496 38fc compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/07/27-17:15:01.496 38fc Delete type=2 #21
+2026/07/27-17:15:01.496 38fc Delete type=2 #24
+2026/07/27-17:15:01.497 38fc Delete type=2 #27
+2026/07/27-17:15:01.497 38fc Delete type=2 #30
+2026/07/27-17:15:01.497 38fc Delete type=2 #33
