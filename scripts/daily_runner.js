@@ -200,20 +200,29 @@ async function main() {
 
   // ── YouTube Shorts 자동 생성 + 업로드 (trending-picks 포스팅 완료 시) ────
   const tpPost = publishedPosts.find(p => p.sectionId === 'trending-picks');
-  if (tpPost && process.env.YOUTUBE_REFRESH_TOKEN) {
-    log('🎬', `YouTube Shorts 생성 중: ${tpPost.slug}`);
+  if (tpPost) {
+    log('🎬', `YouTube Shorts 생성 시작: ${tpPost.slug}`);
     try {
-      const { makeVideo }      = await import('./yt_video_maker.mjs');
-      const { uploadToYouTube } = await import('./yt_uploader.mjs');
-      const meta = await makeVideo(tpPost.slug);
-      const { videoUrl } = await uploadToYouTube(meta);
-      log('✅', `YouTube 업로드 완료: ${videoUrl}`);
-      await sendTelegram(`🎬 YouTube Shorts 업로드!\n제목: ${meta.title}\n링크: ${videoUrl}`);
+      const { generate } = await import('./yt_make_shorts.mjs');
+      const mp4Path = await generate(tpPost.slug);
+      log('✅', `Shorts 영상 생성 완료: ${mp4Path}`);
+
+      // yt_upload.mjs 를 child process로 실행 (Playwright 별도 프로세스 필요)
+      await new Promise((resolve) => {
+        const title = tpPost.title || `트렌드 상품 추천 TOP3 #Shorts`;
+        const desc  = `지금 가장 인기 있는 트렌드 상품 비교·추천!\n자세한 내용은 트렌드줌 블로그에서 확인해봐 👇\n\n#Shorts #트렌드 #쿠팡추천`;
+        const proc  = spawn(process.execPath, [
+          path.join(__dirname, 'yt_upload.mjs'), mp4Path, title, desc,
+        ], { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+        proc.on('close', code => {
+          if (code === 0) log('✅', 'YouTube 업로드 완료');
+          else            log('⚠️', `YouTube 업로드 실패 (exit ${code}) — 수동 업로드 필요`);
+          resolve();
+        });
+      });
     } catch (err) {
       log('⚠️', `YouTube Shorts 실패 (포스팅은 정상): ${err.message}`);
     }
-  } else if (tpPost && !process.env.YOUTUBE_REFRESH_TOKEN) {
-    log('📌', 'YOUTUBE_REFRESH_TOKEN 미설정 — YouTube 업로드 건너뜀 (node scripts/yt_auth.mjs 로 인증)');
   }
 
   // ── 텔레그램 완료 알림 ──────────────────────────────────────────────────

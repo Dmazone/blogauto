@@ -9,10 +9,13 @@ import os from 'os';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SESSION = path.join(os.homedir(), '.yt-ekaledma-session');
+const SESSION   = path.join(os.homedir(), '.yt-ekaledma-session');
+// --schedule=2026-07-28T15:00  (ISO datetime, KST) → YouTube 예약 업로드
+const scheduleArg  = process.argv.find(a => a.startsWith('--schedule='));
+const SCHEDULE_ISO = scheduleArg ? scheduleArg.replace('--schedule=', '') : null;
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const snap = async (p, name) => {
-  await p.screenshot({ path: `data/upload_${name}.png` });
+  await p.screenshot({ path: `data/3_screenshots/upload_${name}.png` });
   console.log(`📸 upload_${name}.png`);
 };
 
@@ -135,81 +138,149 @@ async function main() {
   }
   await snap(p, '06_review');
 
-  // 공개 설정 → 공개
-  console.log('8️⃣ 공개 설정...');
-  // 공개 라디오 버튼 — YouTube Studio는 paper-radio-button 사용
-  let pubOk = false;
-  // 방법 1: tp-yt-paper-radio-button 중 "공개" 텍스트
-  try {
-    const radioItems = await p.locator('tp-yt-paper-radio-button').all();
-    for (const radio of radioItems) {
-      const txt = await radio.textContent();
-      if (txt?.trim() === '공개' || txt?.trim() === 'Public') {
-        await radio.click();
-        pubOk = true;
-        console.log('  ✅ 공개 radio 클릭');
-        break;
-      }
-    }
-  } catch {}
-  // 방법 2: ytcp-privacy-dropdown 드롭다운
-  if (!pubOk) {
+  if (SCHEDULE_ISO) {
+    // ── 예약 업로드 모드 ────────────────────────────────────────────
+    console.log(`8️⃣ 예약 설정: ${SCHEDULE_ISO}`);
+    const dt = new Date(SCHEDULE_ISO + ':00+09:00'); // KST
+    // 날짜: "2026. 7. 28." 형식 (한국어 YouTube Studio)
+    const yy = dt.getFullYear();
+    const mm = String(dt.getMonth() + 1).padStart(2, '0');
+    const dd = String(dt.getDate()).padStart(2, '0');
+    const HH = String(dt.getHours()).padStart(2, '0');
+    const MI = String(dt.getMinutes()).padStart(2, '0');
+    const dateStr = `${yy}. ${mm}. ${dd}.`; // YouTube Studio 한국어 형식
+    const timeStr = `${HH}:${MI}`;
+
+    // "예약" 라디오 선택
+    let schedOk = false;
     try {
-      await p.locator('ytcp-privacy-dropdown').click({ timeout: 3000 });
-      await wait(800);
-      const opts = await p.locator('tp-yt-paper-item').all();
-      for (const opt of opts) {
-        const t = await opt.textContent();
-        if (t?.trim() === '공개' || t?.trim() === 'Public') {
-          await opt.click(); pubOk = true;
-          console.log('  ✅ 드롭다운 공개 선택');
+      const radios = await p.locator('tp-yt-paper-radio-button').all();
+      for (const r of radios) {
+        const t = await r.textContent();
+        if (t?.trim() === '예약' || t?.trim() === 'Schedule') {
+          await r.click(); schedOk = true;
+          console.log('  ✅ 예약 radio 클릭');
+          await wait(1500);
           break;
         }
       }
     } catch {}
-  }
-  // 방법 3: JS evaluate
-  if (!pubOk) {
-    await p.evaluate(() => {
-      const all = [...document.querySelectorAll('[role="radio"], tp-yt-paper-radio-button, [role="menuitem"]')];
-      const pub = all.find(el => el.textContent?.trim() === '공개' || el.textContent?.trim() === 'Public');
-      if (pub) pub.click();
-    });
-  }
-  await wait(1000);
-  await snap(p, '07_public');
+    if (!schedOk) {
+      await p.evaluate(() => {
+        const all = [...document.querySelectorAll('[role="radio"], tp-yt-paper-radio-button')];
+        const sched = all.find(el => el.textContent?.trim() === '예약' || el.textContent?.trim() === 'Schedule');
+        if (sched) sched.click();
+      });
+      await wait(1500);
+    }
 
-  // 게시 버튼
-  console.log('9️⃣ 게시...');
-  let publishOk = false;
-  try {
-    // "게시" 또는 "저장" 버튼
-    const doneBtn = p.locator('ytcp-button#done-button').first();
-    await doneBtn.click({ timeout: 8000 });
-    publishOk = true;
-    console.log('  ✅ done-button 클릭');
-  } catch {}
-  if (!publishOk) {
+    // 날짜 입력
+    try {
+      const dateInput = p.locator('ytcp-date-picker input, input[placeholder*="날짜"], input[aria-label*="날짜"]').first();
+      await dateInput.click({ timeout: 5000 });
+      await p.keyboard.selectAll();
+      await dateInput.fill(dateStr);
+      await p.keyboard.press('Tab');
+      console.log(`  📅 날짜: ${dateStr}`);
+      await wait(800);
+    } catch (e) { console.log('  ⚠️ 날짜 입력 실패:', e.message); }
+
+    // 시간 입력
+    try {
+      const timeInput = p.locator('ytcp-time-of-day-picker input, input[placeholder*="시간"], input[aria-label*="시간"]').first();
+      await timeInput.click({ timeout: 5000 });
+      await p.keyboard.selectAll();
+      await timeInput.fill(timeStr);
+      await p.keyboard.press('Tab');
+      console.log(`  ⏰ 시간: ${timeStr}`);
+      await wait(800);
+    } catch (e) { console.log('  ⚠️ 시간 입력 실패:', e.message); }
+
+    await snap(p, '07_schedule');
+
+    // "게시 예약" 버튼 클릭
+    let schedDone = false;
+    const schedBtnTexts = ['게시 예약', '예약', 'Schedule', 'Save'];
     try {
       const btns = await p.locator('ytcp-button').all();
       for (const btn of btns) {
         const t = await btn.textContent();
-        if (t?.trim() === '게시' || t?.trim() === '저장' || t?.trim() === 'Publish' || t?.trim() === 'Save') {
-          await btn.click(); publishOk = true;
-          console.log('  ✅', t.trim(), '클릭');
+        if (schedBtnTexts.some(s => t?.trim().includes(s))) {
+          await btn.click(); schedDone = true;
+          console.log('  ✅', t.trim());
           break;
         }
       }
     } catch {}
-  }
-  await wait(5000);
-  await snap(p, '08_published');
+    if (!schedDone) {
+      await p.locator('ytcp-button#done-button').first().click({ timeout: 5000 }).catch(() => {});
+    }
 
-  const finalText = await p.evaluate(() => document.body.innerText);
-  if (finalText.includes('게시됨') || finalText.includes('published') || finalText.includes('동영상이')) {
-    console.log('\n✅ 업로드 + 게시 완료!');
+    await wait(5000);
+    await snap(p, '08_scheduled');
+    console.log(`\n✅ 예약 업로드 완료: ${SCHEDULE_ISO} KST 공개 예정`);
+
   } else {
-    console.log('\n최종 상태 확인: data/upload_08_published.png');
+    // ── 즉시 공개 모드 ──────────────────────────────────────────────
+    console.log('8️⃣ 공개 설정...');
+    let pubOk = false;
+    try {
+      const radioItems = await p.locator('tp-yt-paper-radio-button').all();
+      for (const radio of radioItems) {
+        const txt = await radio.textContent();
+        if (txt?.trim() === '공개' || txt?.trim() === 'Public') {
+          await radio.click(); pubOk = true;
+          console.log('  ✅ 공개 radio 클릭');
+          break;
+        }
+      }
+    } catch {}
+    if (!pubOk) {
+      try {
+        await p.locator('ytcp-privacy-dropdown').click({ timeout: 3000 });
+        await wait(800);
+        const opts = await p.locator('tp-yt-paper-item').all();
+        for (const opt of opts) {
+          const t = await opt.textContent();
+          if (t?.trim() === '공개' || t?.trim() === 'Public') {
+            await opt.click(); pubOk = true;
+            console.log('  ✅ 드롭다운 공개 선택');
+            break;
+          }
+        }
+      } catch {}
+    }
+    if (!pubOk) {
+      await p.evaluate(() => {
+        const all = [...document.querySelectorAll('[role="radio"], tp-yt-paper-radio-button')];
+        const pub = all.find(el => el.textContent?.trim() === '공개' || el.textContent?.trim() === 'Public');
+        if (pub) pub.click();
+      });
+    }
+    await wait(1000);
+    await snap(p, '07_public');
+
+    console.log('9️⃣ 게시...');
+    let publishOk = false;
+    try {
+      await p.locator('ytcp-button#done-button').first().click({ timeout: 8000 });
+      publishOk = true;
+      console.log('  ✅ done-button');
+    } catch {}
+    if (!publishOk) {
+      const btns = await p.locator('ytcp-button').all();
+      for (const btn of btns) {
+        const t = await btn.textContent();
+        if (['게시', '저장', 'Publish', 'Save'].includes(t?.trim())) {
+          await btn.click(); publishOk = true;
+          console.log('  ✅', t.trim());
+          break;
+        }
+      }
+    }
+    await wait(5000);
+    await snap(p, '08_published');
+    console.log('\n✅ 업로드 + 게시 완료!');
   }
 
   await wait(8000);
