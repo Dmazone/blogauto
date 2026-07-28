@@ -27,7 +27,6 @@ import { fileURLToPath } from 'url';
 const __dirname  = path.dirname(fileURLToPath(import.meta.url));
 const ROOT       = path.join(__dirname, '..');
 const FFMPEG     = 'C:\\Users\\Paydma\\.vscode\\extensions\\kilocode.kilo-code-7.4.16-win32-x64\\bin\\ffmpeg.exe';
-const FFPROBE    = FFMPEG.replace('ffmpeg.exe', 'ffprobe.exe');
 const OUT_DIR    = path.join(ROOT, 'data', '1_youtube-shorts');
 const BGM_DIR    = path.join(OUT_DIR, 'bgm');
 const NO_PREVIEW = process.argv.includes('--no-preview');
@@ -132,23 +131,34 @@ async function genImg(query, outPath, maxRetry = 2) {
 
 // ── HTML 슬라이드 빌더 ────────────────────────────────────────────
 
+// Playwright 헤드리스 모드에서 시스템 폰트 미인식 방지 — @font-face 절대 경로 직접 주입
+const MALGUN_URL = 'file:///C:/Windows/Fonts/malgunbd.ttf';
+
 function buildHtml(bgImg, blocks) {
   const elems = blocks.map(b => {
-    const fs_   = b.size || 48;
-    const maxH  = b.maxH ? `max-height:${b.maxH}px;overflow:hidden;` : '';
+    const fs_  = b.size || 48;
+    const maxH = b.maxH ? `max-height:${b.maxH}px;overflow:hidden;` : '';
     return `<div style="
       position:absolute;width:920px;left:80px;top:${b.top}px;
       font-size:${fs_}px;color:${b.color || '#fff'};
       font-weight:${b.weight || 'bold'};text-align:center;
+      font-family:'KOR',sans-serif;
       text-shadow:3px 3px 20px rgba(0,0,0,1),0 0 50px rgba(0,0,0,.9);
       line-height:1.35;word-break:keep-all;${maxH}">${b.text}</div>`;
   }).join('\n');
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
+  /* 헤드리스 Chromium에서 한글 폰트 보장 — 절대 경로 직접 로드 */
+  @font-face {
+    font-family: 'KOR';
+    src: url('${MALGUN_URL}') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
   *{margin:0;padding:0;box-sizing:border-box}
   body{width:1080px;height:1920px;overflow:hidden;position:relative;
-    font-family:'Malgun Gothic','맑은 고딕',sans-serif;background:#111}
+    font-family:'KOR',sans-serif;background:#111}
   .bg{position:absolute;inset:0;
     background:url('${toFileUrl(bgImg)}') center/cover no-repeat;
     filter:brightness(0.52) saturate(0.75)}
@@ -187,15 +197,21 @@ $s.Dispose()`.trim();
   });
 }
 
+// ffprobe 대신 ffmpeg -i 로 Duration 파싱 (ffprobe 미설치 환경 대응)
 async function getWavDur(wavPath) {
   return new Promise(resolve => {
-    const p = spawn(FFPROBE, [
-      '-v', 'error', '-show_entries', 'format=duration',
-      '-of', 'default=noprint_wrappers=1:nokey=1', wavPath,
-    ], { stdio: 'pipe' });
-    let out = '';
-    p.stdout.on('data', d => { out += d; });
-    p.on('close', () => resolve(Math.max(1, parseFloat(out.trim()) || 5)));
+    const p = spawn(FFMPEG, ['-i', wavPath, '-f', 'null', '-'], { stdio: 'pipe' });
+    let err = '';
+    p.stderr.on('data', d => { err += d; });
+    p.on('close', () => {
+      const m = err.match(/Duration:\s*(\d+):(\d+):([\d.]+)/);
+      if (m) {
+        const dur = parseInt(m[1]) * 3600 + parseInt(m[2]) * 60 + parseFloat(m[3]);
+        resolve(Math.max(1, dur));
+      } else {
+        resolve(5);
+      }
+    });
   });
 }
 
@@ -272,7 +288,9 @@ export async function generate(slugArg) {
     const pngFile  = path.join(tmp, `${name}.png`);
     fs.writeFileSync(htmlFile, buildHtml(bgImg, blocks), 'utf-8');
     await page.goto(toFileUrl(htmlFile), { waitUntil: 'load' });
-    await page.waitForTimeout(400);
+    // 한글 @font-face 로드 완료까지 대기
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(500);
     await page.screenshot({ path: pngFile });
     console.log('  📸 렌더링 OK');
 
