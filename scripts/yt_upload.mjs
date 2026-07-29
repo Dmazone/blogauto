@@ -359,7 +359,21 @@ async function main() {
     console.log('\n✅ 업로드 + 게시 완료!');
   }
 
-  await wait(8000);
+  // ── 업로드 완료 후 video ID 추출 (댓글 달기에 사용) ──────────────
+  await wait(5000);
+  let videoId = null;
+  try {
+    const href = await p.evaluate(() => {
+      const links = [...document.querySelectorAll('a[href*="shorts/"], a[href*="watch?v="]')];
+      return links.map(l => l.href).find(Boolean) || '';
+    });
+    const m = href.match(/shorts\/([a-zA-Z0-9_-]{11})|[?&]v=([a-zA-Z0-9_-]{11})/);
+    if (m) videoId = m[1] || m[2];
+  } catch {}
+  // 파싱 가능한 포맷으로 출력 (daily_runner.js가 캡처해 댓글 달기에 사용)
+  console.log(`VIDEO_ID:${videoId || 'unknown'}`);
+
+  await wait(3000);
   await ctx.close();
 }
 

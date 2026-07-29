@@ -186,7 +186,7 @@ $v = $voices | Where-Object {$_.VoiceInfo.Culture -like 'ko*' -and $_.VoiceInfo.
 if (-not $v) { $v = $voices | Where-Object {$_.VoiceInfo.Culture -like 'ko*'} | Select-Object -First 1 }
 if (-not $v) { $v = $voices | Where-Object {$_.VoiceInfo.Gender -eq [System.Speech.Synthesis.VoiceGender]::Male} | Select-Object -First 1 }
 if ($v) { $s.SelectVoice($v.VoiceInfo.Name); Write-Host "Voice: $($v.VoiceInfo.Name)" } else { Write-Host "Voice: default" }
-$s.Rate = 2
+$s.Rate = 6
 $s.SetOutputToWaveFile("${wavPath.replace(/\\/g, '/')}")
 $s.Speak("${safe}")
 $s.Dispose()`.trim();
@@ -349,7 +349,7 @@ export async function generate(slugArg) {
     { text: '▼ 어떤 게 1위인지 확인해봐',     top: 260 + titleHeight + 150, size: 44, color: '#AAAAAA' },
   ],
   `오늘 진짜 핫한 트렌드 상품 소개해줄게. ${post.title}! 어떤 제품이 제일인지 같이 한번 확인해봐.`,
-  7);
+  5);
 
   // ── 슬라이드 1: TOP3 상품 ────────────────────────────────────
   // 3개 상품을 1920px 안에 균등 배치 (헤더 80, 상품 3개, 하단 채널)
@@ -369,7 +369,7 @@ export async function generate(slugArg) {
 
   const prodNarr = `TOP 3 인기 상품 한번 비교해볼게. ` +
     post.products.map((p, i) => `${R[i]}는 ${p.name}.`).join(' ');
-  await makeSeg('s1', bgS1, prodBlocks, prodNarr, 14);
+  await makeSeg('s1', bgS1, prodBlocks, prodNarr, 9);
 
   // ── 슬라이드 2: CTA ──────────────────────────────────────────
   await makeSeg('s2', bgS2, [
@@ -379,7 +379,7 @@ export async function generate(slugArg) {
     { text: '설명란 링크 한번 들어가봐',  top: 710, size: 46, color: '#AAAAAA' },
   ],
   '더 자세한 비교랑 쿠팡 최저가 링크는 트렌드줌 블로그에서 확인할 수 있어. 설명란 링크 한번 들어가봐!',
-  10);
+  6);
 
   // ── 슬라이드 3: 아웃트로 ─────────────────────────────────────
   await makeSeg('s3', bgIntro, [
@@ -387,7 +387,7 @@ export async function generate(slugArg) {
     { text: '🔔 알림 켜놓으면 좋겠어!',  top: 910, size: 64, color: '#FFFFFF' },
   ],
   '구독이랑 좋아요 눌러주면 진짜 힘이 돼. 알림도 켜놓으면 새 영상 바로 받을 수 있어. 고마워!',
-  5);
+  4);
 
   await browser.close();
 

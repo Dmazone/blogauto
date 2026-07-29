@@ -1,0 +1,121 @@
+/**
+ * yt_comment.mjs — YouTube 영상에 쿠팡파트너스 링크 댓글 달기
+ * Usage: node scripts/yt_comment.mjs <videoId> <slug>
+ *
+ * trending-picks 포스팅의 쿠팡 링크를 파싱해 첫 번째 댓글로 게시.
+ * 업로드 직후 daily_runner.js 에서 자동 호출됨.
+ */
+import { chromium } from 'playwright';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT      = path.join(__dirname, '..');
+const SESSION   = path.join(os.homedir(), '.yt-ekaledma-session');
+const wait      = ms => new Promise(r => setTimeout(r, ms));
+
+// ── 쿠팡 링크 + 상품명 파싱 ──────────────────────────────────────
+
+function parseProducts(slug) {
+  const md = fs.readFileSync(
+    path.join(ROOT, 'content', 'posts', 'trending-picks', slug, 'index.md'), 'utf-8'
+  );
+  const rows = [...md.matchAll(/^\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|/gm)].slice(0, 3);
+  const urls = [...md.matchAll(/https:\/\/www\.coupang\.com[^\s\)\"\'<>\]]+/g)]
+    .map(m => m[0].replace(/[)\]\s,;]+$/, ''));
+  return rows.map((m, i) => ({
+    name: m[1].trim(),
+    url:  urls[i] || '',
+  }));
+}
+
+function buildComment(products) {
+  const RANKS = ['🥇', '🥈', '🥉'];
+  const lines = ['🛒 쿠팡 구매 링크 👇', ''];
+  products.forEach((p, i) => {
+    if (!p.url) return;
+    lines.push(`${RANKS[i]} ${p.name}`);
+    lines.push(p.url);
+    if (i < products.length - 1) lines.push('');
+  });
+  lines.push('');
+  lines.push('📌 상세 비교·리뷰는 트렌드줌 블로그 설명란 링크 확인해봐!');
+  return lines.join('\n');
+}
+
+// ── Playwright 댓글 게시 ──────────────────────────────────────────
+
+async function postComment(videoId, commentText) {
+  const ctx  = await chromium.launchPersistentContext(SESSION, {
+    headless: false,
+    ignoreDefaultArgs: ['--enable-automation'],
+    args: ['--no-first-run', '--disable-blink-features=AutomationControlled'],
+    viewport: { width: 1280, height: 900 },
+  });
+  const p = await ctx.newPage();
+
+  // Shorts URL로 접속 (댓글 섹션 접근 용이)
+  const url = `https://www.youtube.com/watch?v=${videoId}`;
+  console.log('💬 댓글 달기 접속:', url);
+  await p.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  await wait(4000);
+
+  // 댓글 입력창 클릭 (스크롤 후)
+  await p.evaluate(() => window.scrollBy(0, 600));
+  await wait(1500);
+
+  let ok = false;
+  try {
+    // YouTube 댓글 입력창 placeholder 클릭
+    const placeholder = p.locator('#placeholder-area, ytd-comment-simplebox-renderer #placeholder-area').first();
+    await placeholder.click({ timeout: 8000 });
+    await wait(1000);
+
+    // 실제 입력 영역에 타이핑
+    const commentInput = p.locator('#contenteditable-root[contenteditable="true"]').first();
+    await commentInput.fill(commentText);
+    await wait(800);
+
+    // "댓글" 게시 버튼 클릭
+    const submitBtn = p.locator('ytd-button-renderer#submit-button button, #submit-button').first();
+    await submitBtn.click({ timeout: 5000 });
+    await wait(3000);
+
+    ok = true;
+    console.log('✅ 댓글 게시 완료');
+  } catch (e) {
+    console.log('⚠️ 댓글 게시 실패:', e.message);
+  }
+
+  await ctx.close();
+  return ok;
+}
+
+// ── 메인 ─────────────────────────────────────────────────────────
+
+async function main() {
+  const videoId = process.argv[2];
+  const slug    = process.argv[3];
+
+  if (!videoId || videoId === 'unknown' || !slug) {
+    console.error('Usage: node yt_comment.mjs <videoId> <slug>');
+    process.exit(1);
+  }
+
+  console.log(`📹 Video: ${videoId}  |  📄 Post: ${slug}`);
+
+  const products = parseProducts(slug);
+  if (!products.length) {
+    console.log('⚠️ 상품 파싱 실패 — 댓글 스킵');
+    process.exit(0);
+  }
+
+  const comment = buildComment(products);
+  console.log('📝 댓글 내용:\n' + comment);
+
+  await postComment(videoId, comment);
+}
+
+main().catch(e => { console.error('❌', e.message); process.exit(1); });

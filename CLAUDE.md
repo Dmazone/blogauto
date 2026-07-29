@@ -85,13 +85,19 @@ node scripts/daily_runner.js --only economy --now   # 예약 없이 즉시 발�
 
 ## 업무 2 — YouTube Shorts 자동화
 
+### 실행 시점 ★★★
+
+> **블로그 7개 예약발행 완료 직후** — `daily_runner.js` 가 trending-picks 포스팅을 완료하면 **자동**으로 영상 제작 → 업로드 → 댓글 달기까지 이어서 실행한다.  
+> 별도 명령어 없이 자동 파이프라인으로 처리됨. 수동 실행은 아래 명령 참고.
+
 ### 파이프라인
 
 ```
-trending-picks 포스트
-  → yt_make_shorts.mjs  (1080×1920 MP4, 40초)
-  → yt_upload.mjs       (YouTube Studio 업로드, 초안 저장)
-  → yt_publish_video.mjs (초안 → 공개)
+[daily_runner.js] 블로그 7개 발행 완료
+  → trending-picks 포스팅 감지
+  → yt_make_shorts.mjs   (MP4 생성, ~25~30초)
+  → yt_upload.mjs        (YouTube Studio 업로드, VIDEO_ID 반환)
+  → yt_comment.mjs       (쿠팡파트너스 링크 첫 댓글 즉시 게시)
 ```
 
 ### 스크립트
@@ -100,7 +106,9 @@ trending-picks 포스트
 |---|---|
 | `scripts/yt_login.mjs` | 최초 로그인 / 세션 갱신 |
 | `scripts/yt_make_shorts.mjs` | trending-picks 포스트 → MP4 생성 |
-| `scripts/yt_upload.mjs` | YouTube Studio Playwright 업로드 |
+| `scripts/yt_upload.mjs` | YouTube Studio 업로드 + VIDEO_ID 출력 |
+| `scripts/yt_comment.mjs` | 업로드 직후 쿠팡파트너스 링크 댓글 자동 게시 |
+| `scripts/yt_batch_shorts.mjs` | 과거 포스팅 일괄 영상 생성 + 예약 업로드 |
 | `scripts/yt_publish_video.mjs` | `node yt_publish_video.mjs <videoId>` 로 초안 공개 |
 | `scripts/yt_delete_final.mjs` | 잘못 올린 영상 삭제 (복구용) |
 

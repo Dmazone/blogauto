@@ -207,19 +207,38 @@ async function main() {
       const mp4Path = await generate(tpPost.slug);
       log('✅', `Shorts 영상 생성 완료: ${mp4Path}`);
 
-      // yt_upload.mjs 를 child process로 실행 (Playwright 별도 프로세스 필요)
-      await new Promise((resolve) => {
-        const title = tpPost.title || `트렌드 상품 추천 TOP3 #Shorts`;
-        const desc  = `지금 가장 인기 있는 트렌드 상품 비교·추천!\n자세한 내용은 트렌드줌 블로그에서 확인해봐 👇\n\n#Shorts #트렌드 #쿠팡추천`;
-        const proc  = spawn(process.execPath, [
+      // yt_upload.mjs — child process로 실행 (Playwright 별도 프로세스 필요)
+      // stdout 캡처해서 VIDEO_ID 추출 → yt_comment.mjs 자동 호출
+      const videoId = await new Promise((resolve) => {
+        const title  = tpPost.title || `트렌드 상품 추천 TOP3 #Shorts`;
+        const desc   = `지금 가장 인기 있는 트렌드 상품 비교·추천!\n자세한 내용은 트렌드줌 블로그에서 확인해봐 👇\n\n#Shorts #트렌드 #쿠팡추천`;
+        const proc   = spawn(process.execPath, [
           path.join(__dirname, 'yt_upload.mjs'), mp4Path, title, desc,
-        ], { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+        ], { cwd: path.join(__dirname, '..'), stdio: ['inherit', 'pipe', 'inherit'] });
+        let out = '';
+        proc.stdout.on('data', d => { process.stdout.write(d); out += d; });
         proc.on('close', code => {
           if (code === 0) log('✅', 'YouTube 업로드 완료');
           else            log('⚠️', `YouTube 업로드 실패 (exit ${code}) — 수동 업로드 필요`);
-          resolve();
+          const m = out.match(/VIDEO_ID:([a-zA-Z0-9_-]+)/);
+          resolve(m ? m[1] : null);
         });
       });
+
+      // 업로드 성공 + video ID 확인 시 쿠팡 링크 댓글 달기
+      if (videoId && videoId !== 'unknown') {
+        log('💬', `쿠팡 링크 댓글 달기: ${videoId}`);
+        await new Promise((resolve) => {
+          const proc = spawn(process.execPath, [
+            path.join(__dirname, 'yt_comment.mjs'), videoId, tpPost.slug,
+          ], { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+          proc.on('close', code => {
+            if (code === 0) log('✅', '댓글 게시 완료');
+            else            log('⚠️', '댓글 게시 실패 (업로드는 성공)');
+            resolve();
+          });
+        });
+      }
     } catch (err) {
       log('⚠️', `YouTube Shorts 실패 (포스팅은 정상): ${err.message}`);
     }
