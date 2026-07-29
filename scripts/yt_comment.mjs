@@ -66,6 +66,8 @@ function buildComment(products) {
   });
   lines.push('');
   lines.push('📌 상세 비교·리뷰는 트렌드줌 블로그 설명란 링크 확인해봐!');
+  lines.push('');
+  lines.push('※ 이 영상은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.');
   return lines.join('\n');
 }
 
