@@ -279,6 +279,7 @@ export async function generate(slugArg) {
   await page.setViewportSize({ width: 1080, height: 1920 });
 
   const segs     = [];
+  const segDurs  = []; // xfade offset 계산용
   const E        = ['🥇', '🥈', '🥉'];
   const R        = ['1위', '2위', '3위'];
   let   timeline = 0; // 싱크 모니터링용 누적 시간
@@ -317,18 +318,24 @@ export async function generate(slugArg) {
     console.log(`  🗣 음성: ${narration.slice(0, 80)}`);
     timeline += dur;
 
-    // PNG + 오디오 → MP4
+    // PNG + 오디오 → MP4 (Ken Burns 줌 효과 포함)
+    segDurs.push(dur);
     const mp4File = path.join(tmp, `${name}.mp4`);
+    // Ken Burns: 느린 중앙 줌인 + 슬라이드 전환용 fade in/out
+    const fadeOut = Math.max(0, dur - 0.4).toFixed(1);
+    const ZF = `zoompan=z='min(zoom+0.0007,1.10)':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=1080x1920:fps=30,fps=30,fade=t=in:st=0:d=0.3,fade=t=out:st=${fadeOut}:d=0.4`;
     if (ttsOk) {
       const aacFile = path.join(tmp, `${name}.aac`);
       await runFF(['-i', wavFile, '-af', `apad,atrim=duration=${dur}`,
         '-c:a', 'aac', '-b:a', '128k', '-y', aacFile], 'aac');
       await runFF(['-loop', '1', '-t', String(dur), '-i', pngFile,
-        '-i', aacFile, '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '24',
+        '-i', aacFile, '-vf', ZF,
+        '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '24',
         '-pix_fmt', 'yuv420p', '-r', '30', '-c:a', 'copy', '-y', mp4File], 'seg');
     } else {
       await runFF(['-loop', '1', '-t', String(dur), '-i', pngFile,
         '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo',
+        '-vf', ZF,
         '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '24',
         '-pix_fmt', 'yuv420p', '-r', '30',
         '-c:a', 'aac', '-b:a', '128k', '-t', String(dur), '-y', mp4File], 'seg(무음)');
@@ -342,13 +349,13 @@ export async function generate(slugArg) {
   const titleHeight   = titleBroken.lines * Math.ceil(titleFontSize * 1.35) + 10;
 
   await makeSeg('s0', bgIntro, [
-    { text: '🔥 오늘의 추천 상품',            top: 140, size: 62,          color: '#FFD700' },
+    { text: '🔥 이거 모르면 손해야',           top: 140, size: 62,          color: '#FFD700' },
     { text: titleBroken.html,               top: 260, size: titleFontSize, color: '#FFFFFF',
       maxH: titleBroken.lines * 130 + 20 },
-    { text: '요즘 제일 핫한 아이템이야',       top: 260 + titleHeight + 80, size: 52, color: '#87CEEB' },
-    { text: '▼ 어떤 게 1위인지 확인해봐',     top: 260 + titleHeight + 150, size: 44, color: '#AAAAAA' },
+    { text: '딱 3개만 골라봤어',              top: 260 + titleHeight + 80, size: 52, color: '#87CEEB' },
+    { text: '🥇 1위는 끝까지 봐야 알아',      top: 260 + titleHeight + 150, size: 46, color: '#FFD700' },
   ],
-  `오늘 진짜 핫한 트렌드 상품 소개해줄게. ${post.title}! 어떤 제품이 제일인지 같이 한번 확인해봐.`,
+  `이거 모르면 진짜 손해야. ${post.title}. 딱 3개만 골랐으니까 1위가 뭔지 끝까지 한번 봐봐.`,
   5);
 
   // ── 슬라이드 1: TOP3 상품 ────────────────────────────────────
@@ -373,12 +380,12 @@ export async function generate(slugArg) {
 
   // ── 슬라이드 2: CTA ──────────────────────────────────────────
   await makeSeg('s2', bgS2, [
-    { text: '📦 자세한 비교 & 리뷰는',   top: 320, size: 64, color: '#FFFFFF' },
-    { text: '트렌드줌 블로그에 있어!',    top: 420, size: 78, color: '#FFD700' },
-    { text: '쿠팡 최저가 링크도 포함 👇', top: 620, size: 52, color: '#87CEEB' },
-    { text: '설명란 링크 한번 들어가봐',  top: 710, size: 46, color: '#AAAAAA' },
+    { text: '💰 쿠팡 최저가 링크 있어',   top: 300, size: 64, color: '#FFD700' },
+    { text: '지금 설명란 ▼ 클릭해봐',    top: 400, size: 76, color: '#FFFFFF' },
+    { text: '트렌드줌 블로그에서',        top: 630, size: 50, color: '#87CEEB' },
+    { text: '비교 리뷰도 바로 확인 가능!', top: 710, size: 46, color: '#87CEEB' },
   ],
-  '더 자세한 비교랑 쿠팡 최저가 링크는 트렌드줌 블로그에서 확인할 수 있어. 설명란 링크 한번 들어가봐!',
+  '쿠팡 최저가 링크 바로 설명란에 있어. 지금 클릭해봐! 트렌드줌 블로그에서 더 자세한 비교 리뷰도 볼 수 있어.',
   6);
 
   // ── 슬라이드 3: 아웃트로 ─────────────────────────────────────
@@ -394,7 +401,7 @@ export async function generate(slugArg) {
   // ── 총 싱크 요약 ─────────────────────────────────────────────
   console.log(`\n📊 총 영상 길이: ${timeline.toFixed(1)}s`);
 
-  // ── concat ────────────────────────────────────────────────
+  // ── concat (fade in/out은 각 세그먼트에 내장) ─────────────
   console.log('\n🔗 합치기...');
   const listFile = path.join(tmp, 'list.txt');
   fs.writeFileSync(listFile, segs.map(s => `file '${s.replace(/\\/g, '/')}'`).join('\n'));
