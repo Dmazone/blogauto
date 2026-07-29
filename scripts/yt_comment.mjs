@@ -22,13 +22,30 @@ function parseProducts(slug) {
   const md = fs.readFileSync(
     path.join(ROOT, 'content', 'posts', 'trending-picks', slug, 'index.md'), 'utf-8'
   );
-  const rows = [...md.matchAll(/^\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|/gm)].slice(0, 3);
+
+  // 쿠팡 링크 추출 (trackingCode 포함 여부 확인)
   const urls = [...md.matchAll(/https:\/\/www\.coupang\.com[^\s\)\"\'<>\]]+/g)]
-    .map(m => m[0].replace(/[)\]\s,;]+$/, ''));
-  return rows.map((m, i) => ({
-    name: m[1].trim(),
-    url:  urls[i] || '',
-  }));
+    .map(m => m[0].replace(/[)\]\s,;]+$/, ''))
+    .filter(u => u.includes('trackingCode=AF8691300'));
+
+  if (!urls.length) {
+    console.warn('⚠️ trackingCode=AF8691300 링크 없음 — 일반 쿠팡 링크 포함 여부 확인 필요');
+  }
+
+  // 상품명: 1) 마크다운 링크 텍스트 [상품명](url) 형식, 2) 표 **bold** 형식
+  const linkNames = [...md.matchAll(/\[([^\]]+?)\s*쿠팡에서\s*보기\]/g)].map(m => m[1].trim());
+  const tableNames = [...md.matchAll(/^\|\s*\*\*(.+?)\*\*\s*\|/gm)].map(m => m[1].trim());
+
+  return urls.slice(0, 3).map((url, i) => {
+    // 이름 우선순위: 링크 텍스트 → 표 이름 → URL q 파라미터에서 추출
+    let name = linkNames[i] || tableNames[i] || '';
+    if (!name) {
+      try {
+        name = decodeURIComponent(new URL(url).searchParams.get('q') || '').replace(/\+/g, ' ');
+      } catch {}
+    }
+    return { name, url };
+  });
 }
 
 function buildComment(products) {
