@@ -79,11 +79,26 @@ async function main() {
   await wait(3000);
   await snap(p, '03_upload_dialog');
 
-  // 파일 선택 input
+  // 파일 선택 — filechooser 이벤트 방식 (hidden input 직접 접근 불가 대응)
   console.log('4️⃣ 파일 선택...');
-  const fileInput = await p.locator('input[type="file"]').first();
-  await fileInput.setInputFiles(videoPath);
-  console.log('  파일 전송됨, 업로드 대기...');
+  try {
+    const [chooser] = await Promise.all([
+      p.waitForEvent('filechooser', { timeout: 20000 }),
+      p.locator('button:has-text("파일 선택")').first().click({ timeout: 10000 })
+        .catch(() => p.evaluate(() => {
+          const b = [...document.querySelectorAll('button')]
+            .find(b => b.textContent?.trim().includes('파일 선택'));
+          if (b) b.click();
+        })),
+    ]);
+    await chooser.setFiles(videoPath);
+    console.log('  파일 전송됨 (filechooser)');
+  } catch {
+    // 폴백: 직접 input 접근
+    await p.locator('input[type="file"]').first().setInputFiles(videoPath, { timeout: 20000 });
+    console.log('  파일 전송됨 (direct input)');
+  }
+  console.log('  업로드 대기...');
   await wait(5000);
   await snap(p, '04_uploading');
 
@@ -142,7 +157,6 @@ async function main() {
     // ── 예약 업로드 모드 ────────────────────────────────────────────
     console.log(`8️⃣ 예약 설정: ${SCHEDULE_ISO}`);
     const dt = new Date(SCHEDULE_ISO + ':00+09:00'); // KST
-    // 날짜: "2026. 7. 28." 형식 (한국어 YouTube Studio)
     const yy = dt.getFullYear();
     const mm = String(dt.getMonth() + 1).padStart(2, '0');
     const dd = String(dt.getDate()).padStart(2, '0');
@@ -151,74 +165,136 @@ async function main() {
     const dateStr = `${yy}. ${mm}. ${dd}.`; // YouTube Studio 한국어 형식
     const timeStr = `${HH}:${MI}`;
 
-    // "예약" 라디오 선택
-    let schedOk = false;
+    // "예약"은 라디오가 아닌 아코디언 섹션 — 클릭해서 확장
+    console.log('  예약 섹션 확장 중...');
+    let expanded = false;
     try {
-      const radios = await p.locator('tp-yt-paper-radio-button').all();
-      for (const r of radios) {
-        const t = await r.textContent();
-        if (t?.trim() === '예약' || t?.trim() === 'Schedule') {
-          await r.click(); schedOk = true;
-          console.log('  ✅ 예약 radio 클릭');
-          await wait(1500);
-          break;
-        }
-      }
+      await p.locator('ytcp-publish-at-section').first().click({ timeout: 4000 });
+      expanded = true; console.log('  ✅ ytcp-publish-at-section 클릭');
     } catch {}
-    if (!schedOk) {
-      await p.evaluate(() => {
-        const all = [...document.querySelectorAll('[role="radio"], tp-yt-paper-radio-button')];
-        const sched = all.find(el => el.textContent?.trim() === '예약' || el.textContent?.trim() === 'Schedule');
-        if (sched) sched.click();
-      });
-      await wait(1500);
+    if (!expanded) {
+      try {
+        // 텍스트 "예약"이 포함된 헤더 요소 클릭 (아코디언 헤더)
+        await p.evaluate(() => {
+          const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT);
+          while (walker.nextNode()) {
+            const el = walker.currentNode;
+            const txt = el.textContent?.trim();
+            if (txt === '예약' || txt === 'Schedule') {
+              const h = el.offsetHeight;
+              if (h > 0 && h < 60) { el.click(); return; }
+            }
+          }
+        });
+        expanded = true; console.log('  ✅ 텍스트 기반 클릭');
+      } catch {}
     }
+    await wait(2000);
+    await snap(p, '07a_schedule_expanded');
 
-    // 날짜 입력
+    // 날짜 입력 — ytcp-date-picker 클릭 후 shadow DOM 내부 input 또는 키보드 타이핑
+    let dateOk = false;
     try {
-      const dateInput = p.locator('ytcp-date-picker input, input[placeholder*="날짜"], input[aria-label*="날짜"]').first();
-      await dateInput.click({ timeout: 5000 });
-      await p.keyboard.selectAll();
-      await dateInput.fill(dateStr);
-      await p.keyboard.press('Tab');
-      console.log(`  📅 날짜: ${dateStr}`);
-      await wait(800);
-    } catch (e) { console.log('  ⚠️ 날짜 입력 실패:', e.message); }
+      await p.locator('ytcp-date-picker').first().click({ timeout: 5000 });
+      await wait(600);
+      // shadow DOM 내부 input 직접 설정
+      dateOk = await p.evaluate((dStr) => {
+        const el = document.querySelector('ytcp-date-picker');
+        const inp = el?.shadowRoot?.querySelector('input') || el?.querySelector('input');
+        if (inp) {
+          inp.focus(); inp.select();
+          inp.value = dStr;
+          inp.dispatchEvent(new InputEvent('input', { bubbles: true }));
+          inp.dispatchEvent(new Event('change', { bubbles: true }));
+          return true;
+        }
+        return false;
+      }, dateStr);
+      if (dateOk) await p.keyboard.press('Tab');
+    } catch {}
+    // 폴백: 키보드 타이핑
+    if (!dateOk) {
+      try {
+        await p.locator('ytcp-date-picker').first().click({ timeout: 3000 });
+        await wait(400);
+        await p.keyboard.selectAll();
+        await p.keyboard.type(dateStr, { delay: 40 });
+        await p.keyboard.press('Tab');
+        await wait(500);
+        dateOk = true;
+      } catch {}
+    }
+    console.log(dateOk ? `  📅 날짜: ${dateStr}` : '  ⚠️ 날짜 입력 실패');
 
-    // 시간 입력
+    // 시간 입력 — ytcp-time-of-day-picker 클릭 후 shadow DOM 또는 키보드
+    // YouTube Studio 시간 형식: "오전 HH:MM" / "오후 HH:MM" (24시간 직접 입력도 가능)
+    let timeOk = false;
     try {
-      const timeInput = p.locator('ytcp-time-of-day-picker input, input[placeholder*="시간"], input[aria-label*="시간"]').first();
-      await timeInput.click({ timeout: 5000 });
-      await p.keyboard.selectAll();
-      await timeInput.fill(timeStr);
-      await p.keyboard.press('Tab');
-      console.log(`  ⏰ 시간: ${timeStr}`);
-      await wait(800);
-    } catch (e) { console.log('  ⚠️ 시간 입력 실패:', e.message); }
+      await p.locator('ytcp-time-of-day-picker').first().click({ timeout: 5000 });
+      await wait(600);
+      timeOk = await p.evaluate((tStr) => {
+        const el = document.querySelector('ytcp-time-of-day-picker');
+        const inp = el?.shadowRoot?.querySelector('input') || el?.querySelector('input');
+        if (inp) {
+          inp.focus(); inp.select();
+          inp.value = tStr;
+          inp.dispatchEvent(new InputEvent('input', { bubbles: true }));
+          inp.dispatchEvent(new Event('change', { bubbles: true }));
+          return true;
+        }
+        return false;
+      }, timeStr);
+      if (timeOk) await p.keyboard.press('Tab');
+    } catch {}
+    if (!timeOk) {
+      try {
+        await p.locator('ytcp-time-of-day-picker').first().click({ timeout: 3000 });
+        await wait(400);
+        await p.keyboard.selectAll();
+        await p.keyboard.type(timeStr, { delay: 40 });
+        await p.keyboard.press('Tab');
+        await wait(500);
+        timeOk = true;
+      } catch {}
+    }
+    console.log(timeOk ? `  ⏰ 시간: ${timeStr}` : '  ⚠️ 시간 입력 실패');
 
     await snap(p, '07_schedule');
 
-    // "게시 예약" 버튼 클릭
-    let schedDone = false;
-    const schedBtnTexts = ['게시 예약', '예약', 'Schedule', 'Save'];
-    try {
-      const btns = await p.locator('ytcp-button').all();
-      for (const btn of btns) {
-        const t = await btn.textContent();
-        if (schedBtnTexts.some(s => t?.trim().includes(s))) {
-          await btn.click(); schedDone = true;
-          console.log('  ✅', t.trim());
-          break;
+    if (!dateOk || !timeOk) {
+      // 예약 실패 → 즉시 공개 방지를 위해 비공개 저장
+      console.log('  ⚠️ 예약 설정 실패 → 비공개 저장 (YouTube Studio에서 수동 예약 필요)');
+      try {
+        const radios = await p.locator('tp-yt-paper-radio-button').all();
+        for (const r of radios) {
+          if ((await r.textContent())?.includes('비공개')) { await r.click(); break; }
+        }
+      } catch {}
+      await p.locator('ytcp-button#done-button').first().click({ timeout: 5000 }).catch(() => {});
+      await wait(3000);
+      await snap(p, '08_saved_private');
+      console.log('\n⚠️ 비공개 저장됨 — YouTube Studio에서 예약 수동 설정 필요');
+    } else {
+      // "게시 예약" 버튼 클릭
+      let schedDone = false;
+      try {
+        await p.locator('ytcp-button#done-button').first().click({ timeout: 5000 });
+        schedDone = true; console.log('  ✅ done-button (게시 예약)');
+      } catch {}
+      if (!schedDone) {
+        const btns = await p.locator('ytcp-button').all();
+        for (const btn of btns) {
+          const t = await btn.textContent().catch(() => '');
+          if (['게시 예약', '예약 설정', 'Schedule'].some(s => t?.trim().includes(s))) {
+            await btn.click(); schedDone = true;
+            console.log(`  ✅ ${t.trim()}`); break;
+          }
         }
       }
-    } catch {}
-    if (!schedDone) {
-      await p.locator('ytcp-button#done-button').first().click({ timeout: 5000 }).catch(() => {});
+      await wait(5000);
+      await snap(p, '08_scheduled');
+      console.log(`\n✅ 예약 업로드 완료: ${SCHEDULE_ISO} KST 공개 예정`);
     }
-
-    await wait(5000);
-    await snap(p, '08_scheduled');
-    console.log(`\n✅ 예약 업로드 완료: ${SCHEDULE_ISO} KST 공개 예정`);
 
   } else {
     // ── 즉시 공개 모드 ──────────────────────────────────────────────

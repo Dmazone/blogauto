@@ -110,8 +110,9 @@ function parsePost(slug) {
 // ── [지침 2단계] Pollinations.ai 상품 이미지 생성 ─────────────────
 
 async function genImg(query, outPath, maxRetry = 2) {
-  const prompt = `${query}, product photography, professional, clean, high quality, vertical 9:16`;
-  const url    = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1080&height=1920&model=flux&nologo=true`;
+  // 정사각형으로 생성 → CSS object-fit:cover 가 확대·크롭해서 세로 화면 채움 (찌그러짐 방지)
+  const prompt = `${query}, product photography, professional studio, clean background, high quality`;
+  const url    = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1080&height=1080&model=flux&nologo=true`;
   for (let i = 1; i <= maxRetry; i++) {
     try {
       console.log(`  🎨 [${i}/${maxRetry}] ${query.slice(0, 28)}...`);
@@ -139,7 +140,7 @@ function buildHtml(bgImg, blocks) {
     const fs_  = b.size || 48;
     const maxH = b.maxH ? `max-height:${b.maxH}px;overflow:hidden;` : '';
     return `<div style="
-      position:absolute;width:920px;left:80px;top:${b.top}px;
+      position:absolute;width:960px;left:60px;top:${b.top}px;
       font-size:${fs_}px;color:${b.color || '#fff'};
       font-weight:${b.weight || 'bold'};text-align:center;
       font-family:'KOR',sans-serif;
@@ -159,13 +160,15 @@ function buildHtml(bgImg, blocks) {
   *{margin:0;padding:0;box-sizing:border-box}
   body{width:1080px;height:1920px;overflow:hidden;position:relative;
     font-family:'KOR',sans-serif;background:#111}
-  .bg{position:absolute;inset:0;
-    background:url('${toFileUrl(bgImg)}') center/cover no-repeat;
-    filter:brightness(0.52) saturate(0.75)}
+  /* object-fit:cover → 원본 비율 유지하며 확대해 화면 채움, 좌우/상하 크롭 허용 */
+  .bg-img{position:absolute;top:0;left:0;width:100%;height:100%;
+    object-fit:cover;object-position:center;
+    filter:brightness(0.52) saturate(0.75);}
   .grad{position:absolute;inset:0;
     background:linear-gradient(180deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 45%,rgba(0,0,0,.65) 100%)}
 </style></head><body>
-  <div class="bg"></div><div class="grad"></div>
+  <img class="bg-img" src="${toFileUrl(bgImg)}" />
+  <div class="grad"></div>
 ${elems}
 </body></html>`;
 }
@@ -178,9 +181,12 @@ async function tts(text, wavPath) {
     const ps = `
 Add-Type -AssemblyName System.Speech
 $s = New-Object System.Speech.Synthesis.SpeechSynthesizer
-$v = $s.GetInstalledVoices() | Where-Object {$_.Enabled -and $_.VoiceInfo.Culture -like 'ko*'} | Select-Object -First 1
-if ($v) { $s.SelectVoice($v.VoiceInfo.Name); Write-Host "Voice: $($v.VoiceInfo.Name)" }
-$s.Rate = 0
+$voices = $s.GetInstalledVoices() | Where-Object {$_.Enabled}
+$v = $voices | Where-Object {$_.VoiceInfo.Culture -like 'ko*' -and $_.VoiceInfo.Gender -eq [System.Speech.Synthesis.VoiceGender]::Male} | Select-Object -First 1
+if (-not $v) { $v = $voices | Where-Object {$_.VoiceInfo.Culture -like 'ko*'} | Select-Object -First 1 }
+if (-not $v) { $v = $voices | Where-Object {$_.VoiceInfo.Gender -eq [System.Speech.Synthesis.VoiceGender]::Male} | Select-Object -First 1 }
+if ($v) { $s.SelectVoice($v.VoiceInfo.Name); Write-Host "Voice: $($v.VoiceInfo.Name)" } else { Write-Host "Voice: default" }
+$s.Rate = 2
 $s.SetOutputToWaveFile("${wavPath.replace(/\\/g, '/')}")
 $s.Speak("${safe}")
 $s.Dispose()`.trim();
@@ -332,15 +338,15 @@ export async function generate(slugArg) {
 
   // ── 슬라이드 0: 제목 ─────────────────────────────────────────
   const titleBroken   = breakText(post.title, 12);
-  const titleFontSize = dynFont(post.title, 72);
+  const titleFontSize = dynFont(post.title, 84);
   const titleHeight   = titleBroken.lines * Math.ceil(titleFontSize * 1.35) + 10;
 
   await makeSeg('s0', bgIntro, [
-    { text: '🔥 오늘의 추천 상품',            top: 140, size: 52,         color: '#FFD700' },
-    { text: titleBroken.html,               top: 240, size: titleFontSize, color: '#FFFFFF',
-      maxH: titleBroken.lines * 110 + 20 },
-    { text: '요즘 제일 핫한 아이템이야',       top: 240 + titleHeight + 80, size: 44, color: '#87CEEB' },
-    { text: '▼ 어떤 게 1위인지 확인해봐',     top: 240 + titleHeight + 140, size: 36, color: '#AAAAAA' },
+    { text: '🔥 오늘의 추천 상품',            top: 140, size: 62,          color: '#FFD700' },
+    { text: titleBroken.html,               top: 260, size: titleFontSize, color: '#FFFFFF',
+      maxH: titleBroken.lines * 130 + 20 },
+    { text: '요즘 제일 핫한 아이템이야',       top: 260 + titleHeight + 80, size: 52, color: '#87CEEB' },
+    { text: '▼ 어떤 게 1위인지 확인해봐',     top: 260 + titleHeight + 150, size: 44, color: '#AAAAAA' },
   ],
   `오늘 진짜 핫한 트렌드 상품 소개해줄게. ${post.title}! 어떤 제품이 제일인지 같이 한번 확인해봐.`,
   7);
@@ -348,42 +354,37 @@ export async function generate(slugArg) {
   // ── 슬라이드 1: TOP3 상품 ────────────────────────────────────
   // 3개 상품을 1920px 안에 균등 배치 (헤더 80, 상품 3개, 하단 채널)
   const prodBlocks = [
-    { text: '🏆 TOP 3 인기 상품 비교', top: 60, size: 52, color: '#FFD700' },
+    { text: '🏆 TOP 3 인기 상품 비교', top: 60, size: 62, color: '#FFD700' },
   ];
   post.products.forEach((p, i) => {
     const baseY    = 220 + i * 490;
     const nameBr   = breakText(p.name, 14);
-    const nameFont = dynFont(p.name, 42);
+    const nameFont = dynFont(p.name, 54);
     const nameH    = nameBr.lines * Math.ceil(nameFont * 1.35) + 10;
 
-    prodBlocks.push({ text: `${E[i]} ${R[i]}`,  top: baseY,            size: 50, color: '#FFD700' });
-    prodBlocks.push({ text: nameBr.html,         top: baseY + 70,       size: nameFont, color: '#FFFFFF',
-      maxH: Math.max(nameH, 120) });
-    prodBlocks.push({ text: p.price,             top: baseY + 70 + Math.max(nameH, 120) + 16,
-      size: 36, color: '#87CEEB' });
+    prodBlocks.push({ text: `${E[i]} ${R[i]}`,  top: baseY,       size: 62, color: '#FFD700' });
+    prodBlocks.push({ text: nameBr.html,         top: baseY + 85,  size: nameFont, color: '#FFFFFF',
+      maxH: Math.max(nameH, 150) });
   });
-  prodBlocks.push({ text: '@dmalog', top: 1820, size: 36, color: 'rgba(255,255,255,0.6)', weight: 'normal' });
 
   const prodNarr = `TOP 3 인기 상품 한번 비교해볼게. ` +
-    post.products.map((p, i) => `${R[i]}는 ${p.name}, 가격대는 ${p.price}.`).join(' ');
+    post.products.map((p, i) => `${R[i]}는 ${p.name}.`).join(' ');
   await makeSeg('s1', bgS1, prodBlocks, prodNarr, 14);
 
   // ── 슬라이드 2: CTA ──────────────────────────────────────────
   await makeSeg('s2', bgS2, [
-    { text: '📦 자세한 비교 & 리뷰는',   top: 320, size: 52, color: '#FFFFFF' },
-    { text: '트렌드줌 블로그에 있어!',    top: 410, size: 66, color: '#FFD700' },
-    { text: '쿠팡 최저가 링크도 포함 👇', top: 580, size: 42, color: '#87CEEB' },
-    { text: '설명란 링크 한번 들어가봐',  top: 660, size: 36, color: '#AAAAAA' },
-    { text: '@dmalog',                  top: 1750, size: 48, color: '#FFFFFF' },
+    { text: '📦 자세한 비교 & 리뷰는',   top: 320, size: 64, color: '#FFFFFF' },
+    { text: '트렌드줌 블로그에 있어!',    top: 420, size: 78, color: '#FFD700' },
+    { text: '쿠팡 최저가 링크도 포함 👇', top: 620, size: 52, color: '#87CEEB' },
+    { text: '설명란 링크 한번 들어가봐',  top: 710, size: 46, color: '#AAAAAA' },
   ],
   '더 자세한 비교랑 쿠팡 최저가 링크는 트렌드줌 블로그에서 확인할 수 있어. 설명란 링크 한번 들어가봐!',
   10);
 
   // ── 슬라이드 3: 아웃트로 ─────────────────────────────────────
   await makeSeg('s3', bgIntro, [
-    { text: '구독 & 좋아요! 👍',         top: 760, size: 84, color: '#FFD700' },
-    { text: '🔔 알림 켜놓으면 좋겠어!',  top: 900, size: 52, color: '#FFFFFF' },
-    { text: '@dmalog',                  top: 1020, size: 56, color: '#87CEEB' },
+    { text: '구독 & 좋아요! 👍',         top: 760, size: 96, color: '#FFD700' },
+    { text: '🔔 알림 켜놓으면 좋겠어!',  top: 910, size: 64, color: '#FFFFFF' },
   ],
   '구독이랑 좋아요 눌러주면 진짜 힘이 돼. 알림도 켜놓으면 새 영상 바로 받을 수 있어. 고마워!',
   5);
@@ -405,7 +406,7 @@ export async function generate(slugArg) {
       '-c:v', 'libx264', '-preset', 'fast', '-crf', '22',
       '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k', '-y', concatTmp], 'concat');
     await runFF(['-i', concatTmp, '-stream_loop', '-1', '-i', bgmPath,
-      '-filter_complex', '[1:a]volume=0.12[bgm];[0:a][bgm]amix=inputs=2:duration=first[aout]',
+      '-filter_complex', '[1:a]volume=0.20[bgm];[0:a][bgm]amix=inputs=2:duration=first[aout]',
       '-map', '0:v', '-map', '[aout]',
       '-c:v', 'copy', '-c:a', 'aac', '-b:a', '128k',
       '-movflags', '+faststart', '-y', outPath], 'bgm');
