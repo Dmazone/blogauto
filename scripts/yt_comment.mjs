@@ -36,8 +36,15 @@ function buildComment(products) {
   const lines = ['🛒 쿠팡 구매 링크 👇', ''];
   products.forEach((p, i) => {
     if (!p.url) return;
+    // URL-인코딩된 한국어 쿼리를 읽기 좋게 디코딩
+    let displayUrl = p.url;
+    try {
+      const u = new URL(p.url);
+      const q = decodeURIComponent(u.searchParams.get('q') || '').replace(/\+/g, ' ');
+      if (q) { u.searchParams.set('q', q); displayUrl = u.toString(); }
+    } catch {}
     lines.push(`${RANKS[i]} ${p.name}`);
-    lines.push(p.url);
+    lines.push(displayUrl);
     if (i < products.length - 1) lines.push('');
   });
   lines.push('');
