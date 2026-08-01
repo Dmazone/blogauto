@@ -78,6 +78,8 @@ jobs:
           extended: true
 
       - name: Build Hugo (초기 빌드 — 발행은 05:00부터 scheduled-deploy)
+        env:
+          HUGO_ENVIRONMENT: production
         run: hugo --minify
 
       - name: Upload Pages artifact

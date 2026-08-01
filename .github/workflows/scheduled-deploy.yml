@@ -41,6 +41,8 @@ jobs:
           extended: true
 
       - name: Build
+        env:
+          HUGO_ENVIRONMENT: production
         run: hugo --minify --baseURL "https://dmazone.github.io/blogauto/"
 
       - name: Upload Pages artifact
