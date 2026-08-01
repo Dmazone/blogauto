@@ -303,8 +303,8 @@ async function main() {
     const ROOT = path.join(__dirname, '..');
     try {
       execFileSync('git', ['add', 'content/'], { cwd: ROOT, stdio: 'pipe' });
-      const status = execFileSync('git', ['status', '--porcelain'], { cwd: ROOT }).toString().trim();
-      if (status) {
+      const staged = execFileSync('git', ['diff', '--cached', '--name-only'], { cwd: ROOT }).toString().trim();
+      if (staged) {
         execFileSync('git', ['commit', '-m', 'fix: 누락 이미지 자동 복구'], { cwd: ROOT, stdio: 'inherit' });
         execFileSync('git', ['push'], { cwd: ROOT, stdio: 'inherit' });
         log('✅', '누락 이미지 복구 커밋 & 푸시 완료');
