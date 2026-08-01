@@ -817,6 +817,24 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
         keyword: kwM?.[1] ?? '', description: descM?.[1] ?? '',
       };
     }
+    // 4) 마크다운 목록 구조에서 첫 번째 이슈 추출
+    // Gemini가 JSON 무시하고 "## 1. 이슈명" 형식으로 응답할 때
+    const mdIssue = text.match(/##\s*1\.\s+([^\n(（]+)/);
+    if (mdIssue) {
+      const rawTitle = mdIssue[1].trim().replace(/[()（）【】\[\]]/g, '').trim().slice(0, 28);
+      if (rawTitle.length >= 4) {
+        const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const firstWord = rawTitle.split(/[\s,·\-]+/)[0].replace(/[^가-힣a-zA-Z0-9]/g, '');
+        const slug = `${section.dir}-issue-${dateStr}`;
+        const descCandidate = text.match(/왜 지금 핫한지[:\s]+(.{20,120})/);
+        return {
+          title: rawTitle,
+          slug,
+          keyword: firstWord || section.name,
+          description: descCandidate ? descCandidate[1].trim().slice(0, 160) : rawTitle,
+        };
+      }
+    }
     return null;
   };
 
