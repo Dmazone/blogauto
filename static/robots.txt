@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+Disallow: /blogauto/tags/
+Disallow: /blogauto/categories/
+
 Sitemap: https://dmazone.github.io/blogauto/sitemap.xml

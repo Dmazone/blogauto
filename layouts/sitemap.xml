@@ -1,6 +1,7 @@
 {{- printf "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" | safeHTML }}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  {{- range .Data.Pages }}
+  {{- $pages := where (where .Data.Pages "Kind" "ne" "term") "Kind" "ne" "taxonomy" }}
+  {{- range $pages }}
   <url>
     <loc>{{ .Permalink }}</loc>
     {{- if not .Lastmod.IsZero }}

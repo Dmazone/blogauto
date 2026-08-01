@@ -80,11 +80,12 @@ async function main() {
   // 1. 사이트맵에서 모든 URL 수집
   const allUrls = await fetchSitemap();
 
-  // 2. 포스팅 URL만 필터 (섹션 인덱스 제외하고 싶으면 아래 주석 해제)
-  // const postUrls = allUrls.filter(u => /\/posts\/[^/]+\/[^/]+\//.test(u));
-  // 전체 제출 (태그/카테고리 포함 → Google이 사이트 구조 이해하는 데 도움)
-  const postUrls = allUrls;
-  console.log(`📋 제출 대상: ${postUrls.length}개`);
+  // 2. 포스팅 URL만 필터 — 태그/카테고리는 IndexNow 품질 신호 희석
+  const postUrls = allUrls.filter(u =>
+    !u.includes('/tags/') && !u.includes('/categories/')
+  );
+  const skipped = allUrls.length - postUrls.length;
+  console.log(`📋 제출 대상: ${postUrls.length}개 (태그/카테고리 ${skipped}개 제외)`);
 
   // 3. Google 사이트맵 핑
   const googleStatus = await pingGoogleSitemap();
