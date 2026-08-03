@@ -26,7 +26,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname  = path.dirname(fileURLToPath(import.meta.url));
 const ROOT       = path.join(__dirname, '..');
-const FFMPEG     = 'C:\\Users\\Paydma\\.vscode\\extensions\\kilocode.kilo-code-7.4.16-win32-x64\\bin\\ffmpeg.exe';
+const FFMPEG     = 'C:\\Users\\Paydma\\.vscode\\extensions\\kilocode.kilo-code-7.4.17-win32-x64\\bin\\ffmpeg.exe';
 const OUT_DIR    = path.join(ROOT, 'data', '1_youtube-shorts');
 const BGM_DIR    = path.join(OUT_DIR, 'bgm');
 const NO_PREVIEW = process.argv.includes('--no-preview');
