@@ -120,32 +120,26 @@ ekaledma@gmail.com에는 **@DmALOQ**(기본)와 **@dmalog**(DMAZON) 두 채널�
 
 ### [지침] 슬라이드 배경 이미지 생성 표준 ★★★★★
 
-> **핵심 원칙**: 슬라이드 배경은 반드시 해당 상품과 연관도가 높은 이미지여야 한다.  
-> 쿠팡/외부 링크의 상품명을 파싱 → AI 이미지 생성 → 배경 적용 → 텍스트 오버레이 순으로 처리.
+> **핵심 원칙**: Shorts 슬라이드 배경은 반드시 해당 포스팅의 **Gemini 생성 블로그 이미지**를 사용한다.  
+> Pollinations는 Gemini 이미지가 없을 때만 폴백으로 사용.
 
 | 순서 | 내용 |
 |---|---|
-| 1 | 포스팅 markdown에서 쿠팡 링크 `q=` 파라미터(상품명) 파싱 |
-| 2 | 상품명으로 **Pollinations.ai (flux, `1080×1080` 정사각형)** AI 이미지 **병렬** 생성 |
-| 3 | 15KB 미만 → 최대 2회 재시도 |
-| 4 | 생성 실패 시 → 포스팅 기존 이미지(thumb/01/02)로 폴백 |
-| 5 | 생성된 이미지를 `<img object-fit:cover>` 로 배경 적용 — **9:16 강제 변환 절대 금지** |
-| 6 | 텍스트는 HTML 오버레이로 렌더링 (한국어 □□□□ 버그 방지) |
+| 1 | 블로그 포스팅의 Gemini 이미지 직접 사용 (`content/posts/trending-picks/{slug}/`) |
+| 2 | `bg_intro` (s0, s3) → `{slug}-thumb.webp` (Gemini 썸네일) |
+| 3 | `bg_s1` (s1 TOP3) → `{slug}-01.webp` (Gemini 본문 이미지 1) |
+| 4 | `bg_s2` (s2 CTA) → `{slug}-02.webp` (Gemini 본문 이미지 2) |
+| 5 | 해당 파일 없을 때만 **Pollinations.ai (flux, `1080×1080`)** 폴백 생성 |
+| 6 | 생성된 이미지를 `<img object-fit:cover>` 로 배경 적용 — **9:16 강제 변환 절대 금지** |
+| 7 | 텍스트는 HTML 오버레이로 렌더링 (한국어 □□□□ 버그 방지) |
 
 > **⚠️ 이미지 비율 강제 금지**: Pollinations에 `height=1920` 지정 금지 — 제품이 세로로 찌그러짐.  
 > 항상 **정사각형(1080×1080)** 생성 후 `object-fit:cover` 크롭으로 화면 채울 것.  
 > 좌우·상하가 잘려도 무방, 비율 왜곡은 절대 허용 안 됨.
 
-**슬라이드별 이미지 쿼리:**
-| 슬라이드 | 쿼리 |
-|---|---|
-| `bg_intro` (s0, s3) | 전체 상품명 조합 (`q1 + q2 + q3`) |
-| `bg_s1` (s1 TOP3) | 1위 상품명 (`products[0].imageQuery`) |
-| `bg_s2` (s2 CTA) | 2위 상품명 (`products[1].imageQuery`) |
-
 ### 기술 스택
 
-- **FFmpeg**: `C:\Users\Paydma\.vscode\extensions\kilocode.kilo-code-7.4.16-win32-x64\bin\ffmpeg.exe`
+- **FFmpeg**: `C:\Users\Paydma\.vscode\extensions\kilocode.kilo-code-7.4.17-win32-x64\bin\ffmpeg.exe`
 - **해상도**: 1080×1920 (Shorts 세로 포맷)
 - **출력**: `data/1_youtube-shorts/`
 - **BGM**: `data/1_youtube-shorts/bgm/`
@@ -222,7 +216,7 @@ ekaledma@gmail.com에는 **@DmALOQ**(기본)와 **@dmalog**(DMAZON) 두 채널�
 | `{slug}-02.webp` | 두 번째 H2 직후 | 이미지1과 오브젝트·색감·구도 완전히 다르게 |
 | `{slug}-thumb.webp` | 커버 | 사람 얼굴 클로즈업 금지 |
 
-**생성 순서**: ① Gemini "이미지 만들기" → ② Pollinations.ai (flux, 폴백)  
+**생성 순서**: ① Gemini "이미지 만들기" (썸네일 최우선 → 01 → 02) → ② Pollinations.ai (내부 이미지 01/02만 폴백, 썸네일은 폴백 사용 안 함)  
 **품질 게이트**: 15KB 미만 → 즉시 재생성  
 **누락 복구**: `node scripts/fix_missing_images.mjs`
 

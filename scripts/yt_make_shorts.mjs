@@ -4,13 +4,12 @@
  * ╔══════════════════════════════════════════════════════════════════╗
  * ║  [지침] 슬라이드 배경 이미지 생성 표준 절차                        ║
  * ║  1. 포스팅 markdown 쿠팡 링크 q= 파라미터(상품명) 파싱             ║
- * ║  2. Pollinations.ai (flux, 1080×1920) 이미지 병렬 생성            ║
- * ║     · bg_intro (s0,s3): 전체 상품 조합                           ║
- * ║     · bg_s1    (s1)   : 1위 상품명                               ║
- * ║     · bg_s2    (s2)   : 2위 상품명                               ║
- * ║  3. 15KB 미만 → 최대 2회 재시도                                   ║
- * ║  4. 실패 → 포스팅 기존 이미지(thumb/01/02)로 폴백                  ║
- * ║  5. HTML 배경 + Playwright 렌더링으로 텍스트 오버레이              ║
+ * ║  2. 블로그 포스팅의 Gemini 생성 이미지 우선 사용                   ║
+ * ║     · bg_intro (s0,s3): {slug}-thumb.webp (Gemini 썸네일)        ║
+ * ║     · bg_s1    (s1)   : {slug}-01.webp   (Gemini 본문 이미지 1)  ║
+ * ║     · bg_s2    (s2)   : {slug}-02.webp   (Gemini 본문 이미지 2)  ║
+ * ║  3. 블로그 이미지 없을 때만 Pollinations.ai (flux, 1080×1080) 폴백║
+ * ║  4. HTML 배경 + Playwright 렌더링으로 텍스트 오버레이              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * Flags:
@@ -257,21 +256,48 @@ export async function generate(slugArg) {
   fs.mkdirSync(tmp, { recursive: true });
   const outPath = path.join(OUT_DIR, `${resolvedSlug}.mp4`);
 
-  // ── [지침] 상품별 배경 이미지 병렬 생성 ────────────────────────
-  console.log('\n🎨 상품 배경 이미지 생성 (병렬)...');
-  const introQ    = post.products.map(p => p.imageQuery).join(', ') || post.title;
-  const s1Q       = post.products[0]?.imageQuery || post.title;
-  const s2Q       = post.products[1]?.imageQuery || s1Q;
-  const bgIF      = path.join(tmp, 'bg_intro.jpg');
-  const bgS1F     = path.join(tmp, 'bg_s1.jpg');
-  const bgS2F     = path.join(tmp, 'bg_s2.jpg');
+  // ── [지침] 슬라이드 배경 — Gemini 블로그 이미지 우선, 없으면 Pollinations 폴백 ──
+  console.log('\n🎨 슬라이드 배경 이미지 준비 (Gemini 블로그 이미지 우선)...');
+  const postImgDir = path.join(ROOT, 'content', 'posts', 'trending-picks', resolvedSlug);
+  const geminiThumb = path.join(postImgDir, `${resolvedSlug}-thumb.webp`);
+  const geminiImg01 = path.join(postImgDir, `${resolvedSlug}-01.webp`);
+  const geminiImg02 = path.join(postImgDir, `${resolvedSlug}-02.webp`);
 
-  const [introOk, s1Ok, s2Ok] = await Promise.all([
-    genImg(introQ, bgIF), genImg(s1Q, bgS1F), genImg(s2Q, bgS2F),
-  ]);
-  const bgIntro = introOk ? bgIF  : post.fallback.thumb;
-  const bgS1    = s1Ok    ? bgS1F : post.fallback.img01;
-  const bgS2    = s2Ok    ? bgS2F : post.fallback.img02;
+  const bgIF  = path.join(tmp, 'bg_intro.jpg');
+  const bgS1F = path.join(tmp, 'bg_s1.jpg');
+  const bgS2F = path.join(tmp, 'bg_s2.jpg');
+
+  let bgIntro, bgS1, bgS2;
+
+  if (fs.existsSync(geminiThumb)) {
+    console.log(`  ✅ bg_intro ← ${resolvedSlug}-thumb.webp (Gemini)`);
+    bgIntro = geminiThumb;
+  } else {
+    const introQ = post.products.map(p => p.imageQuery).join(', ') || post.title;
+    const ok = await genImg(introQ, bgIF);
+    bgIntro = ok ? bgIF : post.fallback.thumb;
+    console.log(`  ${ok ? '🖼️ bg_intro ← Pollinations 폴백' : '⚠️ bg_intro ← 기존 fallback'}`);
+  }
+
+  if (fs.existsSync(geminiImg01)) {
+    console.log(`  ✅ bg_s1 ← ${resolvedSlug}-01.webp (Gemini)`);
+    bgS1 = geminiImg01;
+  } else {
+    const s1Q = post.products[0]?.imageQuery || post.title;
+    const ok = await genImg(s1Q, bgS1F);
+    bgS1 = ok ? bgS1F : post.fallback.img01;
+    console.log(`  ${ok ? '🖼️ bg_s1 ← Pollinations 폴백' : '⚠️ bg_s1 ← 기존 fallback'}`);
+  }
+
+  if (fs.existsSync(geminiImg02)) {
+    console.log(`  ✅ bg_s2 ← ${resolvedSlug}-02.webp (Gemini)`);
+    bgS2 = geminiImg02;
+  } else {
+    const s2Q = post.products[1]?.imageQuery || post.products[0]?.imageQuery || post.title;
+    const ok = await genImg(s2Q, bgS2F);
+    bgS2 = ok ? bgS2F : post.fallback.img02;
+    console.log(`  ${ok ? '🖼️ bg_s2 ← Pollinations 폴백' : '⚠️ bg_s2 ← 기존 fallback'}`);
+  }
 
   // ── Playwright 렌더링 ────────────────────────────────────────
   const browser = await chromium.launch({ headless: true });

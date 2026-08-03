@@ -1372,19 +1372,21 @@ async function generateImagesViaGemini(session, section, topic, finalBody, bundl
 
     const buffers = await session.extractImagesFromLastResponse(2, 60000);
 
-    if (buffers.length < 2) {
-      log('⚠️', `  Gemini 이미지 추출 실패 (${buffers.length}장) → Pollinations 폴백`);
-      return false;
+    if (buffers.length === 0) {
+      log('⚠️', '  Gemini 이미지 0장 → Pollinations 전체 폴백');
+      return { thumb: false, img01: false, img02: false };
     }
 
-    // sharp로 webp 변환 후 저장
+    // 썸네일 최우선 — buffers[0]=thumb, [1]=01, [2]=02 순으로 저장
+    const result = { thumb: false, img01: false, img02: false };
     const targets = [
-      { buf: buffers[0], index: 1 },
-      { buf: buffers[1], index: 2 },
-      { buf: buffers[2] ?? buffers[1], index: 'thumb' },
+      { buf: buffers[0], index: 'thumb' },
+      { buf: buffers[1],              index: 1 },
+      { buf: buffers[2] ?? buffers[1], index: 2 },
     ];
 
     for (const { buf, index } of targets) {
+      if (!buf) continue;
       const filename = index === 'thumb' ? `${slug}-thumb.webp` : `${slug}-0${index}.webp`;
       const destPath = path.join(bundleDir, filename);
       try {
@@ -1394,15 +1396,18 @@ async function generateImagesViaGemini(session, section, topic, finalBody, bundl
           .toFile(destPath);
         const stat = fs.statSync(destPath);
         log('✅', `  Gemini 이미지 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
+        if (index === 'thumb') result.thumb = true;
+        else if (index === 1)  result.img01 = true;
+        else if (index === 2)  result.img02 = true;
       } catch (err) {
         log('⚠️', `  ${filename} 저장 실패: ${err.message}`);
       }
     }
 
-    return true;
+    return result;
   } catch (err) {
     log('⚠️', `  Gemini 이미지 생성 오류: ${err.message} → Pollinations 폴백`);
-    return false;
+    return { thumb: false, img01: false, img02: false };
   }
 }
 
@@ -1476,22 +1481,28 @@ export async function runForSection(section, options = {}) {
   const pThumb = prompts[2] ??
     `${topic.keyword} editorial magazine cover, bold colors, no text overlay, 16:9`;
 
-  // ① Gemini 브라우저 모드에서는 Gemini 직접 이미지 생성 시도
+  // ① Gemini 브라우저 모드에서 이미지 생성 — 썸네일 우선, 내부 이미지도 시도
   // final(본문)을 함께 전달 → H2 섹션 파싱으로 글 내용과 연관된 이미지 생성
-  let geminiImageSuccess = false;
+  let geminiResult = { thumb: false, img01: false, img02: false };
   if (_geminiImpl?._session) {
-    geminiImageSuccess = await generateImagesViaGemini(
+    geminiResult = await generateImagesViaGemini(
       _geminiImpl._session, section, topic, final, bundleDir, [p1, p2, pThumb]
     );
   }
 
-  // ② Gemini 실패 또는 API 모드 → Flow / NanoBanana / Pollinations
-  if (!geminiImageSuccess) {
-    log('🖼️', '[STEP 8] Pollinations(폴백) 이미지 생성 중...');
+  // ② Gemini가 생성 못 한 내부 이미지(01, 02)만 Pollinations 폴백 — 썸네일은 폴백 없음
+  if (!geminiResult.img01) {
+    log('🖼️', '[STEP 8] 본문 이미지 1 → Pollinations 폴백');
     try { await generateImage(p1, topic.slug, 1, bundleDir); }
     catch (err) { log('⚠️', `  본문 이미지 1 실패: ${err.message}`); }
+  }
+  if (!geminiResult.img02) {
+    log('🖼️', '[STEP 8] 본문 이미지 2 → Pollinations 폴백');
     try { await generateImage(p2, topic.slug, 2, bundleDir); }
     catch (err) { log('⚠️', `  본문 이미지 2 실패: ${err.message}`); }
+  }
+  if (!geminiResult.thumb) {
+    log('🖼️', '[STEP 8] 썸네일 → Pollinations 폴백 (Gemini 한도 초과)');
     try { await generateImage(pThumb, topic.slug, 'thumb', bundleDir); }
     catch (err) { log('⚠️', `  썸네일 실패: ${err.message}`); }
   }
