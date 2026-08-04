@@ -1,4 +1,4 @@
----
+﻿---
 title: "KT위즈 1위 탈환! 고영표 20이닝 무실점 대기록"
 date: 2026-08-05T07:00:00+09:00
 slug: kt-wiz-kbo-rank-1st-go-young-pyo-2026
@@ -13,13 +13,6 @@ cover:
   hiddenInSingle: true
 ---
 
-JSON{
-  "title": "KT위즈 1위 탈환! 고영표 20이닝 무실점 대기록",
-  "slug": "kt-wiz-kbo-rank-1st-go-young-pyo-2026",
-  "keyword": "KT위즈 1위",
-  "description": "2026년 8월 KBO 리그 단독 선두로 뛰어오른 KT 위즈! 76일 만의 1위 탈환 배경과 고영표의 20이닝 연속 무실점 대기록 핵심 포인트를 정리합니다."
-}
-KBO 리그연기됨, 어제, 오후 6:30KTKIA연기됨, 어제, 오후 6:30NC두산오늘, 오후 6:30한화0삼성0종료, 어제LG8SSG10종료, 어제한화4삼성1종료, 어제키움2롯데3한국 표준시 기준
 ## 1. 76일 만에 되찾은 KBO 왕좌, KT 위즈의 질주 원동력
 
 
