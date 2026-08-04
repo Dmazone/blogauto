@@ -538,6 +538,21 @@ export class GeminiSession {
   // ── "이미지 만들기" 버튼 클릭 → 프롬프트 전송 → 이미지 생성 대기 ────────────
   // Gemini 입력창 "+" 메뉴의 "이미지 만들기" 버튼을 클릭 후 프롬프트를 전송한다.
   async useImageMaker(prompt) {
+    // 응답 인터셉터로 이미지 바이트 직접 캡처 (blob URL fetch 불가 우회)
+    this._interceptedImages = [];
+    const handler = async (response) => {
+      try {
+        const ct = response.headers()['content-type'] || '';
+        const url = response.url();
+        if (!ct.startsWith('image/') || ct.includes('svg')) return;
+        if (url.includes('favicon') || url.includes('/icon') || url.includes('gstatic.com/images')) return;
+        const buf = await response.body().catch(() => null);
+        if (buf && buf.length > 10000) this._interceptedImages.push(buf);
+      } catch {}
+    };
+    this.page.on('response', handler);
+    this._imageInterceptHandler = handler;
+
     log('🎨', '이미지 만들기 버튼 클릭 시도...');
 
     // ① "+" 또는 도구 버튼 클릭 → 메뉴 열기
@@ -642,17 +657,32 @@ export class GeminiSession {
 
     // ⑤ 이미지 생성 완료 대기 (텍스트보다 오래 걸림 → 2분)
     await this._waitForCompletion(120000);
-    await wait(3000); // 이미지 DOM 렌더링 여유
+    await wait(5000); // 이미지 로딩 완료 추가 대기
+
+    // 인터셉터 해제
+    if (this._imageInterceptHandler) {
+      this.page.off('response', this._imageInterceptHandler);
+      this._imageInterceptHandler = null;
+    }
+    log('📸', `인터셉터 캡처 이미지: ${this._interceptedImages?.length ?? 0}장`);
   }
 
   // ── Gemini 응답에서 생성된 이미지 추출 ──────────────────────────────────────
-  // Gemini가 이미지 생성 후 DOM에 <img> 태그로 렌더링한 것을 Buffer 배열로 반환
+  // 인터셉터로 캡처된 이미지를 우선 반환. 없으면 DOM에서 blob/URL 추출 시도.
   async extractImagesFromLastResponse(minCount = 1, maxWaitMs = 30000) {
+    // 인터셉터로 이미지를 이미 캡처한 경우 — blob fetch 없이 바로 반환
+    if (this._interceptedImages && this._interceptedImages.length >= minCount) {
+      const result = this._interceptedImages.slice();
+      this._interceptedImages = [];
+      log('✅', `인터셉터 캡처 이미지 ${result.length}장 반환`);
+      return result;
+    }
+
     const deadline = Date.now() + maxWaitMs;
 
     while (Date.now() < deadline) {
-      // 마지막 모델 응답 컨테이너에서 img src 목록 수집
-      const srcs = await this.page.evaluate((sels) => {
+      // 1차: 마지막 모델 응답 컨테이너에서 img src 수집
+      let srcs = await this.page.evaluate((sels) => {
         let lastResp = null;
         for (const sel of sels) {
           const all = document.querySelectorAll(sel);
@@ -673,6 +703,29 @@ export class GeminiSession {
             !src.includes('profile')
           );
       }, SEL.response).catch(() => []);
+
+      // 2차 폴백: 페이지 전체에서 Gemini 생성 이미지 검색
+      // Gemini는 이미지를 blob: URL 또는 lh3.googleusercontent.com 으로 렌더링함
+      if (srcs.length < minCount) {
+        srcs = await this.page.evaluate(() => {
+          return Array.from(document.querySelectorAll('img'))
+            .filter(img => {
+              const src = img.src || '';
+              const w = img.naturalWidth || 0;
+              const h = img.naturalHeight || 0;
+              // blob URL (Gemini 생성 이미지) 또는 대형 이미지 (200px 이상)
+              const isGenerated = src.startsWith('blob:https://gemini.google.com/');
+              const isLarge = w >= 200 && h >= 200 &&
+                !src.includes('gstatic') &&
+                !src.includes('favicon') &&
+                !src.includes('/icon') &&
+                !src.includes('data:image/svg');
+              return isGenerated || isLarge;
+            })
+            .map(img => img.src)
+            .filter(src => src && src.length > 10);
+        }).catch(() => []);
+      }
 
       if (srcs.length >= minCount) {
         const buffers = [];
