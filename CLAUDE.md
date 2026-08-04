@@ -121,7 +121,7 @@ ekaledma@gmail.com에는 **@DmALOQ**(기본)와 **@dmalog**(DMAZON) 두 채널�
 ### [지침] 슬라이드 배경 이미지 생성 표준 ★★★★★
 
 > **핵심 원칙**: Shorts 슬라이드 배경은 반드시 해당 포스팅의 **Gemini 생성 블로그 이미지**를 사용한다.  
-> Pollinations는 Gemini 이미지가 없을 때만 폴백으로 사용.
+> **Pollinations 폴백 일절 금지** — Gemini 이미지 없으면 그냥 흰색 배경으로 진행.
 
 | 순서 | 내용 |
 |---|---|
@@ -129,13 +129,9 @@ ekaledma@gmail.com에는 **@DmALOQ**(기본)와 **@dmalog**(DMAZON) 두 채널�
 | 2 | `bg_intro` (s0, s3) → `{slug}-thumb.webp` (Gemini 썸네일) |
 | 3 | `bg_s1` (s1 TOP3) → `{slug}-01.webp` (Gemini 본문 이미지 1) |
 | 4 | `bg_s2` (s2 CTA) → `{slug}-02.webp` (Gemini 본문 이미지 2) |
-| 5 | 해당 파일 없을 때만 **Pollinations.ai (flux, `1080×1080`)** 폴백 생성 |
+| 5 | 파일 없으면 → **단색 배경 (#1a1a2e)** 사용 (Pollinations 절대 금지) |
 | 6 | 생성된 이미지를 `<img object-fit:cover>` 로 배경 적용 — **9:16 강제 변환 절대 금지** |
 | 7 | 텍스트는 HTML 오버레이로 렌더링 (한국어 □□□□ 버그 방지) |
-
-> **⚠️ 이미지 비율 강제 금지**: Pollinations에 `height=1920` 지정 금지 — 제품이 세로로 찌그러짐.  
-> 항상 **정사각형(1080×1080)** 생성 후 `object-fit:cover` 크롭으로 화면 채울 것.  
-> 좌우·상하가 잘려도 무방, 비율 왜곡은 절대 허용 안 됨.
 
 ### 기술 스택
 
@@ -216,9 +212,10 @@ ekaledma@gmail.com에는 **@DmALOQ**(기본)와 **@dmalog**(DMAZON) 두 채널�
 | `{slug}-02.webp` | 두 번째 H2 직후 | 이미지1과 오브젝트·색감·구도 완전히 다르게 |
 | `{slug}-thumb.webp` | 커버 | 사람 얼굴 클로즈업 금지 |
 
-**생성 순서**: ① Gemini "이미지 만들기" (썸네일 최우선 → 01 → 02) → ② Pollinations.ai (내부 이미지 01/02만 폴백, 썸네일은 폴백 사용 안 함)  
+**생성 순서**: ① Gemini Pro "이미지 만들기" 전용 — **Pollinations 폴백 일절 금지** ★★★★★  
+Gemini 세션 없으면 이미지 없이 포스트 발행 (저품질 이미지보다 이미지 없음이 낫다)  
 **품질 게이트**: 15KB 미만 → 즉시 재생성  
-**누락 복구**: `node scripts/fix_missing_images.mjs`
+**누락 복구**: `node scripts/fix_bad_thumbs.mjs` (Gemini Pro 전용 재생성)
 
 **Hugo Page Bundle 구조:**
 ```

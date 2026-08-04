@@ -147,6 +147,13 @@ function buildHtml(bgImg, blocks) {
       line-height:1.35;word-break:keep-all;${maxH}">${b.text}</div>`;
   }).join('\n');
 
+  const bgStyle = bgImg
+    ? `background:#111`
+    : `background:#1a1a2e`; // Gemini 이미지 없을 때 단색 배경
+  const bgImgTag = bgImg
+    ? `<img class="bg-img" src="${toFileUrl(bgImg)}" />`
+    : '';
+
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
   /* 헤드리스 Chromium에서 한글 폰트 보장 — 절대 경로 직접 로드 */
@@ -158,7 +165,7 @@ function buildHtml(bgImg, blocks) {
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{width:1080px;height:1920px;overflow:hidden;position:relative;
-    font-family:'KOR',sans-serif;background:#111}
+    font-family:'KOR',sans-serif;${bgStyle}}
   /* object-fit:cover → 원본 비율 유지하며 확대해 화면 채움, 좌우/상하 크롭 허용 */
   .bg-img{position:absolute;top:0;left:0;width:100%;height:100%;
     object-fit:cover;object-position:center;
@@ -166,7 +173,7 @@ function buildHtml(bgImg, blocks) {
   .grad{position:absolute;inset:0;
     background:linear-gradient(180deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 45%,rgba(0,0,0,.65) 100%)}
 </style></head><body>
-  <img class="bg-img" src="${toFileUrl(bgImg)}" />
+  ${bgImgTag}
   <div class="grad"></div>
 ${elems}
 </body></html>`;
@@ -256,16 +263,14 @@ export async function generate(slugArg) {
   fs.mkdirSync(tmp, { recursive: true });
   const outPath = path.join(OUT_DIR, `${resolvedSlug}.mp4`);
 
-  // ── [지침] 슬라이드 배경 — Gemini 블로그 이미지 우선, 없으면 Pollinations 폴백 ──
-  console.log('\n🎨 슬라이드 배경 이미지 준비 (Gemini 블로그 이미지 우선)...');
+  // ── [지침] 슬라이드 배경 — Gemini 블로그 이미지 전용 (Pollinations 폴백 금지) ──
+  console.log('\n🎨 슬라이드 배경 이미지 준비 (Gemini Pro 전용)...');
   const postImgDir = path.join(ROOT, 'content', 'posts', 'trending-picks', resolvedSlug);
   const geminiThumb = path.join(postImgDir, `${resolvedSlug}-thumb.webp`);
   const geminiImg01 = path.join(postImgDir, `${resolvedSlug}-01.webp`);
   const geminiImg02 = path.join(postImgDir, `${resolvedSlug}-02.webp`);
 
-  const bgIF  = path.join(tmp, 'bg_intro.jpg');
-  const bgS1F = path.join(tmp, 'bg_s1.jpg');
-  const bgS2F = path.join(tmp, 'bg_s2.jpg');
+  const FALLBACK_COLOR = '#1a1a2e'; // Gemini 이미지 없을 때 단색 배경
 
   let bgIntro, bgS1, bgS2;
 
@@ -273,30 +278,24 @@ export async function generate(slugArg) {
     console.log(`  ✅ bg_intro ← ${resolvedSlug}-thumb.webp (Gemini)`);
     bgIntro = geminiThumb;
   } else {
-    const introQ = post.products.map(p => p.imageQuery).join(', ') || post.title;
-    const ok = await genImg(introQ, bgIF);
-    bgIntro = ok ? bgIF : post.fallback.thumb;
-    console.log(`  ${ok ? '🖼️ bg_intro ← Pollinations 폴백' : '⚠️ bg_intro ← 기존 fallback'}`);
+    console.log(`  ⚠️ bg_intro ← Gemini 이미지 없음, 단색 배경 사용`);
+    bgIntro = null; // null = 단색 배경
   }
 
   if (fs.existsSync(geminiImg01)) {
     console.log(`  ✅ bg_s1 ← ${resolvedSlug}-01.webp (Gemini)`);
     bgS1 = geminiImg01;
   } else {
-    const s1Q = post.products[0]?.imageQuery || post.title;
-    const ok = await genImg(s1Q, bgS1F);
-    bgS1 = ok ? bgS1F : post.fallback.img01;
-    console.log(`  ${ok ? '🖼️ bg_s1 ← Pollinations 폴백' : '⚠️ bg_s1 ← 기존 fallback'}`);
+    console.log(`  ⚠️ bg_s1 ← Gemini 이미지 없음, 단색 배경 사용`);
+    bgS1 = null;
   }
 
   if (fs.existsSync(geminiImg02)) {
     console.log(`  ✅ bg_s2 ← ${resolvedSlug}-02.webp (Gemini)`);
     bgS2 = geminiImg02;
   } else {
-    const s2Q = post.products[1]?.imageQuery || post.products[0]?.imageQuery || post.title;
-    const ok = await genImg(s2Q, bgS2F);
-    bgS2 = ok ? bgS2F : post.fallback.img02;
-    console.log(`  ${ok ? '🖼️ bg_s2 ← Pollinations 폴백' : '⚠️ bg_s2 ← 기존 fallback'}`);
+    console.log(`  ⚠️ bg_s2 ← Gemini 이미지 없음, 단색 배경 사용`);
+    bgS2 = null;
   }
 
   // ── Playwright 렌더링 ────────────────────────────────────────

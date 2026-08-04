@@ -434,17 +434,13 @@ async function claudeFullReviewAndFix(topic, body) {
 // ────────────────────────────────────────────────────────────────────────────
 async function claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName = '', description = '', _retried = false) {
   if (!fs.existsSync(imagePath)) {
-    log('⚠️', `  [이미지 검수] 파일 없음 → 재생성: ${label}`);
-    await generateImage(prompt, slug, index, bundleDir);
-    if (!_retried) await claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName, description, true);
+    log('⚠️', `  [이미지 검수] 파일 없음 — Gemini 세션 없이는 재생성 불가: ${label}`);
     return;
   }
 
   const stat = fs.statSync(imagePath);
   if (stat.size < 15000) {
-    log('⚠️', `  [이미지 검수] 파일 너무 작음 (${stat.size}B) → 재생성: ${label}`);
-    await generateImage(prompt, slug, index, bundleDir);
-    if (!_retried) await claudeCheckAndRegenImage(imagePath, postTitle, label, prompt, slug, index, bundleDir, sectionName, description, true);
+    log('⚠️', `  [이미지 검수] 파일 너무 작음 (${stat.size}B) — Gemini 세션 없이는 재생성 불가: ${label}`);
     return;
   }
 
@@ -1373,7 +1369,7 @@ async function generateImagesViaGemini(session, section, topic, finalBody, bundl
     const buffers = await session.extractImagesFromLastResponse(2, 60000);
 
     if (buffers.length === 0) {
-      log('⚠️', '  Gemini 이미지 0장 → Pollinations 전체 폴백');
+      log('⚠️', '  Gemini 이미지 0장 → 이미지 없이 진행');
       return { thumb: false, img01: false, img02: false };
     }
 
@@ -1406,7 +1402,7 @@ async function generateImagesViaGemini(session, section, topic, finalBody, bundl
 
     return result;
   } catch (err) {
-    log('⚠️', `  Gemini 이미지 생성 오류: ${err.message} → Pollinations 폴백`);
+    log('⚠️', `  Gemini 이미지 생성 오류: ${err.message} → 이미지 없이 진행`);
     return { thumb: false, img01: false, img02: false };
   }
 }
@@ -1471,8 +1467,8 @@ export async function runForSection(section, options = {}) {
     return;
   }
 
-  // STEP 8: 이미지 생성 — Gemini 직접 생성 우선 → 실패 시 Pollinations 폴백
-  log('🖼️', '[STEP 8] 이미지 생성 중 (본문 2장 + 썸네일 1장)...');
+  // STEP 8: 이미지 생성 — Gemini Pro 전용 (Pollinations 폴백 없음)
+  log('🖼️', '[STEP 8] 이미지 생성 중 (본문 2장 + 썸네일 1장) — Gemini Pro 전용...');
   fs.mkdirSync(bundleDir, { recursive: true });
 
   const imgStyle = section?.imageStyle ?? 'blog editorial illustration, clean design, professional';
@@ -1483,28 +1479,12 @@ export async function runForSection(section, options = {}) {
 
   // ① Gemini 브라우저 모드에서 이미지 생성 — 썸네일 우선, 내부 이미지도 시도
   // final(본문)을 함께 전달 → H2 섹션 파싱으로 글 내용과 연관된 이미지 생성
-  let geminiResult = { thumb: false, img01: false, img02: false };
   if (_geminiImpl?._session) {
-    geminiResult = await generateImagesViaGemini(
+    await generateImagesViaGemini(
       _geminiImpl._session, section, topic, final, bundleDir, [p1, p2, pThumb]
     );
-  }
-
-  // ② Gemini가 생성 못 한 내부 이미지(01, 02)만 Pollinations 폴백 — 썸네일은 폴백 없음
-  if (!geminiResult.img01) {
-    log('🖼️', '[STEP 8] 본문 이미지 1 → Pollinations 폴백');
-    try { await generateImage(p1, topic.slug, 1, bundleDir); }
-    catch (err) { log('⚠️', `  본문 이미지 1 실패: ${err.message}`); }
-  }
-  if (!geminiResult.img02) {
-    log('🖼️', '[STEP 8] 본문 이미지 2 → Pollinations 폴백');
-    try { await generateImage(p2, topic.slug, 2, bundleDir); }
-    catch (err) { log('⚠️', `  본문 이미지 2 실패: ${err.message}`); }
-  }
-  if (!geminiResult.thumb) {
-    log('🖼️', '[STEP 8] 썸네일 → Pollinations 폴백 (Gemini 한도 초과)');
-    try { await generateImage(pThumb, topic.slug, 'thumb', bundleDir); }
-    catch (err) { log('⚠️', `  썸네일 실패: ${err.message}`); }
+  } else {
+    log('⚠️', '[STEP 8] Gemini 세션 없음 → 이미지 생성 건너뜀 (Pollinations 폴백 금지)');
   }
 
   // STEP 8c: 이미지 크기 검수 → 15KB 미만이면 재생성
