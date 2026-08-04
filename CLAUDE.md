@@ -303,6 +303,34 @@ docs/                        # 운영 문서 (CONTENTS_PLAN 등)
 
 ---
 
+## Gemini Pro 전담 원칙 ★★★★★
+
+> 글 작성 · 이미지 생성 모두 **Gemini Pro 단독** 처리.  
+> Claude는 품질 검수·코드 수정만 담당. Pollinations 등 외부 이미지 API 일절 사용 금지.
+
+### Gemini Pro 역할
+
+| 역할 | 방법 |
+|---|---|
+| 본문 집필 | Gemini Gem 브라우저 자동화 (`gemini_browser.js`) |
+| 이미지 생성 | Gemini "이미지 만들기" 버튼 (`useImageMaker()`) |
+| 글 자체 검수 | STEP 6: Gemini가 SEO 기준으로 자체 수정 (최대 2회 루프) |
+
+### 글 완료 직후 즉시 검수 원칙
+
+1. Gemini 본문 완성 즉시 → H2 개수, 분량(2500자↑), 해시태그(7개↑) 자동 검증
+2. 이미지 생성 즉시 → 파일 크기(15KB↑) 자동 검수
+3. 검수 통과 실패 시 → 해당 섹션 즉시 재시도, 전체 파이프라인 중단 없이 처리
+4. 최종 저장 → `index.md` 완성본 commit 후 git push
+
+### Gemini 세션 없으면
+
+- 이미지 없이 포스트 발행 (Pollinations 폴백 절대 없음)
+- 텔레그램으로 "Gemini 세션 없음 — 이미지 미생성" 알림 전송
+- Claude Code에게 세션 갱신 요청 (수동 대응 필요)
+
+---
+
 ## 절대 금지
 
 | 금지 항목 | 이유 |
@@ -314,6 +342,7 @@ docs/                        # 운영 문서 (CONTENTS_PLAN 등)
 | `git add .` | 스크린샷·temp 파일 실수 커밋 |
 | Anthropic/Gemini API 직접 호출 | 추가 비용 발생 |
 | @DmALOQ 채널에 YouTube 업로드 | 잘못된 채널 — 반드시 @dmalog |
+| **Pollinations 등 외부 이미지 API** | **Gemini Pro 전담 원칙 위반** |
 
 ---
 
