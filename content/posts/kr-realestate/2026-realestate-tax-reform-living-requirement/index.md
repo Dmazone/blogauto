@@ -6,7 +6,7 @@ tags: ["2026 부동산 세제개편안", "한국부동산"]
 categories: ["한국부동산"]
 series: ["한국부동산"]
 description: "2026년 8월 3일 발표된 세제개편안 핵심 요약! 비거주 1주택자 세부담 증가, 종부세 주택가액 기준 전환, 다주택자 양도세 완화 등 부동산 시장 핵심 세제 변화를 정리합니다."
-draft: false
+draft: true
 cover:
   image: "2026-realestate-tax-reform-living-requirement-thumb.webp"
   alt: "2026 부동산 세제개편안 3가지 세금 변화는? 썸네일"
