@@ -165,16 +165,19 @@ if (flatImages.length === 0) {
   process.exit(0);
 }
 
-console.log(`\n🚀 누락 이미지 ${flatImages.length}장 감지 → Pollinations.ai로 복구 시작\n`);
+// Pollinations 생성 비활성화 — Gemini Pro 전담 원칙 준수
+// 누락 감지만 하고 텔레그램 알림 + 목록 출력 후 종료
+console.log(`\n⚠️  누락 이미지 ${flatImages.length}장 감지 — Gemini Pro 세션으로 수동 복구 필요\n`);
 flatImages.forEach(img => console.log(`  · ${img.dir}/${img.file}`));
 console.log('');
+console.log('💡 복구 방법: node scripts/fix_bad_thumbs.mjs (TARGETS 목록 수정 후 실행)\n');
 
-// 순차 처리 (rate limit 대응 — 요청 간 60초 간격)
-let done = 0, failed = 0;
-for (const img of flatImages) {
-  const ok = await generateOne(img);
-  ok ? done++ : failed++;
-  if (done + failed < flatImages.length) await sleep(30000);
-}
+// 텔레그램 알림
+try {
+  const { sendTelegram } = await import('./telegram.js');
+  const lines = flatImages.slice(0, 10).map(img => `  · ${img.file}`).join('\n');
+  const extra = flatImages.length > 10 ? `\n  ... 외 ${flatImages.length - 10}개` : '';
+  await sendTelegram(`⚠️ 이미지 누락 감지 ${flatImages.length}건\n${lines}${extra}\n→ fix_bad_thumbs.mjs 실행 필요`);
+} catch {}
 
-console.log(`\n✅ 전체 완료 — 성공 ${done}개 / 실패 ${failed}개`);
+process.exit(0);

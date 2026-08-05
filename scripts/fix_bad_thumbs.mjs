@@ -39,26 +39,6 @@ const TARGETS = [
     },
   },
   {
-    slug: 'kt-wiz-kbo-rank-1st-go-young-pyo-2026',
-    section: 'sports',
-    title: 'KT위즈 1위 탈환! 고영표 20이닝 무실점 대기록',
-    prompts: {
-      img01: 'KBO 야구 경기장 파노라마, 야간 조명, 관중석 가득한 응원 분위기, 초록 잔디 마운드, 가로 16:9',
-      img02: '야구 투수 투구 동작 클로즈업 (얼굴 없음), 야구공과 글러브, 극적인 스포츠 조명, 가로 16:9',
-      thumb: '야구 트로피와 우승 리본, KBO 리그 선두 컨셉, 어두운 배경에 골드 빛, 스포츠 매거진 커버 스타일, 가로 16:9',
-    },
-  },
-  {
-    slug: '2026-spacex-rocket-moon-impact-astronomy-guide',
-    section: 'us-trends',
-    title: 'Why SpaceX Moon Impact 2026 Matters: Essential Guide',
-    prompts: {
-      img01: 'SpaceX Falcon 9 rocket stage in deep space, moon surface approaching, debris field, dark space, cinematic sci-fi photography, 16:9',
-      img02: 'Close-up of lunar crater impact zone with scattered debris, moon surface texture, dramatic side lighting from sun, 16:9 landscape',
-      thumb: 'Moon surface with rocket impact crater, Earth in background, space debris orbit, bold dark blue and silver tones, epic editorial, 16:9',
-    },
-  },
-  {
     slug: 'smart-ring-health-tracker-top3-2026',
     section: 'trending-picks',
     title: '2026 스마트링 추천 TOP3 성능 비교',
@@ -66,6 +46,16 @@ const TARGETS = [
       img01: '스마트링 3종 나란히 배치, 흰 배경 제품 사진, 삼성 갤럭시 링 스타일, 정밀한 제품 사진, 가로 16:9',
       img02: '손가락에 스마트링 착용 장면 (손만, 얼굴 없음), 스마트폰 건강 데이터 화면 함께, 미니멀 라이프스타일, 가로 16:9',
       thumb: '스마트링 하나 클로즈업, 메탈릭 고급 소재, 어두운 배경, 웨어러블 테크 매거진 커버 스타일, 가로 16:9',
+    },
+  },
+  {
+    slug: 'galaxy-z-fold8-pre-opening-benefits-2026',
+    section: 'it-devices',
+    title: '갤럭시Z폴드8 사전개통 혜택 3가지 진짜 놓치면 손해인 이유',
+    prompts: {
+      img01: '삼성 갤럭시 Z 폴드8 펼친 화면 프리미엄 스마트폰 제품 사진, 어두운 배경, 미니멀 테크 스타일, 가로 16:9',
+      img02: '스마트폰 사전개통 혜택 컨셉, 선물 상자와 태블릿 화면, 모던 라이프스타일, 가로 16:9',
+      thumb: '갤럭시 폴더블 폰 클로즈업, 골드/실버 메탈릭 소재, 어두운 배경, 테크 매거진 커버 스타일, 가로 16:9',
     },
   },
 ];
@@ -99,14 +89,22 @@ async function main() {
     const allExist = fs.existsSync(thumbPath) && fs.existsSync(img01Path) && fs.existsSync(img02Path);
     if (allExist) {
       const thumbSize = fs.statSync(thumbPath).size;
-      if (thumbSize >= 15000) {
+      // 100KB 미만이면 이전 실행에서 잘못 저장된 이미지일 수 있으므로 재생성
+      if (thumbSize >= 100000) {
         console.log(`  ✅ 이미지 이미 존재 (${Math.round(thumbSize/1024)}KB) — 스킵`);
         continue;
       }
+      console.log(`  ⚠️  기존 썸네일 ${Math.round(thumbSize/1024)}KB 너무 작음 → 재생성`);
     }
 
     try {
       await session.newConversation();
+
+      // 워밍업 텍스트 전송: 페이지 캐시 이미지를 여기서 소진 (이미지 인터셉터 시작 전)
+      // → 이후 useImageMaker에서는 Gemini 생성 이미지만 캡처
+      await session.send(`"${target.title}" 주제의 이미지를 만들 예정입니다.`).catch(() => {});
+      // 워밍업 응답 대기
+      await new Promise(r => setTimeout(r, 5000));
 
       // useImageMaker()가 내부적으로 인터셉터 설정+해제 처리
       await session.useImageMaker(
@@ -121,19 +119,26 @@ async function main() {
       // session._interceptedImages에 캡처된 이미지 반환
       const buffers = await session.extractImagesFromLastResponse(1, 5000);
 
-      if (buffers.length === 0) {
-        console.warn(`  ⚠️  이미지 캡처 실패 — 건너뜀`);
+      // 50KB 미만은 UI 로딩 아이콘 등 → 진짜 Gemini 생성 이미지만 남김
+      const realImages = buffers.filter((b) => b.length >= 50000);
+
+      if (realImages.length === 0) {
+        console.warn(`  ⚠️  실제 Gemini 이미지 없음 (캡처 ${buffers.length}장, 50KB 이상 0장) — 건너뜀`);
         failed++;
         continue;
       }
 
-      console.log(`  ✅ Gemini 이미지 ${buffers.length}장 수신`);
+      console.log(`  ✅ Gemini 이미지 ${realImages.length}장 수신 (전체 ${buffers.length}장 중 50KB 이상)`);
 
-      // 저장 순서: thumb → 01 → 02
+      // 순서대로 img01 → img02 → thumb (가장 큰 것 우선)
+      const sorted = [...realImages].sort((a, b) => b.length - a.length);
+      const b0 = sorted[0];
+      const b1 = sorted[1] ?? b0;
+      const b2 = sorted[2] ?? b1;
       const saveTargets = [
-        { buf: buffers[0], dest: thumbPath },
-        { buf: buffers[1] ?? buffers[0], dest: img01Path },
-        { buf: buffers[2] ?? buffers[1] ?? buffers[0], dest: img02Path },
+        { buf: b0, dest: img01Path },
+        { buf: b1, dest: img02Path },
+        { buf: b2, dest: thumbPath },
       ];
 
       let savedCount = 0;
