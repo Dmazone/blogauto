@@ -6,7 +6,7 @@ tags: ["삼성", "IT기기"]
 categories: ["IT기기"]
 series: ["IT기기"]
 description: "삼성 갤럭시 Z8 시리즈, 역대 최고 사전판매 14"
-draft: true
+draft: false
 cover:
   image: "it-devices-issue-20260804-thumb.webp"
   alt: "삼성 갤럭시 Z8 시리즈, 역대 최고 사전판매 14 썸네일"
