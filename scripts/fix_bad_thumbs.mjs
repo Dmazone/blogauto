@@ -19,16 +19,6 @@ dotenv.config({ path: path.join(ROOT, '.env') });
 // ── 수정 대상 목록 ────────────────────────────────────────────────────────────
 const TARGETS = [
   {
-    slug: 'hand-foot-mouth-disease-isolation-guidelines-2026',
-    section: 'health',
-    title: '2026 수족구병 초기증상과 완치 후 등원 기준 핵심 정리',
-    prompts: {
-      img01: '영유아 손발 발진 클로즈업 없이, 아동 병원 진료실 풍경, 의료진과 아이 실루엣, 밝고 깨끗한 분위기, 가로 16:9',
-      img02: '손 씻기 올바른 방법 안내 포스터 스타일 장면, 비누 거품, 깨끗한 흰색 배경, 건강 정보 일러스트 스타일, 가로 16:9',
-      thumb: '수족구병 관련 의료 테마, 청진기와 의약품 알약, 파란 배경, 전문적인 헬스케어 제품 사진 스타일, 가로 16:9',
-    },
-  },
-  {
     slug: '2026-japan-small-city-travel-trends',
     section: 'world-travel',
     title: '2026 일본 소도시 여행 추천 3곳 진짜 공개',
@@ -36,26 +26,6 @@ const TARGETS = [
       img01: '일본 시코쿠 마쓰야마 도고온천 전통 목조건물, 저녁 조명, 관광객 없이 깔끔한 거리, 따뜻한 노을 톤, 가로 16:9',
       img02: '미야코지마 에메랄드 해변 전경, 맑은 하늘과 산호초, 일본 남국 리조트 분위기, 광각 풍경, 가로 16:9',
       thumb: '일본 소도시 여행 컨셉, 빨간 도리이 게이트와 작은 마을 골목길, 벚꽃 나뭇가지, 따뜻한 색감, 가로 16:9',
-    },
-  },
-  {
-    slug: 'smart-ring-health-tracker-top3-2026',
-    section: 'trending-picks',
-    title: '2026 스마트링 추천 TOP3 성능 비교',
-    prompts: {
-      img01: '스마트링 3종 나란히 배치, 흰 배경 제품 사진, 삼성 갤럭시 링 스타일, 정밀한 제품 사진, 가로 16:9',
-      img02: '손가락에 스마트링 착용 장면 (손만, 얼굴 없음), 스마트폰 건강 데이터 화면 함께, 미니멀 라이프스타일, 가로 16:9',
-      thumb: '스마트링 하나 클로즈업, 메탈릭 고급 소재, 어두운 배경, 웨어러블 테크 매거진 커버 스타일, 가로 16:9',
-    },
-  },
-  {
-    slug: 'galaxy-z-fold8-pre-opening-benefits-2026',
-    section: 'it-devices',
-    title: '갤럭시Z폴드8 사전개통 혜택 3가지 진짜 놓치면 손해인 이유',
-    prompts: {
-      img01: '삼성 갤럭시 Z 폴드8 펼친 화면 프리미엄 스마트폰 제품 사진, 어두운 배경, 미니멀 테크 스타일, 가로 16:9',
-      img02: '스마트폰 사전개통 혜택 컨셉, 선물 상자와 태블릿 화면, 모던 라이프스타일, 가로 16:9',
-      thumb: '갤럭시 폴더블 폰 클로즈업, 골드/실버 메탈릭 소재, 어두운 배경, 테크 매거진 커버 스타일, 가로 16:9',
     },
   },
 ];
@@ -89,12 +59,13 @@ async function main() {
     const allExist = fs.existsSync(thumbPath) && fs.existsSync(img01Path) && fs.existsSync(img02Path);
     if (allExist) {
       const thumbSize = fs.statSync(thumbPath).size;
-      // 100KB 미만이면 이전 실행에서 잘못 저장된 이미지일 수 있으므로 재생성
-      if (thumbSize >= 100000) {
-        console.log(`  ✅ 이미지 이미 존재 (${Math.round(thumbSize/1024)}KB) — 스킵`);
+      const img01Size = fs.statSync(img01Path).size;
+      // thumb와 img01 모두 100KB 이상이어야 정상 이미지로 간주
+      if (thumbSize >= 100000 && img01Size >= 100000) {
+        console.log(`  ✅ 이미지 이미 존재 (thumb:${Math.round(thumbSize/1024)}KB, img01:${Math.round(img01Size/1024)}KB) — 스킵`);
         continue;
       }
-      console.log(`  ⚠️  기존 썸네일 ${Math.round(thumbSize/1024)}KB 너무 작음 → 재생성`);
+      console.log(`  ⚠️  이미지 크기 미달 (thumb:${Math.round(thumbSize/1024)}KB, img01:${Math.round(img01Size/1024)}KB) → 재생성`);
     }
 
     try {
