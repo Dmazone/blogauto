@@ -1514,9 +1514,29 @@ export async function runForSection(section, options = {}) {
     return `![${altText}](${src})`;
   });
 
-  // 품질 게이트: 저장 전 H2 개수 + 분량 확인
+  // 품질 게이트: 저장 전 H2 개수 + 분량 + 연구 아웃라인 감지
   const h2Count  = (final.match(/^## /gm) ?? []).length;
   const charCount = final.replace(/\s/g, '').length;
+
+  // Turn 1 연구 결과물이 본문으로 저장되는 버그 방지
+  const isResearchOutput =
+    final.startsWith('JSON{') ||
+    /^JSON\s*\{/.test(final) ||
+    final.includes('왜 지금 핫한가') ||
+    final.includes('왜 지금 핫한지') ||
+    final.includes('구글 검색어 예시') ||
+    final.includes('추천 제목 방향') ||
+    /^- ①/.test(final) ||
+    final.includes('애드센스 노출 가능성') ||
+    final.includes('조사된 최신') ||
+    final.includes('최종 선택 주제');
+
+  if (isResearchOutput) {
+    log('❌', '품질 게이트 실패: 연구 아웃라인이 본문으로 감지됨 → 저장 취소');
+    log('❌', `  본문 앞 200자: ${final.slice(0, 200).replace(/\n/g, '↵')}`);
+    throw new Error(`연구 아웃라인 감지 (본문 집필 미완성): "${topic.title}"`);
+  }
+
   if (h2Count < 2) {
     log('❌', `품질 게이트 실패: H2 ${h2Count}개 (최소 2개 필요) → 저장 취소`);
     log('❌', `  본문 앞 300자: ${final.slice(0, 300).replace(/\n/g, '↵')}`);
