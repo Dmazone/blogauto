@@ -313,7 +313,7 @@ export async function generate(slugArg) {
   console.log('\n📋 텍스트/음성 싱크 매핑:');
 
   async function makeSeg(name, bgImg, blocks, narration, minSec) {
-    console.log(`\n▶ [${name}] bg: ${path.basename(bgImg)}`);
+    console.log(`\n▶ [${name}] bg: ${bgImg ? path.basename(bgImg) : '단색배경(#1a1a2e)'}`);
 
     // HTML → PNG
     const htmlFile = path.join(tmp, `${name}.html`);
