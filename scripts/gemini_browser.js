@@ -637,7 +637,11 @@ export class GeminiSession {
 
     await wait(400);
 
-    // ④ 전송
+    // ④ 전송 — 직전에 버튼 클릭으로 로드된 캐시 이미지 수 기록
+    await wait(1500); // 버튼 클릭 후 캐시 이미지들이 모두 로드되길 기다림
+    const preSendCount = this._interceptedImages.length;
+    log('📸', `전송 전 캐시 이미지 ${preSendCount}장 (Gemini UI 캐시 — 제외 예정)`);
+
     const sendBtn = await this._tryFind(SEL.send);
     if (sendBtn) {
       const disabled = await sendBtn.evaluate(
@@ -664,7 +668,11 @@ export class GeminiSession {
       this.page.off('response', this._imageInterceptHandler);
       this._imageInterceptHandler = null;
     }
-    log('📸', `인터셉터 캡처 이미지: ${this._interceptedImages?.length ?? 0}장`);
+
+    // 프롬프트 전송 이후 로드된 이미지만 유지 (버튼 클릭 캐시 제거)
+    const allImages = this._interceptedImages.slice();
+    this._interceptedImages = allImages.slice(preSendCount);
+    log('📸', `인터셉터 캡처 이미지: ${this._interceptedImages.length}장 (버튼 캐시 ${preSendCount}장 제외, 전체 ${allImages.length}장)`);
   }
 
   // ── Gemini 응답에서 생성된 이미지 추출 ──────────────────────────────────────
