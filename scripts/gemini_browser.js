@@ -13,12 +13,14 @@
 import { chromium } from 'playwright';
 import os from 'os';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { sendTelegram } from './telegram.js';
 
 const __dirname    = path.dirname(fileURLToPath(import.meta.url));
 const SESSION_DIR  = path.join(os.homedir(), '.gemini-blog-session');
 const GEMINI_HOME  = 'https://gemini.google.com/app';
+const LOCK_FILE    = path.join(__dirname, '..', '.gemini-browser.lock');
 
 const log  = (e, m) => console.log(`${e}  ${m}`);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -75,15 +77,47 @@ const SEL = {
 
 export class GeminiSession {
   constructor({ headless = false, gemUrl = null } = {}) {
-    this.headless  = headless;
-    this.gemUrl    = gemUrl;     // 특정 Gem URL (없으면 일반 채팅)
-    this.context   = null;
-    this.page      = null;
-    this._turnCount = 0;         // 현재 대화 턴 수
+    this.headless   = headless;
+    this.gemUrl     = gemUrl;
+    this.context    = null;
+    this.page       = null;
+    this._turnCount = 0;
+    this._lockOwner = false;
+  }
+
+  // ── Lock 관리 (동시 실행 방지) ───────────────────────────────────────────────
+  _acquireLock() {
+    if (fs.existsSync(LOCK_FILE)) {
+      const pidStr = fs.readFileSync(LOCK_FILE, 'utf-8').trim();
+      const pid    = parseInt(pidStr, 10);
+      // 락을 건 프로세스가 실제로 살아있는지 확인
+      try { process.kill(pid, 0); } catch {
+        // 프로세스 없음 → 고아 락 제거
+        log('⚠️', `고아 락 파일 제거 (PID ${pid} 종료됨)`);
+        fs.unlinkSync(LOCK_FILE);
+      }
+    }
+    if (fs.existsSync(LOCK_FILE)) {
+      const pid = fs.readFileSync(LOCK_FILE, 'utf-8').trim();
+      throw new Error(`Gemini 브라우저 이미 실행 중 (PID ${pid}). 완료 후 재시도하세요.`);
+    }
+    fs.writeFileSync(LOCK_FILE, String(process.pid));
+    this._lockOwner = true;
+    process.once('exit', () => this._releaseLock());
+    process.once('SIGINT', () => { this._releaseLock(); process.exit(130); });
+    process.once('SIGTERM', () => { this._releaseLock(); process.exit(143); });
+  }
+
+  _releaseLock() {
+    if (this._lockOwner && fs.existsSync(LOCK_FILE)) {
+      try { fs.unlinkSync(LOCK_FILE); } catch {}
+      this._lockOwner = false;
+    }
   }
 
   // ── 초기화 ──────────────────────────────────────────────────────────────────
   async init() {
+    this._acquireLock();
     log('🌐', 'Gemini 브라우저 시작... (저장된 세션 사용)');
     this.context = await chromium.launchPersistentContext(SESSION_DIR, {
       headless: this.headless,
@@ -774,6 +808,7 @@ export class GeminiSession {
 
   async close() {
     try { await this.context?.close(); } catch {}
+    this._releaseLock();
     log('🔒', 'Gemini 세션 종료');
   }
 }
