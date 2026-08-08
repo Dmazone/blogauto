@@ -205,6 +205,39 @@ const TARGETS = [
     p2: 'mountain hiking trail with panoramic alpine valley view, summer travel destination, wide landscape, 16:9',
     p3: 'cozy mountain lodge exterior with snow-capped peaks backdrop, alpine retreat concept, no text, 16:9',
   },
+  // === trending-picks 추가 누락 ===
+  {
+    slug: 'deskterior-setup-top3-20260728',
+    section: 'trending-picks',
+    title: '2026 데스크테리어 무선 셋업 TOP3',
+    p1: 'clean minimal desk setup with wireless keyboard mouse and monitor arm, deskterior style, natural daylight, no text, 16:9',
+    p2: 'premium desk accessories laid out flat — wireless charger stand, cable management clips, monitor riser, product photography, 16:9',
+    p3: 'aesthetic home office corner with wood desk and ambient LED lighting, work from home deskterior, no text, 16:9',
+  },
+  {
+    slug: 'smart-inverter-dehumidifier-20260731',
+    section: 'trending-picks',
+    title: '2026 인버터 제습기 TOP3',
+    p1: 'modern white smart dehumidifier on wooden floor in bright living room, home appliance product photography, no text, 16:9',
+    p2: 'three dehumidifiers side by side on white background comparison shot, home appliance lineup, studio lighting, no text, 16:9',
+    p3: 'dehumidifier water tank being removed showing collected water, appliance function close-up, bright background, 16:9',
+  },
+  {
+    slug: 'smart-ring-health-tracker-top3-2026',
+    section: 'trending-picks',
+    title: '2026 스마트링 건강 트래커 TOP3',
+    p1: 'three smart health tracker rings on white studio surface, wearable comparison photography, no text, 16:9',
+    p2: 'smart ring worn on ring finger showing health monitoring, wearable tech close-up, neutral background, no face shown, 16:9',
+    p3: 'smart ring next to smartphone health app showing heart rate sleep data, health tracking concept, clean desk, 16:9',
+  },
+  {
+    slug: 'trending-picks-20260727',
+    section: 'trending-picks',
+    title: '트렌드 상품 추천 TOP3',
+    p1: 'three trendy consumer products arranged on white studio surface — gadget lifestyle concept, no text, 16:9',
+    p2: 'popular tech products lineup on minimal background, trend product recommendation concept, clean photography, 16:9',
+    p3: 'shopping concept with curated product selection on wooden desk, consumer trend recommendation, no text, 16:9',
+  },
 ];
 
 async function main() {
