@@ -8,7 +8,7 @@
  * ║     · bg_intro (s0,s3): {slug}-thumb.webp (Gemini 썸네일)        ║
  * ║     · bg_s1    (s1)   : {slug}-01.webp   (Gemini 본문 이미지 1)  ║
  * ║     · bg_s2    (s2)   : {slug}-02.webp   (Gemini 본문 이미지 2)  ║
- * ║  3. 블로그 이미지 없을 때만 Pollinations.ai (flux, 1080×1080) 폴백║
+ * ║  3. Gemini 이미지 없으면 단색 배경 (#1a1a2e) — Pollinations 금지  ║
  * ║  4. HTML 배경 + Playwright 렌더링으로 텍스트 오버레이              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
@@ -25,14 +25,13 @@ import { fileURLToPath } from 'url';
 
 const __dirname  = path.dirname(fileURLToPath(import.meta.url));
 const ROOT       = path.join(__dirname, '..');
-const FFMPEG     = 'C:\\Users\\Paydma\\.vscode\\extensions\\kilocode.kilo-code-7.4.17-win32-x64\\bin\\ffmpeg.exe';
+const FFMPEG     = 'C:\\Users\\Paydma\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.1.2-full_build\\bin\\ffmpeg.exe';
 const OUT_DIR    = path.join(ROOT, 'data', '1_youtube-shorts');
 const BGM_DIR    = path.join(OUT_DIR, 'bgm');
 const NO_PREVIEW = process.argv.includes('--no-preview');
 
 // ── 텍스트 유틸 ────────────────────────────────────────────────────
 
-// 한국어 단어 기준으로 maxChars마다 <br> 삽입
 function breakText(text, maxChars) {
   const words = text.split(/\s+/);
   const lines = [];
@@ -50,7 +49,6 @@ function breakText(text, maxChars) {
   return { html: lines.join('<br>'), lines: lines.length };
 }
 
-// 텍스트 길이에 따른 동적 폰트 크기
 function dynFont(text, base) {
   const len = [...text].length;
   if (len <= 12) return base;
@@ -81,20 +79,44 @@ function parsePost(slug) {
     path.join(ROOT, 'content', 'posts', 'trending-picks', slug, 'index.md'), 'utf-8'
   );
   const title = (md.match(/^title:\s*["']?(.+?)["']?\s*$/m) || [])[1] || slug;
-  const rows = [...md.matchAll(/^\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|/gm)].slice(0, 3);
+
+  // 마크다운 테이블 파싱 (| **상품명** | 가격 | ...)
+  const tableRows = [...md.matchAll(/^\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|/gm)].slice(0, 3);
+
+  // 폴백: ### N) 패턴으로 상품명+가격 파싱
+  const sectionRows = tableRows.length === 0
+    ? [...md.matchAll(/###\s*\d+[)\.]\s*(?:\[?[^\]]*\]?)?\s*([가-힣\w\s\(\)]+?)\s*[\n\r]/gm)].slice(0, 3)
+    : [];
+  const priceRows = tableRows.length === 0
+    ? [...md.matchAll(/실제 판매 가격대[:：]?\s*([^\n\r]+)/gm)].slice(0, 3)
+    : [];
+
   const urls = [...md.matchAll(/https:\/\/www\.coupang\.com[^\s\)\"\'<>\]]+/g)]
     .map(m => m[0].replace(/[)\]\s,;]+$/, ''));
 
-  const products = rows.map((m, i) => ({
-    name:       m[1].trim(),
-    price:      m[2].trim().replace(/\\\~/g, '~'),
-    imageQuery: coupangQuery(urls[i] || '') || m[1].trim(),
-  }));
+  let products;
+  if (tableRows.length >= 1) {
+    products = tableRows.map((m, i) => ({
+      name:       m[1].trim(),
+      price:      m[2].trim().replace(/\\\~/g, '~'),
+      imageQuery: coupangQuery(urls[i] || '') || m[1].trim(),
+    }));
+  } else {
+    // 폴백: 섹션 제목에서 상품명 추출
+    const headings = [...md.matchAll(/###\s*\d+[)\.]\s*(?:\[[^\]]*\]\s*)?\[?([가-힣A-Za-z0-9\s\(\)\-]+?)\]?(?:\s*\([^)]*\))?\s*[\n\r]/gm)].slice(0, 3);
+    products = headings.map((m, i) => ({
+      name:       m[1].trim().replace(/\s+/g, ' '),
+      price:      (priceRows[i] || [])[1]?.trim() || '',
+      imageQuery: m[1].trim(),
+    }));
+    // 폴백도 실패하면 빈 배열
+    if (products.length === 0) products = [];
+  }
 
   const imgDir  = path.join(ROOT, 'content', 'posts', 'trending-picks', slug);
   const fallImg = (name) => {
     const p = path.join(imgDir, name);
-    return fs.existsSync(p) ? p : path.join(imgDir, `${slug}-thumb.webp`);
+    return fs.existsSync(p) ? p : null;
   };
   return {
     title, products,
@@ -106,57 +128,31 @@ function parsePost(slug) {
   };
 }
 
-// ── [지침 2단계] Pollinations.ai 상품 이미지 생성 ─────────────────
-
-async function genImg(query, outPath, maxRetry = 2) {
-  // 정사각형으로 생성 → CSS object-fit:cover 가 확대·크롭해서 세로 화면 채움 (찌그러짐 방지)
-  const prompt = `${query}, product photography, professional studio, clean background, high quality`;
-  const url    = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1080&height=1080&model=flux&nologo=true`;
-  for (let i = 1; i <= maxRetry; i++) {
-    try {
-      console.log(`  🎨 [${i}/${maxRetry}] ${query.slice(0, 28)}...`);
-      const r   = await fetch(url, { signal: AbortSignal.timeout(90_000) });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const buf = Buffer.from(await r.arrayBuffer());
-      if (buf.length < 15_000) throw new Error(`너무 작음 ${buf.length}B`);
-      fs.writeFileSync(outPath, buf);
-      console.log(`  ✅ ${(buf.length / 1024).toFixed(0)}KB`);
-      return true;
-    } catch (e) {
-      console.log(`  ⚠️ 실패 [${i}/${maxRetry}]: ${e.message}`);
-    }
-  }
-  return false;
-}
-
 // ── HTML 슬라이드 빌더 ────────────────────────────────────────────
 
-// Playwright 헤드리스 모드에서 시스템 폰트 미인식 방지 — @font-face 절대 경로 직접 주입
 const MALGUN_URL = 'file:///C:/Windows/Fonts/malgunbd.ttf';
 
 function buildHtml(bgImg, blocks) {
   const elems = blocks.map(b => {
     const fs_  = b.size || 48;
     const maxH = b.maxH ? `max-height:${b.maxH}px;overflow:hidden;` : '';
+    const bg   = b.bg   ? `background:${b.bg};border-radius:16px;padding:12px 24px;` : '';
     return `<div style="
       position:absolute;width:960px;left:60px;top:${b.top}px;
       font-size:${fs_}px;color:${b.color || '#fff'};
       font-weight:${b.weight || 'bold'};text-align:center;
       font-family:'KOR',sans-serif;
-      text-shadow:3px 3px 20px rgba(0,0,0,1),0 0 50px rgba(0,0,0,.9);
-      line-height:1.35;word-break:keep-all;${maxH}">${b.text}</div>`;
+      text-shadow:2px 2px 12px rgba(0,0,0,1),0 0 40px rgba(0,0,0,.95);
+      line-height:1.3;word-break:keep-all;${maxH}${bg}">${b.text}</div>`;
   }).join('\n');
 
-  const bgStyle = bgImg
-    ? `background:#111`
-    : `background:#1a1a2e`; // Gemini 이미지 없을 때 단색 배경
+  const bgStyle = bgImg ? `background:#000` : `background:#0d0d1a`;
   const bgImgTag = bgImg
     ? `<img class="bg-img" src="${toFileUrl(bgImg)}" />`
     : '';
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
-  /* 헤드리스 Chromium에서 한글 폰트 보장 — 절대 경로 직접 로드 */
   @font-face {
     font-family: 'KOR';
     src: url('${MALGUN_URL}') format('truetype');
@@ -166,15 +162,21 @@ function buildHtml(bgImg, blocks) {
   *{margin:0;padding:0;box-sizing:border-box}
   body{width:1080px;height:1920px;overflow:hidden;position:relative;
     font-family:'KOR',sans-serif;${bgStyle}}
-  /* object-fit:cover → 원본 비율 유지하며 확대해 화면 채움, 좌우/상하 크롭 허용 */
   .bg-img{position:absolute;top:0;left:0;width:100%;height:100%;
     object-fit:cover;object-position:center;
-    filter:brightness(0.52) saturate(0.75);}
+    filter:brightness(0.45) saturate(0.80);}
   .grad{position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 45%,rgba(0,0,0,.65) 100%)}
+    background:linear-gradient(180deg,
+      rgba(0,0,0,.75) 0%,
+      rgba(0,0,0,.15) 40%,
+      rgba(0,0,0,.15) 60%,
+      rgba(0,0,0,.80) 100%)}
+  .stripe{position:absolute;left:0;right:0;height:5px;background:linear-gradient(90deg,#FFD700,#FF6B35,#FFD700)}
 </style></head><body>
   ${bgImgTag}
   <div class="grad"></div>
+  <div class="stripe" style="top:0"></div>
+  <div class="stripe" style="bottom:0"></div>
 ${elems}
 </body></html>`;
 }
@@ -192,7 +194,7 @@ $v = $voices | Where-Object {$_.VoiceInfo.Culture -like 'ko*' -and $_.VoiceInfo.
 if (-not $v) { $v = $voices | Where-Object {$_.VoiceInfo.Culture -like 'ko*'} | Select-Object -First 1 }
 if (-not $v) { $v = $voices | Where-Object {$_.VoiceInfo.Gender -eq [System.Speech.Synthesis.VoiceGender]::Male} | Select-Object -First 1 }
 if ($v) { $s.SelectVoice($v.VoiceInfo.Name); Write-Host "Voice: $($v.VoiceInfo.Name)" } else { Write-Host "Voice: default" }
-$s.Rate = 6
+$s.Rate = 2
 $s.SetOutputToWaveFile("${wavPath.replace(/\\/g, '/')}")
 $s.Speak("${safe}")
 $s.Dispose()`.trim();
@@ -209,7 +211,6 @@ $s.Dispose()`.trim();
   });
 }
 
-// ffprobe 대신 ffmpeg -i 로 Duration 파싱 (ffprobe 미설치 환경 대응)
 async function getWavDur(wavPath) {
   return new Promise(resolve => {
     const p = spawn(FFMPEG, ['-i', wavPath, '-f', 'null', '-'], { stdio: 'pipe' });
@@ -263,40 +264,16 @@ export async function generate(slugArg) {
   fs.mkdirSync(tmp, { recursive: true });
   const outPath = path.join(OUT_DIR, `${resolvedSlug}.mp4`);
 
-  // ── [지침] 슬라이드 배경 — Gemini 블로그 이미지 전용 (Pollinations 폴백 금지) ──
+  // ── [지침] Gemini 블로그 이미지 전용 ──
   console.log('\n🎨 슬라이드 배경 이미지 준비 (Gemini Pro 전용)...');
-  const postImgDir = path.join(ROOT, 'content', 'posts', 'trending-picks', resolvedSlug);
-  const geminiThumb = path.join(postImgDir, `${resolvedSlug}-thumb.webp`);
-  const geminiImg01 = path.join(postImgDir, `${resolvedSlug}-01.webp`);
-  const geminiImg02 = path.join(postImgDir, `${resolvedSlug}-02.webp`);
+  const postImgDir   = path.join(ROOT, 'content', 'posts', 'trending-picks', resolvedSlug);
+  const geminiThumb  = path.join(postImgDir, `${resolvedSlug}-thumb.webp`);
+  const geminiImg01  = path.join(postImgDir, `${resolvedSlug}-01.webp`);
+  const geminiImg02  = path.join(postImgDir, `${resolvedSlug}-02.webp`);
 
-  const FALLBACK_COLOR = '#1a1a2e'; // Gemini 이미지 없을 때 단색 배경
-
-  let bgIntro, bgS1, bgS2;
-
-  if (fs.existsSync(geminiThumb)) {
-    console.log(`  ✅ bg_intro ← ${resolvedSlug}-thumb.webp (Gemini)`);
-    bgIntro = geminiThumb;
-  } else {
-    console.log(`  ⚠️ bg_intro ← Gemini 이미지 없음, 단색 배경 사용`);
-    bgIntro = null; // null = 단색 배경
-  }
-
-  if (fs.existsSync(geminiImg01)) {
-    console.log(`  ✅ bg_s1 ← ${resolvedSlug}-01.webp (Gemini)`);
-    bgS1 = geminiImg01;
-  } else {
-    console.log(`  ⚠️ bg_s1 ← Gemini 이미지 없음, 단색 배경 사용`);
-    bgS1 = null;
-  }
-
-  if (fs.existsSync(geminiImg02)) {
-    console.log(`  ✅ bg_s2 ← ${resolvedSlug}-02.webp (Gemini)`);
-    bgS2 = geminiImg02;
-  } else {
-    console.log(`  ⚠️ bg_s2 ← Gemini 이미지 없음, 단색 배경 사용`);
-    bgS2 = null;
-  }
+  const bgIntro = fs.existsSync(geminiThumb) ? (console.log(`  ✅ bg_intro ← ${resolvedSlug}-thumb.webp`), geminiThumb) : (console.log('  ⚠️ bg_intro ← 단색 배경'), null);
+  const bgS1    = fs.existsSync(geminiImg01) ? (console.log(`  ✅ bg_s1 ← ${resolvedSlug}-01.webp`), geminiImg01) : (console.log('  ⚠️ bg_s1 ← 단색 배경'), null);
+  const bgS2    = fs.existsSync(geminiImg02) ? (console.log(`  ✅ bg_s2 ← ${resolvedSlug}-02.webp`), geminiImg02) : (console.log('  ⚠️ bg_s2 ← 단색 배경'), null);
 
   // ── Playwright 렌더링 ────────────────────────────────────────
   const browser = await chromium.launch({ headless: true });
@@ -304,129 +281,141 @@ export async function generate(slugArg) {
   await page.setViewportSize({ width: 1080, height: 1920 });
 
   const segs     = [];
-  const segDurs  = []; // xfade offset 계산용
+  const segDurs  = [];
   const E        = ['🥇', '🥈', '🥉'];
   const R        = ['1위', '2위', '3위'];
-  let   timeline = 0; // 싱크 모니터링용 누적 시간
+  let   timeline = 0;
 
-  // ── 싱크 모니터 출력 ─────────────────────────────────────────
   console.log('\n📋 텍스트/음성 싱크 매핑:');
 
   async function makeSeg(name, bgImg, blocks, narration, minSec) {
-    console.log(`\n▶ [${name}] bg: ${bgImg ? path.basename(bgImg) : '단색배경(#1a1a2e)'}`);
+    console.log(`\n▶ [${name}] bg: ${bgImg ? path.basename(bgImg) : '단색배경(#0d0d1a)'}`);
 
-    // HTML → PNG
     const htmlFile = path.join(tmp, `${name}.html`);
     const pngFile  = path.join(tmp, `${name}.png`);
     fs.writeFileSync(htmlFile, buildHtml(bgImg, blocks), 'utf-8');
     await page.goto(toFileUrl(htmlFile), { waitUntil: 'load' });
-    // 한글 @font-face 로드 완료까지 대기
     await page.evaluate(() => document.fonts.ready);
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     await page.screenshot({ path: pngFile });
     console.log('  📸 렌더링 OK');
 
-    // TTS
     const wavFile = path.join(tmp, `${name}.wav`);
     const ttsOk   = await tts(narration, wavFile);
 
     let dur = minSec;
     if (ttsOk) {
       const wavDur = await getWavDur(wavFile);
-      dur = Math.max(minSec, Math.ceil(wavDur) + 1);
+      dur = Math.max(minSec, Math.ceil(wavDur) + 1.5);
     }
 
-    // 싱크 모니터 로그
     const screenTexts = blocks.map(b => b.text.replace(/<br>/g, ' ')).join(' | ');
     console.log(`  ⏱ ${timeline.toFixed(1)}s - ${(timeline + dur).toFixed(1)}s (${dur}s)`);
     console.log(`  📺 화면: ${screenTexts.slice(0, 80)}`);
     console.log(`  🗣 음성: ${narration.slice(0, 80)}`);
     timeline += dur;
 
-    // PNG + 오디오 → MP4 (Ken Burns 줌 효과 포함)
     segDurs.push(dur);
     const mp4File = path.join(tmp, `${name}.mp4`);
-    // Ken Burns: 느린 중앙 줌인 + 슬라이드 전환용 fade in/out
-    const fadeOut = Math.max(0, dur - 0.4).toFixed(1);
-    const ZF = `zoompan=z='min(zoom+0.0007,1.10)':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=1080x1920:fps=30,fps=30,fade=t=in:st=0:d=0.3,fade=t=out:st=${fadeOut}:d=0.4`;
+    // Ken Burns: 부드러운 중앙 줌인
+    const fadeOut = Math.max(0, dur - 0.5).toFixed(1);
+    const ZF = `zoompan=z='min(zoom+0.0004,1.08)':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=1080x1920:fps=30,fps=30,fade=t=in:st=0:d=0.5,fade=t=out:st=${fadeOut}:d=0.5`;
+
     if (ttsOk) {
       const aacFile = path.join(tmp, `${name}.aac`);
       await runFF(['-i', wavFile, '-af', `apad,atrim=duration=${dur}`,
-        '-c:a', 'aac', '-b:a', '128k', '-y', aacFile], 'aac');
+        '-c:a', 'aac', '-b:a', '192k', '-y', aacFile], 'aac');
       await runFF(['-loop', '1', '-t', String(dur), '-i', pngFile,
         '-i', aacFile, '-vf', ZF,
-        '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '24',
+        '-c:v', 'libx264', '-preset', 'medium', '-crf', '18',
         '-pix_fmt', 'yuv420p', '-r', '30', '-c:a', 'copy', '-y', mp4File], 'seg');
     } else {
       await runFF(['-loop', '1', '-t', String(dur), '-i', pngFile,
         '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo',
         '-vf', ZF,
-        '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '24',
+        '-c:v', 'libx264', '-preset', 'medium', '-crf', '18',
         '-pix_fmt', 'yuv420p', '-r', '30',
-        '-c:a', 'aac', '-b:a', '128k', '-t', String(dur), '-y', mp4File], 'seg(무음)');
+        '-c:a', 'aac', '-b:a', '192k', '-t', String(dur), '-y', mp4File], 'seg(무음)');
     }
     segs.push(mp4File);
   }
 
-  // ── 슬라이드 0: 제목 ─────────────────────────────────────────
-  const titleBroken   = breakText(post.title, 12);
-  const titleFontSize = dynFont(post.title, 84);
-  const titleHeight   = titleBroken.lines * Math.ceil(titleFontSize * 1.35) + 10;
+  // ── 슬라이드 0: 인트로 + 제목 ─────────────────────────────────
+  const titleBroken   = breakText(post.title, 11);
+  const titleFontSize = dynFont(post.title, 82);
+  const titleHeight   = titleBroken.lines * Math.ceil(titleFontSize * 1.3) + 10;
 
   await makeSeg('s0', bgIntro, [
-    { text: '🔥 이거 모르면 손해야',           top: 140, size: 62,          color: '#FFD700' },
-    { text: titleBroken.html,               top: 260, size: titleFontSize, color: '#FFFFFF',
-      maxH: titleBroken.lines * 130 + 20 },
-    { text: '딱 3개만 골라봤어',              top: 260 + titleHeight + 80, size: 52, color: '#87CEEB' },
-    { text: '🥇 1위는 끝까지 봐야 알아',      top: 260 + titleHeight + 150, size: 46, color: '#FFD700' },
+    { text: '트렌드줌 | TRENDZOOM',           top: 60,  size: 38, color: '#FFD700', weight: 'normal' },
+    { text: '지금 가장 핫한 아이템 🔥',          top: 160, size: 58, color: '#FF6B35' },
+    { text: titleBroken.html,                 top: 290, size: titleFontSize, color: '#FFFFFF',
+      maxH: titleBroken.lines * 120 + 20 },
+    { text: '▼ 끝까지 보면 1위 공개',            top: 290 + titleHeight + 80, size: 50, color: '#FFD700' },
+    { text: '쿠팡 최저가 링크 설명란에 있어!',    top: 290 + titleHeight + 160, size: 42, color: '#87CEEB' },
   ],
-  `이거 모르면 진짜 손해야. ${post.title}. 딱 3개만 골랐으니까 1위가 뭔지 끝까지 한번 봐봐.`,
-  5);
+  `지금 가장 핫한 아이템. ${post.title}. TOP3 비교 바로 시작할게. 끝까지 보면 1위 공개해줄게.`,
+  6);
 
-  // ── 슬라이드 1: TOP3 상품 ────────────────────────────────────
-  // 3개 상품을 1920px 안에 균등 배치 (헤더 80, 상품 3개, 하단 채널)
+  // ── 슬라이드 1: TOP3 상품 비교 ──────────────────────────────
   const prodBlocks = [
-    { text: '🏆 TOP 3 인기 상품 비교', top: 60, size: 62, color: '#FFD700' },
+    { text: '🏆 TOP 3 인기 상품 비교',  top: 55, size: 60, color: '#FFD700' },
+    { text: '─────────────────',        top: 135, size: 30, color: 'rgba(255,215,0,0.5)', weight: 'normal' },
   ];
-  post.products.forEach((p, i) => {
-    const baseY    = 220 + i * 490;
-    const nameBr   = breakText(p.name, 14);
-    const nameFont = dynFont(p.name, 54);
-    const nameH    = nameBr.lines * Math.ceil(nameFont * 1.35) + 10;
 
-    prodBlocks.push({ text: `${E[i]} ${R[i]}`,  top: baseY,       size: 62, color: '#FFD700' });
-    prodBlocks.push({ text: nameBr.html,         top: baseY + 85,  size: nameFont, color: '#FFFFFF',
-      maxH: Math.max(nameH, 150) });
-  });
+  if (post.products.length === 0) {
+    prodBlocks.push({ text: '지금 블로그에서 상세 비교 확인 🔍', top: 800, size: 54, color: '#fff' });
+  } else {
+    post.products.forEach((p, i) => {
+      const baseY    = 185 + i * 545;
+      const nameBr   = breakText(p.name, 13);
+      const nameFont = dynFont(p.name, 56);
+      const nameH    = nameBr.lines * Math.ceil(nameFont * 1.3) + 10;
 
-  const prodNarr = `TOP 3 인기 상품 한번 비교해볼게. ` +
-    post.products.map((p, i) => `${R[i]}는 ${p.name}.`).join(' ');
-  await makeSeg('s1', bgS1, prodBlocks, prodNarr, 9);
+      prodBlocks.push({ text: `${E[i]} ${R[i]}`,   top: baseY,       size: 58, color: '#FFD700' });
+      prodBlocks.push({ text: nameBr.html,          top: baseY + 75,  size: nameFont, color: '#FFFFFF',
+        maxH: Math.max(nameH, 140) });
+      if (p.price) {
+        prodBlocks.push({
+          text: p.price.replace(/원/g, '원'),
+          top:  baseY + 75 + Math.max(nameH, 140) + 10,
+          size: 40, color: '#87CEEB',
+        });
+      }
+    });
+  }
+
+  const prodNarr = post.products.length > 0
+    ? `TOP 3 인기 상품 비교해볼게. ` + post.products.map((p, i) => `${R[i]}는 ${p.name}.`).join(' ')
+    : '지금 가장 인기 있는 TOP3 상품들. 블로그에서 자세한 비교 확인해봐.';
+  await makeSeg('s1', bgS1, prodBlocks, prodNarr, 10);
 
   // ── 슬라이드 2: CTA ──────────────────────────────────────────
   await makeSeg('s2', bgS2, [
-    { text: '💰 쿠팡 최저가 링크 있어',   top: 300, size: 64, color: '#FFD700' },
-    { text: '지금 설명란 ▼ 클릭해봐',    top: 400, size: 76, color: '#FFFFFF' },
-    { text: '트렌드줌 블로그에서',        top: 630, size: 50, color: '#87CEEB' },
-    { text: '비교 리뷰도 바로 확인 가능!', top: 710, size: 46, color: '#87CEEB' },
+    { text: '💰 쿠팡 최저가 바로가기',      top: 280, size: 66, color: '#FFD700' },
+    { text: '지금 설명란 ▼ 클릭!',         top: 380, size: 80, color: '#FFFFFF' },
+    { text: '──────────────',              top: 510, size: 28, color: 'rgba(255,255,255,0.4)', weight: 'normal' },
+    { text: '📰 트렌드줌 블로그',            top: 570, size: 50, color: '#87CEEB' },
+    { text: '상세 비교 리뷰도 확인 가능!',   top: 650, size: 44, color: '#87CEEB' },
+    { text: 'dmazone.github.io/blogauto',  top: 730, size: 34, color: 'rgba(135,206,235,0.7)', weight: 'normal' },
   ],
-  '쿠팡 최저가 링크 바로 설명란에 있어. 지금 클릭해봐! 트렌드줌 블로그에서 더 자세한 비교 리뷰도 볼 수 있어.',
-  6);
+  '쿠팡 최저가 링크 지금 설명란에 있어. 바로 클릭해봐! 트렌드줌 블로그에서 더 자세한 비교 리뷰도 볼 수 있어.',
+  7);
 
   // ── 슬라이드 3: 아웃트로 ─────────────────────────────────────
   await makeSeg('s3', bgIntro, [
-    { text: '구독 & 좋아요! 👍',         top: 760, size: 96, color: '#FFD700' },
-    { text: '🔔 알림 켜놓으면 좋겠어!',  top: 910, size: 64, color: '#FFFFFF' },
+    { text: '트렌드줌 | TRENDZOOM',        top: 60,  size: 38, color: '#FFD700', weight: 'normal' },
+    { text: '👍 좋아요 & 구독',             top: 700, size: 94, color: '#FFFFFF' },
+    { text: '🔔 알림 ON',                  top: 850, size: 80, color: '#FFD700' },
+    { text: '매일 최신 트렌드 픽 업데이트!', top: 970, size: 46, color: '#87CEEB' },
   ],
-  '구독이랑 좋아요 눌러주면 진짜 힘이 돼. 알림도 켜놓으면 새 영상 바로 받을 수 있어. 고마워!',
-  4);
+  '좋아요랑 구독 눌러주면 정말 힘이 돼. 알림도 켜두면 매일 새로운 트렌드 아이템 바로 받아볼 수 있어. 고마워!',
+  5);
 
   await browser.close();
 
-  // ── 총 싱크 요약 ─────────────────────────────────────────────
   console.log(`\n📊 총 영상 길이: ${timeline.toFixed(1)}s`);
 
-  // ── concat (fade in/out은 각 세그먼트에 내장) ─────────────
+  // ── concat ───────────────────────────────────────────────────
   console.log('\n🔗 합치기...');
   const listFile = path.join(tmp, 'list.txt');
   fs.writeFileSync(listFile, segs.map(s => `file '${s.replace(/\\/g, '/')}'`).join('\n'));
@@ -435,18 +424,18 @@ export async function generate(slugArg) {
   if (bgmPath) {
     const concatTmp = path.join(tmp, 'concat.mp4');
     await runFF(['-f', 'concat', '-safe', '0', '-i', listFile,
-      '-c:v', 'libx264', '-preset', 'fast', '-crf', '22',
-      '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k', '-y', concatTmp], 'concat');
+      '-c:v', 'libx264', '-preset', 'medium', '-crf', '18',
+      '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-y', concatTmp], 'concat');
     await runFF(['-i', concatTmp, '-stream_loop', '-1', '-i', bgmPath,
-      '-filter_complex', '[1:a]volume=0.20[bgm];[0:a][bgm]amix=inputs=2:duration=first[aout]',
+      '-filter_complex', '[1:a]volume=0.15[bgm];[0:a][bgm]amix=inputs=2:duration=first[aout]',
       '-map', '0:v', '-map', '[aout]',
-      '-c:v', 'copy', '-c:a', 'aac', '-b:a', '128k',
+      '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k',
       '-movflags', '+faststart', '-y', outPath], 'bgm');
   } else {
     await runFF(['-f', 'concat', '-safe', '0', '-i', listFile,
-      '-c:v', 'libx264', '-preset', 'fast', '-crf', '22',
+      '-c:v', 'libx264', '-preset', 'medium', '-crf', '18',
       '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
-      '-c:a', 'aac', '-b:a', '128k', '-y', outPath], 'concat');
+      '-c:a', 'aac', '-b:a', '192k', '-y', outPath], 'concat');
   }
 
   fs.rmSync(tmp, { recursive: true, force: true });
