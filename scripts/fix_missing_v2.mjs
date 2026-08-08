@@ -83,7 +83,7 @@ const TARGETS = [
     p2: 'airline passenger compensation claim document on airport seating area, travel disruption concept, 16:9',
     p3: 'airplane on rainy tarmac under grey cloudy sky seen from terminal window, flight delay atmosphere, no text, 16:9',
   },
-  // === fix_bad_thumbs 실패 6건 재시도 ===
+  // === fix_bad_thumbs 실패 8건 재시도 ===
   {
     slug: 'early-onset-diabetes-sugar-spike-2026',
     section: 'health',
@@ -107,6 +107,22 @@ const TARGETS = [
     p1: 'network attached storage NAS device glowing blue LED on dark server rack, data storage concept, 16:9',
     p2: 'rows of hard drives inside opened NAS enclosure, enterprise storage close-up, dark background with tech lighting, 16:9',
     p3: 'abstract data flow visualization with storage nodes and AI chip concept art, dark blue background, no text, 16:9',
+  },
+  {
+    slug: 'magsafe-powerbank-top3-20260807',
+    section: 'trending-picks',
+    title: '2026 맥세이프 보조배터리 TOP3',
+    p1: 'three MagSafe compatible wireless power banks on white studio surface, MagSafe circular magnet visible, no text, 16:9',
+    p2: 'MagSafe power bank attached to back of smartphone wirelessly charging, tech product in use, clean background, 16:9',
+    p3: 'compact magnetic wireless charger power bank close-up detail, premium portable charging concept, dark background, 16:9',
+  },
+  {
+    slug: '2026-anthropic-custom-ai-chips-in-house-silicon',
+    section: 'us-trends',
+    title: 'Anthropic 자체 AI 칩 개발',
+    p1: 'custom AI processor chip on circuit board with glowing blue nodes, silicon semiconductor concept, dark background, 16:9',
+    p2: 'abstract AI chip design concept with neural network pathways etched into silicon, tech manufacturing, 16:9',
+    p3: 'futuristic AI data center server room with custom chip architecture concept, cool blue lighting, no text, 16:9',
   },
   {
     slug: 'kbo-heatwave-cancellation-2026-schedule-change',
