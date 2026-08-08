@@ -6,6 +6,7 @@ publishDate: 2026-05-21T09:05:00+09:00
 slug: korea-economy-gdp-growth-2026
 categories: ["경제"]
 tags: ["2026년 한국 경제성장률", "한국경제", "반도체수출", "내수침체"]
+description: "2026년 한국 경제성장률 전망과 반도체 수출 호조 뒤에 감춰진 내수 침체 실태를 기재부·한국은행 데이터로 분석합니다."
 cover:
   image: "korea-economy-gdp-growth-2026-thumb.webp"
   alt: "한국 경제성장률 썸네일"

@@ -36,19 +36,6 @@ async function fetchSitemap() {
   return urls;
 }
 
-async function pingGoogleSitemap() {
-  console.log('🔔 Google 사이트맵 핑 전송 중...');
-  try {
-    const url = `https://www.google.com/ping?sitemap=${encodeURIComponent(SITEMAP)}`;
-    const res = await fetch(url, { method: 'GET' });
-    console.log(`  Google 핑: HTTP ${res.status}`);
-    return res.status;
-  } catch (err) {
-    console.error(`  Google 핑 실패: ${err.message}`);
-    return 0;
-  }
-}
-
 async function submitIndexNow(urlList) {
   const BATCH = 10000; // IndexNow 최대
   let total = 0;
@@ -87,14 +74,11 @@ async function main() {
   const skipped = allUrls.length - postUrls.length;
   console.log(`📋 제출 대상: ${postUrls.length}개 (태그/카테고리 ${skipped}개 제외)`);
 
-  // 3. Google 사이트맵 핑
-  const googleStatus = await pingGoogleSitemap();
-
-  // 4. IndexNow 일괄 제출
+  // 3. IndexNow 일괄 제출
   const submitted = await submitIndexNow(postUrls);
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(1);
-  const msg = `✅ IndexNow 전체 제출 완료\n• 총 URL: ${postUrls.length}개\n• IndexNow 제출: ${submitted}개\n• Google 사이트맵 핑: HTTP ${googleStatus}\n• 소요: ${elapsed}초`;
+  const msg = `✅ IndexNow 전체 제출 완료\n• 총 URL: ${postUrls.length}개\n• IndexNow 제출: ${submitted}개\n• 소요: ${elapsed}초`;
   console.log('\n' + msg);
   await tg(msg);
 }
