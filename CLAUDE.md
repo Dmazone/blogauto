@@ -22,7 +22,7 @@
 
 | 항목 | 값 |
 |---|---|
-| Gemini Gem URL | `https://gemini.google.com/u/2/gem/cca9fca55f60` |
+| Gemini Gem URL | `https://gemini.google.com/u/1/gem/cca9fca55f60` |
 | Google 계정 | `paydma` (DmA 01, Gemini Pro 구독) |
 | YouTube 계정 | `ekaledma@gmail.com` |
 | YouTube 채널 | **@dmalog** (DMAZON) — @DmALOQ와 다름, 절대 혼동 금지 |
