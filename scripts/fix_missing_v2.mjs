@@ -83,7 +83,7 @@ const TARGETS = [
     p2: 'airline passenger compensation claim document on airport seating area, travel disruption concept, 16:9',
     p3: 'airplane on rainy tarmac under grey cloudy sky seen from terminal window, flight delay atmosphere, no text, 16:9',
   },
-  // === fix_bad_thumbs 실패 3건 재시도 ===
+  // === fix_bad_thumbs 실패 5건 재시도 ===
   {
     slug: 'early-onset-diabetes-sugar-spike-2026',
     section: 'health',
@@ -107,6 +107,22 @@ const TARGETS = [
     p1: 'network attached storage NAS device glowing blue LED on dark server rack, data storage concept, 16:9',
     p2: 'rows of hard drives inside opened NAS enclosure, enterprise storage close-up, dark background with tech lighting, 16:9',
     p3: 'abstract data flow visualization with storage nodes and AI chip concept art, dark blue background, no text, 16:9',
+  },
+  {
+    slug: 'open-ear-earbuds-top3-20260803',
+    section: 'trending-picks',
+    title: '2026 오픈형 이어버즈 TOP3',
+    p1: 'three open-ear sports earbuds side by side on white studio surface, bone conduction and air conduction types, no text, 16:9',
+    p2: 'open-ear earbuds worn during outdoor running exercise, wearable audio product, no face shown, blurred background, 16:9',
+    p3: 'open-ear earbuds next to smartphone showing fitness app, audio health wearable concept, clean desk, 16:9',
+  },
+  {
+    slug: 'legion-go-bios-update-brick-issue-2026',
+    section: 'it-devices',
+    title: '리전고 BIOS 벽돌 이슈 2026',
+    p1: 'handheld gaming PC on dark background with warning error screen concept, BIOS brick issue concept, no text, 16:9',
+    p2: 'portable gaming device with system update screen concept art, firmware failure concept, dramatic lighting, 16:9',
+    p3: 'compact gaming handheld console on dark reflective surface, RGB lighting, product photography, no text, 16:9',
   },
   // === 추가 누락 포스팅 ===
   {
