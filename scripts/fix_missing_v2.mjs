@@ -83,7 +83,7 @@ const TARGETS = [
     p2: 'airline passenger compensation claim document on airport seating area, travel disruption concept, 16:9',
     p3: 'airplane on rainy tarmac under grey cloudy sky seen from terminal window, flight delay atmosphere, no text, 16:9',
   },
-  // === fix_bad_thumbs 실패 5건 재시도 ===
+  // === fix_bad_thumbs 실패 6건 재시도 ===
   {
     slug: 'early-onset-diabetes-sugar-spike-2026',
     section: 'health',
@@ -107,6 +107,14 @@ const TARGETS = [
     p1: 'network attached storage NAS device glowing blue LED on dark server rack, data storage concept, 16:9',
     p2: 'rows of hard drives inside opened NAS enclosure, enterprise storage close-up, dark background with tech lighting, 16:9',
     p3: 'abstract data flow visualization with storage nodes and AI chip concept art, dark blue background, no text, 16:9',
+  },
+  {
+    slug: 'kbo-heatwave-cancellation-2026-schedule-change',
+    section: 'sports',
+    title: 'KBO 폭염 취소 일정 변경',
+    p1: 'empty baseball stadium during extreme heat summer day, KBO professional baseball, wide aerial shot, no text, 16:9',
+    p2: 'baseball field with thermometer showing extreme temperature concept, sports schedule disruption, 16:9',
+    p3: 'scoreboard showing canceled game message in empty stadium, sports event cancellation concept, 16:9',
   },
   {
     slug: 'open-ear-earbuds-top3-20260803',
