@@ -18,7 +18,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 dotenv.config({ path: path.join(ROOT, '.env') });
 
-const MIN_SIZE = 60000; // 60KB 미만 = 별 아이콘 폴백으로 간주
+const MIN_OUTPUT_KB = 60; // sharp 변환 후 출력 파일 60KB 미만 = 별 아이콘 폴백으로 간주
 
 const TARGETS = [
   // ── Batch 1 (committed, 32KB bad) — 7개 ─────────────────────────────────
@@ -176,9 +176,13 @@ const TARGETS = [
 async function main() {
   const { GeminiSession } = await import('./gemini_browser.js');
   const sharp = (await import('sharp')).default;
+  const { execSync } = await import('child_process');
 
   console.log(`🔄 이미지 재생성 — 총 ${TARGETS.length}개 포스팅 (60KB 미만 폴백 아이콘 거부)`);
-  const session = new GeminiSession({ headless: false });
+  const gemUrl = process.env.GEMINI_GEM_URL;
+  if (!gemUrl) throw new Error('GEMINI_GEM_URL 미설정 — .env 확인 필요');
+  console.log(`💎 Gem 모드: ${gemUrl}`);
+  const session = new GeminiSession({ headless: false, gemUrl });
   await session.init();
 
   let fixed = 0;
@@ -202,39 +206,25 @@ async function main() {
     const thumbPath = path.join(bundleDir, `${t.slug}-thumb.webp`);
 
     try {
+      // 워밍업: _turnCount=1로 강제 설정해 send() 내부 newConversation() 재호출 방지
       await session.newConversation();
-      await session.send('이미지를 만들어줘.').catch(() => {});
-      await new Promise(r => setTimeout(r, 4000));
-      await session.newConversation();
-      await new Promise(r => setTimeout(r, 1500));
+      session._turnCount = 1;
+      await session.send('안녕', { timeout: 10000 }).catch(() => {});
+      session._turnCount = 0; // useImageMaker를 위해 리셋
 
       await session.useImageMaker(
         `이미지 3장 생성:\n\n[1] ${t.p1}\n\n[2] ${t.p2}\n\n[3] ${t.p3}\n\n규칙: 텍스트·로고 없음, 얼굴 클로즈업 없음, 16:9 가로`
       );
 
       const buffers = await session.extractImagesFromLastResponse(1, 10000);
-      const realImages = buffers.filter(b => b.length >= MIN_SIZE);
 
-      if (realImages.length === 0) {
-        const captured = buffers.length;
-        const maxKb = buffers.length > 0 ? Math.round(Math.max(...buffers.map(b => b.length)) / 1024) : 0;
-        console.warn(`  ⚠️  유효 이미지 없음 (캡처 ${captured}장, 최대 ${maxKb}KB — 60KB 미만 폴백 아이콘)`);
-        // 기존 소형(잘못된) 파일 삭제 — 이미지 없음이 아이콘보다 낫다
-        for (const imgPath of [img01Path, img02Path, thumbPath]) {
-          if (fs.existsSync(imgPath)) {
-            const sizeByte = fs.statSync(imgPath).size;
-            if (sizeByte < MIN_SIZE) {
-              fs.unlinkSync(imgPath);
-              console.warn(`  🗑️  ${path.basename(imgPath)} 삭제 (${Math.round(sizeByte / 1024)}KB — 별 아이콘)`);
-            }
-          }
-        }
-        failed++;
-        failedList.push(t.slug);
-        continue;
+      if (buffers.length === 0) {
+        console.warn(`  ⚠️  캡처된 이미지 없음 — 건너뜀`);
+        failed++; failedList.push(t.slug); continue;
       }
+      console.log(`  📊 raw 버퍼: ${buffers.length}장, 최대 ${Math.round(Math.max(...buffers.map(b=>b.length))/1024)}KB`);
 
-      const sorted = [...realImages].sort((a, b) => b.length - a.length);
+      const sorted = [...buffers].sort((a, b) => b.length - a.length);
       const saves = [
         { buf: sorted[0],              dest: img01Path },
         { buf: sorted[1] ?? sorted[0], dest: img02Path },
@@ -248,16 +238,41 @@ async function main() {
             .resize(1280, 720, { fit: 'cover', position: 'centre' })
             .webp({ quality: 90, effort: 6 })
             .toFile(dest);
-          const kb = Math.round(fs.statSync(dest).size / 1024);
-          console.log(`  💾 ${path.basename(dest)} (${kb}KB)`);
-          savedCount++;
+          const outputBytes = fs.statSync(dest).size;
+          const kb = Math.round(outputBytes / 1024);
+          if (outputBytes < MIN_OUTPUT_KB * 1024) {
+            fs.unlinkSync(dest);
+            console.warn(`  🗑️  ${path.basename(dest)} (${kb}KB) — 출력 너무 작음, 별 아이콘 제거`);
+          } else {
+            console.log(`  💾 ${path.basename(dest)} (${kb}KB)`);
+            savedCount++;
+          }
         } catch (err) {
           console.warn(`  ⚠️  저장 실패: ${err.message}`);
         }
       }
 
-      if (savedCount > 0) fixed++;
-      else { failed++; failedList.push(t.slug); }
+      if (savedCount > 0) {
+        fixed++;
+        // 즉시 commit + push
+        try {
+          execSync('git add content/', { cwd: ROOT, stdio: 'inherit' });
+          execSync(`git commit -m "fix: ${t.slug} 이미지 재생성"`, { cwd: ROOT, stdio: 'inherit' });
+          execSync('git push origin main', { cwd: ROOT, stdio: 'inherit' });
+          console.log(`  🚀 즉시 push 완료 → ${t.slug}`);
+        } catch (e) {
+          console.error(`  ❌ push 실패: ${e.message}`);
+        }
+      } else {
+        // 출력이 전부 소형 → 기존 파일도 소형이면 삭제
+        for (const imgPath of [img01Path, img02Path, thumbPath]) {
+          if (fs.existsSync(imgPath) && fs.statSync(imgPath).size < MIN_OUTPUT_KB * 1024) {
+            fs.unlinkSync(imgPath);
+            console.warn(`  🗑️  기존 별 아이콘 삭제: ${path.basename(imgPath)}`);
+          }
+        }
+        failed++; failedList.push(t.slug);
+      }
 
     } catch (err) {
       console.error(`  ❌ 오류: ${err.message}`);
@@ -279,17 +294,7 @@ async function main() {
     console.log(`❌ 실패:\n${failedList.map(s => `  - ${s}`).join('\n')}`);
   }
 
-  if (fixed > 0) {
-    const { execSync } = await import('child_process');
-    try {
-      execSync('git add content/', { cwd: ROOT, stdio: 'inherit' });
-      execSync(`git commit -m "fix: 별 아이콘 이미지 재생성 (${fixed}건) — 60KB 임계값"`, { cwd: ROOT, stdio: 'inherit' });
-      execSync('git push origin main', { cwd: ROOT, stdio: 'inherit' });
-      console.log('✅ Git push 완료');
-    } catch (err) {
-      console.error('❌ Git push 실패:', err.message);
-    }
-  }
+  console.log('(각 포스팅 완료 시 즉시 push 완료됨)');
 }
 
 main().catch(err => { console.error('Fatal:', err); process.exit(1); });

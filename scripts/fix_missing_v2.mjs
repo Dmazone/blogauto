@@ -286,7 +286,10 @@ async function main() {
   const { execSync } = await import('child_process');
 
   console.log(`🔄 이미지 생성 — 총 ${TARGETS.length}개 누락 포스팅 (Gemini Pro 전용)`);
-  const session = new GeminiSession({ headless: false });
+  const gemUrl = process.env.GEMINI_GEM_URL;
+  if (!gemUrl) throw new Error('GEMINI_GEM_URL 미설정 — .env 확인 필요');
+  console.log(`💎 Gem 모드: ${gemUrl}`);
+  const session = new GeminiSession({ headless: false, gemUrl });
   await session.init();
 
   let fixed = 0;
