@@ -735,7 +735,7 @@ async function runWebPipeline(section, dateOverride) {
   log('🔍', '[Turn 1] 실시간 트렌드 조사 중...');
   session._turnCount = 0; // 새 대화
   const todayKst = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  await session.send(
+  const t1 = await session.send(
     `[섹션: ${section.name}] [작성 언어: ${lc.label}]
 [오늘 날짜: ${todayKst}] ← 이 날짜를 반드시 인식하고 아래 모든 판단의 기준으로 삼을 것
 ${subtopicLine}
@@ -784,51 +784,69 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
 각 섹션의 톤(내부 메모용 — 본문에 출력 절대 금지): 비교분석/장단점/경험담/튜토리얼 중 선택`
   );
 
-  // JSON 파싱 (3단계: 코드블록 → 중첩JSON → 개별 필드 추출 → 재시도 턴)
+  // JSON 파싱 (다단계: 코드블록→중첩JSON→개별필드→마크다운→재시도→신규대화)
   let topic = { title: '', slug: '', keyword: '', description: '' };
   let t2Parsed = false;
 
   const tryParseJson = (text) => {
-    // 1) ```json 코드블록
-    const m1 = text.match(/```json\s*([\s\S]*?)```/s);
-    if (m1) { try { return JSON.parse(m1[1]); } catch {} }
-    // 2) 첫 번째 { } 블록 (중첩 포함)
-    const start = text.indexOf('{');
-    if (start >= 0) {
+    // Gemini curly/smart quote 정규화
+    const norm = text
+      .replace(/[“”„‟]/g, '"')
+      .replace(/[‘’‚‛]/g, "'")
+      .replace(/＂/g, '"').replace(/＇/g, "'");
+
+    // 1) ```json / ``` 코드블록 (텍스트 어디서든)
+    for (const m of norm.matchAll(/```(?:json)?\s*([\s\S]*?)```/gs)) {
+      try {
+        const r = JSON.parse(m[1].trim());
+        if (r?.title && r?.slug) return r;
+      } catch {}
+    }
+    // 2) { } 블록 전체 순서대로 시도 (JSON이 텍스트 끝에 있어도 처리)
+    let pos = 0;
+    while ((pos = norm.indexOf('{', pos)) >= 0) {
       let depth = 0, end = -1;
-      for (let i = start; i < text.length; i++) {
-        if (text[i] === '{') depth++;
-        else if (text[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+      for (let i = pos; i < norm.length; i++) {
+        if (norm[i] === '{') depth++;
+        else if (norm[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
       }
-      if (end > start) { try { return JSON.parse(text.slice(start, end + 1)); } catch {} }
+      if (end > pos) {
+        try {
+          const r = JSON.parse(norm.slice(pos, end + 1));
+          if (r?.title && r?.slug) return r;
+        } catch {}
+      }
+      pos++;
     }
-    // 3) 개별 필드 추출 (파싱 완전 실패 시 최후 수단)
-    const titleM = text.match(/"title"\s*:\s*"([^"]+)"/);
-    const slugM  = text.match(/"slug"\s*:\s*"([a-z0-9-]+)"/);
-    const kwM    = text.match(/"keyword"\s*:\s*"([^"]+)"/);
-    const descM  = text.match(/"description"\s*:\s*"([^"]+)"/);
-    if (titleM && slugM) {
-      return {
-        title: titleM[1], slug: slugM[1],
-        keyword: kwM?.[1] ?? '', description: descM?.[1] ?? '',
-      };
+    // 3) 개별 필드 regex (straight + normalized quotes 모두)
+    const tM = norm.match(/"title"\s*:\s*"([^"\n]{4,60})"/);
+    const sM = norm.match(/"slug"\s*:\s*"([a-z0-9][a-z0-9-]{2,80})"/);
+    const kM = norm.match(/"keyword"\s*:\s*"([^"\n]+)"/);
+    const dM = norm.match(/"description"\s*:\s*"([^"\n]{10,200})"/);
+    if (tM && sM) {
+      return { title: tM[1], slug: sM[1], keyword: kM?.[1] ?? '', description: dM?.[1] ?? '' };
     }
-    // 4) 마크다운 목록 구조에서 첫 번째 이슈 추출
-    // Gemini가 JSON 무시하고 "## 1. 이슈명" 형식으로 응답할 때
-    const mdIssue = text.match(/##\s*1\.\s+([^\n(（]+)/);
-    if (mdIssue) {
-      const rawTitle = mdIssue[1].trim().replace(/[()（）【】\[\]]/g, '').trim().slice(0, 28);
-      if (rawTitle.length >= 4) {
-        const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-        const firstWord = rawTitle.split(/[\s,·\-]+/)[0].replace(/[^가-힣a-zA-Z0-9]/g, '');
-        const slug = `${section.dir}-issue-${dateStr}`;
-        const descCandidate = text.match(/왜 지금 핫한지[:\s]+(.{20,120})/);
-        return {
-          title: rawTitle,
-          slug,
-          keyword: firstWord || section.name,
-          description: descCandidate ? descCandidate[1].trim().slice(0, 160) : rawTitle,
-        };
+    // 4) 마크다운 ## 1. / **제목**: / 선택 주제: 등 비정형 패턴
+    const mdPat = [
+      /##\s*1\.\s*\**([^\n*]{4,40})\**/,
+      /\*\*제목\*\*\s*[:：]\s*([^\n]{4,40})/,
+      /선택\s*주제\s*[:：]\s*([^\n]{4,40})/,
+      /포스팅\s*제목\s*[:：]\s*[""]?([^\n"]{4,40})[""]?/,
+    ];
+    for (const pat of mdPat) {
+      const m = text.match(pat);
+      if (m) {
+        const rawTitle = m[1].trim().replace(/[()（）【】\[\]]/g, '').trim().slice(0, 28);
+        if (rawTitle.length >= 4) {
+          const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+          const slug = `${section.dir}-issue-${dateStr}`;
+          const descM2 = text.match(/왜 지금 핫한지[:\s]+(.{20,120})/);
+          return {
+            title: rawTitle, slug,
+            keyword: rawTitle.split(/[\s,·\-]+/)[0].replace(/[^가-힣a-zA-Z0-9]/g, '') || section.name,
+            description: descM2 ? descM2[1].trim().slice(0, 160) : rawTitle,
+          };
+        }
       }
     }
     return null;
@@ -840,17 +858,17 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
     t2Parsed = true;
   }
 
-  // 파싱 실패 시 재시도 턴
+  // 재시도 1: 같은 대화에서 JSON만 요청
   if (!t2Parsed || !topic.title || !topic.slug) {
-    log('⚠️', `[Turn 2] JSON 파싱 실패 → 실제 응답(${t2.length}자): ${t2.slice(0, 300).replace(/\n/g, ' ')}`);
-    log('⚠️', '[Turn 2] JSON 파싱 실패 → 재시도 중...');
+    log('⚠️', `[Turn 2] JSON 파싱 실패 → 응답(${t2.length}자): ${t2.slice(0, 400).replace(/\n/g, ' ')}`);
+    log('⚠️', '[Turn 2] JSON 파싱 실패 → 재시도 1...');
     const t2Retry = await session.send(
       `앞서 조사한 주제 중 가장 최신 이슈 1개를 선택해서 아래 JSON 형식으로만 출력해줘.\n` +
       `조건을 완벽히 충족하는 주제가 없어도 가장 적합한 주제 1개를 반드시 선택해야 함.\n` +
       `JSON 코드 블록 외 다른 텍스트 일절 금지.\n\n` +
       `\`\`\`json\n{"title":"SEO최적화제목(${lc.lang === 'ko' ? '28자이내' : '60 chars max'})","slug":"english-slug-lowercase-hyphens","keyword":"핵심키워드","description":"160자이내설명"}\n\`\`\``
     );
-    log('⚠️', `[Turn 2 Retry] 응답(${t2Retry.length}자): ${t2Retry.slice(0, 300).replace(/\n/g, ' ')}`);
+    log('⚠️', `[Turn 2 Retry1] 응답(${t2Retry.length}자): ${t2Retry.slice(0, 400).replace(/\n/g, ' ')}`);
     const retryParsed = tryParseJson(t2Retry);
     if (retryParsed?.title && retryParsed?.slug) {
       topic = { ...topic, ...retryParsed };
@@ -858,8 +876,27 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
     }
   }
 
+  // 재시도 2: 새 대화 → Turn 1 연구 요약 포함하여 JSON만 요청 (최후 수단)
   if (!t2Parsed || !topic.title || !topic.slug) {
-    // 폴백 제목으로 발행하면 SEO 가치 0 + 메타텍스트 노출 위험 → 즉시 실패 처리
+    log('⚠️', '[Turn 2] 재시도 1도 실패 → 새 대화로 최후 시도...');
+    await session.newConversation();
+    const t1Summary = t1.slice(0, 1000).replace(/\n/g, ' ');
+    const t2Final = await session.send(
+      `[섹션: ${section.name}] [오늘: ${todayKst}]\n\n` +
+      `아래 연구 내용을 참고해서 블로그 포스팅 주제 1개를 JSON으로만 출력해줘:\n\n` +
+      `연구 내용(일부): ${t1Summary}\n\n` +
+      `JSON 코드블록만 출력. 다른 텍스트 절대 금지:\n` +
+      `\`\`\`json\n{"title":"SEO제목(28자이내)","slug":"english-slug","keyword":"키워드","description":"설명"}\n\`\`\``
+    );
+    log('⚠️', `[Turn 2 Retry2] 응답(${t2Final.length}자): ${t2Final.slice(0, 400).replace(/\n/g, ' ')}`);
+    const finalParsed = tryParseJson(t2Final);
+    if (finalParsed?.title && finalParsed?.slug) {
+      topic = { ...topic, ...finalParsed };
+      t2Parsed = true;
+    }
+  }
+
+  if (!t2Parsed || !topic.title || !topic.slug) {
     throw new Error(`Turn 2 JSON 파싱 완전 실패 — "${section.name}" 주제 확정 불가 (재시도 필요)`);
   }
 
