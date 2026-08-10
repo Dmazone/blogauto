@@ -51,7 +51,13 @@ function extractFinalMarkdown(text) {
 
 /** Gemini가 코드블록 안팎에 "Markdown" 레이블을 붙이는 경우 제거 */
 function stripMarkdownLabel(text) {
-  return text.replace(/^Markdown\s*\n/, '').replace(/^markdown\s*\n/, '');
+  // "Markdown\n" 또는 "markdown\n" 단순 레이블 제거
+  let result = text.replace(/^[Mm]arkdown\s*\n/, '');
+  // "Markdown```json\n{title/slug JSON}\n(```\n)?" 형태의 선행 메타블록 제거 (닫는 ``` 없는 경우도 처리)
+  result = result.replace(/^[Mm]arkdown```json\s*\n\{[\s\S]*?"slug"\s*:[\s\S]*?\}\s*\n?(?:```\s*\n?)?/, '');
+  // "```json\n{title/slug JSON}\n```" 형태의 선행 JSON 블록 제거
+  result = result.replace(/^```json\s*\n\{[\s\S]*?"slug"\s*:[\s\S]*?\}\s*\n(?:```\s*\n?)?/, '');
+  return result.trimStart();
 }
 
 // ── Gemini 호출 구현체 (기본: API / 교체 가능: 브라우저) ───────────────────
