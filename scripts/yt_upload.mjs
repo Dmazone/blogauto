@@ -26,9 +26,15 @@ async function main() {
     process.exit(1);
   }
 
-  // title/description from args or filename
+  // title/description from args or index.md frontmatter
   const slug = path.basename(videoPath, '.mp4');
-  const title = process.argv[3] || `트렌드 상품 추천 TOP3 #Shorts`;
+  let autoTitle = null;
+  const indexMd = path.join(__dirname, '..', 'content', 'posts', 'trending-picks', slug, 'index.md');
+  if (fs.existsSync(indexMd)) {
+    const m = fs.readFileSync(indexMd, 'utf8').match(/^title:\s*"(.+?)"/m);
+    if (m) autoTitle = m[1].trim() + ' #Shorts';
+  }
+  const title = process.argv[3] || autoTitle || `트렌드 상품 추천 TOP3 #Shorts`;
   const description = process.argv[4] || `지금 가장 인기 있는 트렌드 상품을 비교·추천합니다.\n자세한 내용은 트렌드줌 블로그에서 확인하세요.\n\n#Shorts #트렌드 #쿠팡추천`;
 
   console.log('📤 업로드:', path.basename(videoPath));
