@@ -1366,19 +1366,52 @@ async function generateImagesViaGemini(session, section, topic, finalBody, bundl
       `공통: 사람 얼굴 클로즈업 금지. 분위기: ${section.imageStyle.split(',')[0]}`
     );
 
-    const buffers = await session.extractImagesFromLastResponse(2, 60000);
+    const MIN_IMAGE_BYTES = 60 * 1024; // 60KB 미만 = 별 아이콘 폴백
+
+    let buffers = await session.extractImagesFromLastResponse(1, 60000);
+
+    // 0장 캡처 시 1회 재시도
+    if (buffers.length === 0) {
+      log('⚠️', '  Gemini 이미지 0장 → 15초 후 재시도');
+      await new Promise(r => setTimeout(r, 15000));
+      await session.newConversation();
+      session._turnCount = 1;
+      try { await session.send('안녕', { timeout: 20000 }); } catch {}
+      session._turnCount = 0;
+      await session.useImageMaker(
+        `방금 네가 쓴 글 제목: "${topic.title}"\n\n` +
+        `이 글의 실제 내용을 기반으로 이미지 3장 만들어줘.\n` +
+        `(글의 내용을 이미 알고 있으니, 아래 섹션 제목과 맥락을 참고해서 그 내용에 딱 맞는 장면으로 만들어)\n\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `[이미지 1] 섹션 "${sec1Title}" 내용을 담은 구체적 장면\n` +
+        (sec1Ctx ? `맥락: ${sec1Ctx}\n` : '') +
+        `→ 이 섹션에서 가장 핵심적인 사물·상황을 실제로 촬영한 것처럼 표현\n` +
+        `→ 텍스트·로고 없이, 가로 16:9\n\n` +
+        `[이미지 2] 섹션 "${sec2Title}" 내용을 담은 구체적 장면\n` +
+        (sec2Ctx ? `맥락: ${sec2Ctx}\n` : '') +
+        `→ 이미지1과 완전히 다른 오브젝트·배경·색감 (같은 소재 반복 금지)\n` +
+        `→ 텍스트·로고 없이, 가로 16:9\n\n` +
+        `[이미지 3 — 썸네일] 이 글 전체를 한 장으로 상징하는 커버\n` +
+        `→ 이미지1·2와 다른 소재, bold 색감, 강한 구도\n` +
+        `→ 텍스트·로고 없이, 가로 16:9\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `공통: 사람 얼굴 클로즈업 금지. 분위기: ${section.imageStyle.split(',')[0]}`
+      );
+      buffers = await session.extractImagesFromLastResponse(1, 60000);
+    }
 
     if (buffers.length === 0) {
-      log('⚠️', '  Gemini 이미지 0장 → 이미지 없이 진행');
+      log('⚠️', '  Gemini 이미지 0장 (재시도 후) → 이미지 없이 진행');
       return { thumb: false, img01: false, img02: false };
     }
 
     // 썸네일 최우선 — buffers[0]=thumb, [1]=01, [2]=02 순으로 저장
     const result = { thumb: false, img01: false, img02: false };
+    const sorted = [...buffers].sort((a, b) => b.length - a.length);
     const targets = [
-      { buf: buffers[0], index: 'thumb' },
-      { buf: buffers[1],              index: 1 },
-      { buf: buffers[2] ?? buffers[1], index: 2 },
+      { buf: sorted[0],              index: 'thumb' },
+      { buf: sorted[1] ?? sorted[0], index: 1 },
+      { buf: sorted[2] ?? sorted[0], index: 2 },
     ];
 
     for (const { buf, index } of targets) {
@@ -1391,10 +1424,16 @@ async function generateImagesViaGemini(session, section, topic, finalBody, bundl
           .webp({ quality: 90, effort: 6 })
           .toFile(destPath);
         const stat = fs.statSync(destPath);
-        log('✅', `  Gemini 이미지 저장: ${filename} (${Math.round(stat.size / 1024)}KB)`);
-        if (index === 'thumb') result.thumb = true;
-        else if (index === 1)  result.img01 = true;
-        else if (index === 2)  result.img02 = true;
+        const kb = Math.round(stat.size / 1024);
+        if (stat.size < MIN_IMAGE_BYTES) {
+          fs.unlinkSync(destPath);
+          log('🗑️', `  ${filename} (${kb}KB) — 별 아이콘 폴백 제거`);
+        } else {
+          log('✅', `  Gemini 이미지 저장: ${filename} (${kb}KB)`);
+          if (index === 'thumb') result.thumb = true;
+          else if (index === 1)  result.img01 = true;
+          else if (index === 2)  result.img02 = true;
+        }
       } catch (err) {
         log('⚠️', `  ${filename} 저장 실패: ${err.message}`);
       }
