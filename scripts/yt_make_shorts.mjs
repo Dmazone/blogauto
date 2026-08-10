@@ -164,14 +164,14 @@ function buildHtml(bgImg, blocks) {
     font-family:'KOR',sans-serif;${bgStyle}}
   .bg-img{position:absolute;top:0;left:0;width:100%;height:100%;
     object-fit:cover;object-position:center;
-    filter:brightness(0.45) saturate(0.80);}
+    filter:brightness(0.55) saturate(0.90);}
   .grad{position:absolute;inset:0;
     background:linear-gradient(180deg,
-      rgba(0,0,0,.75) 0%,
-      rgba(0,0,0,.15) 40%,
-      rgba(0,0,0,.15) 60%,
-      rgba(0,0,0,.80) 100%)}
-  .stripe{position:absolute;left:0;right:0;height:5px;background:linear-gradient(90deg,#FFD700,#FF6B35,#FFD700)}
+      rgba(0,0,0,.80) 0%,
+      rgba(0,0,0,.10) 35%,
+      rgba(0,0,0,.10) 65%,
+      rgba(0,0,0,.85) 100%)}
+  .stripe{position:absolute;left:0;right:0;height:6px;background:linear-gradient(90deg,#FFD700,#FF6B35,#FF0066,#FFD700)}
 </style></head><body>
   ${bgImgTag}
   <div class="grad"></div>
@@ -317,9 +317,9 @@ export async function generate(slugArg) {
 
     segDurs.push(dur);
     const mp4File = path.join(tmp, `${name}.mp4`);
-    // Ken Burns: 부드러운 중앙 줌인
-    const fadeOut = Math.max(0, dur - 0.5).toFixed(1);
-    const ZF = `zoompan=z='min(zoom+0.0004,1.08)':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=1080x1920:fps=30,fps=30,fade=t=in:st=0:d=0.5,fade=t=out:st=${fadeOut}:d=0.5`;
+    // Ken Burns: 임팩트 있는 줌인 (이탈률 개선용 0.0008로 강화)
+    const fadeOut = Math.max(0, dur - 0.4).toFixed(1);
+    const ZF = `zoompan=z='min(zoom+0.0008,1.12)':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=1080x1920:fps=30,fps=30,fade=t=in:st=0:d=0.3,fade=t=out:st=${fadeOut}:d=0.4`;
 
     if (ttsOk) {
       const aacFile = path.join(tmp, `${name}.aac`);
@@ -340,21 +340,22 @@ export async function generate(slugArg) {
     segs.push(mp4File);
   }
 
-  // ── 슬라이드 0: 인트로 + 제목 ─────────────────────────────────
+  // ── 슬라이드 0: 강한 훅 인트로 (이탈률 개선 — 첫 2초에 가치 즉시 전달)
   const titleBroken   = breakText(post.title, 11);
-  const titleFontSize = dynFont(post.title, 82);
+  const titleFontSize = dynFont(post.title, 88);
   const titleHeight   = titleBroken.lines * Math.ceil(titleFontSize * 1.3) + 10;
 
   await makeSeg('s0', bgIntro, [
-    { text: '트렌드줌 | TRENDZOOM',           top: 60,  size: 38, color: '#FFD700', weight: 'normal' },
-    { text: '지금 가장 핫한 아이템 🔥',          top: 160, size: 58, color: '#FF6B35' },
-    { text: titleBroken.html,                 top: 290, size: titleFontSize, color: '#FFFFFF',
-      maxH: titleBroken.lines * 120 + 20 },
-    { text: '▼ 끝까지 보면 1위 공개',            top: 290 + titleHeight + 80, size: 50, color: '#FFD700' },
-    { text: '쿠팡 최저가 링크 설명란에 있어!',    top: 290 + titleHeight + 160, size: 42, color: '#87CEEB' },
+    { text: '🚨 이거 모르면 손해!',              top: 80,  size: 68, color: '#FF4444',
+      bg: 'rgba(0,0,0,0.7)' },
+    { text: titleBroken.html,                 top: 230, size: titleFontSize, color: '#FFFFFF',
+      maxH: titleBroken.lines * 130 + 20 },
+    { text: '▼ 끝까지 보면 1위 공개 ▼',          top: 230 + titleHeight + 60, size: 54, color: '#FFD700',
+      bg: 'rgba(0,0,0,0.5)' },
+    { text: '💰 쿠팡 최저가 링크 설명란 ▼',       top: 230 + titleHeight + 160, size: 44, color: '#87CEEB' },
   ],
-  `지금 가장 핫한 아이템. ${post.title}. TOP3 비교 바로 시작할게. 끝까지 보면 1위 공개해줄게.`,
-  6);
+  `이거 모르면 손해! ${post.title}. 지금 바로 TOP3 공개할게. 1위는 끝까지 봐야 알 수 있어.`,
+  4);
 
   // ── 슬라이드 1: TOP3 상품 비교 ──────────────────────────────
   const prodBlocks = [
@@ -387,28 +388,17 @@ export async function generate(slugArg) {
   const prodNarr = post.products.length > 0
     ? `TOP 3 인기 상품 비교해볼게. ` + post.products.map((p, i) => `${R[i]}는 ${p.name}.`).join(' ')
     : '지금 가장 인기 있는 TOP3 상품들. 블로그에서 자세한 비교 확인해봐.';
-  await makeSeg('s1', bgS1, prodBlocks, prodNarr, 10);
+  await makeSeg('s1', bgS1, prodBlocks, prodNarr, 8);
 
-  // ── 슬라이드 2: CTA ──────────────────────────────────────────
+  // ── 슬라이드 2: CTA (이탈률 개선 — 간결하게, 5초로 단축, 아웃트로 제거)
   await makeSeg('s2', bgS2, [
-    { text: '💰 쿠팡 최저가 바로가기',      top: 280, size: 66, color: '#FFD700' },
-    { text: '지금 설명란 ▼ 클릭!',         top: 380, size: 80, color: '#FFFFFF' },
-    { text: '──────────────',              top: 510, size: 28, color: 'rgba(255,255,255,0.4)', weight: 'normal' },
-    { text: '📰 트렌드줌 블로그',            top: 570, size: 50, color: '#87CEEB' },
-    { text: '상세 비교 리뷰도 확인 가능!',   top: 650, size: 44, color: '#87CEEB' },
-    { text: 'dmazone.github.io/blogauto',  top: 730, size: 34, color: 'rgba(135,206,235,0.7)', weight: 'normal' },
+    { text: '👆 설명란 링크 클릭!',          top: 260, size: 88, color: '#FFD700',
+      bg: 'rgba(0,0,0,0.65)' },
+    { text: '지금 바로 쿠팡 최저가 🔥',       top: 420, size: 70, color: '#FFFFFF' },
+    { text: '👍 좋아요 & 🔔 구독',           top: 560, size: 62, color: '#FF6B35' },
+    { text: '📰 트렌드줌 블로그 상세 리뷰',   top: 680, size: 46, color: '#87CEEB' },
   ],
-  '쿠팡 최저가 링크 지금 설명란에 있어. 바로 클릭해봐! 트렌드줌 블로그에서 더 자세한 비교 리뷰도 볼 수 있어.',
-  7);
-
-  // ── 슬라이드 3: 아웃트로 ─────────────────────────────────────
-  await makeSeg('s3', bgIntro, [
-    { text: '트렌드줌 | TRENDZOOM',        top: 60,  size: 38, color: '#FFD700', weight: 'normal' },
-    { text: '👍 좋아요 & 구독',             top: 700, size: 94, color: '#FFFFFF' },
-    { text: '🔔 알림 ON',                  top: 850, size: 80, color: '#FFD700' },
-    { text: '매일 최신 트렌드 픽 업데이트!', top: 970, size: 46, color: '#87CEEB' },
-  ],
-  '좋아요랑 구독 눌러주면 정말 힘이 돼. 알림도 켜두면 매일 새로운 트렌드 아이템 바로 받아볼 수 있어. 고마워!',
+  '지금 설명란에 쿠팡 최저가 링크 있어. 바로 클릭해봐! 좋아요랑 구독도 눌러주면 정말 힘이 돼.',
   5);
 
   await browser.close();
