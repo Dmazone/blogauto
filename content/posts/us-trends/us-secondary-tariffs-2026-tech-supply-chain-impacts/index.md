@@ -7,14 +7,9 @@ categories: ["Global Trends"]
 series: ["Global Trends"]
 description: "Explore how the US Senate's August 2026 secondary tariff bill reshapes global tech supply chains, international trade, and East Asian electronics exports."
 draft: false
-cover:
-  image: "us-secondary-tariffs-2026-tech-supply-chain-impacts-thumb.webp"
-  alt: "US Secondary Tariffs 2026: 3 Tech Supply Chain Impacts thumbnail"
-  hiddenInSingle: true
 ---
 
 The passage of the Lindsey O. Graham Sanctioning Russia and Iran Act of 2026 by the US Senate on August 8, 2026, marks a seismic shift in enforcement strategy. This bipartisan vote authorizes targeted **US secondary tariffs 2026** against major nations importing Russian energy, sending immediate shockwaves across technology hardware sectors and international logistics networks. As multinational corporations brace for potential 100% tariff penalties on key trading partners, hardware manufacturers must immediately re-evaluate their supply chain compliance models.
-![US Secondary Tariffs 2026: 3 Tech Supply Chain Impacts](us-secondary-tariffs-2026-tech-supply-chain-impacts-01.webp)
 
 ## Understanding the US Senate's August 2026 Secondary Tariff Bill
 
@@ -30,8 +25,6 @@ Primary sanctions penalize state-owned enterprises, government officials, and de
 Unlike past trade actions executed under Section 301 or Section 232 authorities, the August 2026 statute links geopolitical energy compliance directly to general commercial imports. While 2025 measures imposed baseline 25% duties on specific trade partners, the new framework doubles maximum potential penalties to 100%. This structural change forces global tech enterprises to audit national energy reliance across their tier-2 and tier-3 supplier bases.
 
 ## Direct Consequences for Global Tech and Semiconductor Supply Chains
-![US secondary tariffs 2026 관련 이미지](us-secondary-tariffs-2026-tech-supply-chain-impacts-02.webp)
-
 ### Risks to East Asian Component Manufacturers and Exporters
 East Asian technology hubs represent the frontline of this regulatory shift. Contract manufacturers across India and China produce substantial volumes of printed circuit board assemblies (PCBAs), passive components, and consumer enclosures bound for Western markets. With India’s Russian crude imports rising 34% year-over-year in June 2026, technology hardware exporters in the region face heightened risks of sudden duty surcharges that erode slim operating margins.
 
