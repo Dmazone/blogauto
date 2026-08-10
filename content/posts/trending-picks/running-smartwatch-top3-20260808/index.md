@@ -13,14 +13,6 @@ cover:
   hiddenInSingle: true
 ---
 
-Markdown```json
-{
-  "title": "2026 러닝 스마트워치 TOP3 추천 비교",
-  "slug": "running-smartwatch-top3-20260808",
-  "keyword": "러닝 스마트워치",
-  "description": "2026년 여름 야간 러닝과 헬스케어 트렌드에 발맞춘 러닝 스마트워치 TOP3를 전격 비교합니다. GPS 정확도, 배터리, OS 호환성을 기준으로 예산대별 최적의 추천 모델을 확인해보세요."
-}
-
 ## 1. 지금 러닝 스마트워치가 뜨는 이유
 
 
