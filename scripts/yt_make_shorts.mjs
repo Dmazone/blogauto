@@ -340,66 +340,51 @@ export async function generate(slugArg) {
     segs.push(mp4File);
   }
 
-  // ── 슬라이드 0: 강한 훅 인트로 (이탈률 개선 — 첫 2초에 가치 즉시 전달)
-  const titleBroken   = breakText(post.title, 11);
-  const titleFontSize = dynFont(post.title, 88);
-  const titleHeight   = titleBroken.lines * Math.ceil(titleFontSize * 1.3) + 10;
+  // ── s0 인트로 제거 (이탈률 데이터: 첫 10초 60% 이탈 → 제품 비교를 0초부터 바로 시작)
 
-  await makeSeg('s0', bgIntro, [
-    { text: '🚨 이거 모르면 손해!',              top: 80,  size: 68, color: '#FF4444',
-      bg: 'rgba(0,0,0,0.7)' },
-    { text: titleBroken.html,                 top: 230, size: titleFontSize, color: '#FFFFFF',
-      maxH: titleBroken.lines * 130 + 20 },
-    { text: '▼ 끝까지 보면 1위 공개 ▼',          top: 230 + titleHeight + 60, size: 54, color: '#FFD700',
-      bg: 'rgba(0,0,0,0.5)' },
-    { text: '💰 쿠팡 최저가 링크 설명란 ▼',       top: 230 + titleHeight + 160, size: 44, color: '#87CEEB' },
-  ],
-  `이거 모르면 손해! ${post.title}. 지금 바로 TOP3 공개할게. 1위는 끝까지 봐야 알 수 있어.`,
-  4);
-
-  // ── 슬라이드 1: TOP3 상품 비교 ──────────────────────────────
+  // ── 슬라이드 1: TOP3 — 훅 + 비교 즉시 시작 ─────────────────
   const prodBlocks = [
-    { text: '🏆 TOP 3 인기 상품 비교',  top: 55, size: 60, color: '#FFD700' },
-    { text: '─────────────────',        top: 135, size: 30, color: 'rgba(255,215,0,0.5)', weight: 'normal' },
+    { text: '🔥 지금 가장 핫한 TOP3!',   top: 40,  size: 62, color: '#FF4444',
+      bg: 'rgba(0,0,0,0.75)' },
+    { text: '─────────────────',          top: 115, size: 28, color: 'rgba(255,68,68,0.4)', weight: 'normal' },
   ];
 
   if (post.products.length === 0) {
     prodBlocks.push({ text: '지금 블로그에서 상세 비교 확인 🔍', top: 800, size: 54, color: '#fff' });
   } else {
     post.products.forEach((p, i) => {
-      const baseY    = 185 + i * 545;
+      const baseY    = 150 + i * 540;
       const nameBr   = breakText(p.name, 13);
-      const nameFont = dynFont(p.name, 56);
+      const nameFont = dynFont(p.name, 54);
       const nameH    = nameBr.lines * Math.ceil(nameFont * 1.3) + 10;
 
-      prodBlocks.push({ text: `${E[i]} ${R[i]}`,   top: baseY,       size: 58, color: '#FFD700' });
-      prodBlocks.push({ text: nameBr.html,          top: baseY + 75,  size: nameFont, color: '#FFFFFF',
-        maxH: Math.max(nameH, 140) });
+      prodBlocks.push({ text: `${E[i]} ${R[i]}`,   top: baseY,       size: 56, color: '#FFD700' });
+      prodBlocks.push({ text: nameBr.html,          top: baseY + 70,  size: nameFont, color: '#FFFFFF',
+        maxH: Math.max(nameH, 130) });
       if (p.price) {
         prodBlocks.push({
           text: p.price.replace(/원/g, '원'),
-          top:  baseY + 75 + Math.max(nameH, 140) + 10,
-          size: 40, color: '#87CEEB',
+          top:  baseY + 70 + Math.max(nameH, 130) + 8,
+          size: 38, color: '#87CEEB',
         });
       }
     });
   }
 
   const prodNarr = post.products.length > 0
-    ? `TOP 3 인기 상품 비교해볼게. ` + post.products.map((p, i) => `${R[i]}는 ${p.name}.`).join(' ')
-    : '지금 가장 인기 있는 TOP3 상품들. 블로그에서 자세한 비교 확인해봐.';
-  await makeSeg('s1', bgS1, prodBlocks, prodNarr, 8);
+    ? `잠깐! 이거 모르면 손해야. ` + post.products.map((p, i) => `${R[i]}는 ${p.name}.`).join(' ') + ' 1위는 진짜 인정!'
+    : '잠깐! 이거 모르면 손해야. 지금 가장 인기 TOP3 상품들. 블로그에서 자세한 비교 확인해봐.';
+  await makeSeg('s1', bgS1, prodBlocks, prodNarr, 7);
 
-  // ── 슬라이드 2: CTA (이탈률 개선 — 간결하게, 5초로 단축, 아웃트로 제거)
-  await makeSeg('s2', bgS2, [
-    { text: '👆 설명란 링크 클릭!',          top: 260, size: 88, color: '#FFD700',
+  // ── 슬라이드 2: CTA — 4초, 핵심 2개만
+  await makeSeg('s2', bgIntro, [
+    { text: '👆 설명란 링크 = 쿠팡 최저가!', top: 700, size: 72, color: '#FFD700',
+      bg: 'rgba(0,0,0,0.80)' },
+    { text: '👍 좋아요 & 🔔 구독',           top: 820, size: 58, color: '#FF6B35',
       bg: 'rgba(0,0,0,0.65)' },
-    { text: '지금 바로 쿠팡 최저가 🔥',       top: 420, size: 70, color: '#FFFFFF' },
-    { text: '👍 좋아요 & 🔔 구독',           top: 560, size: 62, color: '#FF6B35' },
-    { text: '📰 트렌드줌 블로그 상세 리뷰',   top: 680, size: 46, color: '#87CEEB' },
   ],
-  '지금 설명란에 쿠팡 최저가 링크 있어. 바로 클릭해봐! 좋아요랑 구독도 눌러주면 정말 힘이 돼.',
-  5);
+  '설명란에 쿠팡 최저가 링크 있어. 좋아요 구독 눌러줘!',
+  4);
 
   await browser.close();
 
