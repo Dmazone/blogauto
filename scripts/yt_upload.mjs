@@ -365,17 +365,41 @@ async function main() {
     console.log('\n✅ 업로드 + 게시 완료!');
   }
 
-  // ── 업로드 완료 후 video ID 추출 (댓글 달기에 사용) ──────────────
+  // ── 업로드 완료 후 video ID 추출 — 콘텐츠 목록 최신 항목에서 추출 ──
   await wait(5000);
   let videoId = null;
+
+  // 1차: 업로드 다이얼로그 내 링크에서 추출
   try {
     const href = await p.evaluate(() => {
-      const links = [...document.querySelectorAll('a[href*="shorts/"], a[href*="watch?v="]')];
+      const dialog = document.querySelector(
+        'ytcp-uploads-still-processing-dialog, ytcp-video-share-dialog, ytcp-uploads-dialog'
+      );
+      const scope = dialog || document;
+      const links = [...scope.querySelectorAll('a[href*="shorts/"], a[href*="watch?v="]')];
       return links.map(l => l.href).find(Boolean) || '';
     });
     const m = href.match(/shorts\/([a-zA-Z0-9_-]{11})|[?&]v=([a-zA-Z0-9_-]{11})/);
     if (m) videoId = m[1] || m[2];
   } catch {}
+
+  // 2차: 콘텐츠 목록 페이지 이동 → 날짜 내림차순 최신 항목 ID 추출
+  if (!videoId) {
+    try {
+      await p.goto(
+        `https://studio.youtube.com/channel/${CHANNEL_ID}/videos/short?filter=%5B%5D&sort=%7B%22columnType%22%3A%22date%22%2C%22sortOrder%22%3A%22DESCENDING%22%7D`,
+        { waitUntil: 'domcontentloaded', timeout: 20000 }
+      );
+      await wait(4000);
+      const editHref = await p.evaluate(() => {
+        const links = [...document.querySelectorAll('a[href*="/video/"][href*="/edit"]')];
+        return links[0]?.href || '';
+      });
+      const m = editHref.match(/\/video\/([a-zA-Z0-9_-]{11})\//);
+      if (m) videoId = m[1];
+    } catch {}
+  }
+
   // 파싱 가능한 포맷으로 출력 (daily_runner.js가 캡처해 댓글 달기에 사용)
   console.log(`VIDEO_ID:${videoId || 'unknown'}`);
 
