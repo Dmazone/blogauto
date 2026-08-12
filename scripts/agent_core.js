@@ -130,6 +130,42 @@ function existingSlugsForSection(section) {
   return slugs;
 }
 
+/** 전체 섹션에 실제 존재하는 슬러그 Set 반환 */
+function getAllExistingSlugs() {
+  const slugSet = new Set();
+  if (!fs.existsSync(POSTS_DIR)) return slugSet;
+  for (const sectionDir of fs.readdirSync(POSTS_DIR)) {
+    const dir = path.join(POSTS_DIR, sectionDir);
+    try { if (!fs.statSync(dir).isDirectory()) continue; } catch { continue; }
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory() && fs.existsSync(path.join(dir, entry.name, 'index.md'))) {
+        slugSet.add(entry.name);
+      }
+    }
+  }
+  return slugSet;
+}
+
+/**
+ * 본문에서 존재하지 않는 슬러그 내부 링크를 텍스트로만 남김.
+ * [텍스트](/posts/섹션/없는슬러그/) → 텍스트
+ */
+function stripDeadInternalLinks(body) {
+  const existing = getAllExistingSlugs();
+  let removed = 0;
+  const result = body.replace(
+    /\[([^\]]+)\]\(\/posts\/[^/]+\/([^/)\s]+)\/?[^)]*\)/g,
+    (match, text, slug) => {
+      if (existing.has(slug)) return match;
+      removed++;
+      log('🔗', `  내부링크 제거 (슬러그 없음): ${slug} → 텍스트만 유지`);
+      return text;
+    }
+  );
+  if (removed > 0) log('⚠️', `  죽은 내부링크 ${removed}개 제거 완료`);
+  return result;
+}
+
 // ────────────────────────────────────────────────────────────────────────────
 // ────────────────────────────────────────────────────────────────────────────
 // STEP 7.5: 마크다운 렌더링 검증 (취소선·따옴표·괄호 오류)
@@ -1630,8 +1666,9 @@ export async function runForSection(section, options = {}) {
   }
   log('✅', `품질 게이트 통과: H2 ${h2Count}개, ${charCount}자`);
 
-  // 파일 저장
-  const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + final;
+  // 파일 저장 — 저장 직전 죽은 내부링크 자동 제거
+  const sanitized = stripDeadInternalLinks(final);
+  const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + sanitized;
   fs.mkdirSync(bundleDir, { recursive: true });
   fs.writeFileSync(postPath, fullContent, 'utf-8');
   log('✅', `포스팅 저장: ${postPath}`);
