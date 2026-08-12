@@ -48,8 +48,9 @@ function parseProducts(slug) {
   });
 }
 
-function buildComment(products) {
+function buildComment(products, slug) {
   const RANKS = ['🥇', '🥈', '🥉'];
+  const blogUrl = `https://dmazone.github.io/blogauto/posts/trending-picks/${slug}/`;
   const lines = ['🛒 쿠팡 구매 링크 👇', ''];
   products.forEach((p, i) => {
     if (!p.url) return;
@@ -65,7 +66,8 @@ function buildComment(products) {
     if (i < products.length - 1) lines.push('');
   });
   lines.push('');
-  lines.push('📌 상세 비교·리뷰는 트렌드줌 블로그 설명란 링크 확인해봐!');
+  lines.push(`📌 상세 비교·리뷰 전체 보기`);
+  lines.push(blogUrl);
   lines.push('');
   lines.push('※ 이 영상은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.');
   return lines.join('\n');
@@ -138,7 +140,7 @@ async function main() {
     process.exit(0);
   }
 
-  const comment = buildComment(products);
+  const comment = buildComment(products, slug);
   console.log('📝 댓글 내용:\n' + comment);
 
   await postComment(videoId, comment);
