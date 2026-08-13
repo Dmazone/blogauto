@@ -250,15 +250,21 @@ async function main() {
   // ── 스레드 자동 연동 ────────────────────────────────────────────────────
   // --now 모드(즉시 발행)일 때만 자동 실행. 예약 발행 모드에서는 포스팅이
   // 07:00~09:00 KST에 공개되므로 threads_poster는 /threads-post 스킬(10:00 KST)로 실행.
+  const threadsScript = path.join(__dirname, 'threads_poster.js');
+  const connectChromeScript = path.join(__dirname, 'connect_chrome.js');
   if (successCount > 0 && publishNow) {
-    log('🧵', '스레드 게시 + 스하리 자동 시작 (--now 모드)...');
-    const threadsProc = spawn(process.execPath, [path.join(__dirname, 'threads_poster.js')], {
-      cwd:   path.join(__dirname, '..'),
-      stdio: 'inherit',
-      detached: false,
-    });
-    await new Promise((resolve) => threadsProc.on('close', resolve));
-    log('✅', '스레드 게시 + 스하리 완료');
+    if (existsSync(threadsScript) && existsSync(connectChromeScript)) {
+      log('🧵', '스레드 게시 + 스하리 자동 시작 (--now 모드)...');
+      const threadsProc = spawn(process.execPath, [threadsScript], {
+        cwd:   path.join(__dirname, '..'),
+        stdio: 'inherit',
+        detached: false,
+      });
+      await new Promise((resolve) => threadsProc.on('close', resolve));
+      log('✅', '스레드 게시 + 스하리 완료');
+    } else {
+      log('⏸️', '스레드 보류 중 (connect_chrome.js 없음) — 스킵');
+    }
   } else if (successCount > 0) {
     log('📌', '예약 발행 모드 — threads_poster는 10:00 KST /threads-post 스킬로 별도 실행');
   }

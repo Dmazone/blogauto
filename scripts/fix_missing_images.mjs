@@ -138,7 +138,7 @@ function todayKST() {
   return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
-function scanTodayMissing() {
+function scanMissing({ allMode = false } = {}) {
   const today = todayKST();
   const targets = [];
 
@@ -153,9 +153,11 @@ function scanTodayMissing() {
       if (!fs.existsSync(mdPath)) continue;
 
       const md = fs.readFileSync(mdPath, 'utf8');
-      // 오늘 날짜 포스팅만 처리
-      const dateMatch = md.match(/^date:\s*["']?(\d{4}-\d{2}-\d{2})/m);
-      if (!dateMatch || dateMatch[1] !== today) continue;
+      if (!allMode) {
+        // 오늘 날짜 포스팅만 처리
+        const dateMatch = md.match(/^date:\s*["']?(\d{4}-\d{2}-\d{2})/m);
+        if (!dateMatch || dateMatch[1] !== today) continue;
+      }
 
       const p01 = path.join(d, `${slug}-01.webp`);
       const p02 = path.join(d, `${slug}-02.webp`);
@@ -176,14 +178,16 @@ async function main() {
   const { GeminiSession } = await import('./gemini_browser.js');
   const sharp = (await import('sharp')).default;
 
-  const targets = scanTodayMissing();
+  const allMode = process.argv.includes('--all');
+  const targets = scanMissing({ allMode });
+  const label = allMode ? '전체' : '오늘 발행';
 
   if (targets.length === 0) {
-    console.log('✅ 오늘 발행 포스팅 이미지 모두 정상 (60KB↑)');
+    console.log(`✅ ${label} 포스팅 이미지 모두 정상 (60KB↑)`);
     process.exit(0);
   }
 
-  console.log(`🔍 오늘 발행 이미지 누락/불량: ${targets.length}개 포스팅\n`);
+  console.log(`🔍 ${label} 이미지 누락/불량: ${targets.length}개 포스팅\n`);
 
   const gemUrl = process.env.GEMINI_GEM_URL;
   if (!gemUrl) {
@@ -191,7 +195,7 @@ async function main() {
     try {
       const { sendTelegram } = await import('./telegram.js');
       const list = targets.map(t => `  · [${t.section}] ${t.slug}`).join('\n');
-      await sendTelegram(`⚠️ 오늘 발행 이미지 ${targets.length}건 누락\nGEMINI_GEM_URL 미설정\n${list}`);
+      await sendTelegram(`⚠️ ${label} 이미지 ${targets.length}건 누락\nGEMINI_GEM_URL 미설정\n${list}`);
     } catch {}
     process.exit(1);
   }
