@@ -95,3 +95,5 @@ response = client.models.generate_content(
     )
 )
 print(response.text)
+
+#GoogleDeepMindrestructuring2026 #GlobalTrends #Google #Deepmind #Restructuring #Demis #Hassabis #Agi

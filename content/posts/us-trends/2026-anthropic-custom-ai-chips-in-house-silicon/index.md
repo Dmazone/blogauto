@@ -86,3 +86,5 @@ With leading-edge nodes heavily booked, securing wafer allocations for advanced 
 
 
 ### Shifts in HBM3e/HBM4 Demand for Samsung Electronics and SK Hynix
+
+#AnthropicCustomAIChips #GlobalTrends #Anthropic #Custom #Chips #House #Silicon
