@@ -58,4 +58,8 @@ K-드라마 입문자라면 자신의 취향을 먼저 파악하는 것이 출�
 
 K-드라마만큼이나 전 세계 팬들을 끌어모으고 있는 한국 스포츠 콘텐츠도 주목할 만합니다. K-드라마가 열어놓은 글로벌 팬덤의 문을 통해 한국 스포츠도 세계 무대로 나아가고 있습니다. 한국 축구의 도전기가 궁금하다면 [2026 FIFA 월드컵 한국의 도전](/posts/sports/korea-world-cup-2026-challenge/)도 함께 읽어보세요.
 
+**함께 읽으면 좋은 글**
+- [세븐틴 디노 피철인 앨범 핵심 정리](/posts/entertainment/seventeen-dino-pi-cheol-in-solo-album-2026/)
+- [나나 자택 침입범, 징역 7년 불복? 진짜 속사정 완전 정리](/posts/entertainment/nana-home-intruder-appeal-2026/)
+
 #K드라마 #넷플릭스한국드라마 #한류2026 #K컬처 #OTT흥행 #글로벌한류 #한국드라마추천 #넷플릭스추천

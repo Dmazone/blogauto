@@ -96,4 +96,8 @@ response = client.models.generate_content(
 )
 print(response.text)
 
+**함께 읽으면 좋은 글**
+- [2026 AI Agents Guide: Why Your Business Must Adapt Now](/posts/us-trends/2026-global-trend-autonomous-ai-agents-enterprise/)
+- [Why Agentic AI Interfaces Are Replacing Traditional Mobile Apps in 2026](/posts/us-trends/2026-agentic-ai-interfaces-replacing-mobile-apps/)
+
 #GoogleDeepMindrestructuring2026 #GlobalTrends #Google #Deepmind #Restructuring #Demis #Hassabis #Agi

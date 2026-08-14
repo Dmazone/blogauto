@@ -66,4 +66,8 @@ AI 도구의 확산으로 직업이 재편되고, 글로벌 경제 불안이 일
 
 > [인문 섹션의 다른 글도 확인해보세요](/posts/humanities/)
 
+**함께 읽으면 좋은 글**
+- [소통 심리학 핵심만! 진짜 인생 바뀌는 대화법](/posts/humanities/communication-psychology-tips-2026/)
+- [AI윤리 해답, 진짜 불교 철학인가](/posts/humanities/ai-ethics-buddhism-philosophy-2026/)
+
 #스토아철학 #철학실천 #마음챙김 #자기계발 #인문학 #멘탈관리 #명상록 #불안극복

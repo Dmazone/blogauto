@@ -58,4 +58,8 @@ KBO 리그는 국내 최고 수준의 선수를 배출하는 무대이기도 합
 
 KBO 야구뿐 아니라 K스포츠 전반이 글로벌 팬덤을 확장하고 있습니다. 한국 축구의 월드컵 도전기도 함께 즐기고 싶다면 [2026 FIFA 월드컵 한국의 도전](/posts/sports/korea-world-cup-2026-challenge/)도 함께 읽어보세요. 여름 내내 K스포츠의 열기가 이어집니다.
 
+**함께 읽으면 좋은 글**
+- [LA 레이커스 17조원 매각, 스포츠 역사상 최고가 뒤 숨은 배경](/posts/sports/la-lakers-17billion-sale-record-2026/)
+- [월드컵 결승 하프타임쇼 라인업 및 시간 변경 진짜 이유](/posts/sports/worldcup-2026-final-halftime-show-changes/)
+
 #KBO2026 #한국야구 #프로야구 #KBO리그 #야구직관 #야구시즌 #한국시리즈 #야구팬

@@ -79,4 +79,8 @@ AI 여행 앱이 과거 검색 패턴, 예산, 관심사, 체력 수준까지 �
 
 [디지털 피로 탈출 트렌드](/posts/society/)에서 다룬 것처럼 여행은 지금 가장 강력한 디지털 디톡스 수단이기도 합니다. 2026년, 자신에게 가장 맞는 속도와 목적지를 고르는 것이 최고의 여행 전략이에요.
 
+**함께 읽으면 좋은 글**
+- [2026 남아공 필수 신고서 작성법](/posts/world-travel/south-africa-online-traveler-declaration-2026-guide/)
+- [2026 진짜 뜨는 슬로우 여행지 Best 3](/posts/world-travel/2026-slow-travel-culinary-hidden-gems/)
+
 #동남아여행2026 #일본여행 #해외여행추천 #태국여행 #베트남여행 #슬로우트래블 #솔로여행

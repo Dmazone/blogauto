@@ -95,4 +95,8 @@ cover:
 
 原作の持つ鋭いエッジと、アニメーションがもたらす抒情的な映像美を照らし合わせることで、『ルックバック』が持つ真価を余すことなく体験できます。
 
+**함께 읽으면 좋은 글**
+- [8月13日施行『国旗損壊罪』の真実！韓国の法律との違い3選](/posts/japan-trends/2026-japan-flag-damage-act-enforcement-korea-comparison/)
+- [安青錦が1場所で大関復帰！歴史的快挙を果たせた3つの理由](/posts/japan-trends/2026-japan-aonishiki-sumo-ozeki-return-sumou-record/)
+
 #日本トレンド #2026年 #ルックバック #藤本タツキ #アニメ考察 #地上波初放送 #映画ルックバック #韓国の反応 #アニメ好きな人と繋がりたい

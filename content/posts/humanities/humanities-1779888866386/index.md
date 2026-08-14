@@ -96,4 +96,8 @@ cover:
 
 [관련 글 보기](/posts/humanities/)
 
+**함께 읽으면 좋은 글**
+- [광복절 태극기 거꾸로 진짜 논란인 이유 3가지](/posts/humanities/gwangbokjeol-taegeukgi-upside-down-controversy-2026/)
+- [AI시대 바뀌는 DH2026 디지털인문학 핵심](/posts/humanities/dh2026-digital-humanities-ai-era-2026/)
+
 #AI시대인문학 #인문학트렌드 #생존전략 #비판적사유 #인간중심 #철학공부 #커리어성장 #텍스트힙 #미래역량 #마음챙김

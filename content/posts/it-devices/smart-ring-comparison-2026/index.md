@@ -78,4 +78,8 @@ cover:
 
 > 삼성 생태계 기기 더 알아보고 싶다면 [갤럭시 S26 AI 기능 완전 정리](/posts/it-devices/galaxy-s26-ai-features-2026/)를 확인해보세요.
 
+**함께 읽으면 좋은 글**
+- [갤럭시 글라스 출시일과 가격 스펙 총정리](/posts/it-devices/galaxy-glass-unpacked-specs-release-date-2026/)
+- [스마트 글래스 2026 진짜 쓸만할까? 완전 정리](/posts/it-devices/smart-glasses-ar-wearable-trend-2026/)
+
 #스마트링 #2026스마트링 #갤럭시링2세대 #오라링5세대 #웨어러블기기 #수면분석기기 #AI헬스케어

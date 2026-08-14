@@ -94,4 +94,8 @@ cover:
 
 [관련 글 보기](/posts/economy/)
 
+**함께 읽으면 좋은 글**
+- [2026 하반기 기준금리 전망과 투자 전략](/posts/economy/2026-interest-rate-outlook-strategy/)
+- [2026 고유가 시대, 진짜 안 오르는 숨은 절약법 핵심 정리](/posts/economy/2026-high-oil-price-saving-strategies/)
+
 #코스피8000 #반도체투자 #코스피전망 #2026재테크 #자산배분전략 #ETF투자법 #주식분할매수 #삼성전자주가 #재테크노하우 #FOMO극복

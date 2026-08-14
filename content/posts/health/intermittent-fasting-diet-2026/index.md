@@ -68,4 +68,8 @@ cover:
 
 > [건강한 식단과 운동 조합 방법](/posts/health/)도 함께 읽어보세요.
 
+**함께 읽으면 좋은 글**
+- [젊은 당뇨 초기증상 3가지, 진짜 숨은 혈당 스파이크 완전정리](/posts/health/early-onset-diabetes-sugar-spike-2026/)
+- [폭염 속 온열질환 예방법 진짜 핵심 3가지](/posts/health/heat-stroke-exhaustion-prevention-symptoms-2026/)
+
 #간헐적단식 #다이어트식단 #IF식단 #체중감량 #건강식단2026 #간단식 #식이요법 #건강관리

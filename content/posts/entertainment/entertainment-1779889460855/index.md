@@ -86,4 +86,8 @@ cover:
 
 [관련 글 보기](/posts/entertainment/)
 
+**함께 읽으면 좋은 글**
+- [손예진 현빈 가족 여행, 진짜 소름 돋는 패션 정보 완전 정리](/posts/entertainment/son-ye-jin-hyun-bin-family-trip-2026/)
+- [아이유 메타 고소, 익명 악플러 100% 잡힐까?](/posts/entertainment/iu-meta-discovery-lawsuit-2026/)
+
 #BTS #BTSAMA #올해의아티스트 #2026AMA #방탄소년단 #KPOP트렌드 #아메리칸뮤직어워드 #아미 #빌보드 #엔터테인먼트이슈

@@ -64,4 +64,8 @@ K-드라마가 글로벌 시장에서 경쟁력을 유지하는 핵심은 이야
 
 > [연예이슈 최신 포스팅 목록](/posts/entertainment/)을 확인해보세요.
 
+**함께 읽으면 좋은 글**
+- [2026년 K-드라마 글로벌 흥행 공식, 무엇이 세계를 사로잡는가](/posts/entertainment/kdrama-global-2026/)
+- [세븐틴 디노 피철인 앨범 핵심 정리](/posts/entertainment/seventeen-dino-pi-cheol-in-solo-album-2026/)
+
 #넷플릭스드라마 #K드라마2026 #한국드라마추천 #넷플릭스추천 #오리지널시리즈 #드라마추천 #연예이슈 #넷플릭스한국

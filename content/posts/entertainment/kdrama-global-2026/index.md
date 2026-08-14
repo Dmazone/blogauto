@@ -74,4 +74,8 @@ AI 기반 VFX, 자동 더빙 품질 향상, 다국어 자막 실시간 생성이
 
 [2026년 AI 에이전트 기술 트렌드](/posts/latest-tech/)에서 다룬 콘텐츠 자동화 기술이 드라마 기획·마케팅에도 본격 도입되고 있어, K-드라마 산업의 변화 속도는 앞으로 더 빨라질 전망입니다.
 
+**함께 읽으면 좋은 글**
+- [화사 젠슨 황 진짜 관계? 손편지 비하인드 3가지](/posts/entertainment/hwasa-jensen-huang-handwritten-letter-behind-2026/)
+- [기안84 기안장 넷플릭스 3가지 성공 요인](/posts/entertainment/ki-an84-netflix-variety-2026/)
+
 #K드라마 #넷플릭스한국 #한류2026 #드라마추천 #연예트렌드 #OTT #웹툰원작드라마

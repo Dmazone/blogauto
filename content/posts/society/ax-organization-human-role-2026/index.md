@@ -81,4 +81,8 @@ cover:
 
 ---
 
+**함께 읽으면 좋은 글**
+- [카카오 파업과 네이버 교섭, 진짜 바뀌는 것 3가지](/posts/society/it-platform-strike-labor-conflict-2026/)
+- [813대책 결혼페널티 폐지 조건 진짜 바뀔까?](/posts/society/813-real-estate-marriage-penalty-2026/)
+
 #AX조직 #휴먼인더루프 #AI전환 #업무자동화 #미래트렌드 #생존전략 #AI리터러시 #생산성향상 #커리어성장 #인사이트

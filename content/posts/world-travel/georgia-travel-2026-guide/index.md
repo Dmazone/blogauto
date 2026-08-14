@@ -123,4 +123,8 @@ cover:
 
 2026년, 당신만의 조지아 여행을 계획하고 직접 경험해보세요. 코카서스 산맥의 신비로운 풍경, 달콤한 조지아 와인 한 잔, 그리고 따뜻한 현지인들의 미소는 당신의 기억 속에 오래도록 아름다운 추억으로 남을 것이라고 확신합니다.
 
+**함께 읽으면 좋은 글**
+- [2026 AI 여행 플래너로 꿀 빠는 가성비 일정 완전 정리](/posts/world-travel/2026-ai-travel-planner-budget-itinerary-guide/)
+- [2026 여권 순위 발표! 한국 2위로 바뀐 무비자 국가는?](/posts/world-travel/2026-global-passport-ranking-korea-visa-free-travel-guide/)
+
 #2026조지아여행 #조지아항공권 #조지아비자 #조지아물가 #조지아여행팁 #트빌리시 #코카서스 #와인의발상지

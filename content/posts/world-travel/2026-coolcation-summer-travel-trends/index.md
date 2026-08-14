@@ -70,4 +70,8 @@ cover:
 
 유럽 여름 여행지의 구체적인 일정과 숙소 정보는 [유럽 여름 여행 완전 가이드](/posts/world-travel/europe-summer-travel-guide-2026/)도 함께 확인해보세요.
 
+**함께 읽으면 좋은 글**
+- [2026 일본 소도시 여행 추천 3곳 진짜 공개](/posts/world-travel/2026-japan-small-city-travel-trends/)
+- [유럽 EES 입국 대란, 5시간 대기 안 하려면?](/posts/world-travel/europe-ees-entry-system-delay-guide-2026/)
+
 #해외여행트렌드 #쿨케이션 #2026여름여행 #여름휴가추천 #아이슬란드여행 #홋카이도여름 #폭염피서지 #해외여행지추천

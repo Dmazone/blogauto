@@ -62,4 +62,8 @@ cover:
 
 > [저출생 주거 정책과 청년 주거 지원](/posts/society/low-birth-housing-2026/)도 함께 읽어보세요.
 
+**함께 읽으면 좋은 글**
+- [2026년 전세 월세, 정부 정책 숨은 핵심 3가지](/posts/kr-realestate/2026-jeonse-wolse-policy-key/)
+- [8월 세제개편 실거주 유예 조건 진짜 바뀌나?](/posts/kr-realestate/august-tax-reform-residence-exemption-extension-2026/)
+
 #서울아파트2026 #부동산시장 #내집마련 #아파트매매 #한국부동산 #부동산전망 #서울부동산 #DSR대출

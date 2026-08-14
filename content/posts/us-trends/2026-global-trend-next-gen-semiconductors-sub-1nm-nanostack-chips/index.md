@@ -102,4 +102,8 @@ Given that sub-1nm manufacturing is heavily concentrated in East Asia, geographi
 2. **Buffer Stocking:** Maintain a rolling six-month inventory of critical microcontrollers and processing units to mitigate sudden shipping corridor disruptions.
 3. **Localized Cloud Nodes:** Distribute compute workloads across regions utilizing varied chip suppliers, ensuring that a localized supply chain shock does not halt global enterprise operations.
 
+**함께 읽으면 좋은 글**
+- [US Secondary Tariffs 2026: 3 Tech Supply Chain Impacts](/posts/us-trends/us-secondary-tariffs-2026-tech-supply-chain-impacts/)
+- [AI 전투기의 시대, 인간 파일럿 종말일까?](/posts/us-trends/darpa-ai-f16-autonomous-fighter-jet-flight-test/)
+
 #Semiconductors #Sub1nm #Nanostack #Samsung #TSMC #AIHardware #TechTrends2026 #GlobalSupplyChain

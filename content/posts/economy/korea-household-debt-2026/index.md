@@ -74,4 +74,8 @@ cover:
 
 [2026년 한국 부동산 시장 전망](/posts/kr-realestate/)에서 지역별 집값 흐름을 함께 살펴보면 자산 포트폴리오 전략을 세우는 데 도움이 됩니다. 불확실한 경제 환경일수록 레버리지를 줄이고 현금 흐름을 확보하는 것이 장기적으로 가장 안전한 전략이에요.
 
+**함께 읽으면 좋은 글**
+- [AI 전력망 수혜주 진짜 2026 핵심만](/posts/economy/global-ai-energy-infrastructure-boom-2026/)
+- [대출 연체율 10년만 최고치, 내 돈 지킬 진짜 전략](/posts/economy/sme-loan-delinquency-rate-highest-2026/)
+
 #가계부채 #한국경제2026 #금리전망 #부동산대출 #재테크 #DSR #경제트렌드

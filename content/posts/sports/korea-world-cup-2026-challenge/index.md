@@ -60,4 +60,8 @@ cover:
 
 > [스포츠 섹션 최신 분석](/posts/sports/)도 함께 확인해보세요.
 
+**함께 읽으면 좋은 글**
+- [홍명보 전술 부재 2026 진짜 바뀔까](/posts/sports/hongmyungbo-tactics-criticism-2026/)
+- [KT위즈 1위 탈환! 고영표 20이닝 무실점 대기록](/posts/sports/kt-wiz-kbo-rank-1st-go-young-pyo-2026/)
+
 #2026월드컵 #한국축구 #FIFA월드컵 #태극전사 #손흥민 #월드컵2026 #축구 #아시아예선

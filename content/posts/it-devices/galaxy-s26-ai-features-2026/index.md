@@ -62,4 +62,8 @@ S26의 카메라와 AI 편집 기능은 별도 편집 앱 없이도 SNS에 올�
 
 > [IT기기 최신 리뷰 목록](/posts/it-devices/)도 확인해보세요.
 
+**함께 읽으면 좋은 글**
+- [코파일럿 플러스 PC 온디바이스 AI 노트북 선택 기준](/posts/it-devices/copilot-plus-pc-laptop-guide-2026/)
+- [2026년 최신 IT 기기 추천 및 트렌드](/posts/it-devices/latest-it-devices-trends-2026/)
+
 #갤럭시S26 #갤럭시AI #삼성스마트폰 #AI스마트폰 #갤럭시카메라 #IT기기추천 #스마트폰2026 #삼성갤럭시

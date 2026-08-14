@@ -58,4 +58,8 @@ cover:
 
 > [세계 여행지 더 많은 정보](/posts/world-travel/)를 확인해보세요.
 
+**함께 읽으면 좋은 글**
+- [2026 일본 소도시 여행 추천 3곳 진짜 공개](/posts/world-travel/2026-japan-small-city-travel-trends/)
+- [2026 월드컵 도시 여행 핵심만](/posts/world-travel/fifa-world-cup-2026-host-cities-travel-guide/)
+
 #2026해외여행 #여름여행추천 #여행지추천 #해외여행2026 #후쿠오카여행 #다낭여행 #타이페이여행 #트빌리시여행

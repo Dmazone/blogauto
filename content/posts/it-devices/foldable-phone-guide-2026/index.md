@@ -58,4 +58,8 @@ cover:
 
 폴더블폰이 더 강력해지는 방향은 AI와의 결합입니다. 온디바이스 AI가 더 발전하면 넓은 화면과 AI 기능이 시너지를 내는 사용 시나리오가 많아질 것입니다. AI 반도체 발전 방향이 궁금하다면 [엣지 AI 칩의 미래와 온디바이스 AI](/posts/latest-tech/edge-ai-chip-future-2026/)도 함께 읽어보세요.
 
+**함께 읽으면 좋은 글**
+- [안드로이드 ADB 권한 강화? Shizuku 막히나](/posts/it-devices/android-adb-permission-shizuku-issue-2026/)
+- [진짜 가벼워진 갤럭시 Z 플립8 배터리 4300mAh 체감 성능은?](/posts/it-devices/galaxy-z-flip8-battery-upgrade-2026/)
+
 #폴더블폰 #갤럭시Z폴드7 #스마트폰2026 #폴더블스마트폰추천 #IT기기추천 #구매가이드 #삼성갤럭시 #아이폰폴더블

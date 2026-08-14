@@ -78,4 +78,8 @@ cover:
 
 [다른 한국 부동산 정책 분석 글 보기](/posts/kr-realestate/)
 
+**함께 읽으면 좋은 글**
+- [공급절벽 2026 아파트 시장, 진짜 전세가 매매가 밀어 올릴까](/posts/kr-realestate/supply-shortage-jeonse-caps-property-2026/)
+- [2026 1기 신도시 재건축 선도지구 투자 전략](/posts/kr-realestate/1st-newtown-reconstruction-2026/)
+
 #2026년전세월세정책 #임대차시장변화 #정부대책 #전세사기예방 #안심전세앱 #전세보증금반환보증 #월세화가속 #부동산전망 #실수요자가이드 #주거안정 #임대차3법

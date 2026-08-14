@@ -67,4 +67,8 @@ cover:
 
 단지별 조합 현황과 분담금 시뮬레이션을 더 자세히 비교하고 싶다면 [서울 아파트 청약 완전 가이드](/posts/kr-realestate/apartment-subscription-guide-2026/)도 함께 참고해보세요.
 
+**함께 읽으면 좋은 글**
+- [2026 세제개편안 1주택자 세금 폭탄 진짜일까?](/posts/kr-realestate/august-83-tax-reform-one-homeowner-impact-2026/)
+- [가계부채 2000조 돌파, 주담대 고정 vs 변동 진짜 이득은?](/posts/kr-realestate/household-debt-2000trillion-variable-rate-mortgage-2026/)
+
 #1기신도시재건축 #선도지구 #분당재건축 #부동산투자2026 #재건축투자 #용적률 #추가분담금

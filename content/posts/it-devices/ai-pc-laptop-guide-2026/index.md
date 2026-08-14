@@ -80,4 +80,8 @@ AI 모델 파일이 로컬에 저장되는 시대에 용량은 512GB가 최소�
 
 [2026년 AI 에이전트 트렌드](/posts/latest-tech/)에서 다룬 것처럼 온디바이스 AI 에이전트를 실제로 활용하려면 NPU 탑재 기기가 필수 환경이 됩니다. 하드웨어 선택이 곧 AI 활용 역량의 시작점이에요.
 
+**함께 읽으면 좋은 글**
+- [갤럭시 S26 AI 기능, 실제로 얼마나 쓸 만한가?](/posts/it-devices/galaxy-s26-ai-features-2026/)
+- [2026 필수 AI 가전 NPU 진짜 장점](/posts/it-devices/on-device-npu-smart-home-appliances-2026/)
+
 #AIPC #노트북추천2026 #코어울트라 #애플M4 #스냅드래곤X #NPU #IT기기트렌드

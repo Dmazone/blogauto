@@ -58,4 +58,8 @@ cover:
 
 유럽과 함께 2026년 트렌드로 급부상한 동남아시아 및 일본 여행지 정보는 [2026년 여름 해외여행 추천 도시 5곳](/posts/world-travel/summer-travel-cities-2026/)에서 확인할 수 있습니다. 예산과 일정에 따라 최적의 목적지를 선택해보세요.
 
+**함께 읽으면 좋은 글**
+- [2026 유럽 항공 지연, 진짜 보상받는 3가지](/posts/world-travel/2026-europe-flight-delay-atc-compensation-guide/)
+- [2026 쿨케이션 여름 해외여행지 완전 분석](/posts/world-travel/2026-coolcation-summer-travel-trends/)
+
 #유럽여행2026 #유럽여름여행 #ETIAS #유럽자유여행 #배낭여행 #유럽여행준비 #해외여행경비 #유럽소도시여행

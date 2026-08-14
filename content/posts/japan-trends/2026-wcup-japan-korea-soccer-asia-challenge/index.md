@@ -71,4 +71,8 @@ cover:
 
 ピッチ上で激しく火花を散らしながらも、試合が終われば互いを称え合う。そんな成熟した日韓関係こそが、これからのアジアサッカーをさらなる高みへと導く原動力になるはずです。
 
+**함께 읽으면 좋은 글**
+- [8月1日食品値上げ一覧！2300品目超の対策と日韓物価比較](/posts/japan-trends/2026-japan-august-food-price-hike-korea-comparison/)
+- [日本人口1.2億人割れは本当か？外国人最多と韓国の深刻比較](/posts/japan-trends/2026-japan-population-under-120m-foreign-residents-record/)
+
 #2026年W杯 #日韓 #サムライブルー #アジアサッカー #ワールドカップ #サッカースタイル比較 #スポーツトレンド #日韓戦

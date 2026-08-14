@@ -78,4 +78,8 @@ cover:
 
 2026년 AI 에이전트 기술은 단순한 생산성 도구가 아닌 일하는 방식 전체를 재편하는 문명적 전환입니다. 이 흐름에 올라타는 사람과 지켜보는 사람 사이의 격차는 앞으로 더 빠르게 벌어질 거예요.
 
+**함께 읽으면 좋은 글**
+- [Grok4.5 커서 인수! 개발자 밥그릇 바뀔까?](/posts/latest-tech/cursor-acquisition-grok-coding-disruption/)
+- [AWS AI투자 2200억불 폭증의 진짜 이유](/posts/latest-tech/aws-ai-capex-surge-2026/)
+
 #AI에이전트 #자율형AI #2026AI트렌드 #인공지능자동화 #업무자동화 #테크트렌드 #미래기술

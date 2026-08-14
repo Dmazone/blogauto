@@ -73,4 +73,8 @@ cover:
 ### 보호무역주의 및 글로벌 공급망 규제가 가져올 돌발 변수
 ### 주가 선반영에 따른 상고하저 가능성과 수익 실현 원칙
 
+**함께 읽으면 좋은 글**
+- [2026 자영업 폐업 지원금 진짜 받는 법](/posts/economy/2026-self-employed-survival-crisis/)
+- [월급외소득 건보료 1000만원 축소 진짜 피하는법](/posts/economy/2026-side-income-health-insurance-deduction-reduction/)
+
 #AI전력망수혜주 #에너지인프라투자 #2026경제트렌드 #초고압변압기 #구리가격전망 #전력인프라ETF #SMR원전 #글로벌인프라 #자산배분전략

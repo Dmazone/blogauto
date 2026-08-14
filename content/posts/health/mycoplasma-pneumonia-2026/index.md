@@ -78,4 +78,8 @@ cover:
 
 > 봄철 호흡기 건강 관련 더 많은 정보는 [봄철 알레르기 증상 완전 정리](/posts/health/spring-allergy-symptoms-2026/)에서 확인해보세요.
 
+**함께 읽으면 좋은 글**
+- [SFTS 진드기 증상 2026 완전정리](/posts/health/sfts-tick-borne-disease-prevention-2026/)
+- [2026 웰에이징 운동, 안 늙는 몸 만드는 숨은 비결](/posts/health/active-ageing-longevity-fitness-2026/)
+
 #마이코플라스마폐렴 #호흡기질환 #항생제내성 #2026건강이슈 #마른기침원인 #고열기침 #세균감염예방

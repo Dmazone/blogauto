@@ -47,3 +47,7 @@ cover:
 ### ① 전작 사용자 및 바 형태 스마트폰 유저별 비교분석
 
 기존 플립6나 플립7 사용자라면 배터리 용량의 변화와 AI 성능 고도화 측면에서
+
+**함께 읽으면 좋은 글**
+- [코파일럿 플러스 PC 온디바이스 AI 노트북 선택 기준](/posts/it-devices/copilot-plus-pc-laptop-guide-2026/)
+- [갤럭시 글라스 출시일과 가격 스펙 총정리](/posts/it-devices/galaxy-glass-unpacked-specs-release-date-2026/)

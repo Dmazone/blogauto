@@ -81,4 +81,8 @@ cover:
 
 [디지털 피로 탈출 트렌드](/posts/society/)에서 다룬 것처럼 스크린 시간을 줄이고 그 자리를 이 루틴으로 채우면 신체와 정신 건강 두 마리 토끼를 잡을 수 있어요. 지금 당장 10분, 시작이 전부입니다.
 
+**함께 읽으면 좋은 글**
+- [초가공식품 만성 염증 유발하는 진짜 이유와 3단계 해독법](/posts/health/ultra-processed-foods-chronic-inflammation-2026/)
+- [폭염 속 운동, 15분마다 물 마셔야 하는 진짜 이유](/posts/health/heatwave-workout-hydration-guidelines-2026/)
+
 #직장인운동 #틈새운동 #운동루틴2026 #홈트레이닝 #건강관리 #NEAT #오피스운동

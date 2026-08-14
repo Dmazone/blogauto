@@ -80,4 +80,8 @@ cover:
 
 스포츠 분석 및 최신 이슈는 [스포츠 섹션](/posts/sports/)에서 더 확인해보세요.
 
+**함께 읽으면 좋은 글**
+- [KT위즈 1위 탈환! 고영표 20이닝 무실점 대기록](/posts/sports/kt-wiz-kbo-rank-1st-go-young-pyo-2026/)
+- [바이에른 뮌헨 제주 방한! 친선전 핵심 관전포인트 3가지](/posts/sports/bayern-munich-jeju-sk-friendly-match-2026/)
+
 #2026월드컵 #북중미월드컵 #국가대표팀 #월드컵전력분석 #축구전술 #월드컵32강 #스포츠이슈

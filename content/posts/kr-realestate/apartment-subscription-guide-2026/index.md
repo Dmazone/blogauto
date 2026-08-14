@@ -58,4 +58,8 @@ cover:
 
 청약 전략은 전체 서울 부동산 시장의 흐름과 연결해서 봐야 합니다. 시장이 침체 국면일 때 무리하게 가점을 소진하는 것은 득보다 실이 클 수 있습니다. 전체 부동산 시장 흐름을 더 알고 싶다면 [서울 아파트 2026 지금 사야 할 타이밍인가](/posts/kr-realestate/seoul-apartment-timing-2026/)를 함께 읽어보세요.
 
+**함께 읽으면 좋은 글**
+- [공급절벽 2026 아파트 시장, 진짜 전세가 매매가 밀어 올릴까](/posts/kr-realestate/supply-shortage-jeonse-caps-property-2026/)
+- [바뀌는 양도세 중과 완전 정리](/posts/kr-realestate/multi-homeowner-tax-heavy-resumption-2026/)
+
 #청약전략 #아파트청약 #주택청약2026 #청약가점 #분양 #신생아특공 #내집마련 #부동산전략

@@ -76,4 +76,8 @@ cover:
 
 이처럼 거창하지 않은 사소한 질문들을 매일 단 세 줄씩이라도 노트에 직접 적어 내려가는 행위는 마비되었던 비판적 사고 회로를 완벽하게 회복시키는 경이로운 시작점이 됩니다.
 
+**함께 읽으면 좋은 글**
+- [광복절 태극기 거꾸로 진짜 논란인 이유 3가지](/posts/humanities/gwangbokjeol-taegeukgi-upside-down-controversy-2026/)
+- [도파민 디톡스 시대의 위버멘쉬와 느린 독서](/posts/humanities/dopamine-detox-humanities-2026/)
+
 #문해력위기 #비판적사고 #생성형AI시대 #인문학적사유 #질문의기술 #디지털리터러시 #뇌과학 #자기계발 #통찰력기르기 #생각의근육

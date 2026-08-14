@@ -92,4 +92,8 @@ cover:
 
 [관련 글 보기](/posts/society/)
 
+**함께 읽으면 좋은 글**
+- [2026 쓰레기 대란 진짜 오나? 수도권 매립 금지 핵심 정리](/posts/society/capital-waste-landfill-ban-crisis-2026/)
+- [813대책 결혼페널티 폐지 조건 진짜 바뀔까?](/posts/society/813-real-estate-marriage-penalty-2026/)
+
 #시니어빚투 #노후자산관리 #은퇴자금 #5060투자 #가계부채 #월배당포트폴리오 #주택연금 #재테크전략

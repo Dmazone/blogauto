@@ -98,4 +98,8 @@ AI 모델을 학습시키는 핵심 자산은 데이터입니다. 의료, 금융
 
 [관련 글 보기](/posts/latest-tech/)
 
+**함께 읽으면 좋은 글**
+- [키미 K3 진짜 성능 가성비 AI 반토막 혁명일까?](/posts/latest-tech/kimi-k3-moonshot-ai-shock-2026/)
+- [AI 결제 시대, 바뀌는 마케팅 핵심만](/posts/latest-tech/autonomous-economy-agentic-payments/)
+
 #소버린클라우드 #데이터주권 #클라우드보안 #GAIAX #디지털주권 #기밀컴퓨팅 #CSAP #AI인프라 #클라우드전략 #2026기술트렌드
