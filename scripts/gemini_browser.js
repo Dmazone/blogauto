@@ -618,16 +618,44 @@ export class GeminiSession {
 
     await wait(800);
 
-    // ② 메뉴에서 "이미지 만들기" 클릭
+    // ② 메뉴에서 "이미지 만들기" 클릭 (disabled 감지 포함)
     let imgBtnClicked = false;
     try {
       const imgBtn = this.page.getByText('이미지 만들기', { exact: true }).first();
       if (await imgBtn.isVisible({ timeout: 3000 })) {
-        await imgBtn.click();
+        // disabled 여부 확인 (세션 만료 시 버튼이 보이지만 클릭 불가)
+        const isDisabled = await imgBtn.evaluate((el) => {
+          const parent = el.closest('button, [role="menuitem"], .gem-menu-item');
+          if (!parent) return false;
+          return parent.disabled || parent.getAttribute('aria-disabled') === 'true'
+            || parent.classList.contains('disabled')
+            || getComputedStyle(parent).pointerEvents === 'none';
+        }).catch(() => false);
+
+        if (isDisabled) {
+          log('❌', '"이미지 만들기" 버튼 비활성화 — Gemini 세션 만료. 수동 재로그인 필요');
+          // 텔레그램 알림 (모듈 동적 로드)
+          try {
+            const { sendTelegram } = await import('./telegram.js');
+            await sendTelegram('⚠️ Gemini 이미지 생성 불가\n"이미지 만들기" 버튼 비활성화 감지\nChrome에서 paydma 계정 재로그인 후 fix_missing_images.mjs 실행 필요');
+          } catch {}
+          return; // 이미지 없이 진행
+        }
+
+        await imgBtn.click({ timeout: 5000 });
         imgBtnClicked = true;
         log('✅', '"이미지 만들기" 버튼 클릭 성공');
       }
-    } catch {}
+    } catch (e) {
+      if (e.message && e.message.includes('not enabled')) {
+        log('❌', '"이미지 만들기" 버튼 not enabled — 세션 만료 가능성');
+        try {
+          const { sendTelegram } = await import('./telegram.js');
+          await sendTelegram('⚠️ Gemini 이미지 생성 불가\n버튼 not enabled\nChrome에서 paydma 계정 재로그인 필요');
+        } catch {}
+        return;
+      }
+    }
 
     if (!imgBtnClicked) {
       // 폴백: JS 텍스트 탐색
