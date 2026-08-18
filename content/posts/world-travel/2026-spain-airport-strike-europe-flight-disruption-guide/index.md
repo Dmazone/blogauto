@@ -1,4 +1,4 @@
----
+﻿---
 title: "스페인 공항 무기한 파업 비상 대처법 3가지"
 date: 2026-08-09T06:30:00+09:00
 slug: 2026-spain-airport-strike-europe-flight-disruption-guide
@@ -7,6 +7,10 @@ categories: ["세계여행지"]
 series: ["세계여행지"]
 description: "2026년 8월 4일부터 시작된 스페인 바르셀로나와 팔마 공항의 무기한 파업으로 인한 유럽 항공 대혼란 현황과 항공권 취소·지연 시 필수 비상 대처법 3가지를 정리합니다."
 draft: false
+cover:
+  image: "2026-spain-airport-strike-europe-flight-disruption-guide-thumb.webp"
+  alt: "2026 스페인 공항 파업 유럽 항공 가이드 썸네일"
+  hiddenInSingle: true
 ---
 
 2026년 8월 초부터 시작된 **스페인 공항 파업** 사태로 인해 유럽 전역을 잇는 항공편 지연 및 결항 피해가 가속화되고 있습니다. 여름 성수기 휴가철을 맞아 지중해 및 유럽 여행을 계획한 여행객들 사이에서 항공편 운항 차질에 따른 비상 대처법과 보상 규정에 대한 관심이 그 어느 때보다 높은 상황입니다.
