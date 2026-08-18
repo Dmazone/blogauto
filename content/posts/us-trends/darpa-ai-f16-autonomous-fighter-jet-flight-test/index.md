@@ -1,20 +1,20 @@
 ---
-title: "AI 전투기의 시대, 인간 파일럿 종말일까?"
+title: "DARPA AI F-16: Is the Era of Human Fighter Pilots Over?"
 date: 2026-08-11T07:30:00+09:00
 slug: darpa-ai-f16-autonomous-fighter-jet-flight-test
 tags: ["DARPA AI F-16", "Global Trends"]
 categories: ["Global Trends"]
 series: ["Global Trends"]
-description: "DARPA의 AI 전용 F-16 실전 비행 성공 이슈와 자율 무기 체계가 가져올 군사 기술의 미래를 분석합니다."
+description: "DARPA's autonomous AI F-16 flight test success and what it means for the future of military aviation and human pilot roles."
 draft: false
 cover:
   image: "darpa-ai-f16-autonomous-fighter-jet-flight-test-thumb.webp"
-  alt: "AI 전투기의 시대, 인간 파일럿 종말일까? thumbnail"
+  alt: "DARPA AI F-16 autonomous fighter jet flight test thumbnail"
   hiddenInSingle: true
 ---
 
 The recent real-world flight test of the **DARPA AI F-16** fighter jet marks a historic milestone in autonomous combat aviation and modern military defense strategy. Operating with the advanced **VENOM Autonomy Kit**, this modified aircraft demonstrated fully autonomous flight capabilities that bypass traditional crewed operational limits. Defense analysts worldwide are now evaluating how autonomous fighter jets will reshape tactical air superiority and human pilot roles over the coming decade.
-![AI 전투기의 시대, 인간 파일럿 종말일까?](darpa-ai-f16-autonomous-fighter-jet-flight-test-01.webp)
+![DARPA AI F-16 autonomous flight test](darpa-ai-f16-autonomous-fighter-jet-flight-test-01.webp)
 
 ## Operational Breakthroughs in Autonomous Flight Testing
 
@@ -44,7 +44,7 @@ Human pilots face severe physiological constraints, bounded by G-force tolerance
 This capability fundamentally changes airframe design parameters. Future combat aircraft designed specifically for artificial intelligence will no longer require cockpit oxygen systems, heavy ejection seats, or life-support environmental controls. The resulting weight reduction increases fuel capacity, operational payload, and overall combat radius.
 
 ## Strategic Impact on Modern Tactical Air Warfare
-![DARPA AI F-16 관련 이미지](darpa-ai-f16-autonomous-fighter-jet-flight-test-02.webp)
+![DARPA AI F-16 autonomous combat aviation](darpa-ai-f16-autonomous-fighter-jet-flight-test-02.webp)
 
 ### Crewed-Uncrewed Teaming and Manned Fighter Support
 The primary near-term operational doctrine focuses on Collaborative Combat Aircraft (CCA) and Collaborative Manned-Unmanned Teaming (MUM-T). Under this strategy, a human pilot operating a fifth-generation fighter commands a fleet of autonomous wingmen that enter high-risk threat zones ahead of the primary strike package.
