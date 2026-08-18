@@ -1,12 +1,14 @@
 /**
- * yt_make_shorts.mjs v3 — 고품질 상품 Shorts
+ * yt_make_shorts.mjs v4 — 이탈률 개선판
  *
- * 슬라이드: hook(3s) → 1위(5s) → 2위(5s) → 3위(5s) → 비교표(4s) → CTA(3s) ≈ 25s
- * - 각 슬라이드 CSS fade-in/out 전환
- * - 배경 Ken Burns 줌 효과
- * - 제품 슬라이드에 특징 불릿 3개
- * - 비교표 슬라이드 추가
- * - crf 17 고품질 인코딩
+ * 슬라이드: hook(2s) → 1위(4s) → 2위(4s) → 3위(4s) → CTA(3s) ≈ 17s
+ * v3 대비 변경:
+ *   - TTS 1.75× → 1.5× (청취 편의)
+ *   - 훅 문구 다이나믹 로테이션 (카테고리/가격대 반영)
+ *   - 제품 슬라이드: 스펙 3개 → 핵심 1개 + 큼직한 가격 배지
+ *   - 진행 표시기 추가 (1/3, 2/3, 3/3)
+ *   - 비교표 슬라이드 제거 (정보 과부하 원인)
+ *   - 총 17s (v3 25s 대비 단축)
  */
 import { chromium } from 'playwright';
 import pkg from 'msedge-tts';
@@ -51,7 +53,6 @@ function parsePost(slug) {
   );
   const title = (md.match(/^title:\s*["']?(.+?)["']?\s*$/m) || [])[1] || slug;
 
-  // 테이블: | **상품명** | 가격 | 스펙1 / 스펙2 / 스펙3 |
   const tableRows = [...md.matchAll(/^\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|/gm)].slice(0, 3);
   const urls = [...md.matchAll(/https:\/\/www\.coupang\.com[^\s\)\"\'<>\]]+/g)]
     .map(m => m[0].replace(/[)\]\s,;]+$/, ''));
@@ -60,11 +61,11 @@ function parsePost(slug) {
   if (tableRows.length >= 1) {
     products = tableRows.map((m, i) => {
       const specsRaw = m[3].replace(/\\\~/g, '~').replace(/\*+/g, '').trim();
-      const specs = specsRaw.split(/\s*\/\s*/).map(s => s.trim()).filter(s => s.length > 1 && s.length < 25).slice(0, 3);
+      const specs = specsRaw.split(/\s*\/\s*/).map(s => s.trim()).filter(s => s.length > 1 && s.length < 25);
       return {
         name:  m[1].trim(),
         price: m[2].trim().replace(/\\\~/g, '~').replace(/\s*원대?$/, '원'),
-        specs,
+        keySpec: specs[0] || '',
         query: coupangQuery(urls[i] || '') || m[1].trim(),
       };
     });
@@ -73,7 +74,7 @@ function parsePost(slug) {
     products = headings.map((m) => ({
       name: m[1].trim().replace(/\s+/g, ' '),
       price: '',
-      specs: [],
+      keySpec: '',
       query: m[1].trim(),
     }));
   }
@@ -90,6 +91,26 @@ function parsePost(slug) {
   };
 }
 
+// ── 훅 문구 다이나믹 생성 ───────────────────────────────────────────
+function makeHookText(title) {
+  // 가격대 추출 시도
+  const priceMatch = title.match(/(\d+)만\s*원/);
+  const priceLabel = priceMatch ? `${priceMatch[1]}만원대` : '';
+
+  // 카테고리 키워드 기반 후크 풀
+  const hooks = [
+    '지금 핫한 TOP3 한방에 정리!',
+    '이거 모르면 진짜 손해봐요 👀',
+    `${priceLabel ? priceLabel + ' 중에' : ''} 이게 가성비 끝판왕!`,
+    '구매 전에 꼭 보세요 ⚡',
+    '2초만 보면 고민 끝!',
+  ].filter(h => h.trim());
+
+  // 제목 기반 세미-랜덤 선택 (동일 제목은 항상 동일 훅)
+  const seed = [...title].reduce((a, c) => a + c.charCodeAt(0), 0);
+  return hooks[seed % hooks.length];
+}
+
 // ── Edge TTS ──────────────────────────────────────────────────────
 async function ttsEdge(text, mp3Path) {
   const rawPath = mp3Path.replace(/\.mp3$/, '_raw.mp3');
@@ -104,7 +125,8 @@ async function ttsEdge(text, mp3Path) {
         if (!fs.existsSync(rawPath) || fs.statSync(rawPath).size < 500) {
           return resolve(false);
         }
-        await runFF(['-i', rawPath, '-filter:a', 'atempo=1.75', '-y', mp3Path], null);
+        // v4: 1.75 → 1.5 (조금 더 천천히, 청취 편의)
+        await runFF(['-i', rawPath, '-filter:a', 'atempo=1.5', '-y', mp3Path], null);
         try { fs.unlinkSync(rawPath); } catch {}
         resolve(true);
       });
@@ -147,35 +169,37 @@ const COMMON_CSS = `
 body{
   width:1080px;height:1920px;overflow:hidden;
   background:#06040f;font-family:'K',sans-serif;position:relative;
-  animation:bodyFadeIn 0.35s ease forwards
+  animation:bodyFadeIn 0.3s ease forwards
 }
 @keyframes bodyFadeIn{from{opacity:0}to{opacity:1}}
 .bg{position:absolute;inset:0;z-index:0;overflow:hidden}
 .bg img{
   width:110%;height:110%;object-fit:cover;object-position:center;
-  filter:brightness(.68) saturate(1.35) contrast(1.08);
+  filter:brightness(.62) saturate(1.4) contrast(1.1);
   margin:-5%;
-  animation:kenBurns var(--kb-dur,6s) ease-out forwards
+  animation:kenBurns var(--kb-dur,5s) ease-out forwards
 }
 @keyframes kenBurns{
   0%{transform:scale(1) translate(0,0)}
-  100%{transform:scale(1.12) translate(-2%,-1.5%)}
+  100%{transform:scale(1.14) translate(-2.5%,-2%)}
 }
 .vign{position:absolute;inset:0;
-  background:radial-gradient(ellipse at center,transparent 15%,rgba(0,0,0,.72) 100%)}
+  background:radial-gradient(ellipse at center,transparent 10%,rgba(0,0,0,.78) 100%)}
 .ov{position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(5,0,30,.7) 0%,transparent 25%,transparent 75%,rgba(0,0,20,.8) 100%)}
-.stripe{position:absolute;left:0;right:0;height:7px}
-.stripe-t{top:0;background:linear-gradient(90deg,#FF0066,#FF6B35,#FFD700,#00DDFF,#FF0066);background-size:200%}
-.stripe-b{bottom:0;background:linear-gradient(90deg,#00DDFF,#FFD700,#FF6B35,#FF0066,#00DDFF);background-size:200%}
+  background:linear-gradient(180deg,rgba(5,0,30,.75) 0%,transparent 22%,transparent 78%,rgba(0,0,20,.85) 100%)}
+.stripe{position:absolute;left:0;right:0;height:8px}
+.stripe-t{top:0;background:linear-gradient(90deg,#FF0066,#FF6B35,#FFD700,#00DDFF,#FF0066);background-size:200%;animation:stripeMove 3s linear infinite}
+.stripe-b{bottom:0;background:linear-gradient(90deg,#00DDFF,#FFD700,#FF6B35,#FF0066,#00DDFF);background-size:200%;animation:stripeMove 3s linear infinite reverse}
+@keyframes stripeMove{0%{background-position:0%}100%{background-position:200%}}
 .wrap{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 40px}
-@keyframes fadeUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes popIn{0%{transform:scale(0) rotate(-30deg);opacity:0}65%{transform:scale(1.18) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-@keyframes slideRight{from{transform:translateX(-140px);opacity:0}to{transform:translateX(0);opacity:1}}
-@keyframes glow2{0%,100%{text-shadow:0 0 25px currentColor,2px 2px 0 #000}50%{text-shadow:0 0 70px currentColor,0 0 120px currentColor,2px 2px 0 #000}}
+@keyframes fadeUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes popIn{0%{transform:scale(0) rotate(-20deg);opacity:0}65%{transform:scale(1.15) rotate(2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes slideRight{from{transform:translateX(-120px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes glow2{0%,100%{text-shadow:0 0 25px currentColor,2px 2px 0 #000}50%{text-shadow:0 0 65px currentColor,0 0 110px currentColor,2px 2px 0 #000}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 `;
 
-function bgLayer(bgImg, kbDur = '6s') {
+function bgLayer(bgImg, kbDur = '5s') {
   const url = bgImg ? toFileUrl(bgImg) : null;
   return `<div class="bg" style="--kb-dur:${kbDur}">${url ? `<img src="${url}"/>` : ''}</div>
 <div class="vign"></div><div class="ov"></div>
@@ -185,140 +209,143 @@ function bgLayer(bgImg, kbDur = '6s') {
 // ── 슬라이드 1: 훅 ────────────────────────────────────────────────
 function hookHtml(bgImg, title) {
   const topic = title.replace(/TOP\s*\d+[^가-힣]*/i, '').replace(/^[\d년\s]+/, '').trim() || title;
+  const hookText = makeHookText(title);
+
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 ${COMMON_CSS}
-.fire{font-size:160px;line-height:1;animation:popIn .65s cubic-bezier(.175,.885,.32,1.275) forwards}
-.hook{font-size:102px;font-weight:900;color:#FF3333;margin-top:12px;text-align:center;
-  animation:fadeUp .5s ease .5s both,glow2 2s ease 1.1s infinite;color:#FF3333;
-  word-break:keep-all;padding:0 20px;line-height:1.2}
-.topic{font-size:60px;color:#FFD700;margin-top:24px;text-align:center;
-  animation:fadeUp .5s ease .85s both;word-break:keep-all;line-height:1.35;padding:0 40px;
+.fire{font-size:150px;line-height:1;animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) forwards}
+.hook{font-size:90px;font-weight:900;color:#FF3333;margin-top:14px;text-align:center;
+  animation:fadeUp .45s ease .45s both,glow2 2s ease 1s infinite;
+  word-break:keep-all;padding:0 24px;line-height:1.22}
+.topic{font-size:56px;color:#FFD700;margin-top:22px;text-align:center;
+  animation:fadeUp .45s ease .8s both;word-break:keep-all;line-height:1.35;padding:0 44px;
   text-shadow:2px 2px 12px rgba(0,0,0,.95)}
-.sub{font-size:48px;color:rgba(255,255,255,.88);margin-top:36px;text-align:center;
-  animation:fadeUp .5s ease 1.2s both;text-shadow:1px 1px 6px rgba(0,0,0,.8)}
+.sub{font-size:46px;color:rgba(255,255,255,.88);margin-top:32px;text-align:center;
+  animation:fadeUp .45s ease 1.1s both;text-shadow:1px 1px 6px rgba(0,0,0,.8)}
 </style></head><body>
-${bgLayer(bgImg, '3.5s')}
+${bgLayer(bgImg, '3s')}
 <div class="wrap">
   <div class="fire">🔥</div>
-  <div class="hook">모르면 손해!</div>
+  <div class="hook">${hookText}</div>
   <div class="topic">${topic}</div>
   <div class="sub">지금 TOP3 다 알려드릴게요 👇</div>
 </div>
 </body></html>`;
 }
 
-// ── 슬라이드 2~4: 제품 ───────────────────────────────────────────
-function productHtml(bgImg, product, rank) {
-  const { name, price, specs } = product;
+// ── 슬라이드 2~4: 제품 (v4: 핵심 스펙 1개 + 가격 배지 강조 + 진행 표시) ─
+function productHtml(bgImg, product, rank, total = 3) {
+  const { name, price, keySpec } = product;
   const EMOJI  = ['🥇', '🥈', '🥉'];
   const COLORS = ['#FFD700', '#C8C8C8', '#CD7F32'];
   const color  = COLORS[rank];
-  const nameFs = name.length > 18 ? 55 : name.length > 13 ? 62 : 70;
 
-  const specItems = specs.length > 0
-    ? specs.map(s => `<div class="spec-item">✅ ${s}</div>`).join('')
-    : '';
+  // 제품명 폰트 크기 (v4: 조금 더 크게)
+  const nameFs = name.length > 18 ? 62 : name.length > 13 ? 70 : 80;
+
+  // 진행 표시기 (●●○)
+  const dots = Array.from({ length: total }, (_, i) =>
+    `<span style="color:${i === rank ? '#fff' : 'rgba(255,255,255,.3)'};font-size:36px">${i === rank ? '●' : '●'}</span>`
+  ).join('<span style="margin:0 10px"></span>');
+  const progressColors = Array.from({ length: total }, (_, i) =>
+    i === rank ? '#fff' : 'rgba(255,255,255,.28)'
+  );
+  const dotsHtml = Array.from({ length: total }, (_, i) =>
+    `<span style="color:${progressColors[i]};transition:color .3s">●</span>`
+  ).join('<span style="margin:0 12px;opacity:0"> </span>');
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 ${COMMON_CSS}
-@keyframes rankGlow{0%,100%{text-shadow:0 0 20px ${color}88,2px 2px 0 #000}50%{text-shadow:0 0 60px ${color},0 0 100px ${color}66,2px 2px 0 #000}}
-.badge{font-size:140px;line-height:1;text-align:center;animation:popIn .65s cubic-bezier(.175,.885,.32,1.275) forwards}
-.ranktext{font-size:60px;font-weight:900;color:${color};text-align:center;margin-top:6px;
-  animation:fadeUp .4s ease .55s both,rankGlow 2s ease 1s infinite;
+@keyframes rankGlow{0%,100%{text-shadow:0 0 20px ${color}88,2px 2px 0 #000}50%{text-shadow:0 0 55px ${color},0 0 90px ${color}66,2px 2px 0 #000}}
+.progress{font-size:38px;letter-spacing:18px;margin-bottom:18px;
+  animation:fadeUp .35s ease .1s both}
+.badge{font-size:130px;line-height:1;text-align:center;animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) forwards}
+.ranktext{font-size:58px;font-weight:900;color:${color};text-align:center;margin-top:8px;
+  animation:fadeUp .38s ease .5s both,rankGlow 2s ease .95s infinite;
   text-shadow:0 0 20px ${color}88,2px 2px 0 #000}
-.card{background:rgba(0,0,0,.82);border:2.5px solid ${color}88;border-radius:28px;
-  padding:36px 48px;margin-top:22px;width:100%;
-  animation:slideRight .55s ease .7s both;
-  box-shadow:0 8px 50px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.07)}
+.card{background:rgba(0,0,0,.85);border:3px solid ${color}99;border-radius:30px;
+  padding:40px 52px;margin-top:20px;width:100%;
+  animation:slideRight .5s ease .65s both;
+  box-shadow:0 8px 55px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.08)}
 .name{font-size:${nameFs}px;font-weight:900;color:#fff;word-break:keep-all;
-  line-height:1.3;text-shadow:2px 2px 10px rgba(0,0,0,.95)}
-.price{font-size:50px;color:#87CEEB;font-weight:bold;margin-top:14px;
-  animation:fadeUp .4s ease 1.1s both}
-.specs{margin-top:16px;animation:fadeUp .4s ease 1.3s both}
-.spec-item{font-size:40px;color:rgba(255,255,255,.9);margin-top:10px;line-height:1.3;
+  line-height:1.28;text-shadow:2px 2px 10px rgba(0,0,0,.95)}
+.price-badge{display:inline-block;background:linear-gradient(135deg,#FF0066,#FF6B35);
+  border-radius:14px;padding:12px 28px;margin-top:22px;
+  font-size:58px;font-weight:900;color:#fff;
+  animation:fadeUp .38s ease 1s both;
+  box-shadow:0 4px 24px rgba(255,0,102,.45);text-shadow:1px 1px 4px rgba(0,0,0,.5)}
+.key-spec{font-size:46px;color:rgba(255,255,255,.92);margin-top:20px;
+  animation:fadeUp .38s ease 1.2s both;line-height:1.35;
   text-shadow:1px 1px 5px rgba(0,0,0,.8)}
-.hint{font-size:38px;color:rgba(255,255,255,.68);margin-top:28px;text-align:center;
-  animation:fadeUp .4s ease 1.5s both}
+.hint{font-size:40px;color:rgba(255,255,255,.7);margin-top:30px;text-align:center;
+  animation:fadeUp .38s ease 1.45s both}
 </style></head><body>
-${bgLayer(bgImg, '5.5s')}
+${bgLayer(bgImg, '5s')}
 <div class="wrap">
+  <div class="progress" style="color:rgba(255,255,255,.5);letter-spacing:16px">${dotsHtml}</div>
   <div class="badge">${EMOJI[rank]}</div>
-  <div class="ranktext">${rank + 1}위</div>
+  <div class="ranktext">${rank + 1}위 / ${total}위</div>
   <div class="card">
     <div class="name">${name}</div>
-    ${price ? `<div class="price">💰 ${price}</div>` : ''}
-    ${specItems ? `<div class="specs">${specItems}</div>` : ''}
+    ${price ? `<div class="price-badge">💰 ${price}</div>` : ''}
+    ${keySpec ? `<div class="key-spec">⚡ ${keySpec}</div>` : ''}
   </div>
   <div class="hint">👆 설명란 쿠팡 최저가 링크</div>
 </div>
 </body></html>`;
 }
 
-// ── 슬라이드 5: 비교표 ───────────────────────────────────────────
-function compareHtml(bgImg, products) {
-  const RANK_COLOR = ['#FFD700', '#C8C8C8', '#CD7F32'];
-  const RANK_LABEL = ['🥇 1위', '🥈 2위', '🥉 3위'];
-  const cols = products.map((p, i) => {
-    const shortName = p.name.length > 10 ? p.name.slice(0, 10) + '..' : p.name;
-    const spec = p.specs[0] || '';
-    return `
-<div class="col" style="--rc:${RANK_COLOR[i]}">
-  <div class="rank-lbl">${RANK_LABEL[i]}</div>
-  <div class="pname">${shortName}</div>
-  ${p.price ? `<div class="pprice">${p.price}</div>` : ''}
-  ${spec ? `<div class="pspec">${spec}</div>` : ''}
-</div>`;
+// ── 슬라이드 5: CTA (v4: 미니 요약 + 행동 유도 통합) ────────────────
+function ctaHtml(bgImg, products) {
+  // 1~3위 이름 짧게
+  const shortName = n => {
+    let s = n.replace(/\s*\([^)]+\)/g, '').split(/\s*[\/,]\s*/)[0].trim();
+    const words = s.split(/\s+/);
+    let out = '';
+    for (const w of words) {
+      const next = out ? out + ' ' + w : w;
+      if ([...next].length <= 9) out = next; else break;
+    }
+    return out || words[0].slice(0, 9);
+  };
+
+  const summaryItems = products.slice(0, 3).map((p, i) => {
+    const EMOJI = ['🥇', '🥈', '🥉'];
+    return `<div class="sum-item" style="animation-delay:${0.3 + i * 0.12}s">
+      <span class="sum-rank">${EMOJI[i]}</span>
+      <span class="sum-name">${shortName(p.name)}</span>
+      ${p.price ? `<span class="sum-price">${p.price}</span>` : ''}
+    </div>`;
   }).join('');
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 ${COMMON_CSS}
-.title{font-size:72px;font-weight:900;color:#FFD700;text-align:center;
-  animation:fadeUp .5s ease .2s both;text-shadow:2px 2px 12px rgba(0,0,0,.95);
-  word-break:keep-all;line-height:1.2;padding:0 20px}
-.grid{display:flex;gap:24px;width:100%;margin-top:36px;animation:fadeUp .5s ease .5s both}
-.col{flex:1;background:rgba(0,0,0,.80);border:2.5px solid var(--rc);border-radius:22px;
-  padding:28px 18px;text-align:center;
-  box-shadow:0 6px 40px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
-.rank-lbl{font-size:40px;font-weight:900;color:var(--rc);margin-bottom:10px}
-.pname{font-size:34px;color:#fff;font-weight:bold;line-height:1.3;word-break:keep-all;
+@keyframes wiggle{0%,100%{transform:rotate(-2.5deg) scale(1)}50%{transform:rotate(2.5deg) scale(1.04)}}
+@keyframes bounceIn{0%{transform:scale(.15);opacity:0}55%{transform:scale(1.15)}80%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
+.main{font-size:76px;font-weight:900;color:#FFD700;text-align:center;
+  animation:bounceIn .55s ease .1s both;word-break:keep-all;line-height:1.25;
+  text-shadow:3px 3px 0 #000,0 0 55px #FFD70066}
+.summary{width:100%;margin-top:28px;animation:fadeUp .4s ease .35s both}
+.sum-item{display:flex;align-items:center;gap:18px;
+  background:rgba(0,0,0,.72);border-radius:18px;padding:18px 28px;
+  margin-top:12px;border:1.5px solid rgba(255,255,255,.12);
+  animation:slideRight .4s ease both}
+.sum-rank{font-size:48px;flex-shrink:0}
+.sum-name{font-size:44px;font-weight:900;color:#fff;flex:1;word-break:keep-all;
   text-shadow:1px 1px 5px rgba(0,0,0,.9)}
-.pprice{font-size:30px;color:#87CEEB;margin-top:8px;font-weight:bold}
-.pspec{font-size:28px;color:rgba(255,255,255,.75);margin-top:6px;line-height:1.2}
-.cta-line{font-size:50px;color:#FF3333;margin-top:44px;font-weight:900;text-align:center;
-  animation:fadeUp .5s ease .85s both;word-break:keep-all;
-  text-shadow:0 0 30px #FF333366,2px 2px 0 #000}
-</style></head><body>
-${bgLayer(bgImg, '4.5s')}
-<div class="wrap">
-  <div class="title">한눈에 비교!</div>
-  <div class="grid">${cols}</div>
-  <div class="cta-line">어떤 게 내 상황에 맞을까? 👇</div>
-</div>
-</body></html>`;
-}
-
-// ── 슬라이드 6: CTA ───────────────────────────────────────────────
-function ctaHtml(bgImg) {
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-${COMMON_CSS}
-@keyframes wiggle{0%,100%{transform:rotate(-3deg) scale(1)}50%{transform:rotate(3deg) scale(1.04)}}
-@keyframes bounceIn{0%{transform:scale(.15);opacity:0}55%{transform:scale(1.18)}80%{transform:scale(.94)}100%{transform:scale(1);opacity:1}}
-.arrow{font-size:145px;line-height:1;animation:bounceIn .6s ease forwards}
-.main{font-size:84px;font-weight:900;color:#FFD700;text-align:center;margin-top:18px;
-  animation:bounceIn .6s ease .3s both;word-break:keep-all;line-height:1.25;
-  text-shadow:3px 3px 0 #000,0 0 60px #FFD70066}
-.gap{height:40px}
+.sum-price{font-size:38px;color:#87CEEB;font-weight:bold;flex-shrink:0}
+.gap{height:36px}
 .btn{background:linear-gradient(135deg,#FF0066,#FF6B35);border-radius:999px;
-  padding:32px 72px;font-size:60px;font-weight:900;color:#fff;
-  animation:bounceIn .6s ease .65s both,wiggle .5s ease 1.55s infinite;
+  padding:30px 68px;font-size:58px;font-weight:900;color:#fff;
+  animation:bounceIn .55s ease .7s both,wiggle .5s ease 1.5s infinite;
   box-shadow:0 10px 50px rgba(255,0,102,.55);text-shadow:2px 2px 6px rgba(0,0,0,.4)}
-.like{font-size:46px;color:rgba(255,255,255,.85);margin-top:44px;text-align:center;
-  animation:bounceIn .6s ease 1.05s both}
+.like{font-size:44px;color:rgba(255,255,255,.85);margin-top:40px;text-align:center;
+  animation:bounceIn .55s ease 1.1s both}
 </style></head><body>
 ${bgLayer(bgImg, '3.5s')}
 <div class="wrap">
-  <div class="arrow">👆</div>
-  <div class="main">설명란 링크<br>= 쿠팡 최저가!</div>
+  <div class="main">👆 쿠팡 최저가<br>설명란 링크 클릭!</div>
+  <div class="summary">${summaryItems}</div>
   <div class="gap"></div>
   <div class="btn">지금 바로 확인 🛒</div>
   <div class="like">👍 좋아요  🔔 구독  💬 댓글</div>
@@ -329,7 +356,7 @@ ${bgLayer(bgImg, '3.5s')}
 // ── 슬라이드 → MP4 (Playwright recordVideo) ───────────────────────
 async function slideToMp4(browser, { name, html, mp3Path, minDur }, tmp) {
   const audioDur = (mp3Path && fs.existsSync(mp3Path)) ? await getAudioDur(mp3Path) : 0;
-  const dur = Math.max(minDur, audioDur + 0.6);
+  const dur = Math.max(minDur, audioDur + 0.5);
 
   const context = await browser.newContext({
     viewport: { width: 1080, height: 1920 },
@@ -375,21 +402,18 @@ async function slideToMp4(browser, { name, html, mp3Path, minDur }, tmp) {
   return { mp4Path, dur };
 }
 
-// ── xfade concat (슬라이드 간 0.4s 크로스페이드) ─────────────────
+// ── xfade concat (슬라이드 간 0.35s 크로스페이드) ──────────────────
 async function concatWithXfade(mp4s, durations, outPath, tmp) {
   if (mp4s.length === 1) {
     await runFF(['-i', mp4s[0], '-c', 'copy', '-y', outPath], 'copy');
     return;
   }
 
-  const FADE = 0.4;
-  // 각 슬라이드의 오디오를 concat용으로 변환 후 xfade 체인
-  // 비디오: xfade 필터 체인
+  const FADE = 0.35;
   let filterV = '';
   let filterA = '';
   const inputs = mp4s.flatMap(p => ['-i', p]);
 
-  // 오프셋 계산
   const offsets = [];
   let acc = 0;
   for (let i = 0; i < mp4s.length - 1; i++) {
@@ -397,7 +421,6 @@ async function concatWithXfade(mp4s, durations, outPath, tmp) {
     offsets.push(acc);
   }
 
-  // 비디오 xfade 체인
   let lastV = `[0:v]`;
   for (let i = 0; i < mp4s.length - 1; i++) {
     const outLabel = i === mp4s.length - 2 ? `[vout]` : `[v${i}]`;
@@ -405,7 +428,6 @@ async function concatWithXfade(mp4s, durations, outPath, tmp) {
     lastV = outLabel;
   }
 
-  // 오디오 acrossfade 체인
   let lastA = `[0:a]`;
   for (let i = 0; i < mp4s.length - 1; i++) {
     const outLabel = i === mp4s.length - 2 ? `[aout]` : `[a${i}]`;
@@ -430,7 +452,7 @@ export async function generate(slugArg) {
   const slug = slugArg
     || process.argv.find(a => !a.startsWith('-') && a !== process.argv[0] && a !== process.argv[1]);
   const resolvedSlug = slug || findLatestPost();
-  console.log('📹 v3', resolvedSlug);
+  console.log('📹 v4', resolvedSlug);
 
   const post = parsePost(resolvedSlug);
   console.log('제목:', post.title);
@@ -456,18 +478,28 @@ export async function generate(slugArg) {
     return out || words[0].slice(0, 8);
   };
   const shortPrice = p => {
-    const m = p.match(/(\d[\d,]*)\s*만?\s*~\s*([\d,]+)/);
-    if (m) return `${m[1].replace(/,/g,'')}~${m[2].replace(/,/g,'')}만원`;
+    // "139,000원 ~ 159,000원" 형태 처리
+    const stripped = p.replace(/원/g, '').replace(/\s+/g, ' ').trim();
+    const m = stripped.match(/(\d[\d,]*)\s*~\s*(\d[\d,]*)/);
+    if (m) {
+      const lo = parseInt(m[1].replace(/,/g, ''));
+      const hi = parseInt(m[2].replace(/,/g, ''));
+      const toMan = n => n >= 10000 ? `${Math.round(n / 10000)}만` : `${n}`;
+      return `${toMan(lo)}~${toMan(hi)}원`;
+    }
+    const single = parseInt(stripped.replace(/,/g, '').replace(/[^0-9]/g, ''));
+    if (!isNaN(single) && single >= 10000) return `${Math.round(single / 10000)}만원`;
     return p.replace(/\s*원대?$/, '원');
   };
 
+  // v4 내레이션: 극도로 짧게 (슬라이드당 2~3s 목표)
+  const hookText = makeHookText(title);
   const narrs = [
-    { name: 'hook', text: `TOP3 지금 바로 알려드릴게요!` },
-    ...(P[0] ? [{ name:'p0', text:`1위 ${shortName(P[0].name)}! ${P[0].price ? shortPrice(P[0].price)+', ' : ''}가성비 최고 추천!` }] : []),
-    ...(P[1] ? [{ name:'p1', text:`2위 ${shortName(P[1].name)}! ${P[1].price ? shortPrice(P[1].price)+', ' : ''}가격 대비 성능 최고!` }] : []),
-    ...(P[2] ? [{ name:'p2', text:`3위 ${shortName(P[2].name)}! ${P[2].price ? shortPrice(P[2].price)+', ' : ''}이 가격엔 이게 최선!` }] : []),
-    { name: 'cmp',  text: `세 제품 특징이 다 달라요. 내 상황에 맞는 거 고르세요!` },
-    { name: 'cta',  text: `설명란 링크로 쿠팡 최저가 바로 확인! 좋아요 구독 부탁드려요!` },
+    { name: 'hook', text: `TOP3 바로 알려드릴게요!` },
+    ...(P[0] ? [{ name:'p0', text:`1위, ${shortName(P[0].name)}! ${P[0].price ? shortPrice(P[0].price) + '.' : ''}` }] : []),
+    ...(P[1] ? [{ name:'p1', text:`2위, ${shortName(P[1].name)}! ${P[1].price ? shortPrice(P[1].price) + '.' : ''}` }] : []),
+    ...(P[2] ? [{ name:'p2', text:`3위, ${shortName(P[2].name)}! ${P[2].price ? shortPrice(P[2].price) + '.' : ''}` }] : []),
+    { name: 'cta',  text: `설명란 링크에서 최저가 확인! 좋아요 구독!` },
   ];
 
   const mp3Map = {};
@@ -475,20 +507,19 @@ export async function generate(slugArg) {
     const mp3Path = path.join(tmp, `${name}.mp3`);
     const ok = await ttsEdge(text, mp3Path);
     if (ok) mp3Map[name] = mp3Path;
-    console.log(`  ${name}: ${ok ? '✅' : '⚠️'} "${text.slice(0, 40)}"`);
+    console.log(`  ${name}: ${ok ? '✅' : '⚠️'} "${text.slice(0, 45)}"`);
   }
 
   // ── 배경 이미지 할당 ─────────────────────────────────────────────
   console.log('\n🎨 배경:', Object.entries(bg).map(([k,v]) => `${k}:${v?'✅':'⬜'}`).join(' '));
 
-  // ── 슬라이드 정의 ────────────────────────────────────────────────
+  // ── 슬라이드 정의 (v4: 비교표 제거, 총 5장) ────────────────────────
   const slides = [
-    { name:'hook', html: hookHtml(bg.thumb,         title),       mp3Path: mp3Map.hook, minDur: 2.8 },
-    ...(P[0] ? [{ name:'p0', html: productHtml(bg.img01,  P[0], 0), mp3Path: mp3Map.p0,   minDur: 3.5 }] : []),
-    ...(P[1] ? [{ name:'p1', html: productHtml(bg.img02,  P[1], 1), mp3Path: mp3Map.p1,   minDur: 3.5 }] : []),
-    ...(P[2] ? [{ name:'p2', html: productHtml(bg.thumb,  P[2], 2), mp3Path: mp3Map.p2,   minDur: 3.5 }] : []),
-    { name:'cmp',  html: compareHtml(bg.img01 || bg.thumb, P),      mp3Path: mp3Map.cmp,  minDur: 3.2 },
-    { name:'cta',  html: ctaHtml(bg.img02 || bg.thumb),             mp3Path: mp3Map.cta,  minDur: 2.5 },
+    { name:'hook', html: hookHtml(bg.thumb,        title),          mp3Path: mp3Map.hook, minDur: 2.2 },
+    ...(P[0] ? [{ name:'p0', html: productHtml(bg.img01, P[0], 0), mp3Path: mp3Map.p0,   minDur: 3.2 }] : []),
+    ...(P[1] ? [{ name:'p1', html: productHtml(bg.img02, P[1], 1), mp3Path: mp3Map.p1,   minDur: 3.2 }] : []),
+    ...(P[2] ? [{ name:'p2', html: productHtml(bg.thumb, P[2], 2), mp3Path: mp3Map.p2,   minDur: 3.2 }] : []),
+    { name:'cta',  html: ctaHtml(bg.img01 || bg.thumb, P),          mp3Path: mp3Map.cta,  minDur: 2.5 },
   ];
 
   // ── 녹화 ────────────────────────────────────────────────────────
