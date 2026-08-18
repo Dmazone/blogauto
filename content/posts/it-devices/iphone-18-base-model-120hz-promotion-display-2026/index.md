@@ -7,10 +7,6 @@ categories: ["IT기기"]
 series: ["IT기기"]
 description: "2026년 9월 공개를 앞두고 유출된 아이폰 18 일반 라인업의 120Hz ProMotion 탑재 확정 소식과 LTPO 패널 적용에 따른 배터리, 체감 성능 차이를 완벽 정리합니다."
 draft: false
-cover:
-  image: "iphone-18-base-model-120hz-promotion-display-2026-thumb.webp"
-  alt: "아이폰 18 기본형 120Hz 탑재 진짜일까? 썸네일"
-  hiddenInSingle: true
 ---
 
 매년 가을 애플 스페셜 이벤트를 앞두고 소비자들이 가장 날카롭게 따져보는 쟁점은 디스플레이 주사율 정책입니다. 2026년 9월 공개를 앞둔 **아이폰 18 기본형 120Hz** ProMotion 디스플레이 탑재 소식이 글로벌 공급망 라인을 통해 구체화되면서, 일반형과 프로 라인업 사이에 수년간 그어졌던 선이 무너지고 있습니다. 고주사율 화면 전환과 저전력 LTPO 패널의 기본 적용은 일반 모델 사용자가 매일 만지는 화면의 반응 속도를 완전히 바꿔놓을 핵심 요소입니다.

@@ -6,11 +6,6 @@ slug: "ai-pc-laptop-guide-2026"
 description: "NPU 탑재 AI PC가 대세가 된 2026년, 노트북 구매 기준이 완전히 바뀌었다. 코어 울트라·스냅드래곤 X·애플 M4의 차이와 실사용 기준 구매 가이드를 정리했다."
 categories: ["IT기기"]
 tags: ["AIPC", "노트북추천", "코어울트라", "애플M4", "2026노트북"]
-cover:
-  image: "ai-pc-laptop-guide-2026-thumb.webp"
-  alt: "AI PC 가이드 썸네일"
-  relative: true
-  hiddenInSingle: true
 
 ---
 

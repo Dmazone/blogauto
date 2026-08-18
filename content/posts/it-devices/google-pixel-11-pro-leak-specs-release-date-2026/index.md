@@ -7,10 +7,6 @@ categories: ["IT기기"]
 series: ["IT기기"]
 description: "8월 12일 공개를 앞두고 유출된 구글 픽셀 11 프로의 픽셀 글로우, 120배 줌, Tensor G6 칩셋 등 핵심 스펙과 실구매 전 필수 체크 포인트를 정리합니다."
 draft: false
-cover:
-  image: "google-pixel-11-pro-leak-specs-release-date-2026-thumb.webp"
-  alt: "구글 픽셀 11 프로 유출, 진짜 사야 할 3가지 이유 썸네일"
-  hiddenInSingle: true
 ---
 
 오는 8월 12일 'Made by Google' 행사를 앞두고 최신 플래그십 스마트폰 **구글 픽셀 11 프로**의 마케팅 유출 자료가 대거 공개되며 테크 커뮤니티가 뜨겁게 달아오르고 있습니다. 이번에 드러난 신형 안드로이드 스마트폰 스펙은 온디바이스 AI 성능 극대화와 독특한 외형 변화를 골자로 하여 프리미엄 기기를 기다리던 사용자들의 기대감을 대폭 끌어올렸습니다.
