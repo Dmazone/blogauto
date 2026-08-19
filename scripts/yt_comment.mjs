@@ -101,12 +101,16 @@ async function postComment(videoId, commentText) {
     await placeholder.click({ timeout: 20000 });
     await wait(1000);
 
-    // 클립보드 경유 붙여넣기 (YouTube contenteditable은 fill()이 버튼 활성화를 트리거하지 않음)
+    // 실제 입력 영역 클릭 후 한 글자 타이핑 → 버튼 활성화
+    const commentInput = p.locator('#contenteditable-root[contenteditable="true"]').first();
+    await commentInput.click();
+    await p.keyboard.type('a');   // 한 글자 입력으로 submit 버튼 활성화
+    await wait(500);
+
+    // 클립보드에 전체 댓글 복사 후 Ctrl+A → Ctrl+V로 교체
     await p.evaluate(async (text) => {
       await navigator.clipboard.writeText(text);
     }, commentText);
-    const commentInput = p.locator('#contenteditable-root[contenteditable="true"]').first();
-    await commentInput.click();
     await p.keyboard.press('Control+a');
     await p.keyboard.press('Control+v');
     await wait(1500);
