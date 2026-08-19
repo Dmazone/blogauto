@@ -91,24 +91,29 @@ async function postComment(videoId, commentText) {
   await wait(4000);
 
   // 댓글 입력창 클릭 (스크롤 후)
-  await p.evaluate(() => window.scrollBy(0, 600));
-  await wait(1500);
+  await p.evaluate(() => window.scrollBy(0, 1000));
+  await wait(2500);
 
   let ok = false;
   try {
     // YouTube 댓글 입력창 placeholder 클릭
     const placeholder = p.locator('#placeholder-area, ytd-comment-simplebox-renderer #placeholder-area').first();
-    await placeholder.click({ timeout: 8000 });
+    await placeholder.click({ timeout: 20000 });
     await wait(1000);
 
-    // 실제 입력 영역에 타이핑
+    // 클립보드 경유 붙여넣기 (YouTube contenteditable은 fill()이 버튼 활성화를 트리거하지 않음)
+    await p.evaluate(async (text) => {
+      await navigator.clipboard.writeText(text);
+    }, commentText);
     const commentInput = p.locator('#contenteditable-root[contenteditable="true"]').first();
-    await commentInput.fill(commentText);
-    await wait(800);
+    await commentInput.click();
+    await p.keyboard.press('Control+a');
+    await p.keyboard.press('Control+v');
+    await wait(1500);
 
-    // "댓글" 게시 버튼 클릭
-    const submitBtn = p.locator('ytd-button-renderer#submit-button button, #submit-button').first();
-    await submitBtn.click({ timeout: 5000 });
+    // disabled가 아닌 submit 버튼 대기 후 클릭
+    const submitBtn = p.locator('ytd-button-renderer#submit-button button:not([disabled])').first();
+    await submitBtn.click({ timeout: 10000 });
     await wait(3000);
 
     ok = true;
