@@ -198,6 +198,17 @@ async function main() {
   // ── IndexNow 즉시 색인 요청 (Bing / Yahoo / DuckDuckGo) ─────────────────
   if (publishedPosts.length > 0) await submitIndexNow(publishedPosts);
 
+  // ── 핑 서비스 (WebSub / Ping-O-Matic / Naver) — Google 빠른 크롤링 유도 ──
+  if (publishedPosts.length > 0) {
+    try {
+      const { default: pingMain } = await import('./ping_services.mjs');
+      await pingMain();
+      log('📡', '핑 서비스 제출 완료 (WebSub + Ping-O-Matic + Naver)');
+    } catch (err) {
+      log('⚠️', `핑 서비스 실패 (IndexNow는 성공): ${err.message}`);
+    }
+  }
+
   // ── YouTube Shorts 자동 생성 + 업로드 (trending-picks 포스팅 완료 시) ────
   const tpPost = publishedPosts.find(p => p.sectionId === 'trending-picks');
   if (tpPost) {

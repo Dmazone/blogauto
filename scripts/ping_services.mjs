@@ -5,6 +5,7 @@
  */
 import https from 'https';
 import http from 'http';
+import { fileURLToPath } from 'url';
 import { sendTelegram } from './telegram.js';
 
 const BLOG_TITLE = '트렌드줌';
@@ -139,4 +140,9 @@ async function main() {
   await sendTelegram(`📡 핑 서비스 일괄 제출 완료\nWebSub, XML-RPC, Google, Daum, Naver\nBlog: ${BLOG_URL}`);
 }
 
-main().catch(e => { console.error('❌', e.message); process.exit(1); });
+export default main;
+
+// 직접 실행 시
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch(e => { console.error('❌', e.message); process.exit(1); });
+}
