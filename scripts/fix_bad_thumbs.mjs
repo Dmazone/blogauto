@@ -205,6 +205,16 @@ async function main() {
     const img02Path = path.join(bundleDir, `${t.slug}-02.webp`);
     const thumbPath = path.join(bundleDir, `${t.slug}-thumb.webp`);
 
+    // 이미 모두 OK(60KB↑)이면 건너뜀 (재시작 안전)
+    const allOk = [img01Path, img02Path, thumbPath].every(
+      p => fs.existsSync(p) && fs.statSync(p).size >= MIN_OUTPUT_KB * 1024
+    );
+    if (allOk) {
+      console.log(`  ✅ 이미 완료 — 건너뜀`);
+      fixed++;
+      continue;
+    }
+
     try {
       // 워밍업: _turnCount=1로 강제 설정해 send() 내부 newConversation() 재호출 방지
       await session.newConversation();
