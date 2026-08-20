@@ -968,6 +968,23 @@ ${lc.lang !== 'ko' ? `⚠️ H2/H3 제목 모두 ${lc.label}로 작성\n` : ''}#
   const toneInstruction = section.viralTone
     ? `\n[톤 — 내부 지침 전용, 본문에 절대 출력 금지]\n${section.viralTone}\n`
     : '';
+  const coupangKwMap = {
+    'health':        '건강기기 마사지기',
+    'it-devices':    '스마트기기 노트북',
+    'economy':       '재테크 ETF',
+    'sports':        '스포츠용품',
+    'world-travel':  '여행용품',
+    'kr-realestate': '인테리어 홈가구',
+    'entertainment': '생활가전',
+    'society':       '생필품',
+    'latest-tech':   '스마트기기 AI기기',
+    'humanities':    '도서 문구용품',
+    'japan-trends':  '일본 인기상품',
+    'us-trends':     '해외인기상품',
+  };
+  const coupangKw = coupangKwMap[section.id] || topic.keyword;
+  const coupangHint = `⑩ 쿠팡 관련 상품 링크 — 본문 마지막 H2 섹션 끝에 주제와 가장 관련 있는 상품 1개 자연스럽게 삽입:\n   [관련상품 쿠팡에서 보기](https://www.coupang.com/np/search?q=${encodeURIComponent(coupangKw)}&sourceType=affiliate&trackingCode=AF8691300)\n   (상품명을 구체적으로 바꿔도 됨, trackingCode=AF8691300 반드시 유지)`;
+
   await session.send(
     `${lc.writingInstruction ? lc.writingInstruction + '\n\n' : ''}아웃라인대로 Hugo 마크다운 본문을 작성해줘. front matter 없이.
 ${toneInstruction}
@@ -986,6 +1003,7 @@ ${internalLinksHint}
 ⑦ **볼드**, > 인용구, - 불릿 적극 활용 (가독성·체류시간 향상)
 ⑧ 출처 없는 수치·통계 금지, 구체적 사례 반드시 포함
 ⑨ 맨 마지막 줄: ${lc.hashtagNote}
+${coupangHint}
 
 [금지 표현]
 ${lc.forbiddenExpr}`
@@ -1003,6 +1021,7 @@ ${lc.forbiddenExpr}`
 ${lc.qualityCheck5}
 6. **헤딩 구조** — ## H2 4개와 ### H3가 올바른 마크다운 문법으로 사용됐는지 확인 (숫자 번호 방식이면 ## 문법으로 교체)
 7. **해시태그** — 글 맨 마지막 줄에 ${lc.hashtagNote} 확인, 없으면 반드시 추가
+8. **쿠팡 링크** — 본문에 trackingCode=AF8691300 포함된 쿠팡 링크가 1개 이상 있는지 확인, 없으면 마지막 H2 섹션 끝에 추가
 
 수정 후 어떤 부분을 바꿨는지 2~3줄로 요약해줘.`
   );

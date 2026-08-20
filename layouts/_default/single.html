@@ -34,8 +34,36 @@
   {{- partial "toc.html" . }}
   {{- end }}
 
+  {{- /* 쿠팡 슬롯 — TOC 직후, 본문 읽기 전 노출 (클릭률 최고 위치) */ -}}
+  <div class="post-coupang-slot-top" style="margin:14px auto 18px;max-width:680px;overflow:hidden;min-height:60px;"></div>
+
   {{- if .Content }}
   <div class="post-content md-content">
+
+    {{- /* 섹션별 쿠팡 CTA 박스 — trending-picks 제외 전 섹션 */ -}}
+    {{- $sec := .Section -}}
+    {{- $coupangKw := index (dict
+      "health"        "건강기기 마사지기 헬스케어"
+      "it-devices"    "노트북 태블릿 스마트기기"
+      "economy"       "재테크 ETF 금융 투자"
+      "sports"        "스포츠용품 운동기구 헬스용품"
+      "world-travel"  "여행용품 캐리어 여행가방"
+      "kr-realestate" "인테리어 홈가구 생활가전"
+      "entertainment" "생활가전 취미용품"
+      "society"       "생필품 생활용품"
+      "latest-tech"   "최신 스마트기기 AI기기"
+      "humanities"    "도서 전자책 문구용품"
+      "japan-trends"  "일본직구 인기상품"
+      "us-trends"     "해외직구 인기상품"
+    ) $sec -}}
+    {{- if $coupangKw }}
+    <div class="coupang-section-cta">
+      <span class="coupang-cta-label">📦 이 글과 관련된 상품 최저가</span>
+      <a href="https://www.coupang.com/np/search?q={{ $coupangKw | urlize }}&sourceType=affiliate&trackingCode=AF8691300"
+         target="_blank" rel="noopener sponsored" class="coupang-cta-btn">{{ $coupangKw }} 쿠팡 최저가 →</a>
+    </div>
+    {{- end }}
+
     <div class="ad-unit ad-adfit" style="margin:0 auto 20px;max-width:768px;text-align:center;">
       <ins class="kakao_ad_area" style="display:block;"
         data-ad-unit="DAN-rQKAp2HPhLvIgyeA"
@@ -43,7 +71,7 @@
         data-ad-height="100"></ins>
     </div>
 
-    {{- /* anchored_headings 처리 후 이미지 없는 H2 섹션 중간에 Tenping 광고 정적 삽입 */ -}}
+    {{- /* H2 섹션마다 텐핑 광고 삽입 (이미지 여부 무관하게 삽입) */ -}}
     {{- $c := .Content -}}
     {{- if not (.Param "disableAnchoredHeadings") -}}
       {{- $c = $c | replaceRE `(<h[1-6] id="([^"]+)".+)(</h[1-6]+>)` `${1}<a hidden class="anchor" aria-hidden="true" href="#${2}">#</a>${3}` -}}
@@ -52,25 +80,23 @@
     {{- $AD2 := `<div class="ad-unit ad-tenping" style="margin:28px auto;max-width:768px;text-align:center;"><tenping class="adsbytenping" style="width:100%;max-width:768px;margin:0px auto;display:block;" tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d" tenping-ad-client="BdnhcMfPBvtcqWy4TeF3452t47SWFwraO4StFWXx1U%2fSBFm9k9OQo1uJHpkxwqxi"></tenping></div>` -}}
     {{- $parts := split $c "<h2" -}}
     {{- if gt (len $parts) 1 -}}
-      {{- /* H2 섹션 기반 삽입 */ -}}
       {{- $adIdx := 0 -}}
       {{- $result := index $parts 0 -}}
       {{- range $i, $part := $parts -}}
         {{- if gt $i 0 -}}
-          {{- $hasImg := strings.Contains $part "<img" -}}
-          {{- if and (not $hasImg) (lt $adIdx 2) -}}
+          {{- if (lt $adIdx 2) -}}
             {{- $ad := $AD1 -}}{{- if eq $adIdx 1 -}}{{- $ad = $AD2 -}}{{- end -}}
             {{- $pparts := split $part "</p>" -}}
             {{- $total := len $pparts -}}
             {{- $mid := sub $total 2 -}}
-            {{- $sec := "" -}}
+            {{- $sec2 := "" -}}
             {{- range $j, $pp := $pparts -}}
-              {{- $sec = print $sec $pp -}}
-              {{- if lt $j (sub $total 1) -}}{{- $sec = print $sec "</p>" -}}{{- end -}}
-              {{- if and (eq $j $mid) (lt $j (sub $total 1)) -}}{{- $sec = print $sec $ad -}}{{- end -}}
+              {{- $sec2 = print $sec2 $pp -}}
+              {{- if lt $j (sub $total 1) -}}{{- $sec2 = print $sec2 "</p>" -}}{{- end -}}
+              {{- if and (eq $j $mid) (lt $j (sub $total 1)) -}}{{- $sec2 = print $sec2 $ad -}}{{- end -}}
             {{- end -}}
-            {{- if lt $total 2 -}}{{- $sec = print $sec $ad -}}{{- end -}}
-            {{- $result = print $result "<h2" $sec -}}
+            {{- if lt $total 2 -}}{{- $sec2 = print $sec2 $ad -}}{{- end -}}
+            {{- $result = print $result "<h2" $sec2 -}}
             {{- $adIdx = add $adIdx 1 -}}
           {{- else -}}
             {{- $result = print $result "<h2" $part -}}
@@ -79,7 +105,6 @@
       {{- end -}}
       {{ $result | safeHTML }}
     {{- else -}}
-      {{- /* H2 없는 경우: P 태그 기준 1/3, 2/3 지점 삽입 */ -}}
       {{- $pparts := split $c "</p>" -}}
       {{- $total := len $pparts -}}
       {{- $p1 := div $total 3 -}}
@@ -98,16 +123,18 @@
 
   {{- partial "ads-inject.html" . }}
 
+  {{- /* 애드핏 — 본문 하단, 320×100으로 업사이즈 */ -}}
   <div class="ad-unit ad-adfit-bottom" style="margin:32px auto 16px;max-width:768px;text-align:center;">
     <ins class="kakao_ad_area" style="display:block;"
       data-ad-unit="DAN-jzmk9rPd9goT1dXv"
       data-ad-width="320"
-      data-ad-height="50"></ins>
+      data-ad-height="100"></ins>
   </div>
 
-  {{- partial "aliexpress-banner.html" . }}
+  {{- /* 쿠팡 슬롯 — 본문 하단 (두 번째 노출 기회) */ -}}
+  <div class="post-coupang-slot" style="margin:20px auto 24px;max-width:680px;overflow:hidden;min-height:60px;"></div>
 
-  <div class="post-coupang-slot" style="margin:24px auto;max-width:680px;overflow:hidden;min-height:60px;"></div>
+  {{- partial "aliexpress-banner.html" . }}
 
   {{- partial "related_posts.html" . }}
 

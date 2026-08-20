@@ -108,6 +108,25 @@
         setTimeout(function() { obs.disconnect(); }, 2000);
       }
 
+      // 포스팅 본문 상단 쿠팡 광고 (TOC 직후 — 가장 높은 클릭 위치)
+      function injectPostCoupangTop() {
+        var slot = document.querySelector('.post-coupang-slot-top');
+        if (!slot || slot.childElementCount > 0) return;
+        if (!window.PartnersCoupang) { setTimeout(injectPostCoupangTop, 300); return; }
+        var obs = new MutationObserver(function(mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            var added = mutations[i].addedNodes;
+            for (var j = 0; j < added.length; j++) {
+              var node = added[j];
+              if (node.nodeType === 1) { obs.disconnect(); slot.appendChild(node); return; }
+            }
+          }
+        });
+        obs.observe(document.body, { childList: true });
+        new window.PartnersCoupang.G({"id":999595,"template":"carousel","trackingCode":"AF8691300","width":"680","height":"140","tsource":""});
+        setTimeout(function() { obs.disconnect(); }, 2000);
+      }
+
       // 포스팅 본문 하단 쿠팡 광고
       function injectPostCoupang() {
         var slot = document.querySelector('.post-coupang-slot');
@@ -131,6 +150,7 @@
         injectListCoupang();
         injectSidebarCoupang();
         injectLeftSidebarCoupang();
+        injectPostCoupangTop();
         injectPostCoupang();
         if (typeof window.tp_adsbytenpingInit === 'function') window.tp_adsbytenpingInit();
         if (window.kakaoAdFit && typeof window.kakaoAdFit.display === 'function') window.kakaoAdFit.display();
