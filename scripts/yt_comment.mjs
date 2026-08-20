@@ -90,15 +90,18 @@ async function postComment(videoId, commentText) {
   await p.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await wait(4000);
 
-  // 댓글 입력창 클릭 (스크롤 후)
-  await p.evaluate(() => window.scrollBy(0, 1000));
-  await wait(2500);
+  // 댓글 섹션 로딩 대기 (스크롤 반복)
+  for (let i = 0; i < 3; i++) {
+    await p.evaluate(() => window.scrollBy(0, 800));
+    await wait(2000);
+  }
+  await wait(3000);
 
   let ok = false;
   try {
     // YouTube 댓글 입력창 placeholder 클릭
-    const placeholder = p.locator('#placeholder-area, ytd-comment-simplebox-renderer #placeholder-area').first();
-    await placeholder.click({ timeout: 20000 });
+    const placeholder = p.locator('#placeholder-area, ytd-comment-simplebox-renderer #placeholder-area, #simplebox-placeholder').first();
+    await placeholder.click({ timeout: 35000 });
     await wait(1000);
 
     // 실제 입력 영역 클릭 후 한 글자 타이핑 → 버튼 활성화
