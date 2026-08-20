@@ -61,10 +61,12 @@
       "@type": "ImageObject",
       "url": {{ (printf "%s/favicon.ico" $baseURL) | jsonify }}
     }
-  }{{- if $image -}},
+  }{{- if $ogImage -}},
   "image": {
     "@type": "ImageObject",
-    "url": {{ $image | jsonify }}
+    "url": {{ $ogImage | jsonify }},
+    "width": 1280,
+    "height": 720
   }{{- end -}}
 }
 </script>
