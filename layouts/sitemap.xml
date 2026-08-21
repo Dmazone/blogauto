@@ -1,7 +1,12 @@
 {{- printf "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" | safeHTML }}
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   {{- $pages := where (where .Data.Pages "Kind" "ne" "term") "Kind" "ne" "taxonomy" }}
   {{- range $pages }}
+  {{- $slug := .File.ContentBaseName -}}
+  {{- $thumb := .Resources.GetMatch (printf "%s-thumb.webp" $slug) -}}
+  {{- $img01 := .Resources.GetMatch (printf "%s-01.webp" $slug) -}}
+  {{- $img02 := .Resources.GetMatch (printf "%s-02.webp" $slug) -}}
   <url>
     <loc>{{ .Permalink }}</loc>
     {{- if not .Lastmod.IsZero }}
@@ -16,6 +21,24 @@
     {{- else if eq .Kind "section" }}
     <priority>0.6</priority>
     <changefreq>daily</changefreq>
+    {{- end }}
+    {{- if $thumb }}
+    <image:image>
+      <image:loc>{{ $thumb.Permalink }}</image:loc>
+      <image:title>{{ .Title | html }}</image:title>
+    </image:image>
+    {{- end }}
+    {{- if $img01 }}
+    <image:image>
+      <image:loc>{{ $img01.Permalink }}</image:loc>
+      <image:title>{{ .Title | html }}</image:title>
+    </image:image>
+    {{- end }}
+    {{- if $img02 }}
+    <image:image>
+      <image:loc>{{ $img02.Permalink }}</image:loc>
+      <image:title>{{ .Title | html }}</image:title>
+    </image:image>
     {{- end }}
   </url>
   {{- end }}

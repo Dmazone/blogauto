@@ -1,7 +1,35 @@
 <meta name="google-site-verification" content="aGAY_kwsExs_qvC3QdZjOKXU4Jq4o2BISQnTHsfdoW0" />
 <!-- Pretendard Variable — 무료 최고품질 한국어 웹폰트 -->
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
+<!-- 광고 서버 preconnect — LCP 개선 -->
+<link rel="preconnect" href="https://ads-partners.coupang.com" crossorigin>
+<link rel="preconnect" href="https://t1.daumcdn.net" crossorigin>
+<link rel="preconnect" href="https://ads.tenping.kr" crossorigin>
+<!-- RSS 피드 자동발견 -->
+<link rel="alternate" type="application/rss+xml" title="트렌드줌 RSS 피드" href="{{ .Site.BaseURL }}index.xml">
+<!-- WebSite 구조화 데이터 + 검색창 액션 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "트렌드줌",
+  "alternateName": "TrendZoom",
+  "url": {{ .Site.BaseURL | jsonify }},
+  "description": {{ .Site.Params.description | jsonify }},
+  "inLanguage": "ko-KR",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": {{ (printf "%ssearch/?q={search_term_string}" .Site.BaseURL) | jsonify }}
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
 {{- if .IsPage -}}
 {{- $baseURL := strings.TrimSuffix "/" .Site.BaseURL -}}
 {{- $title := .Title -}}
@@ -1074,6 +1102,50 @@ input, button, select, textarea {
 </style>
 
 <script>
+/* GA4 커스텀 이벤트 추적 — 쿠팡 클릭, 공유, 스크롤 깊이 */
+(function() {
+  if (typeof window.gtag !== 'function') return;
+
+  // 쿠팡 링크 클릭 추적
+  document.addEventListener('click', function(e) {
+    var a = e.target.closest('a[href*="coupang.com"]');
+    if (a) {
+      window.gtag('event', 'coupang_click', {
+        event_category: 'affiliate',
+        event_label: a.textContent.trim().slice(0, 60),
+        page_location: window.location.href,
+      });
+    }
+  }, true);
+
+  // 공유 버튼 추적
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.share-btn-custom, .share-buttons a');
+    if (btn) {
+      var platform = btn.title || btn.getAttribute('aria-label') || 'unknown';
+      window.gtag('event', 'share', {
+        method: platform,
+        content_type: 'article',
+        content_id: window.location.pathname,
+      });
+    }
+  }, true);
+
+  // 스크롤 깊이 추적 (25%, 50%, 75%, 100%)
+  var scrollMarks = [25, 50, 75, 100];
+  var fired = {};
+  window.addEventListener('scroll', function() {
+    var el = document.documentElement;
+    var pct = Math.round((el.scrollTop + window.innerHeight) / el.scrollHeight * 100);
+    scrollMarks.forEach(function(mark) {
+      if (!fired[mark] && pct >= mark) {
+        fired[mark] = true;
+        window.gtag('event', 'scroll_depth', { depth: mark, page: window.location.pathname });
+      }
+    });
+  }, { passive: true });
+})();
+
 /* 헤더 fixed 보정: 헤더 높이만큼 body padding-top 자동 설정 */
 (function() {
   function applyHeaderOffset() {
