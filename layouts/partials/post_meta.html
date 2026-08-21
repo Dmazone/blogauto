@@ -20,8 +20,8 @@
 {{- end }}
 {{- end }}
 
-{{- /* 조회수 — Firebase Realtime Database 미설정 시 숨김 */ -}}
-{{- if site.Params.firebaseDbUrl }}
+{{- /* 조회수 — 단일 포스팅 페이지(.IsPage)에서만 표시·증가 */ -}}
+{{- if and site.Params.firebaseDbUrl .IsPage }}
 {{- $vcSpan := printf "<span class=\"post-views\">👁 <span class=\"vc-num\" data-slug=\"%s\" data-db=\"%s\">-</span></span>" .Slug site.Params.firebaseDbUrl }}
 {{- $scratch.Add "meta" (slice $vcSpan) }}
 {{- end }}
@@ -30,22 +30,22 @@
 {{- delimit . "&nbsp;·&nbsp;" | safeHTML -}}
 {{- end }}
 
-{{- if site.Params.firebaseDbUrl }}
+{{- if and site.Params.firebaseDbUrl .IsPage }}
 <script>
 (function () {
-  document.querySelectorAll(".vc-num").forEach(function (el) {
-    var slug = el.getAttribute("data-slug");
-    var db   = el.getAttribute("data-db").replace(/\/$/, "");
-    var url  = db + "/views/" + slug + ".json";
-    fetch(url)
-      .then(function (r) { return r.json(); })
-      .then(function (n) {
-        n = (n || 0) + 1;
-        fetch(url, { method: "PUT", body: JSON.stringify(n) });
-        el.textContent = n.toLocaleString("ko-KR");
-      })
-      .catch(function () { el.textContent = "?"; });
-  });
+  var el = document.querySelector(".vc-num");
+  if (!el) return;
+  var slug = el.getAttribute("data-slug");
+  var db   = el.getAttribute("data-db").replace(/\/$/, "");
+  var url  = db + "/views/" + slug + ".json";
+  fetch(url)
+    .then(function (r) { return r.json(); })
+    .then(function (n) {
+      n = (n || 0) + 1;
+      fetch(url, { method: "PUT", body: JSON.stringify(n) });
+      el.textContent = n.toLocaleString("ko-KR");
+    })
+    .catch(function () { el.textContent = ""; });
 })();
 </script>
 {{- end }}
