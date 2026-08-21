@@ -60,8 +60,17 @@ enableGitInfo = true
     limit = 20
     keys = ["title", "permalink", "summary", "content"]
 
+[outputFormats]
+  [outputFormats.NewsSitemap]
+    mediaType = "application/xml"
+    baseName = "news-sitemap"
+    isPlainText = false
+    rel = "alternate"
+    isHTML = false
+    noUgly = true
+
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+  home = ["HTML", "RSS", "JSON", "NewsSitemap"]
 
 [menu]
   [[menu.main]]
