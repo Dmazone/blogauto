@@ -14,8 +14,10 @@
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end }}
     {{ range .Pages }}
-    {{- $slug := .File.ContentBaseName -}}
-    {{- $thumb := .Resources.GetMatch (printf "%s-thumb.webp" $slug) -}}
+    {{- $slug := "" }}
+    {{- with .File }}{{- $slug = .ContentBaseName }}{{- end }}
+    {{- $thumb := false }}
+    {{- if $slug }}{{- $thumb = .Resources.GetMatch (printf "%s-thumb.webp" $slug) }}{{- end }}
     <item>
       <title>{{ .Title | html }}</title>
       <link>{{ .Permalink }}</link>

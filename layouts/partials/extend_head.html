@@ -42,10 +42,10 @@
 {{- /* 썸네일 이미지 — Page Bundle 우선 */ -}}
 {{- $ogImage := $image -}}
 {{- if not $ogImage -}}
-  {{- $slug := .File.ContentBaseName -}}
-  {{- $thumbFile := printf "%s-thumb.webp" $slug -}}
-  {{- $thumbRes := .Resources.GetMatch $thumbFile -}}
-  {{- if $thumbRes -}}{{- $ogImage = $thumbRes.Permalink -}}{{- end -}}
+  {{- with .File -}}
+    {{- $thumbFile := printf "%s-thumb.webp" .ContentBaseName -}}
+    {{- with $.Resources.GetMatch $thumbFile -}}{{- $ogImage = .Permalink -}}{{- end -}}
+  {{- end -}}
 {{- end -}}
 <!-- Open Graph / SNS 공유 최적화 -->
 <meta property="og:type" content="article" />
