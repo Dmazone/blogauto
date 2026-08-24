@@ -3,10 +3,16 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   {{- $pages := where (where .Data.Pages "Kind" "ne" "term") "Kind" "ne" "taxonomy" }}
   {{- range $pages }}
-  {{- $slug := .File.ContentBaseName -}}
-  {{- $thumb := .Resources.GetMatch (printf "%s-thumb.webp" $slug) -}}
-  {{- $img01 := .Resources.GetMatch (printf "%s-01.webp" $slug) -}}
-  {{- $img02 := .Resources.GetMatch (printf "%s-02.webp" $slug) -}}
+  {{- $slug := "" }}
+  {{- with .File }}{{- $slug = .ContentBaseName }}{{- end }}
+  {{- $thumb := false }}
+  {{- $img01 := false }}
+  {{- $img02 := false }}
+  {{- if $slug }}
+  {{- $thumb = .Resources.GetMatch (printf "%s-thumb.webp" $slug) }}
+  {{- $img01  = .Resources.GetMatch (printf "%s-01.webp" $slug) }}
+  {{- $img02  = .Resources.GetMatch (printf "%s-02.webp" $slug) }}
+  {{- end }}
   <url>
     <loc>{{ .Permalink }}</loc>
     {{- if not .Lastmod.IsZero }}
