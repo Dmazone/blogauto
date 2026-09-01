@@ -2,11 +2,12 @@
 title: "2027 수능 원서접수 변경 핵심 3가지"
 date: 2026-08-31T05:00:00+09:00
 slug: 2027-csat-application-guide-changes
-tags: ["2027 수능 원서접수", "건강"]
-categories: ["건강"]
-series: ["건강"]
+tags: ["수능", "사회"]
+categories: ["사회"]
+series: ["사회"]
 description: "8월 말 시작된 2027학년도 대학수학능력시험 원서접수 기간 및 달라진 온라인 사전입력 시스템, 준비물과 주의사항을 한눈에 정리해 드립니다."
 draft: false
+aliases: ["/posts/health/2027-csat-application-guide-changes/"]
 cover:
   image: "2027-csat-application-guide-changes-thumb.webp"
   alt: "2027 수능 원서접수 변경 핵심 3가지 썸네일"

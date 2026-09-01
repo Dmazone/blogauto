@@ -2,11 +2,12 @@
 title: "2026 차세대 AI 에이전트 트렌드"
 date: 2026-08-26T07:00:00+09:00
 slug: next-gen-ai-agent-trends
-tags: ["AI 에이전트", "연예이슈"]
-categories: ["연예이슈"]
-series: ["연예이슈"]
+tags: ["AI 에이전트", "최신기술동향"]
+categories: ["최신기술동향"]
+series: ["최신기술동향"]
 description: "2026년 급부상한 차세대 AI 에이전트의 핵심 기술 동향과 산업별 적용 사례를 알기 쉽게 정리했습니다. 최신 트렌드를 확인해 보세요."
 draft: false
+aliases: ["/posts/entertainment/next-gen-ai-agent-trends/"]
 cover:
   image: "next-gen-ai-agent-trends-thumb.webp"
   alt: "2026 차세대 AI 에이전트 트렌드 썸네일"

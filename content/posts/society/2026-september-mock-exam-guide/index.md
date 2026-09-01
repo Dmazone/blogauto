@@ -2,11 +2,12 @@
 title: "2026 9월 모의평가 대비 핵심정리"
 date: 2026-08-31T05:30:00+09:00
 slug: 2026-september-mock-exam-guide
-tags: ["9월 모의평가", "IT기기"]
-categories: ["IT기기"]
-series: ["IT기기"]
+tags: ["수능", "사회"]
+categories: ["사회"]
+series: ["사회"]
 description: "2026년 9월 2일 시행되는 9월 모의평가 직전 필수 대비 전략과 수시 원서 접수 연계 핵심 분석 가이드입니다."
 draft: false
+aliases: ["/posts/it-devices/2026-september-mock-exam-guide/"]
 cover:
   image: "2026-september-mock-exam-guide-thumb.webp"
   alt: "2026 9월 모의평가 대비 핵심정리 썸네일"

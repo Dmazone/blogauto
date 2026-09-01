@@ -640,6 +640,11 @@ async function generateImage(prompt, slug, index, bundleDir) {
   }
 
   log('⚠️', `  이미지 생성 3회 실패 — ${filename} 없이 텍스트만 발행`);
+  // 텔레그램 알림 (조용히 실패하지 않도록)
+  try {
+    const { sendTelegram } = await import('./telegram.js');
+    await sendTelegram(`⚠️ 이미지 생성 실패: ${filename}\n→ 내일 fix_missing_images.mjs 에서 자동 복구 예정`);
+  } catch {}
   return { localPath: '', sourceUrl: '' };
 }
 

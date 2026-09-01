@@ -2,11 +2,12 @@
 title: "2026 청년 주거지원 변경 핵심만"
 date: 2026-09-01T07:00:00+09:00
 slug: 2026-youth-housing-support-updates
-tags: ["2026 청년 주거지원", "연예이슈"]
-categories: ["연예이슈"]
-series: ["연예이슈"]
+tags: ["청년", "사회"]
+categories: ["사회"]
+series: ["사회"]
 description: "2026년 하반기 기준 새로 개편된 청년 주거지원 정책의 핵심 자격 조건과 지원 혜택, 놓치기 쉬운 필수 신청 절차를 한눈에 정리해 드립니다."
 draft: false
+aliases: ["/posts/entertainment/2026-youth-housing-support-updates/"]
 cover:
   image: "2026-youth-housing-support-updates-thumb.webp"
   alt: "2026 청년 주거지원 변경 핵심만 썸네일"

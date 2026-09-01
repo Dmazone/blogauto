@@ -37,9 +37,11 @@ data/debug-screenshots/
 screenshots/
 /*.png
 
-# YouTube 영상 작업 폴더 (용량 큰 MP4/WAV 제외)
+# YouTube 영상 작업 폴더 + Shorts 생성 영상 (용량 큰 MP4/WAV 제외)
 data/yt-output/
 data/yt-work/
+data/1_youtube-shorts/*.mp4
+data/1_youtube-shorts/*.wav
 
 # Gemini 브라우저 동시 실행 방지 락 파일
 .gemini-browser.lock

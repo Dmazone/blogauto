@@ -2,11 +2,12 @@
 title: "2026 AI 에이전트 자동화 트렌드"
 date: 2026-08-31T06:30:00+09:00
 slug: 2026-ai-agent-automation-trends
-tags: ["AI 에이전트 자동화", "세계여행지"]
-categories: ["세계여행지"]
-series: ["세계여행지"]
+tags: ["AI 에이전트", "최신기술동향"]
+categories: ["최신기술동향"]
+series: ["최신기술동향"]
 description: "2026년 최신 AI 에이전트 자동화 트렌드와 업무 생산성 혁신 전략을 살펴보고, 자율형 AI 시스템 도입 시 고려해야 할 핵심 변화를 정리합니다."
 draft: false
+aliases: ["/posts/world-travel/2026-ai-agent-automation-trends/"]
 cover:
   image: "2026-ai-agent-automation-trends-thumb.webp"
   alt: "2026 AI 에이전트 자동화 트렌드 썸네일"

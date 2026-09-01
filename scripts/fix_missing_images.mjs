@@ -140,6 +140,11 @@ function todayKST() {
 
 function scanMissing({ allMode = false } = {}) {
   const today = todayKST();
+  // 최근 7일치를 커버 — 이미지 생성 실패가 당일 복구를 빠져나가도 7일 이내에 잡힘
+  const recent7 = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(Date.now() + 9 * 60 * 60 * 1000 - i * 86400000);
+    return d.toISOString().slice(0, 10);
+  });
   const targets = [];
 
   for (const section of SECTIONS) {
@@ -154,9 +159,9 @@ function scanMissing({ allMode = false } = {}) {
 
       const md = fs.readFileSync(mdPath, 'utf8');
       if (!allMode) {
-        // 오늘 날짜 포스팅만 처리
+        // 최근 7일 이내 포스팅만 처리
         const dateMatch = md.match(/^date:\s*["']?(\d{4}-\d{2}-\d{2})/m);
-        if (!dateMatch || dateMatch[1] !== today) continue;
+        if (!dateMatch || !recent7.includes(dateMatch[1])) continue;
       }
 
       const p01 = path.join(d, `${slug}-01.webp`);
