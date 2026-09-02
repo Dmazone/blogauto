@@ -67,6 +67,13 @@ cover:
 * **Sagaパターン**: 分散トランザクションの代わりに補償トランザクションを用いた整合性確保
 * **CQRS（コマンドクエリ責務分離）**: 読み取り専用モデルと更新用モデルを分離し、参照性能を最適化
 
+
+---
+
+**관련 글**
+- [ミントコアとは？2026年最新韓国ファッショントレンド徹底解](/posts/japan-trends/2026-japan-mintcore-korean-fashion-trend-guide/)
+- [生活道路30km/h引き下げ完全解説](/posts/japan-trends/2026-japan-living-road-speed-limit-30km-korea-comparison/)
+
 ## デプロイメントおよび運用監視基盤
 
 安定した運用を維持するために、オブザーバビリティの確保と自動化パイプラインの構築を行います。

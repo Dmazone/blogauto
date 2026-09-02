@@ -47,6 +47,13 @@ AI 모델 중개 플랫폼 오픈라우터(OpenRouter)에 정체불명의 고성
 
 ## 옥스 알파 무료 API 연동 및 개발 환경 세팅 튜토리얼
 
+
+---
+
+**관련 글**
+- [애플 이벤트 2026 핵심 3가지 정리](/posts/latest-tech/apple-event-2026-keynote-highlights/)
+- [2027 수능 원서접수 마감 핵심](/posts/latest-tech/2027-csat-application-deadline-guide/)
+
 ### 오픈라우터 API 키 발급 및 엔드포인트 환경 변수 설정
 옥스 알파를 개인 개발 환경에 연동하는 절차는 간결합니다. 오픈라우터 계정 생성 후 API 키를 발급받아 프로젝트 환경 변수에 등록하면 즉시 호출할 수 있습니다.
 

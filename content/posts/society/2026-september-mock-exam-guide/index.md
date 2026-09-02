@@ -48,6 +48,13 @@ cover:
 * **스크롤 뎁스 추적**: 25%, 50%, 75%, 90% 임계점 도달 시 `scroll_depth` 이벤트를 발송하여 랜딩페이지 가독성 및 이탈 지점 분석
 * **외부 링크 및 전화 문의 클릭**: `Click URL` 변수에 `tel:` 또는 오픈채팅 링크가 포함된 경우를 포착하여 전환 가치 부여
 
+
+---
+
+**관련 글**
+- [차세대 고대역폭 메모리 기술 동향](/posts/society/next-gen-high-bandwidth-memory-trends/)
+- [2026 청년 주거지원 변경 핵심만](/posts/society/2026-youth-housing-support-updates/)
+
 ## 4. 데이터 검증 및 QA 프로세스
 
 태그 배포 전 디버깅 모드를 활용하여 파라미터 유실 및 오작동 여부를 전수 검사합니다.

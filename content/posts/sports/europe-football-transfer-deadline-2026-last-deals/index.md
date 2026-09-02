@@ -56,6 +56,13 @@ cover:
 * **웜 오디언스 (Middle of Funnel)**: 상세 페이지 조회, 장바구니 담기 후 이탈 유저 대상 혜택 중심 리타게팅
 * **핫 오디언스 (Bottom of Funnel)**: 결제 단계 이탈자 대상 마감 임박 프로모션 및 1:1 상담 유도
 
+
+---
+
+**관련 글**
+- [UCL 대진 확정, 韓 더비 승자는?](/posts/sports/ucl-2026-draw-lee-kang-in-kim-min-jae-derby/)
+- [2026 KBO 잔여경기 일정과 숨은 변수 3가지](/posts/sports/kbo-2026-residual-schedule-wildcard-keypoints/)
+
 ## 4. 캠페인 성과 검증 및 A/B 테스트 프레임워크
 
 단순 CTR이나 CPC 지표에 의존하지 않고, 최종 비즈니스 전환 가치를 기준으로 소재와 랜딩 페이지를 검증해야 합니다. 신뢰도 높은 의사결정을 위해 통계적 유의성을 확보하는 실험 프로세스를 정립합니다.

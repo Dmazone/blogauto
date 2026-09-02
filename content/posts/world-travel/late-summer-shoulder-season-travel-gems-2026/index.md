@@ -40,6 +40,13 @@ cover:
 * **구조화 데이터(Schema.org):** `Course`, `FAQPage`, `LocalBusiness` 등 JSON-LD 마크업 적용을 통한 리치 결과 및 AI 인식률 향상.
 * **콘텐츠 인덱싱:** 명확한 헤딩 태그(`H1`, `H2`, `H3`) 구조와 직관적인 요약 단락 배치를 통한 정보 추출 용이성 극대화.
 
+
+---
+
+**관련 글**
+- [쿠알라룸푸르 공항 지연 대처 4가지](/posts/world-travel/klia-airspace-closure-flight-delay-guide-2026/)
+- [노르웨이 공항 마비 결항 대처 3가지](/posts/world-travel/norway-atc-strike-oslo-airport-flight-delay-compensation-2026/)
+
 ## 4. 자동화 워크플로우 및 리포팅 체계
 
 반복적인 데이터 추출과 리포팅 업무를 자동화하여 분석과 전략 수립에 집중할 수 있는 환경을 구축합니다.

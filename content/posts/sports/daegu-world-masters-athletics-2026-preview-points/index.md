@@ -98,6 +98,13 @@ cover:
 
 러닝·육상 직관 필수용품 쿠팡에서 보기
 
+
+---
+
+**관련 글**
+- [해외축구 이적시장 마감 진짜 놓치면 안 될 3가지](/posts/sports/europe-football-transfer-deadline-2026-last-deals/)
+- [UCL 대진 확정, 韓 더비 승자는?](/posts/sports/ucl-2026-draw-lee-kang-in-kim-min-jae-derby/)
+
 #대구세계마스터즈육상경기대회 #마스터즈육상 #2026대구세계마스터즈 #대구스타디움 #육상경기일정 #시니어스포츠 #러닝축제
 
 수정 요약
