@@ -285,16 +285,27 @@ export class GeminiSession {
     }
 
     if (!inputReady) {
-      // 입력창 미로드 → 페이지 새로고침 후 재시도
-      log('⚠️', '입력창 미로드 → Gem 재진입 재시도');
-      const target = this.gemUrl ?? GEMINI_HOME;
-      await this.page.goto(target, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
-      await wait(5000);
+      // Gem 홈페이지에는 입력창이 없음 → GEMINI_HOME 폴백 후 재대기
+      log('⚠️', `입력창 미로드 → GEMINI_HOME 폴백 (현재: ${this.page.url()})`);
+      await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+      await wait(3000);
       await this._ensureLoggedIn();
+      const fallbackDeadline = Date.now() + 20000;
+      while (Date.now() < fallbackDeadline) {
+        inputReady = await this.page.evaluate((sels) =>
+          sels.some(s => {
+            const el = document.querySelector(s);
+            return el && el.getBoundingClientRect().height > 0;
+          }), SEL.input
+        ).catch(() => false);
+        if (inputReady) break;
+        await wait(1500);
+      }
+      if (!inputReady) throw new Error('입력창 로드 실패 (Gem + GEMINI_HOME 폴백 모두 실패)');
     }
 
     this._turnCount = 0;
-    log('💬', '새 대화 시작');
+    log('💬', `새 대화 시작 (URL: ${this.page.url()})`);
   }
 
   // ── 메시지 전송 (새 대화 or 이어서) ─────────────────────────────────────────
