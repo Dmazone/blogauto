@@ -1,0 +1,13 @@
+{
+  "rules": {
+    "comments": {
+      "$pageKey": {
+        ".read": true,
+        "$id": {
+          ".write": "!data.exists()",
+          ".validate": "newData.hasChildren(['name','body','ts']) && newData.child('name').val().length >= 1 && newData.child('name').val().length <= 30 && newData.child('body').val().length >= 2 && newData.child('body').val().length <= 500 && newData.child('ts').isNumber()"
+        }
+      }
+    }
+  }
+}

@@ -1,19 +1,280 @@
-<div class="comments-section" style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(128,128,128,0.2);">
-  <h3 style="margin-bottom:16px;font-size:1.1rem;">댓글</h3>
-  <script src="https://giscus.app/client.js"
-    data-repo="Dmazone/blogauto"
-    data-repo-id="R_kgDOSMKI2A"
-    data-category="General"
-    data-category-id="DIC_kwDOSMKI2M4C93Ub"
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="top"
-    data-theme="preferred_color_scheme"
-    data-lang="ko"
-    data-loading="lazy"
-    crossorigin="anonymous"
-    async>
-  </script>
+{{/*
+  익명 댓글 시스템 — Firebase Realtime Database REST API
+  로그인 불필요: 이름만 입력하면 댓글 가능
+  Firebase 보안 규칙 (콘솔에서 1회 설정 필요):
+  {
+    "rules": {
+      "comments": {
+        "$pageKey": {
+          ".read": true,
+          "$id": {
+            ".write": "!data.exists()",
+            ".validate": "newData.hasChildren(['name','body','ts']) && newData.child('name').val().length >= 1 && newData.child('name').val().length <= 30 && newData.child('body').val().length >= 2 && newData.child('body').val().length <= 500 && newData.child('ts').isNumber()"
+          }
+        }
+      }
+    }
+  }
+*/}}
+
+<style>
+#tz-comments {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(128,128,128,0.2);
+}
+#tz-comments h3 {
+  margin: 0 0 20px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.tz-form-box {
+  background: var(--code-bg, rgba(128,128,128,0.07));
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 28px;
+}
+.tz-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tz-input, .tz-textarea {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1px solid rgba(128,128,128,0.28);
+  border-radius: 7px;
+  background: var(--entry, #fff);
+  color: var(--primary, #1a1a1a);
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color .15s;
+}
+.tz-input:focus, .tz-textarea:focus {
+  outline: none;
+  border-color: #0078d4;
+}
+.tz-textarea {
+  resize: vertical;
+  min-height: 88px;
+  margin-bottom: 10px;
+  line-height: 1.55;
+}
+.tz-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tz-msg {
+  font-size: 0.83rem;
+  color: #e05;
+  flex: 1;
+  min-width: 0;
+}
+.tz-msg.ok { color: #0a7c3e; }
+.tz-btn {
+  padding: 8px 22px;
+  background: #0078d4;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+}
+.tz-btn:hover { background: #005ea6; }
+.tz-btn:disabled { background: #8ab; cursor: default; }
+.tz-comment {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(128,128,128,0.13);
+}
+.tz-comment:last-child { border-bottom: none; }
+.tz-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.tz-author {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.tz-author a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.tz-time {
+  font-size: 0.77rem;
+  color: rgba(128,128,128,0.65);
+}
+.tz-body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.tz-empty {
+  text-align: center;
+  padding: 28px 0 10px;
+  color: rgba(128,128,128,0.6);
+  font-size: 0.88rem;
+}
+@media (max-width: 520px) {
+  .tz-row { flex-direction: column; gap: 8px; }
+}
+</style>
+
+<div id="tz-comments">
+  <h3>💬 댓글 <span id="tz-count" style="font-weight:400;color:rgba(128,128,128,0.7);font-size:0.9rem;"></span></h3>
+
+  <div class="tz-form-box">
+    <div class="tz-row">
+      <input id="tz-name" class="tz-input" type="text" placeholder="이름 *" maxlength="30" autocomplete="nickname">
+      <input id="tz-site" class="tz-input" type="url" placeholder="웹사이트 (선택, 링크 삽입)" maxlength="200" autocomplete="url">
+    </div>
+    <textarea id="tz-body" class="tz-textarea" placeholder="로그인 없이 댓글을 남겨보세요 ✏️&#10;최대 500자" maxlength="500"></textarea>
+    <!-- honeypot: 봇 감지용, 사람은 입력 안 함 -->
+    <input id="tz-hp" type="text" style="position:absolute;left:-9999px;opacity:0;" tabindex="-1" autocomplete="off">
+    <div class="tz-footer">
+      <span id="tz-msg" class="tz-msg"></span>
+      <button id="tz-btn" class="tz-btn" onclick="tzSubmit()">댓글 등록</button>
+    </div>
+  </div>
+
+  <div id="tz-list"></div>
 </div>
+
+<script>
+(function () {
+  const DB  = {{ site.Params.firebaseDbUrl | default "https://dmaru-7148b-default-rtdb.firebaseio.com" | jsonify }};
+  const key = location.pathname.replace(/[^a-z0-9]/gi, '_').replace(/_+/g, '_').replace(/^_|_$/, '') || 'root';
+  const BASE = DB + '/comments/' + key;
+
+  const $ = id => document.getElementById(id);
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function timeAgo(ts) {
+    const d = (Date.now() - ts) / 1000;
+    if (d < 60)      return '방금';
+    if (d < 3600)    return Math.floor(d / 60) + '분 전';
+    if (d < 86400)   return Math.floor(d / 3600) + '시간 전';
+    if (d < 2592000) return Math.floor(d / 86400) + '일 전';
+    return new Date(ts).toLocaleDateString('ko-KR', {year:'numeric',month:'short',day:'numeric'});
+  }
+
+  function render(items) {
+    const list = $('tz-list');
+    const count = $('tz-count');
+    if (!items || !items.length) {
+      count.textContent = '';
+      list.innerHTML = '<p class="tz-empty">아직 댓글이 없습니다. 첫 번째로 의견을 남겨보세요!</p>';
+      return;
+    }
+    count.textContent = '(' + items.length + ')';
+    list.innerHTML = items.map(c => {
+      const authorHtml = (c.site && /^https?:\/\/./.test(c.site))
+        ? `<a href="${esc(c.site)}" rel="nofollow ugc noopener" target="_blank">${esc(c.name)}</a>`
+        : esc(c.name);
+      return `<div class="tz-comment">
+        <div class="tz-meta">
+          <span class="tz-author">${authorHtml}</span>
+          <span class="tz-time">${timeAgo(c.ts)}</span>
+        </div>
+        <p class="tz-body">${esc(c.body)}</p>
+      </div>`;
+    }).join('');
+  }
+
+  async function load() {
+    try {
+      const r = await fetch(BASE + '.json?orderBy="ts"&limitToLast=100');
+      if (!r.ok) throw new Error('fetch failed');
+      const data = await r.json();
+      if (!data) { render([]); return; }
+      const items = Object.values(data).sort((a, b) => b.ts - a.ts);
+      render(items);
+    } catch (e) {
+      $('tz-list').innerHTML = '<p class="tz-empty" style="color:#e05;">댓글을 불러오지 못했습니다. 새로고침해 보세요.</p>';
+    }
+  }
+
+  window.tzSubmit = async function () {
+    const name = $('tz-name').value.trim();
+    const site = $('tz-site').value.trim();
+    const body = $('tz-body').value.trim();
+    const hp   = $('tz-hp').value;
+    const msg  = $('tz-msg');
+    const btn  = $('tz-btn');
+
+    function err(t) { msg.className = 'tz-msg'; msg.textContent = t; }
+    function ok(t)  { msg.className = 'tz-msg ok'; msg.textContent = t; }
+
+    if (hp)          return;                        // bot
+    if (!name)       { err('이름을 입력해 주세요.'); return; }
+    if (!body)       { err('댓글 내용을 입력해 주세요.'); return; }
+    if (body.length < 2) { err('댓글이 너무 짧습니다.'); return; }
+
+    // 클라이언트 속도 제한: 1시간에 최대 5개
+    const rlKey = 'tz_rl_' + key;
+    const rl = JSON.parse(localStorage.getItem(rlKey) || '[]')
+                 .filter(t => Date.now() - t < 3600000);
+    if (rl.length >= 5) { err('1시간에 최대 5개까지 댓글을 남길 수 있습니다.'); return; }
+
+    btn.disabled = true;
+    btn.textContent = '등록 중...';
+    msg.textContent = '';
+
+    try {
+      const payload = {
+        name: name.slice(0, 30),
+        body: body.slice(0, 500),
+        site: (site && /^https?:\/\/./.test(site)) ? site.slice(0, 200) : '',
+        ts: Date.now()
+      };
+      const r = await fetch(BASE + '.json', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+      if (!r.ok) throw new Error('write failed ' + r.status);
+
+      localStorage.setItem(rlKey, JSON.stringify([...rl, Date.now()]));
+      $('tz-body').value = '';
+      ok('댓글이 등록되었습니다! 감사합니다 😊');
+      setTimeout(() => { msg.textContent = ''; }, 4000);
+      await load();
+    } catch (e) {
+      if (e.message && e.message.includes('403')) {
+        err('Firebase 보안 규칙 설정이 필요합니다. 관리자에게 문의해 주세요.');
+      } else {
+        err('오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+      }
+    }
+
+    btn.disabled = false;
+    btn.textContent = '댓글 등록';
+  };
+
+  // Enter키 Shift+Enter 줄바꿈, Enter만 제출
+  $('tz-body').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      window.tzSubmit();
+    }
+  });
+
+  load();
+})();
+</script>
