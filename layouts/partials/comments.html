@@ -199,11 +199,11 @@
 
   async function load() {
     try {
-      const r = await fetch(BASE + '.json?orderBy="ts"&limitToLast=100');
-      if (!r.ok) throw new Error('fetch failed');
+      const r = await fetch(BASE + '.json');
+      if (!r.ok) throw new Error('fetch failed ' + r.status);
       const data = await r.json();
       if (!data) { render([]); return; }
-      const items = Object.values(data).sort((a, b) => b.ts - a.ts);
+      const items = Object.values(data).sort((a, b) => b.ts - a.ts).slice(0, 100);
       render(items);
     } catch (e) {
       $('tz-list').innerHTML = '<p class="tz-empty" style="color:#e05;">댓글을 불러오지 못했습니다. 새로고침해 보세요.</p>';
@@ -256,7 +256,7 @@
       setTimeout(() => { msg.textContent = ''; }, 4000);
       await load();
     } catch (e) {
-      if (e.message && e.message.includes('403')) {
+      if (e.message && (e.message.includes('403') || e.message.includes('401'))) {
         err('Firebase 보안 규칙 설정이 필요합니다. 관리자에게 문의해 주세요.');
       } else {
         err('오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
