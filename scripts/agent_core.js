@@ -1513,10 +1513,10 @@ async function generateImagesViaGemini(session, section, topic, finalBody, bundl
     const result = { thumb: false, img01: false, img02: false };
     const sorted = [...buffers].sort((a, b) => b.length - a.length);
     const targets = [
-      { buf: sorted[0],              index: 'thumb' },
-      { buf: sorted[1] ?? sorted[0], index: 1 },
-      { buf: sorted[2] ?? sorted[0], index: 2 },
-    ];
+      { buf: sorted[0], index: 'thumb' },
+      { buf: sorted[1], index: 1 },
+      { buf: sorted[2], index: 2 },
+    ].filter(t => t.buf != null);
 
     for (const { buf, index } of targets) {
       if (!buf) continue;
