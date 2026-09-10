@@ -1,14 +1,13 @@
 /**
- * yt_make_shorts.mjs v4 — 이탈률 개선판
+ * yt_make_shorts.mjs v5 — 이탈률 95%→개선 (첫 프레임 즉시 노출)
  *
- * 슬라이드: hook(2s) → 1위(4s) → 2위(4s) → 3위(4s) → CTA(3s) ≈ 17s
- * v3 대비 변경:
- *   - TTS 1.75× → 1.5× (청취 편의)
- *   - 훅 문구 다이나믹 로테이션 (카테고리/가격대 반영)
- *   - 제품 슬라이드: 스펙 3개 → 핵심 1개 + 큼직한 가격 배지
- *   - 진행 표시기 추가 (1/3, 2/3, 3/3)
- *   - 비교표 슬라이드 제거 (정보 과부하 원인)
- *   - 총 17s (v3 25s 대비 단축)
+ * 핵심 변경:
+ *   - bodyFadeIn opacity:0 제거 → 첫 프레임부터 콘텐츠 노출
+ *   - animation-delay 전면 제거/단축 (0.45s→0s, 0.8s→0s, 1.1s→0s)
+ *   - Hook 슬라이드: 제품명 3개 즉시 노출 (FOMO 유발)
+ *   - 배경 brightness 0.62 → 0.72 (덜 어두운 이미지)
+ *   - 슬라이드 길이 단축: hook 2.2s→1.8s, 제품 3.2s→2.8s, CTA 2.5s→2.2s
+ *   - 총 ≈ 12s (v4 17s 대비 단축)
  */
 import { chromium } from 'playwright';
 import pkg from 'msedge-tts';
@@ -169,13 +168,12 @@ const COMMON_CSS = `
 body{
   width:1080px;height:1920px;overflow:hidden;
   background:#06040f;font-family:'K',sans-serif;position:relative;
-  animation:bodyFadeIn 0.3s ease forwards
+  opacity:1
 }
-@keyframes bodyFadeIn{from{opacity:0}to{opacity:1}}
 .bg{position:absolute;inset:0;z-index:0;overflow:hidden}
 .bg img{
   width:110%;height:110%;object-fit:cover;object-position:center;
-  filter:brightness(.62) saturate(1.4) contrast(1.1);
+  filter:brightness(.72) saturate(1.3) contrast(1.05);
   margin:-5%;
   animation:kenBurns var(--kb-dur,5s) ease-out forwards
 }
@@ -184,19 +182,20 @@ body{
   100%{transform:scale(1.14) translate(-2.5%,-2%)}
 }
 .vign{position:absolute;inset:0;
-  background:radial-gradient(ellipse at center,transparent 10%,rgba(0,0,0,.78) 100%)}
+  background:radial-gradient(ellipse at center,transparent 15%,rgba(0,0,0,.65) 100%)}
 .ov{position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(5,0,30,.75) 0%,transparent 22%,transparent 78%,rgba(0,0,20,.85) 100%)}
-.stripe{position:absolute;left:0;right:0;height:8px}
+  background:linear-gradient(180deg,rgba(5,0,30,.65) 0%,transparent 28%,transparent 72%,rgba(0,0,20,.80) 100%)}
+.stripe{position:absolute;left:0;right:0;height:10px}
 .stripe-t{top:0;background:linear-gradient(90deg,#FF0066,#FF6B35,#FFD700,#00DDFF,#FF0066);background-size:200%;animation:stripeMove 3s linear infinite}
 .stripe-b{bottom:0;background:linear-gradient(90deg,#00DDFF,#FFD700,#FF6B35,#FF0066,#00DDFF);background-size:200%;animation:stripeMove 3s linear infinite reverse}
 @keyframes stripeMove{0%{background-position:0%}100%{background-position:200%}}
 .wrap{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 40px}
-@keyframes fadeUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes popIn{0%{transform:scale(0) rotate(-20deg);opacity:0}65%{transform:scale(1.15) rotate(2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-@keyframes slideRight{from{transform:translateX(-120px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fadeUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes popIn{0%{transform:scale(0.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes slideRight{from{transform:translateX(-60px);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes glow2{0%,100%{text-shadow:0 0 25px currentColor,2px 2px 0 #000}50%{text-shadow:0 0 65px currentColor,0 0 110px currentColor,2px 2px 0 #000}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
 `;
 
 function bgLayer(bgImg, kbDur = '5s') {
@@ -206,29 +205,51 @@ function bgLayer(bgImg, kbDur = '5s') {
 <div class="stripe stripe-t"></div><div class="stripe stripe-b"></div>`;
 }
 
-// ── 슬라이드 1: 훅 ────────────────────────────────────────────────
-function hookHtml(bgImg, title) {
+// ── 슬라이드 1: 훅 (v5: 첫 프레임부터 제품명 3개 즉시 노출) ─────────
+function hookHtml(bgImg, title, products = []) {
   const topic = title.replace(/TOP\s*\d+[^가-힣]*/i, '').replace(/^[\d년\s]+/, '').trim() || title;
-  const hookText = makeHookText(title);
+
+  const shortN = (n = '') => {
+    const s = n.replace(/\s*\([^)]+\)/g, '').split(/\s*[\/,]\s*/)[0].trim();
+    const words = s.split(/\s+/);
+    let out = '';
+    for (const w of words) {
+      const next = out ? out + ' ' + w : w;
+      if ([...next].length <= 10) out = next; else break;
+    }
+    return out || words[0].slice(0, 10);
+  };
+
+  const listItems = products.slice(0, 3).map((p, i) => {
+    const EMOJI = ['🥇', '🥈', '🥉'];
+    const COLORS = ['#FFD700', '#C8C8C8', '#CD7F32'];
+    return `<div style="display:flex;align-items:center;gap:16px;
+      background:rgba(0,0,0,.78);border-radius:18px;padding:20px 28px;
+      border-left:6px solid ${COLORS[i]};margin-bottom:14px">
+      <span style="font-size:52px;flex-shrink:0">${EMOJI[i]}</span>
+      <span style="font-size:${shortN(p.name).length > 8 ? 48 : 54}px;font-weight:900;color:#fff;
+        word-break:keep-all;text-shadow:2px 2px 8px rgba(0,0,0,.9)">${shortN(p.name)}</span>
+    </div>`;
+  }).join('');
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 ${COMMON_CSS}
-.fire{font-size:150px;line-height:1;animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) forwards}
-.hook{font-size:90px;font-weight:900;color:#FF3333;margin-top:14px;text-align:center;
-  animation:fadeUp .45s ease .45s both,glow2 2s ease 1s infinite;
-  word-break:keep-all;padding:0 24px;line-height:1.22}
-.topic{font-size:56px;color:#FFD700;margin-top:22px;text-align:center;
-  animation:fadeUp .45s ease .8s both;word-break:keep-all;line-height:1.35;padding:0 44px;
-  text-shadow:2px 2px 12px rgba(0,0,0,.95)}
-.sub{font-size:46px;color:rgba(255,255,255,.88);margin-top:32px;text-align:center;
-  animation:fadeUp .45s ease 1.1s both;text-shadow:1px 1px 6px rgba(0,0,0,.8)}
+.label{font-size:46px;font-weight:900;color:#FF3333;text-align:center;
+  background:rgba(255,51,51,.18);border:2px solid #FF3333;border-radius:12px;
+  padding:10px 32px;letter-spacing:2px;text-shadow:0 0 20px #FF333388}
+.topic{font-size:62px;font-weight:900;color:#FFD700;text-align:center;margin-top:16px;
+  word-break:keep-all;line-height:1.28;padding:0 20px;
+  text-shadow:2px 2px 0 #000,0 0 40px #FFD70066}
+.list{width:100%;margin-top:28px}
+.sub{font-size:44px;color:rgba(255,255,255,.85);text-align:center;margin-top:24px;
+  text-shadow:1px 1px 5px rgba(0,0,0,.8)}
 </style></head><body>
-${bgLayer(bgImg, '3s')}
+${bgLayer(bgImg, '4s')}
 <div class="wrap">
-  <div class="fire">🔥</div>
-  <div class="hook">${hookText}</div>
+  <div class="label">🔥 지금 핫한 TOP3</div>
   <div class="topic">${topic}</div>
-  <div class="sub">지금 TOP3 다 알려드릴게요 👇</div>
+  <div class="list">${listItems}</div>
+  <div class="sub">3위부터 1위까지 바로 알려드림 👇</div>
 </div>
 </body></html>`;
 }
@@ -257,34 +278,31 @@ function productHtml(bgImg, product, rank, total = 3) {
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 ${COMMON_CSS}
 @keyframes rankGlow{0%,100%{text-shadow:0 0 20px ${color}88,2px 2px 0 #000}50%{text-shadow:0 0 55px ${color},0 0 90px ${color}66,2px 2px 0 #000}}
-.progress{font-size:38px;letter-spacing:18px;margin-bottom:18px;
-  animation:fadeUp .35s ease .1s both}
-.badge{font-size:130px;line-height:1;text-align:center;animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) forwards}
-.ranktext{font-size:58px;font-weight:900;color:${color};text-align:center;margin-top:8px;
-  animation:fadeUp .38s ease .5s both,rankGlow 2s ease .95s infinite;
+.progress{font-size:40px;letter-spacing:18px;margin-bottom:12px;color:rgba(255,255,255,.55)}
+.badge{font-size:140px;line-height:1;text-align:center;animation:popIn .25s ease forwards}
+.ranktext{font-size:62px;font-weight:900;color:${color};text-align:center;margin-top:6px;
+  animation:rankGlow 2s ease .3s infinite;
   text-shadow:0 0 20px ${color}88,2px 2px 0 #000}
-.card{background:rgba(0,0,0,.85);border:3px solid ${color}99;border-radius:30px;
-  padding:40px 52px;margin-top:20px;width:100%;
-  animation:slideRight .5s ease .65s both;
-  box-shadow:0 8px 55px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.08)}
+.card{background:rgba(0,0,0,.88);border:4px solid ${color};border-radius:28px;
+  padding:36px 48px;margin-top:18px;width:100%;
+  animation:slideRight .2s ease forwards;
+  box-shadow:0 8px 55px rgba(0,0,0,.8),0 0 0 1px ${color}44}
 .name{font-size:${nameFs}px;font-weight:900;color:#fff;word-break:keep-all;
   line-height:1.28;text-shadow:2px 2px 10px rgba(0,0,0,.95)}
 .price-badge{display:inline-block;background:linear-gradient(135deg,#FF0066,#FF6B35);
-  border-radius:14px;padding:12px 28px;margin-top:22px;
-  font-size:58px;font-weight:900;color:#fff;
-  animation:fadeUp .38s ease 1s both;
-  box-shadow:0 4px 24px rgba(255,0,102,.45);text-shadow:1px 1px 4px rgba(0,0,0,.5)}
-.key-spec{font-size:46px;color:rgba(255,255,255,.92);margin-top:20px;
-  animation:fadeUp .38s ease 1.2s both;line-height:1.35;
-  text-shadow:1px 1px 5px rgba(0,0,0,.8)}
-.hint{font-size:40px;color:rgba(255,255,255,.7);margin-top:30px;text-align:center;
-  animation:fadeUp .38s ease 1.45s both}
+  border-radius:14px;padding:12px 28px;margin-top:18px;
+  font-size:62px;font-weight:900;color:#fff;
+  box-shadow:0 4px 24px rgba(255,0,102,.5);text-shadow:1px 1px 4px rgba(0,0,0,.5)}
+.key-spec{font-size:48px;color:rgba(255,255,255,.92);margin-top:16px;
+  line-height:1.35;text-shadow:1px 1px 5px rgba(0,0,0,.8)}
+.hint{font-size:42px;color:rgba(255,255,255,.75);margin-top:24px;text-align:center;
+  text-shadow:1px 1px 4px rgba(0,0,0,.8)}
 </style></head><body>
 ${bgLayer(bgImg, '5s')}
 <div class="wrap">
-  <div class="progress" style="color:rgba(255,255,255,.5);letter-spacing:16px">${dotsHtml}</div>
+  <div class="progress">${dotsHtml}</div>
   <div class="badge">${EMOJI[rank]}</div>
-  <div class="ranktext">${rank + 1}위 / ${total}위</div>
+  <div class="ranktext">${rank + 1}위 추천</div>
   <div class="card">
     <div class="name">${name}</div>
     ${price ? `<div class="price-badge">💰 ${price}</div>` : ''}
@@ -353,10 +371,13 @@ ${bgLayer(bgImg, '3.5s')}
 </body></html>`;
 }
 
-// ── 슬라이드 → MP4 (Playwright recordVideo) ───────────────────────
+// ── 슬라이드 → MP4 (Playwright recordVideo + 앞부분 트림) ───────────
+const TRIM_START = 0.9; // 녹화 시작 후 로드/폰트 준비 대기 구간 제거
+
 async function slideToMp4(browser, { name, html, mp3Path, minDur }, tmp) {
   const audioDur = (mp3Path && fs.existsSync(mp3Path)) ? await getAudioDur(mp3Path) : 0;
   const dur = Math.max(minDur, audioDur + 0.5);
+  const recordDur = dur + TRIM_START; // 앞부분 포함해서 더 오래 녹화
 
   const context = await browser.newContext({
     viewport: { width: 1080, height: 1920 },
@@ -369,10 +390,25 @@ async function slideToMp4(browser, { name, html, mp3Path, minDur }, tmp) {
   fs.writeFileSync(htmlFile, html, 'utf-8');
   await page.goto(toFileUrl(htmlFile), { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(Math.ceil(dur * 1000));
+  // 이미지 디코드 완료 대기 (배경 이미지가 첫 프레임에 보이도록)
+  await page.evaluate(async () => {
+    const imgs = [...document.images];
+    await Promise.all(imgs.map(i => i.decode ? i.decode().catch(() => {}) : Promise.resolve()));
+  });
+  // 렌더 사이클 강제 실행 후 본 대기
+  await page.waitForTimeout(Math.ceil(recordDur * 1000));
   await context.close();
 
-  const webmPath = await page.video().path();
+  const rawWebm = await page.video().path();
+  // 앞부분 TRIM_START초 제거 → 완전히 렌더링된 첫 프레임으로 시작 (재인코딩으로 정확한 seek)
+  const trimWebm = path.join(tmp, `${name}_trim.mp4`);
+  await runFF([
+    '-i', rawWebm, '-ss', String(TRIM_START),
+    '-c:v', 'libx264', '-preset', 'fast', '-crf', '17', '-pix_fmt', 'yuv420p',
+    '-an', '-y', trimWebm
+  ], null);
+  try { fs.unlinkSync(rawWebm); } catch {}
+
   const mp4Path  = path.join(tmp, `${name}.mp4`);
 
   if (mp3Path && fs.existsSync(mp3Path) && audioDur > 0) {
@@ -383,14 +419,14 @@ async function slideToMp4(browser, { name, html, mp3Path, minDur }, tmp) {
       '-c:a', 'aac', '-b:a', '192k', '-y', aacPath
     ], null);
     await runFF([
-      '-i', webmPath, '-i', aacPath,
+      '-i', trimWebm, '-i', aacPath,
       '-c:v', 'libx264', '-preset', 'medium', '-crf', '17',
       '-pix_fmt', 'yuv420p', '-c:a', 'copy',
       '-t', String(dur), '-y', mp4Path
     ], null);
   } else {
     await runFF([
-      '-i', webmPath,
+      '-i', trimWebm,
       '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo',
       '-c:v', 'libx264', '-preset', 'medium', '-crf', '17',
       '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k',
@@ -398,7 +434,7 @@ async function slideToMp4(browser, { name, html, mp3Path, minDur }, tmp) {
     ], null);
   }
 
-  try { fs.unlinkSync(webmPath); } catch {}
+  try { fs.unlinkSync(trimWebm); } catch {}
   return { mp4Path, dur };
 }
 
@@ -513,13 +549,13 @@ export async function generate(slugArg) {
   // ── 배경 이미지 할당 ─────────────────────────────────────────────
   console.log('\n🎨 배경:', Object.entries(bg).map(([k,v]) => `${k}:${v?'✅':'⬜'}`).join(' '));
 
-  // ── 슬라이드 정의 (v4: 비교표 제거, 총 5장) ────────────────────────
+  // ── 슬라이드 정의 (v5: 첫 프레임 즉시 노출, 타이밍 단축) ───────────
   const slides = [
-    { name:'hook', html: hookHtml(bg.thumb,        title),          mp3Path: mp3Map.hook, minDur: 2.2 },
-    ...(P[0] ? [{ name:'p0', html: productHtml(bg.img01, P[0], 0), mp3Path: mp3Map.p0,   minDur: 3.2 }] : []),
-    ...(P[1] ? [{ name:'p1', html: productHtml(bg.img02, P[1], 1), mp3Path: mp3Map.p1,   minDur: 3.2 }] : []),
-    ...(P[2] ? [{ name:'p2', html: productHtml(bg.thumb, P[2], 2), mp3Path: mp3Map.p2,   minDur: 3.2 }] : []),
-    { name:'cta',  html: ctaHtml(bg.img01 || bg.thumb, P),          mp3Path: mp3Map.cta,  minDur: 2.5 },
+    { name:'hook', html: hookHtml(bg.thumb, title, P),              mp3Path: mp3Map.hook, minDur: 1.8 },
+    ...(P[0] ? [{ name:'p0', html: productHtml(bg.img01, P[0], 0), mp3Path: mp3Map.p0,   minDur: 2.8 }] : []),
+    ...(P[1] ? [{ name:'p1', html: productHtml(bg.img02, P[1], 1), mp3Path: mp3Map.p1,   minDur: 2.8 }] : []),
+    ...(P[2] ? [{ name:'p2', html: productHtml(bg.thumb, P[2], 2), mp3Path: mp3Map.p2,   minDur: 2.8 }] : []),
+    { name:'cta',  html: ctaHtml(bg.img01 || bg.thumb, P),          mp3Path: mp3Map.cta,  minDur: 2.2 },
   ];
 
   // ── 녹화 ────────────────────────────────────────────────────────
