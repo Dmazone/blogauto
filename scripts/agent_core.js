@@ -1280,13 +1280,24 @@ async function runProductPipeline(section, dateOverride) {
 4. 구매 전 반드시 확인할 체크포인트`
   );
 
-  // JSON 파싱
+  // JSON 파싱 — 브라켓 카운팅으로 완전한 JSON 객체 추출
   let topic = { title: '', slug: '', keyword: '', description: '' };
   const tryParseJson = (text) => {
-    const m1 = text.match(/```json\s*([\s\S]*?)```/s);
-    if (m1) { try { return JSON.parse(m1[1]); } catch {} }
-    const m2 = text.match(/\{[\s\S]*?\}/);
-    if (m2) { try { return JSON.parse(m2[0]); } catch {} }
+    // 전략 1: ```json 코드 블록 (대소문자 무관, 라벨 생략도 허용)
+    const m1 = text.match(/```(?:json)?\s*([\s\S]*?)```/si);
+    if (m1) { try { const o = JSON.parse(m1[1].trim()); if (o?.title && o?.slug) return o; } catch {} }
+    // 전략 2: 브라켓 카운팅으로 첫 번째 완전한 JSON 객체 추출
+    const startIdx = text.indexOf('{');
+    if (startIdx !== -1) {
+      let depth = 0, endIdx = -1;
+      for (let i = startIdx; i < text.length; i++) {
+        if (text[i] === '{') depth++;
+        else if (text[i] === '}') { depth--; if (depth === 0) { endIdx = i; break; } }
+      }
+      if (endIdx !== -1) {
+        try { const o = JSON.parse(text.slice(startIdx, endIdx + 1)); if (o?.title && o?.slug) return o; } catch {}
+      }
+    }
     return null;
   };
 
@@ -1295,6 +1306,7 @@ async function runProductPipeline(section, dateOverride) {
     topic = parsed;
   } else {
     const today = todayKst.replace(/-/g, '');
+    log('⚠️', `Turn 2 JSON 파싱 실패 — generic slug 사용 (원문 앞 200자: ${String(t2).slice(0,200)})`);
     topic = { title: '트렌드 상품 추천 TOP3', slug: `trending-picks-${today}`, keyword: '트렌드 상품 추천', description: '지금 가장 인기 있는 트렌드 상품 TOP3를 비교·추천합니다.' };
   }
 
