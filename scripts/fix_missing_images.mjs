@@ -259,11 +259,13 @@ async function main() {
         }
 
         const sorted = [...buffers].sort((a, b) => b.length - a.length);
+        // 순서: sorted[0]→thumb, sorted[1]→p01, sorted[2]→p02
+        // ?? 폴백 절대 금지 — 1장만 반환될 때 동일 이미지 3벌 복사 방지
         const needFix = [
-          { buf: sorted[0],           dest: p01 },
-          { buf: sorted[1] ?? sorted[0], dest: p02 },
-          { buf: sorted[2] ?? sorted[0], dest: pth },
-        ].filter(({ dest }) => !ok(dest));
+          { buf: sorted[0], dest: pth },
+          { buf: sorted[1], dest: p01 },
+          { buf: sorted[2], dest: p02 },
+        ].filter(({ buf, dest }) => buf != null && !ok(dest));
 
         for (const { buf, dest } of needFix) {
           await sharp(buf)
