@@ -1,13 +1,12 @@
 /**
- * yt_make_shorts.mjs v5 — 이탈률 95%→개선 (첫 프레임 즉시 노출)
+ * yt_make_shorts.mjs v6 — 시청 지속 시간 개선 (20s 목표)
  *
- * 핵심 변경:
- *   - bodyFadeIn opacity:0 제거 → 첫 프레임부터 콘텐츠 노출
- *   - animation-delay 전면 제거/단축 (0.45s→0s, 0.8s→0s, 1.1s→0s)
- *   - Hook 슬라이드: 제품명 3개 즉시 노출 (FOMO 유발)
- *   - 배경 brightness 0.62 → 0.72 (덜 어두운 이미지)
- *   - 슬라이드 길이 단축: hook 2.2s→1.8s, 제품 3.2s→2.8s, CTA 2.5s→2.2s
- *   - 총 ≈ 12s (v4 17s 대비 단축)
+ * v5 대비 변경:
+ *   - TTS 속도 1.5x → 1.2x (자연스러운 한국어, 정보 흡수율 향상)
+ *   - 슬라이드 길이 증가: hook 1.8→3.0s, 제품 2.8→4.0s, CTA 2.2→3.0s
+ *   - 총 목표 ≈ 20s (v5 12s → 분석 결과 21초 영상이 86-95% 완주율)
+ *   - 첫 프레임 즉시 노출 유지 (v5에서 확인된 효과)
+ *   - 배경 brightness 0.72 유지
  */
 import { chromium } from 'playwright';
 import pkg from 'msedge-tts';
@@ -125,7 +124,7 @@ async function ttsEdge(text, mp3Path) {
           return resolve(false);
         }
         // v4: 1.75 → 1.5 (조금 더 천천히, 청취 편의)
-        await runFF(['-i', rawPath, '-filter:a', 'atempo=1.5', '-y', mp3Path], null);
+        await runFF(['-i', rawPath, '-filter:a', 'atempo=1.2', '-y', mp3Path], null);
         try { fs.unlinkSync(rawPath); } catch {}
         resolve(true);
       });
@@ -551,11 +550,11 @@ export async function generate(slugArg) {
 
   // ── 슬라이드 정의 (v5: 첫 프레임 즉시 노출, 타이밍 단축) ───────────
   const slides = [
-    { name:'hook', html: hookHtml(bg.thumb, title, P),              mp3Path: mp3Map.hook, minDur: 1.8 },
-    ...(P[0] ? [{ name:'p0', html: productHtml(bg.img01, P[0], 0), mp3Path: mp3Map.p0,   minDur: 2.8 }] : []),
-    ...(P[1] ? [{ name:'p1', html: productHtml(bg.img02, P[1], 1), mp3Path: mp3Map.p1,   minDur: 2.8 }] : []),
-    ...(P[2] ? [{ name:'p2', html: productHtml(bg.thumb, P[2], 2), mp3Path: mp3Map.p2,   minDur: 2.8 }] : []),
-    { name:'cta',  html: ctaHtml(bg.img01 || bg.thumb, P),          mp3Path: mp3Map.cta,  minDur: 2.2 },
+    { name:'hook', html: hookHtml(bg.thumb, title, P),              mp3Path: mp3Map.hook, minDur: 3.0 },
+    ...(P[0] ? [{ name:'p0', html: productHtml(bg.img01, P[0], 0), mp3Path: mp3Map.p0,   minDur: 4.0 }] : []),
+    ...(P[1] ? [{ name:'p1', html: productHtml(bg.img02, P[1], 1), mp3Path: mp3Map.p1,   minDur: 4.0 }] : []),
+    ...(P[2] ? [{ name:'p2', html: productHtml(bg.thumb, P[2], 2), mp3Path: mp3Map.p2,   minDur: 4.0 }] : []),
+    { name:'cta',  html: ctaHtml(bg.img01 || bg.thumb, P),          mp3Path: mp3Map.cta,  minDur: 3.0 },
   ];
 
   // ── 녹화 ────────────────────────────────────────────────────────
