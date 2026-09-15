@@ -3,7 +3,8 @@ import path from 'path';
 import os from 'os';
 
 const SESSION = path.join(os.homedir(), '.yt-ekaledma-session');
-const VIDEO_ID = 'FEByDK1VYuk';
+const VIDEO_ID = process.argv[2] || 'FEByDK1VYuk';
+if (!process.argv[2]) console.warn('⚠️  VIDEO_ID 미지정 — 기본값 FEByDK1VYuk 사용');
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const snap = async (p, name) => { await p.screenshot({ path: `data/delf_${name}.png` }); };
 
