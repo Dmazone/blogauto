@@ -606,6 +606,6 @@ export async function generate(slugArg) {
   return outPath;
 }
 
-if (process.argv[1].endsWith('yt_make_shorts.mjs')) {
+if (process.argv[1]?.endsWith('yt_make_shorts.mjs')) {
   generate().catch(e => { console.error('❌', e.message); process.exit(1); });
 }
