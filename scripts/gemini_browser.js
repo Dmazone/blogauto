@@ -418,43 +418,57 @@ export class GeminiSession {
 
   // ── 응답 완료 대기 ───────────────────────────────────────────────────────────
   async _waitForCompletion(timeout) {
-    // 1) 약간 기다려서 스트리밍 시작 확인
-    await wait(2500);
+    // 절대 타임아웃 안전망 — Playwright CDP hang 방지
+    const absoluteDeadline = Date.now() + timeout + 15000;
 
-    // 2) 정지 버튼이 보이면 사라질 때까지 대기
-    let stopFound = false;
-    for (const sel of SEL.stop) {
-      try {
-        if (await this.page.locator(sel).first().isVisible({ timeout: 5000 })) {
-          stopFound = true;
-          await this.page.waitForFunction(
-            (selectors) => !selectors.some((s) => document.querySelector(s)),
-            SEL.stop,
-            { timeout, polling: 1500 }
-          );
-          break;
-        }
-      } catch {}
-    }
+    const inner = async () => {
+      // 1) 약간 기다려서 스트리밍 시작 확인
+      await wait(2500);
 
-    if (!stopFound) {
-      // 정지 버튼 못 찾으면 응답 길이 안정화로 판단
-      let prev = 0, stable = 0;
-      const deadline = Date.now() + timeout;
-      while (Date.now() < deadline && stable < 4) {
-        await wait(3000);
-        const cur = await this._getLatestResponseLength();
-        // 페이지 닫힘 감지 → 루프 중단 (호출자가 빈 응답 처리)
-        if (cur === -1) {
-          log('⚠️', '응답 폴링 중 브라우저 오류 감지 → 대기 중단');
-          break;
-        }
-        stable = (cur === prev && cur > 50) ? stable + 1 : 0;
-        prev = cur;
+      // 2) 정지 버튼이 보이면 사라질 때까지 대기
+      let stopFound = false;
+      for (const sel of SEL.stop) {
+        try {
+          if (await this.page.locator(sel).first().isVisible({ timeout: 5000 })) {
+            stopFound = true;
+            await this.page.waitForFunction(
+              (selectors) => !selectors.some((s) => document.querySelector(s)),
+              SEL.stop,
+              { timeout, polling: 1500 }
+            );
+            break;
+          }
+        } catch {}
       }
-    }
 
-    await wait(1500); // 렌더링 여유
+      if (!stopFound) {
+        // 정지 버튼 못 찾으면 응답 길이 안정화로 판단
+        let prev = 0, stable = 0;
+        const deadline = Date.now() + timeout;
+        while (Date.now() < deadline && stable < 4) {
+          await wait(3000);
+          const cur = await this._getLatestResponseLength();
+          // 페이지 닫힘 감지 → 루프 중단 (호출자가 빈 응답 처리)
+          if (cur === -1) {
+            log('⚠️', '응답 폴링 중 브라우저 오류 감지 → 대기 중단');
+            break;
+          }
+          stable = (cur === prev && cur > 50) ? stable + 1 : 0;
+          prev = cur;
+        }
+      }
+
+      await wait(1500); // 렌더링 여유
+    };
+
+    // 절대 타임아웃과 race — CDP hang 시에도 진행 보장
+    await Promise.race([
+      inner(),
+      new Promise(r => setTimeout(r, absoluteDeadline - Date.now())),
+    ]).catch(() => {});
+    if (Date.now() >= absoluteDeadline - 5000) {
+      log('⚠️', `_waitForCompletion 절대 타임아웃 도달 (${Math.round(timeout/1000)}s+15s) — 강제 진행`);
+    }
   }
 
   async _getLatestResponseLength() {
@@ -732,8 +746,8 @@ export class GeminiSession {
     this._turnCount++;
     log('📤', `이미지 생성 요청 전송 (Turn ${this._turnCount})`);
 
-    // ⑤ 이미지 생성 완료 대기 (텍스트보다 오래 걸림 → 2분)
-    await this._waitForCompletion(120000);
+    // ⑤ 이미지 생성 완료 대기 (텍스트보다 오래 걸림 → 90초)
+    await this._waitForCompletion(90000);
     await wait(5000); // 이미지 로딩 완료 추가 대기
 
     // 인터셉터 해제

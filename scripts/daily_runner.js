@@ -6,6 +6,7 @@
  *   node scripts/daily_runner.js                    # 브라우저 모드 (제미나이 웹, Gem)
  *   node scripts/daily_runner.js --from 3           # 3번째 섹션부터 재개
  *   node scripts/daily_runner.js --only economy,health  # 특정 섹션만
+ *   node scripts/daily_runner.js --date 2026-09-05  # 소급 발행 (해당 날짜 05:00 기준, 과거면 즉시 공개)
  *
  * 예약발행 원리:
  *   - 그룹 1(홀수날): latest-tech, economy, society, humanities, entertainment, japan-trends
@@ -39,27 +40,33 @@ const log = (emoji, msg) => {
 };
 
 /**
- * 오늘 날짜 기준 홀/짝으로 발행 그룹 결정
+ * 날짜(또는 오늘) 기준 홀/짝으로 발행 그룹 결정
  * 홀수 날 → 그룹 1 (latest-tech, economy, society, humanities, entertainment)
  * 짝수 날 → 그룹 2 (health, it-devices, kr-realestate, world-travel, sports)
  */
-function getTodayGroup() {
-  const kstDate = new Date(Date.now() + 9 * 60 * 60 * 1000);
-  const day = kstDate.getUTCDate();
+function getTodayGroup(baseDate) {
+  const d = baseDate || new Date(Date.now() + 9 * 60 * 60 * 1000);
+  const day = d instanceof Date ? d.getUTCDate() : new Date(d).getUTCDate();
   return day % 2 === 1 ? 1 : 2;
 }
 
 /**
- * 다음날 KST 05:00 기준 + index * 30분 오프셋 ISO 날짜
- * 6개 기준: 05:00, 05:30, 06:00, 06:30, 07:00, 07:30
+ * 지정 날짜의 KST 05:00 기준 + index * 30분 오프셋 ISO 날짜
+ * baseDate가 과거이면 즉시 공개, 미래이면 예약 발행
  */
-function getPublishDate(sectionIndex) {
-  const now = new Date();
-  const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
-  // KST 05:00 = UTC 전날 20:00 → UTC 00:00 기준 -240분
-  const offsetMinutes = -240 + sectionIndex * 30;
-  tomorrow.setMinutes(tomorrow.getMinutes() + offsetMinutes);
-  const kst = new Date(tomorrow.getTime() + 9 * 60 * 60 * 1000);
+function getPublishDate(sectionIndex, baseDate) {
+  let target;
+  if (baseDate) {
+    // 지정 날짜 KST 05:00
+    const [y, m, d] = baseDate.split('-').map(Number);
+    target = new Date(Date.UTC(y, m - 1, d, -4, 0, 0)); // KST 05:00 = UTC 전날 20:00
+  } else {
+    const now = new Date();
+    target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
+    target.setMinutes(target.getMinutes() - 240);
+  }
+  target.setMinutes(target.getMinutes() + sectionIndex * 30);
+  const kst = new Date(target.getTime() + 9 * 60 * 60 * 1000);
   const p   = (n) => String(n).padStart(2, '0');
   return (
     `${kst.getUTCFullYear()}-${p(kst.getUTCMonth() + 1)}-${p(kst.getUTCDate())}` +
@@ -84,6 +91,14 @@ async function main() {
   const args    = process.argv.slice(2);
   const publishNow = args.includes('--now'); // 예약 없이 즉시 발행 (재발행/복구용)
 
+  // --date YYYY-MM-DD : 소급 발행 날짜 지정 (해당 날짜 05:00으로 발행, 과거면 즉시 공개)
+  const dateArg = (() => {
+    const i = args.findIndex(a => a.startsWith('--date=') || a === '--date');
+    if (i < 0) return null;
+    const val = args[i].includes('=') ? args[i].split('=')[1] : args[i + 1];
+    return /^\d{4}-\d{2}-\d{2}$/.test(val) ? val : null;
+  })();
+
   // --from N : N번째(1-based)부터 재개
   const fromIdx = (() => {
     const i = args.indexOf('--from');
@@ -98,7 +113,7 @@ async function main() {
 
   // 그룹 자동 선택 (홀수 날=1, 짝수 날=2) — --only 또는 --from 시 무시
   // group: 0 섹션(trending-picks 등)은 매일 실행 — 그룹 섹션 뒤에 추가
-  const todayGroup = getTodayGroup();
+  const todayGroup = getTodayGroup(dateArg ? new Date(dateArg + 'T12:00:00+09:00') : null);
   const dailySections = SECTIONS.filter(s => s.group === 0);
   const targetSections = onlyIds
     ? onlyIds.map((id) => getSectionById(id)).filter(Boolean)
@@ -143,7 +158,7 @@ async function main() {
   for (let i = 0; i < targetSections.length; i++) {
     const section   = targetSections[i];
     const globalIdx = targetSections.findIndex((s) => s.id === section.id);
-    const dateStr   = publishNow ? getNowPublishDate(i) : getPublishDate(globalIdx);
+    const dateStr   = publishNow ? getNowPublishDate(i) : getPublishDate(globalIdx, dateArg);
     const subtopic  = section.id === 'health' ? healthSubtopic : null;
 
     log('📰', `[${i + 1}/${targetSections.length}] ${section.name}${subtopic ? ` (${subtopic})` : ''}`);
@@ -175,10 +190,11 @@ async function main() {
 
     if (!sectionSuccess) failCount++;
 
-    // 마지막 섹션이 아니면 20분 대기 (이미지 생성 API 부하 분산)
+    // 마지막 섹션이 아니면 대기 (SECTION_DELAY_MIN으로 조정 가능, 기본 20분)
     if (i < targetSections.length - 1) {
-      log('⏸️', '다음 섹션까지 20분 대기...');
-      await new Promise((resolve) => setTimeout(resolve, 20 * 60 * 1000));
+      const delayMin = Number(process.env.SECTION_DELAY_MIN ?? 20);
+      log('⏸️', `다음 섹션까지 ${delayMin}분 대기...`);
+      await new Promise((resolve) => setTimeout(resolve, delayMin * 60 * 1000));
     }
   }
 
