@@ -783,9 +783,12 @@ async function runWebPipeline(section, dateOverride) {
   log('🔍', '[Turn 1] 실시간 트렌드 조사 중...');
   session._turnCount = 0; // 새 대화
   const todayKst = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const topicHint = process.env.TOPIC_HINT
+    ? `\n🎯 [오늘의 편집 우선 방향] ${process.env.TOPIC_HINT} — 이 주제와 연관된 이슈를 최우선으로 탐색해줘.`
+    : '';
   const t1 = await session.send(
     `[섹션: ${section.name}] [작성 언어: ${lc.label}]
-[오늘 날짜: ${todayKst}] ← 이 날짜를 반드시 인식하고 아래 모든 판단의 기준으로 삼을 것
+[오늘 날짜: ${todayKst}] ← 이 날짜를 반드시 인식하고 아래 모든 판단의 기준으로 삼을 것${topicHint}
 ${subtopicLine}
 ${lc.lang !== 'ko' ? `⚠️ 이 섹션은 ${lc.label}로 전체 포스팅을 작성합니다. ${lc.cultureCenter} 중심 주제를 선정하되, ${lc.koreanLink}.` : ''}
 
