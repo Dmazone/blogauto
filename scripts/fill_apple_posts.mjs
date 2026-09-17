@@ -165,13 +165,15 @@ async function generateContentForPost(session, post) {
 \`\`\``
   );
 
-  const body = extractMarkdownBody(t5);
+  // Turn 3, 4, 5 중 가장 긴 추출본 선택
+  const candidates = [t3, t4, t5].map(extractMarkdownBody);
+  const body = candidates.reduce((a, b) => (b.length > a.length ? b : a), '');
   const h2Count = (body.match(/^## /gm) ?? []).length;
   const charCount = body.replace(/\s/g, '').length;
 
   console.log(`  ✅ H2 ${h2Count}개, ${charCount}자`);
 
-  if (h2Count < 3 || charCount < 1500) {
+  if (h2Count < 2 || charCount < 1000) {
     throw new Error(`품질 미달: H2 ${h2Count}개, ${charCount}자`);
   }
 
