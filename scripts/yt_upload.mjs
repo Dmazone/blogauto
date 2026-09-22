@@ -19,6 +19,43 @@ const snap = async (p, name) => {
   console.log(`📸 upload_${name}.png`);
 };
 
+// ytcp-auth-confirmation-dialog 감지 및 자동 닫기
+async function dismissAuthDialog(p) {
+  try {
+    const dialog = p.locator('ytcp-auth-confirmation-dialog');
+    const visible = await dialog.isVisible({ timeout: 2000 });
+    if (!visible) return false;
+    console.log('  ⚠️ 인증 확인 다이얼로그 감지 → 자동 닫기...');
+    // "확인" / "OK" / "done" 버튼 순서대로 시도
+    const selectors = [
+      'ytcp-auth-confirmation-dialog ytcp-button[class*="done"]',
+      'ytcp-auth-confirmation-dialog ytcp-button:last-of-type',
+      'ytcp-auth-confirmation-dialog button',
+    ];
+    for (const sel of selectors) {
+      try {
+        await p.locator(sel).first().click({ timeout: 3000 });
+        await wait(1500);
+        console.log('  ✅ 인증 다이얼로그 닫기 성공');
+        return true;
+      } catch {}
+    }
+    // 폴백: JS 직접 클릭
+    await p.evaluate(() => {
+      const d = document.querySelector('ytcp-auth-confirmation-dialog');
+      if (!d) return;
+      const btns = [...d.querySelectorAll('ytcp-button, button')];
+      const last = btns[btns.length - 1];
+      if (last) last.click();
+    });
+    await wait(1500);
+    console.log('  ✅ 인증 다이얼로그 닫기 (JS 폴백)');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function main() {
   const videoPath = path.resolve(process.argv[2] || '');
   if (!videoPath || !fs.existsSync(videoPath)) {
@@ -109,6 +146,9 @@ async function main() {
   await wait(5000);
   await snap(p, '04_uploading');
 
+  // auth 다이얼로그 처리 (파일 업로드 후 팝업 가능)
+  await dismissAuthDialog(p);
+
   // 제목 입력 (업로드 다이얼로그)
   console.log('5️⃣ 제목 입력...');
   // 제목 필드 클리어 후 입력
@@ -126,6 +166,9 @@ async function main() {
     }, title);
   }
   await wait(1000);
+
+  // auth 다이얼로그 재확인 (제목 입력 후 팝업될 수 있음)
+  await dismissAuthDialog(p);
 
   // 설명 입력
   console.log('6️⃣ 설명 입력...');
