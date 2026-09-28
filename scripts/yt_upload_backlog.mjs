@@ -18,6 +18,9 @@ const BACKLOG = [
   'trending-picks-20260920',
   'wireless-turbo-jet-air-duster-top3-2026',
   'ultra-slim-magsafe-wallet-powerbank-top3-2026',
+  'trending-picks-20260923',
+  'heated-foot-massager-top3-2026',
+  'trending-picks-20260926',
 ];
 
 function log(...args) { console.log(new Date().toTimeString().slice(0, 8), ...args); }

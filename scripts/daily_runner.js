@@ -87,6 +87,30 @@ function getNowPublishDate(sectionIndex) {
   );
 }
 
+// ── 비정상 종료 감지 → 텔레그램 알림 ────────────────────────────────────
+let _runnerDone = false;
+const _crashAlert = async (reason, detail = '') => {
+  if (_runnerDone) return;
+  try {
+    const msg = `⚠️ daily_runner 비정상 종료!\n원인: ${reason}\n${detail}\n→ 포스팅 누락 가능. 수동 점검 필요.`;
+    const logLine = `[${new Date().toISOString()}] ⚠️  CRASH: ${reason} ${detail}`;
+    try { appendFileSync(LOG_FILE, logLine + '\n', 'utf8'); } catch {}
+    await sendTelegram(msg);
+  } catch {}
+};
+process.on('uncaughtException', async (err) => {
+  await _crashAlert('uncaughtException', err.message);
+  process.exit(1);
+});
+process.on('unhandledRejection', async (reason) => {
+  await _crashAlert('unhandledRejection', String(reason));
+  process.exit(1);
+});
+process.on('SIGTERM', async () => {
+  await _crashAlert('SIGTERM (강제 종료)');
+  process.exit(1);
+});
+
 async function main() {
   const args    = process.argv.slice(2);
   const publishNow = args.includes('--now'); // 예약 없이 즉시 발행 (재발행/복구용)
@@ -349,6 +373,8 @@ async function main() {
       log('⚠️', `이미지 복구 커밋 실패: ${err.message}`);
     }
   }
+
+  _runnerDone = true;
 }
 
 // ── IndexNow — 발행된 URL을 빙/야후/덕덕고에 즉시 제출 ─────────────────────
