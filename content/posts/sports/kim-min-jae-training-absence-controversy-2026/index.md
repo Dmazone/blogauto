@@ -1,6 +1,6 @@
 ---
 title: "김민재 훈련불참 진짜 갈등일까? 3가지 쟁점"
-date: 2026-10-06T13:01:00+09:00
+date: 2026-10-06T12:00:00+09:00
 slug: kim-min-jae-training-absence-controversy-2026
 tags: ["김민재 훈련불참", "스포츠"]
 categories: ["스포츠"]
