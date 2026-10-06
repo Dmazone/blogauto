@@ -1,6 +1,6 @@
 ---
 title: "2026 노벨생리의학상 발표 진짜 핵심"
-date: 2026-10-06T12:02:00+09:00
+date: 2026-10-06T12:00:00+09:00
 slug: 2026-nobel-prize-physiology-medicine-breakdown
 tags: ["2026 노벨생리의학상", "세계여행지"]
 categories: ["세계여행지"]
