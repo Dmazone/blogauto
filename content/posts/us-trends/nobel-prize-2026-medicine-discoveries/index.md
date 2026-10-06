@@ -1,6 +1,6 @@
 ---
 title: "Nobel Prize 2026: Top 5 Medicine Discoveries"
-date: 2026-10-06T13:59:00+09:00
+date: 2026-10-06T12:01:00+09:00
 slug: nobel-prize-2026-medicine-discoveries
 tags: ["Nobel Prize 2026", "Global Trends"]
 categories: ["Global Trends"]
