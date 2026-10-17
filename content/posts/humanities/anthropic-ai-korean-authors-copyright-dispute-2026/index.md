@@ -1,6 +1,6 @@
 ---
 title: "앤트로픽 AI 저작권 배상, 韓 작가 진짜 포함됐나?"
-date: 2026-10-17T12:32:00+09:00
+date: 2026-10-17T12:19:00+09:00
 slug: anthropic-ai-korean-authors-copyright-dispute-2026
 tags: ["앤트로픽 AI 저작권 배상", "인문"]
 categories: ["인문"]
