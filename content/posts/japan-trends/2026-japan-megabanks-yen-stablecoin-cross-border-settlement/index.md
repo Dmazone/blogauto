@@ -1,6 +1,6 @@
 ---
 title: "円ステーブルコイン始動！3メガ銀行の海外送金はどう変わるか？"
-date: 2026-10-17T14:28:00+09:00
+date: 2026-10-17T12:20:00+09:00
 slug: 2026-japan-megabanks-yen-stablecoin-cross-border-settlement
 tags: ["メガバンク ステーブルコイン", "日本トレンド"]
 categories: ["日本トレンド"]
