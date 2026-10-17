@@ -1,6 +1,6 @@
 ---
 title: "송민호 재복무 기간 진짜 얼마일까?"
-date: 2026-10-17T13:31:00+09:00
+date: 2026-10-17T12:20:00+09:00
 slug: song-min-ho-military-reservice-period-truth-2026
 tags: ["송민호 재복무 기간", "연예이슈"]
 categories: ["연예이슈"]
