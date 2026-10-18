@@ -1,6 +1,6 @@
 ---
 title: "이탈리아 항공 결항 보상 진짜 받나?"
-date: 2026-10-18T12:31:00+09:00
+date: 2026-10-18T12:19:00+09:00
 slug: italy-atc-failure-flight-cancellation-ec261-guide-2026
 tags: ["이탈리아 항공 결항 보상", "세계여행지"]
 categories: ["세계여행지"]
