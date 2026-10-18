@@ -1,6 +1,6 @@
 ---
 title: "China AI Export Ban 2026: 3 Huge Global Tech Shifts"
-date: 2026-10-18T14:31:00+09:00
+date: 2026-10-18T12:20:00+09:00
 slug: china-ai-export-ban-2026-global-tech-impact
 tags: ["China AI export ban 2026", "Global Trends"]
 categories: ["Global Trends"]
