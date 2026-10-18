@@ -1,6 +1,6 @@
 ---
 title: "KIA LG 준PO 2차전 진짜 승부처 3가지"
-date: 2026-10-18T13:30:00+09:00
+date: 2026-10-18T12:19:00+09:00
 slug: kbo-2026-semi-playoff-game2-kia-lg-keypoints
 tags: ["KIA LG 준PO 2차전", "스포츠"]
 categories: ["스포츠"]
