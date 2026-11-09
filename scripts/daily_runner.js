@@ -261,20 +261,37 @@ async function main() {
       // yt_upload.mjs — child process로 실행 (Playwright 별도 프로세스 필요)
       // stdout 캡처해서 VIDEO_ID 추출 → yt_comment.mjs 자동 호출
       const videoId = await new Promise((resolve) => {
-        const title  = tpPost.title || `트렌드 상품 추천 TOP3 #Shorts`;
-        const desc   = `지금 가장 인기 있는 트렌드 상품 비교·추천!\n자세한 내용은 트렌드줌 블로그에서 확인해봐 👇\n\n#Shorts #트렌드 #쿠팡추천`;
+        const rawTitle = tpPost.title || '트렌드 상품 추천 TOP3';
+        const hookSeed = [...rawTitle].reduce((a, c) => a + c.charCodeAt(0), 0);
+        const ytHooks = [
+          `이거 모르면 손해💸 ${rawTitle}`,
+          `${rawTitle} 솔직 비교 (충격 결과)`,
+          `요즘 가장 많이 팔리는 ${rawTitle}`,
+          `${rawTitle} 1분 완벽 정리 ✅`,
+          `사기 전에 꼭 보세요 ${rawTitle}`,
+        ];
+        const title  = ytHooks[hookSeed % ytHooks.length].slice(0, 100);
+        const tagStr = rawTitle.replace(/\s+/g, '').replace(/[^가-힣a-zA-Z0-9]/g, '');
+        const desc   = `${rawTitle}\n\n지금 가장 많이 팔리는 TOP3 직접 비교했어요! 쿠팡 최저가 링크는 설명란에서 확인해봐 👇\n\n#Shorts #쿠팡추천 #${tagStr} #트렌드줌`;
         const proc   = spawn(process.execPath, [
           path.join(__dirname, 'yt_upload.mjs'), mp4Path, title, desc,
         ], { cwd: path.join(__dirname, '..'), stdio: ['inherit', 'pipe', 'inherit'] });
         let out = '';
         proc.stdout.on('data', d => { process.stdout.write(d); out += d; });
         proc.on('close', code => {
-          if (code === 0) log('✅', 'YouTube 업로드 완료');
-          else            log('⚠️', `YouTube 업로드 실패 (exit ${code}) — 수동 업로드 필요`);
+          if (code === 0) {
+            log('✅', 'YouTube 업로드 완료');
+          } else {
+            log('⚠️', `YouTube 업로드 실패 (exit ${code}) — 재업로드 큐 등록`);
+            addPendingUpload(tpPost.slug);
+          }
           const m = out.match(/VIDEO_ID:([a-zA-Z0-9_-]+)/);
           resolve(m ? m[1] : null);
         });
       });
+
+      // 업로드 성공 시 재업로드 큐에서 제거
+      if (videoId && videoId !== 'unknown') removePendingUpload(tpPost.slug);
 
       // 업로드 성공 + video ID 확인 시 쿠팡 링크 댓글 달기
       if (videoId && videoId !== 'unknown') {
@@ -427,6 +444,25 @@ function savePostsLog(posts, totalCount) {
   } catch (err) {
     log('⚠️', `posts_log 저장 실패: ${err.message}`);
   }
+}
+
+// ── YouTube 재업로드 큐 관리 ──────────────────────────────────────────────
+const PENDING_YT_PATH = path.join(__dirname, '..', 'data', 'pending_yt_upload.json');
+function addPendingUpload(slug) {
+  try {
+    const list = existsSync(PENDING_YT_PATH)
+      ? JSON.parse(readFileSync(PENDING_YT_PATH, 'utf8'))
+      : [];
+    if (!list.includes(slug)) { list.push(slug); writeFileSync(PENDING_YT_PATH, JSON.stringify(list, null, 2)); }
+    log('📋', `재업로드 큐 등록: ${slug}`);
+  } catch {}
+}
+function removePendingUpload(slug) {
+  try {
+    if (!existsSync(PENDING_YT_PATH)) return;
+    const list = JSON.parse(readFileSync(PENDING_YT_PATH, 'utf8')).filter(s => s !== slug);
+    writeFileSync(PENDING_YT_PATH, JSON.stringify(list, null, 2));
+  } catch {}
 }
 
 async function sendTelegramDailyReport(posts, successCount, failCount, publishNow = false) {

@@ -27,6 +27,24 @@ const NO_PREVIEW = process.argv.includes('--no-preview');
 
 function toFileUrl(p) { return 'file:///' + p.replace(/\\/g, '/'); }
 
+// ── 카테고리 감지 → 컬러 테마 (썸네일 다양화) ───────────────────────
+const THEMES = {
+  tech:    { label: '#00DDFF', topic: '#7B2FFF', badge: ['#00DDFF','#7B2FFF'], stripe: '#00DDFF,#7B2FFF,#00FF87,#00DDFF' },
+  beauty:  { label: '#FF6EB4', topic: '#FF6EB4', badge: ['#FF6EB4','#A855F7'], stripe: '#FF6EB4,#A855F7,#FF0066,#FF6EB4' },
+  sports:  { label: '#00FF87', topic: '#FFD700', badge: ['#00FF87','#FFD700'], stripe: '#00FF87,#FFD700,#00DDFF,#00FF87' },
+  food:    { label: '#FF6B35', topic: '#FFD700', badge: ['#FF6B35','#FF0066'], stripe: '#FF6B35,#FFD700,#FF0066,#FF6B35' },
+  default: { label: '#FF3333', topic: '#FFD700', badge: ['#FF0066','#FF6B35'], stripe: '#FF0066,#FF6B35,#FFD700,#00DDFF,#FF0066' },
+};
+
+function detectTheme(title, products = []) {
+  const text = [title, ...products.map(p => p.name)].join(' ').toLowerCase();
+  if (/노트북|태블릿|스마트|이어폰|키보드|마우스|모니터|카메라|드론|충전|배터리|pc|tv|가전/.test(text)) return THEMES.tech;
+  if (/화장품|스킨케어|립스틱|세럼|에센스|마스크팩|향수|샴푸|헤어|뷰티|다이어트|보충제|유산균/.test(text)) return THEMES.beauty;
+  if (/런닝화|운동화|헬스|요가|자전거|등산|골프|축구|수영|헬멧|배드민턴|테니스|스포츠/.test(text)) return THEMES.sports;
+  if (/프라이팬|냄비|도마|에어프라이어|커피|믹서|주방|식품|건강식|견과류|과자|음료/.test(text)) return THEMES.food;
+  return THEMES.default;
+}
+
 function getBgm() {
   if (!fs.existsSync(BGM_DIR)) return null;
   const f = fs.readdirSync(BGM_DIR).find(n => /\.(mp3|wav|aac|m4a)$/i.test(n));
@@ -205,7 +223,7 @@ function bgLayer(bgImg, kbDur = '5s') {
 }
 
 // ── 슬라이드 1: 훅 (v5: 첫 프레임부터 제품명 3개 즉시 노출) ─────────
-function hookHtml(bgImg, title, products = []) {
+function hookHtml(bgImg, title, products = [], theme = THEMES.default) {
   const topic = title.replace(/TOP\s*\d+[^가-힣]*/i, '').replace(/^[\d년\s]+/, '').trim() || title;
 
   const shortN = (n = '') => {
@@ -231,14 +249,17 @@ function hookHtml(bgImg, title, products = []) {
     </div>`;
   }).join('');
 
+  const lc = theme.label;
+  const tc = theme.topic;
+  const lcAlpha = lc.replace('#', '').match(/.{2}/g)?.map(h => parseInt(h,16)).join(',') ?? '255,51,51';
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 ${COMMON_CSS}
-.label{font-size:46px;font-weight:900;color:#FF3333;text-align:center;
-  background:rgba(255,51,51,.18);border:2px solid #FF3333;border-radius:12px;
-  padding:10px 32px;letter-spacing:2px;text-shadow:0 0 20px #FF333388}
-.topic{font-size:62px;font-weight:900;color:#FFD700;text-align:center;margin-top:16px;
+.label{font-size:46px;font-weight:900;color:${lc};text-align:center;
+  background:rgba(${lcAlpha},.18);border:2px solid ${lc};border-radius:12px;
+  padding:10px 32px;letter-spacing:2px;text-shadow:0 0 20px ${lc}88}
+.topic{font-size:62px;font-weight:900;color:${tc};text-align:center;margin-top:16px;
   word-break:keep-all;line-height:1.28;padding:0 20px;
-  text-shadow:2px 2px 0 #000,0 0 40px #FFD70066}
+  text-shadow:2px 2px 0 #000,0 0 40px ${tc}66}
 .list{width:100%;margin-top:28px}
 .sub{font-size:44px;color:rgba(255,255,255,.85);text-align:center;margin-top:24px;
   text-shadow:1px 1px 5px rgba(0,0,0,.8)}
@@ -254,7 +275,7 @@ ${bgLayer(bgImg, '4s')}
 }
 
 // ── 슬라이드 2~4: 제품 (v4: 핵심 스펙 1개 + 가격 배지 강조 + 진행 표시) ─
-function productHtml(bgImg, product, rank, total = 3) {
+function productHtml(bgImg, product, rank, total = 3, theme = THEMES.default) {
   const { name, price, keySpec } = product;
   const EMOJI  = ['🥇', '🥈', '🥉'];
   const COLORS = ['#FFD700', '#C8C8C8', '#CD7F32'];
@@ -288,10 +309,10 @@ ${COMMON_CSS}
   box-shadow:0 8px 55px rgba(0,0,0,.8),0 0 0 1px ${color}44}
 .name{font-size:${nameFs}px;font-weight:900;color:#fff;word-break:keep-all;
   line-height:1.28;text-shadow:2px 2px 10px rgba(0,0,0,.95)}
-.price-badge{display:inline-block;background:linear-gradient(135deg,#FF0066,#FF6B35);
+.price-badge{display:inline-block;background:linear-gradient(135deg,${theme.badge[0]},${theme.badge[1]});
   border-radius:14px;padding:12px 28px;margin-top:18px;
   font-size:62px;font-weight:900;color:#fff;
-  box-shadow:0 4px 24px rgba(255,0,102,.5);text-shadow:1px 1px 4px rgba(0,0,0,.5)}
+  box-shadow:0 4px 24px ${theme.badge[0]}80;text-shadow:1px 1px 4px rgba(0,0,0,.5)}
 .key-spec{font-size:48px;color:rgba(255,255,255,.92);margin-top:16px;
   line-height:1.35;text-shadow:1px 1px 5px rgba(0,0,0,.8)}
 .hint{font-size:42px;color:rgba(255,255,255,.75);margin-top:24px;text-align:center;
@@ -313,7 +334,7 @@ ${bgLayer(bgImg, '5s')}
 }
 
 // ── 슬라이드 5: CTA (v4: 미니 요약 + 행동 유도 통합) ────────────────
-function ctaHtml(bgImg, products) {
+function ctaHtml(bgImg, products, theme = THEMES.default) {
   // 1~3위 이름 짧게
   const shortName = n => {
     let s = n.replace(/\s*\([^)]+\)/g, '').split(/\s*[\/,]\s*/)[0].trim();
@@ -352,10 +373,10 @@ ${COMMON_CSS}
   text-shadow:1px 1px 5px rgba(0,0,0,.9)}
 .sum-price{font-size:38px;color:#87CEEB;font-weight:bold;flex-shrink:0}
 .gap{height:36px}
-.btn{background:linear-gradient(135deg,#FF0066,#FF6B35);border-radius:999px;
+.btn{background:linear-gradient(135deg,${theme.badge[0]},${theme.badge[1]});border-radius:999px;
   padding:30px 68px;font-size:58px;font-weight:900;color:#fff;
   animation:bounceIn .55s ease .7s both,wiggle .5s ease 1.5s infinite;
-  box-shadow:0 10px 50px rgba(255,0,102,.55);text-shadow:2px 2px 6px rgba(0,0,0,.4)}
+  box-shadow:0 10px 50px ${theme.badge[0]}88;text-shadow:2px 2px 6px rgba(0,0,0,.4)}
 .like{font-size:44px;color:rgba(255,255,255,.85);margin-top:40px;text-align:center;
   animation:bounceIn .55s ease 1.1s both}
 </style></head><body>
@@ -499,6 +520,8 @@ export async function generate(slugArg) {
   const outPath = path.join(OUT_DIR, `${resolvedSlug}.mp4`);
 
   const { bg, products: P, title } = post;
+  const theme = detectTheme(title, P);
+  console.log('🎨 테마:', Object.entries(THEMES).find(([,v]) => v === theme)?.[0] ?? 'default');
 
   // ── TTS ─────────────────────────────────────────────────────────
   console.log('\n🔊 TTS 생성 중...');
@@ -550,11 +573,11 @@ export async function generate(slugArg) {
 
   // ── 슬라이드 정의 (v5: 첫 프레임 즉시 노출, 타이밍 단축) ───────────
   const slides = [
-    { name:'hook', html: hookHtml(bg.thumb, title, P),              mp3Path: mp3Map.hook, minDur: 3.0 },
-    ...(P[0] ? [{ name:'p0', html: productHtml(bg.img01, P[0], 0), mp3Path: mp3Map.p0,   minDur: 4.0 }] : []),
-    ...(P[1] ? [{ name:'p1', html: productHtml(bg.img02, P[1], 1), mp3Path: mp3Map.p1,   minDur: 4.0 }] : []),
-    ...(P[2] ? [{ name:'p2', html: productHtml(bg.thumb, P[2], 2), mp3Path: mp3Map.p2,   minDur: 4.0 }] : []),
-    { name:'cta',  html: ctaHtml(bg.img01 || bg.thumb, P),          mp3Path: mp3Map.cta,  minDur: 3.0 },
+    { name:'hook', html: hookHtml(bg.thumb, title, P, theme),              mp3Path: mp3Map.hook, minDur: 3.0 },
+    ...(P[0] ? [{ name:'p0', html: productHtml(bg.img01, P[0], 0, P.length, theme), mp3Path: mp3Map.p0,   minDur: 4.0 }] : []),
+    ...(P[1] ? [{ name:'p1', html: productHtml(bg.img02, P[1], 1, P.length, theme), mp3Path: mp3Map.p1,   minDur: 4.0 }] : []),
+    ...(P[2] ? [{ name:'p2', html: productHtml(bg.thumb, P[2], 2, P.length, theme), mp3Path: mp3Map.p2,   minDur: 4.0 }] : []),
+    { name:'cta',  html: ctaHtml(bg.img01 || bg.thumb, P, theme),          mp3Path: mp3Map.cta,  minDur: 3.0 },
   ];
 
   // ── 녹화 ────────────────────────────────────────────────────────

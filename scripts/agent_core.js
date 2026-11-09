@@ -660,9 +660,10 @@ function buildFrontMatter(section, topic, outline, dateOverride) {
     lc.descFallback(topic.keyword)
   ).slice(0, 160);
 
-  // 중복 제거 및 섹션명·키워드 기반 태그
-  const rawTags = [topic.keyword, section.name, ...(topic.tags ?? [])];
-  const tags = [...new Set(rawTags.filter(Boolean))].slice(0, 6);
+  // 중복 제거 및 섹션명·키워드 기반 태그 (object 직렬화 방지)
+  const tagToStr = t => typeof t === 'object' ? (t?.name ?? t?.label ?? '') : String(t ?? '');
+  const rawTags = [topic.keyword, section.name, ...(topic.tags ?? []).map(tagToStr)];
+  const tags = [...new Set(rawTags.map(String).filter(t => t && !t.startsWith('[object')))].slice(0, 6);
 
   const thumbUrl = `${topic.slug}-thumb.webp`;
   const coverAlt = lc.coverAlt(topic.title);
@@ -1706,8 +1707,18 @@ export async function runForSection(section, options = {}) {
   }
   log('✅', `품질 게이트 통과: H2 ${h2Count}개, ${charCount}자`);
 
-  // 파일 저장 — 저장 직전 죽은 내부링크 자동 제거
-  const sanitized = stripDeadInternalLinks(final);
+  // 파일 저장 — 저장 직전 누락 이미지 제거 → 죽은 내부링크 제거
+  const withoutDeadImgs = final.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, _alt, src) => {
+    if (/^https?:\/\//.test(src)) return match; // 외부 URL 보존
+    try {
+      const imgPath = path.join(bundleDir, src);
+      const stat = fs.statSync(imgPath);
+      if (stat.size >= 15000) return match;
+    } catch {}
+    log('⚠️', `  이미지 누락·불량으로 삭제: ${src}`);
+    return '';
+  });
+  const sanitized = stripDeadInternalLinks(withoutDeadImgs);
   const fullContent = buildFrontMatter(section, topic, outline, dateOverride) + sanitized;
   fs.mkdirSync(bundleDir, { recursive: true });
   fs.writeFileSync(postPath, fullContent, 'utf-8');
