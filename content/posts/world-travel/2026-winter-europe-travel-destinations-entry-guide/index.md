@@ -1,6 +1,6 @@
 ---
 title: "2026 겨울 유럽 여행지 5곳, 진짜 바뀐 입국 규정"
-date: 2026-11-14T12:20:00+09:00
+date: 2026-11-14T12:04:00+09:00
 slug: 2026-winter-europe-travel-destinations-entry-guide
 tags: ["2026 겨울 유럽 여행지", "세계여행지"]
 categories: ["세계여행지"]
