@@ -1,6 +1,6 @@
 ---
 title: "COP31 Climate Summit 2026: 5 Essential Global Shifts"
-date: 2026-11-14T14:15:00+09:00
+date: 2026-11-14T12:05:00+09:00
 slug: cop31-climate-summit-2026-global-energy-shifts
 tags: ["COP31 Climate Summit 2026", "Global Trends"]
 categories: ["Global Trends"]
