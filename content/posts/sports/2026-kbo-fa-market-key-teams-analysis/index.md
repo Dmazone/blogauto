@@ -1,6 +1,6 @@
 ---
 title: "2026 KBO FA 시장, 진짜 승자 3팀은 누구일까"
-date: 2026-11-14T13:18:00+09:00
+date: 2026-11-14T12:05:00+09:00
 slug: 2026-kbo-fa-market-key-teams-analysis
 tags: ["2026 KBO FA", "스포츠"]
 categories: ["스포츠"]
