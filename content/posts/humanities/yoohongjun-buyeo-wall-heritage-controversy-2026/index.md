@@ -1,6 +1,6 @@
 ---
 title: "유홍준 부여 자택 담장 문화유산 등록 논란 진짜 쟁점"
-date: 2026-11-15T12:22:00+09:00
+date: 2026-11-15T12:05:00+09:00
 slug: yoohongjun-buyeo-wall-heritage-controversy-2026
 tags: ["유홍준 자택 담장 문화유산", "인문"]
 categories: ["인문"]
