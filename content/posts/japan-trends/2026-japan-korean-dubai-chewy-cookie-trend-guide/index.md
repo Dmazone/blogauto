@@ -1,6 +1,6 @@
 ---
 title: "2026年最新！韓国発「ドバイもちクッキー」日本上陸の理由とは？"
-date: 2026-11-15T14:17:00+09:00
+date: 2026-11-15T12:07:00+09:00
 slug: 2026-japan-korean-dubai-chewy-cookie-trend-guide
 tags: ["ドバイもちクッキー 日本上陸", "日本トレンド"]
 categories: ["日本トレンド"]
