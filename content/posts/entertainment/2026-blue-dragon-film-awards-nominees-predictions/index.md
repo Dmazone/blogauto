@@ -1,6 +1,6 @@
 ---
 title: "2026 청룡영화상 후보 진짜 승자는 누구인가"
-date: 2026-11-15T13:19:00+09:00
+date: 2026-11-15T12:06:00+09:00
 slug: 2026-blue-dragon-film-awards-nominees-predictions
 tags: ["2026 청룡영화상 후보", "연예이슈"]
 categories: ["연예이슈"]
