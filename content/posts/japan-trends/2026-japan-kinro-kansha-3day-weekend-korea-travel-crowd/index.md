@@ -1,6 +1,6 @@
 ---
 title: "勤労感謝の日3連休2026年最新！韓国人観光客と混雑徹底解説"
-date: 2026-11-21T14:06:00+09:00
+date: 2026-11-21T12:18:00+09:00
 slug: 2026-japan-kinro-kansha-3day-weekend-korea-travel-crowd
 tags: ["勤労感謝の日 3連休 混雑 韓国", "日本トレンド"]
 categories: ["日本トレンド"]
