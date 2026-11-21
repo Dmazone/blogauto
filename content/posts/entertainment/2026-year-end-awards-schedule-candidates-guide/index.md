@@ -1,6 +1,6 @@
 ---
 title: "2026 연말 시상식 일정 총정리, 진짜 주목할 후보 5"
-date: 2026-11-21T13:11:00+09:00
+date: 2026-11-21T12:17:00+09:00
 slug: 2026-year-end-awards-schedule-candidates-guide
 tags: ["2026 연말 시상식 일정", "연예이슈"]
 categories: ["연예이슈"]
