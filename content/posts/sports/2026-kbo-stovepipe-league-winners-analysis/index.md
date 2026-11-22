@@ -1,6 +1,6 @@
 ---
 title: "2026 KBO 스토브리그, 진짜 승자는 누구인가"
-date: 2026-11-22T13:11:00+09:00
+date: 2026-11-22T12:02:00+09:00
 slug: 2026-kbo-stovepipe-league-winners-analysis
 tags: ["2026 KBO 스토브리그", "스포츠"]
 categories: ["스포츠"]
