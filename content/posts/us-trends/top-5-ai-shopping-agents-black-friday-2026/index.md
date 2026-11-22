@@ -1,6 +1,6 @@
 ---
 title: "Top 5 AI Shopping Agents Reshaping Black Friday 2026"
-date: 2026-11-22T14:06:00+09:00
+date: 2026-11-22T12:03:00+09:00
 slug: top-5-ai-shopping-agents-black-friday-2026
 tags: ["AI shopping agents Black Friday 2026", "Global Trends"]
 categories: ["Global Trends"]
