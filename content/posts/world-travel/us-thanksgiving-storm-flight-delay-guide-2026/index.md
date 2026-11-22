@@ -1,6 +1,6 @@
 ---
 title: "미국 추수감사절 폭풍 항공 지연 대처법 4가지"
-date: 2026-11-22T12:13:00+09:00
+date: 2026-11-22T12:01:00+09:00
 slug: us-thanksgiving-storm-flight-delay-guide-2026
 tags: ["미국 추수감사절 항공 지연", "세계여행지"]
 categories: ["세계여행지"]
