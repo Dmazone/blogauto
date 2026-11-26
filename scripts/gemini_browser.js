@@ -133,15 +133,22 @@ export class GeminiSession {
     // 로그인 상태 간단 확인 (계정 인덱스 추출용)
     await this._ensureLoggedIn();
 
-    // 로그인 후 현재 URL에서 계정 인덱스 추출 → Gem URL 재구성
+    // 로그인 후 현재 URL에서 계정 인덱스 추출 → Gem/Notebook URL 재구성
     if (this.gemUrl) {
       const currentUrl = this.page.url();
-      const accountMatch = currentUrl.match(/\/u\/(\d+)\//);
-      const gemIdMatch   = this.gemUrl.match(/\/gem\/([a-z0-9]+)/i);
+      const accountMatch    = currentUrl.match(/\/u\/(\d+)\//);
+      const gemIdMatch      = this.gemUrl.match(/\/gem\/([a-z0-9]+)/i);
+      const notebookIdMatch = this.gemUrl.match(/\/notebook\/([a-z0-9-]+)/i);
       if (accountMatch && gemIdMatch) {
         const newUrl = `https://gemini.google.com/u/${accountMatch[1]}/gem/${gemIdMatch[1]}`;
         if (newUrl !== this.gemUrl) {
           log('🔄', `Gem URL 재구성: ${newUrl}`);
+          this.gemUrl = newUrl;
+        }
+      } else if (accountMatch && notebookIdMatch) {
+        const newUrl = `https://gemini.google.com/u/${accountMatch[1]}/notebook/${notebookIdMatch[1]}`;
+        if (newUrl !== this.gemUrl) {
+          log('🔄', `Notebook URL 재구성: ${newUrl}`);
           this.gemUrl = newUrl;
         }
       }
@@ -149,7 +156,10 @@ export class GeminiSession {
     }
 
     this._turnCount = 0;
-    log('✅', `제미나이 세션 준비 완료${this.gemUrl ? ' (Gem 모드)' : ''}`);
+    const modeLabel = this.gemUrl
+      ? (this.gemUrl.includes('/notebook/') ? ' (Notebook 모드)' : ' (Gem 모드)')
+      : '';
+    log('✅', `제미나이 세션 준비 완료${modeLabel}`);
   }
 
   async _ensureLoggedIn() {

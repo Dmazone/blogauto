@@ -152,7 +152,8 @@ async function main() {
   await geminiSession.init();
   setGeminiBrowserSession(geminiSession);
   if (gemUrl) {
-    log('💎', `Gem 모드: ${gemUrl}`);
+    const modeLabel = gemUrl.includes('/notebook/') ? 'Notebook 모드' : 'Gem 모드';
+    log('💎', `${modeLabel}: ${gemUrl}`);
   } else {
     log('⚠️', 'GEMINI_GEM_URL 미설정 → 일반 채팅 사용');
   }
