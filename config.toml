@@ -4,12 +4,14 @@ title = "트렌드줌 | 최신 트렌드 모음"
 theme = "PaperMod"
 defaultContentLanguage = "ko"
 hasCJKLanguage = true
-paginate = 10
 enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 canonifyURLs = true
 enableGitInfo = true
+
+[pagination]
+  pagerSize = 10
 
 [sitemap]
   changefreq = "daily"
