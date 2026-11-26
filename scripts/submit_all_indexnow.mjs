@@ -1,4 +1,4 @@
-/**
+﻿/**
  * submit_all_indexnow.mjs
  * 사이트맵에서 전체 URL 추출 → IndexNow + Google 사이트맵 핑 일괄 제출
  * 사용: node scripts/submit_all_indexnow.mjs
@@ -6,7 +6,7 @@
 
 import 'dotenv/config';
 
-const BASE_URL   = 'https://dmazone.github.io/blogauto';
+const BASE_URL   = 'https://bimil.site';
 const SITEMAP    = `${BASE_URL}/sitemap.xml`;
 const INDEXNOW_KEY = 'c025a607af5dbc0a7c80e1a5058761ad';
 const TOKEN      = process.env.TELEGRAM_TOKEN;
@@ -47,7 +47,7 @@ async function submitIndexNow(urlList) {
       method:  'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify({
-        host:        'dmazone.github.io',
+        host:        'bimil.site',
         key:         INDEXNOW_KEY,
         keyLocation: `${BASE_URL}/${INDEXNOW_KEY}.txt`,
         urlList:     chunk,

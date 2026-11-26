@@ -1,4 +1,4 @@
-/**
+﻿/**
  * yt_update_channel.mjs — YouTube 채널 정보(About) 업데이트
  * 채널 설명과 링크에 블로그 URL 추가 → YouTube에서 블로그로 트래픽 유도
  * Usage: node scripts/yt_update_channel.mjs
@@ -12,7 +12,7 @@ import { sendTelegram } from './telegram.js';
 const __dirname    = path.dirname(fileURLToPath(import.meta.url));
 const SESSION      = path.join(os.homedir(), '.yt-ekaledma-session');
 const CHANNEL_ID   = 'UCZA_nUdouXfwAF0vuSG74_w'; // @dmalog
-const BLOG_URL     = 'https://dmazone.github.io/blogauto/';
+const BLOG_URL     = 'https://bimil.site/';
 const CHANNEL_DESC = `트렌드줌 공식 YouTube 채널 @dmalog입니다.
 
 ✅ 최신 트렌드 상품 TOP3 비교·추천 (매일 업데이트)

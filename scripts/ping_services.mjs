@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ping_services.mjs — 블로그 RSS/사이트맵을 여러 핑 서비스에 제출
  * WebSub(PubSubHubbub) + XML-RPC 핑으로 구글·야후·다음 빠른 크롤링 유도
  * Usage: node scripts/ping_services.mjs
@@ -9,8 +9,8 @@ import { fileURLToPath } from 'url';
 import { sendTelegram } from './telegram.js';
 
 const BLOG_TITLE = '트렌드줌';
-const BLOG_URL   = 'https://dmazone.github.io/blogauto/';
-const BLOG_RSS   = 'https://dmazone.github.io/blogauto/index.xml';
+const BLOG_URL   = 'https://bimil.site/';
+const BLOG_RSS   = 'https://bimil.site/index.xml';
 
 // ─── HTTP 헬퍼 ────────────────────────────────────────────────────────────────
 

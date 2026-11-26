@@ -1,4 +1,4 @@
-/**
+﻿/**
  * gsc_submit.mjs — Google Search Console 사이트맵 재제출 자동화
  * 사용: node scripts/gsc_submit.mjs
  */
@@ -12,8 +12,8 @@ import { sendTelegram } from './telegram.js';
 const __dirname   = path.dirname(fileURLToPath(import.meta.url));
 const SESSION_DIR = path.join(os.homedir(), '.gemini-blog-session');
 
-const SITE_URL = 'https://dmazone.github.io/blogauto/';
-const SITEMAP  = 'https://dmazone.github.io/blogauto/sitemap.xml';
+const SITE_URL = 'https://bimil.site/';
+const SITEMAP  = 'https://bimil.site/sitemap.xml';
 const GSC_URL  = `https://search.google.com/search-console/sitemaps?resource_id=${encodeURIComponent(SITE_URL)}`;
 
 const wait = ms => new Promise(r => setTimeout(r, ms));

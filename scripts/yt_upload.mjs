@@ -1,4 +1,4 @@
-/**
+﻿/**
  * yt_upload.mjs — YouTube Studio Playwright 업로드
  * Usage: node scripts/yt_upload.mjs <videoPath> [title] [description]
  */
@@ -72,7 +72,7 @@ async function main() {
     if (m) autoTitle = m[1].trim() + ' #Shorts';
   }
   const title = process.argv[3] || autoTitle || `트렌드 상품 추천 TOP3 #Shorts`;
-  const blogUrl = `https://dmazone.github.io/blogauto/posts/trending-picks/${slug}/`;
+  const blogUrl = `https://bimil.site/posts/trending-picks/${slug}/`;
   const description = process.argv[4] || `지금 가장 인기 있는 트렌드 상품을 비교·추천합니다.\n\n🔗 상세 비교 리뷰 보기\n${blogUrl}\n\n#Shorts #트렌드 #쿠팡추천`;
 
   console.log('📤 업로드:', path.basename(videoPath));

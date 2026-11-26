@@ -1,4 +1,4 @@
-/**
+﻿/**
  * yt_upload_backlog.mjs — 누락된 Shorts 영상 즉시 공개 업로드
  * Usage: node scripts/yt_upload_backlog.mjs
  */
@@ -12,16 +12,24 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'data', '1_youtube-shorts');
 
-const BACKLOG = [
-  'trending-picks-20260918',
-  'handheld-garment-steamer-top3-2026',
-  'trending-picks-20260920',
-  'wireless-turbo-jet-air-duster-top3-2026',
-  'ultra-slim-magsafe-wallet-powerbank-top3-2026',
-  'trending-picks-20260923',
-  'heated-foot-massager-top3-2026',
-  'trending-picks-20260926',
-];
+const PENDING_YT_PATH = path.join(ROOT, 'data', 'pending_yt_upload.json');
+
+// pending_yt_upload.json이 있으면 그걸 우선 사용, 없으면 하드코딩 목록
+function getBacklog() {
+  if (fs.existsSync(PENDING_YT_PATH)) {
+    try {
+      const list = JSON.parse(fs.readFileSync(PENDING_YT_PATH, 'utf8'));
+      if (Array.isArray(list) && list.length > 0) {
+        console.log(`📋 pending_yt_upload.json 로드: ${list.length}개`);
+        return list;
+      }
+    } catch {}
+  }
+  // 폴백 하드코딩 (파일 없을 때)
+  return [];
+}
+
+const BACKLOG = getBacklog();
 
 function log(...args) { console.log(new Date().toTimeString().slice(0, 8), ...args); }
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -37,7 +45,7 @@ function getTitle(slug) {
 
 function uploadNow(mp4Path, title) {
   return new Promise((resolve) => {
-    const blogUrl = `https://dmazone.github.io/blogauto/posts/trending-picks/${path.basename(mp4Path, '.mp4')}/`;
+    const blogUrl = `https://bimil.site/posts/trending-picks/${path.basename(mp4Path, '.mp4')}/`;
     const desc = `지금 가장 인기 있는 트렌드 상품을 비교·추천합니다.\n\n🔗 상세 비교 리뷰 보기\n${blogUrl}\n\n#Shorts #트렌드 #쿠팡추천`;
     log(`📤 업로드: ${path.basename(mp4Path)}`);
     const proc = spawn(process.execPath, [
@@ -85,6 +93,13 @@ async function main() {
     if (success) {
       successCount++;
       log(`✅ 업로드 완료 (VIDEO_ID: ${videoId})`);
+      // pending 파일에서 제거
+      try {
+        if (fs.existsSync(PENDING_YT_PATH)) {
+          const list = JSON.parse(fs.readFileSync(PENDING_YT_PATH, 'utf8')).filter(s => s !== slug);
+          fs.writeFileSync(PENDING_YT_PATH, JSON.stringify(list, null, 2));
+        }
+      } catch {}
       if (videoId && videoId !== 'unknown') {
         await postComment(videoId, slug);
       }

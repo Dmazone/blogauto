@@ -49,7 +49,7 @@ jobs:
         run: |
           hugo \
             --minify \
-            --baseURL "https://dmazone.github.io/blogauto/"
+            --baseURL "https://bimil.site/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

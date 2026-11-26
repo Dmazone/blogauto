@@ -1,4 +1,4 @@
-/**
+﻿/**
  * yt_comment.mjs — YouTube 영상에 쿠팡파트너스 링크 댓글 달기
  * Usage: node scripts/yt_comment.mjs <videoId> <slug>
  *
@@ -50,7 +50,7 @@ function parseProducts(slug) {
 
 function buildComment(products, slug) {
   const RANKS = ['🥇', '🥈', '🥉'];
-  const blogUrl = `https://dmazone.github.io/blogauto/posts/trending-picks/${slug}/`;
+  const blogUrl = `https://bimil.site/posts/trending-picks/${slug}/`;
   const lines = ['🛒 쿠팡 구매 링크 👇', ''];
   products.forEach((p, i) => {
     if (!p.url) return;

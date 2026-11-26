@@ -398,7 +398,7 @@ async function main() {
 async function submitIndexNow(posts) {
   if (!posts.length) return;
   const key     = 'c025a607af5dbc0a7c80e1a5058761ad';
-  const baseUrl = (process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto').replace(/\/$/, '');
+  const baseUrl = (process.env.BLOG_BASE_URL ?? 'https://bimil.site').replace(/\/$/, '');
   const urlList = posts
     .filter(p => p.slug && p.sectionDir)
     .map(p => `${baseUrl}/posts/${p.sectionDir}/${p.slug}/`);
@@ -408,7 +408,7 @@ async function submitIndexNow(posts) {
       method:  'POST',
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify({
-        host:        'dmazone.github.io',
+        host:        'bimil.site',
         key,
         keyLocation: `${baseUrl}/${key}.txt`,
         urlList,
@@ -422,7 +422,7 @@ async function submitIndexNow(posts) {
 
 function savePostsLog(posts, totalCount) {
   try {
-    const baseUrl  = (process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto').replace(/\/$/, '');
+    const baseUrl  = (process.env.BLOG_BASE_URL ?? 'https://bimil.site').replace(/\/$/, '');
     const tomorrow = (() => { const t = new Date(); t.setDate(t.getDate() + 1); return t.toISOString().slice(0, 10); })();
     const dataDir  = path.join(__dirname, '..', 'data');
     mkdirSync(dataDir, { recursive: true });
@@ -466,7 +466,7 @@ function removePendingUpload(slug) {
 }
 
 async function sendTelegramDailyReport(posts, successCount, failCount, publishNow = false) {
-  const baseUrl  = (process.env.BLOG_BASE_URL ?? 'https://dmazone.github.io/blogauto').replace(/\/$/, '');
+  const baseUrl  = (process.env.BLOG_BASE_URL ?? 'https://bimil.site').replace(/\/$/, '');
   const tomorrow = (() => { const t = new Date(); t.setDate(t.getDate() + 1); return t.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' }); })();
   const todayStr = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
 

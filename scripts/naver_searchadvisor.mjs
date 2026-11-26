@@ -1,4 +1,4 @@
-/**
+﻿/**
  * naver_searchadvisor.mjs — 네이버 서치어드바이저 사이트맵 제출 자동화
  * Usage: node scripts/naver_searchadvisor.mjs
  *
@@ -15,8 +15,8 @@ import { sendTelegram } from './telegram.js';
 
 const __dirname   = path.dirname(fileURLToPath(import.meta.url));
 const SESSION_DIR = path.join(__dirname, '..', 'data', '2_sessions', 'naver-sa');
-const SITE_URL    = 'https://dmazone.github.io/blogauto/';
-const SITEMAP_URL = 'https://dmazone.github.io/blogauto/sitemap.xml';
+const SITE_URL    = 'https://bimil.site/';
+const SITEMAP_URL = 'https://bimil.site/sitemap.xml';
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const log  = (e, m) => console.log(`${e}  ${m}`);

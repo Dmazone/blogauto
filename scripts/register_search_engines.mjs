@@ -1,4 +1,4 @@
-/**
+﻿/**
  * register_search_engines.mjs — 한국/글로벌 검색 엔진 일괄 등록
  * Zum, Nate, Daum 등에 블로그 RSS/사이트맵 제출
  * Usage: node scripts/register_search_engines.mjs
@@ -7,15 +7,15 @@ import https from 'https';
 import http from 'http';
 import { sendTelegram } from './telegram.js';
 
-const BLOG_URL   = 'https://dmazone.github.io/blogauto/';
-const SITEMAP    = 'https://dmazone.github.io/blogauto/sitemap.xml';
-const RSS        = 'https://dmazone.github.io/blogauto/index.xml';
+const BLOG_URL   = 'https://bimil.site/';
+const SITEMAP    = 'https://bimil.site/sitemap.xml';
+const RSS        = 'https://bimil.site/index.xml';
 const BLOG_TITLE = '트렌드줌';
 
 function httpGet(url, followRedirect = true) {
   return new Promise((resolve) => {
     const lib = url.startsWith('https:') ? https : http;
-    const req = lib.get(url, { headers: { 'User-Agent': 'BlogAuto-Crawler/1.0 (+https://dmazone.github.io/blogauto/)' } }, (res) => {
+    const req = lib.get(url, { headers: { 'User-Agent': 'BlogAuto-Crawler/1.0 (+https://bimil.site/)' } }, (res) => {
       if (followRedirect && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
         resolve(httpGet(res.headers.location));
         return;
@@ -123,7 +123,7 @@ async function submitIndexNowFull() {
     if (!locs.length) { console.log('  ⚠️ URL 없음'); return; }
 
     const r = await httpPost('https://api.indexnow.org/indexnow', JSON.stringify({
-      host:        'dmazone.github.io',
+      host:        'bimil.site',
       key:         'c025a607af5dbc0a7c80e1a5058761ad',
       keyLocation: `${BLOG_URL}c025a607af5dbc0a7c80e1a5058761ad.txt`,
       urlList:     locs,

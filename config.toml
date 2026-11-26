@@ -1,11 +1,11 @@
-baseURL = "https://dmazone.github.io/blogauto/"
+baseURL = "https://bimil.site/"
 languageCode = "ko-KR"
 title = "트렌드줌 | 최신 트렌드 모음"
 theme = "PaperMod"
 defaultContentLanguage = "ko"
 hasCJKLanguage = true
 paginate = 10
-enableRobotsTXT = false
+enableRobotsTXT = true
 buildDrafts = false
 buildFuture = false
 canonifyURLs = true
@@ -43,7 +43,7 @@ enableGitInfo = true
   aliexpressAffId = ""
 
   [params.footer]
-    text = "[개인정보처리방침](/blogauto/privacy/)"
+    text = "[개인정보처리방침](/privacy/)"
 
   [params.homeInfoParams]
     Title = "오늘의 트렌드, 여기서 다 본다"
@@ -76,67 +76,67 @@ enableGitInfo = true
   [[menu.main]]
     identifier = "latest-tech"
     name = "최신기술"
-    url = "/blogauto/posts/latest-tech/"
+    url = "/posts/latest-tech/"
     weight = 10
   [[menu.main]]
     identifier = "economy"
     name = "경제"
-    url = "/blogauto/posts/economy/"
+    url = "/posts/economy/"
     weight = 20
   [[menu.main]]
     identifier = "society"
     name = "사회"
-    url = "/blogauto/posts/society/"
+    url = "/posts/society/"
     weight = 30
   [[menu.main]]
     identifier = "humanities"
     name = "인문"
-    url = "/blogauto/posts/humanities/"
+    url = "/posts/humanities/"
     weight = 40
   [[menu.main]]
     identifier = "entertainment"
     name = "연예이슈"
-    url = "/blogauto/posts/entertainment/"
+    url = "/posts/entertainment/"
     weight = 50
   [[menu.main]]
     identifier = "health"
     name = "건강"
-    url = "/blogauto/posts/health/"
+    url = "/posts/health/"
     weight = 60
   [[menu.main]]
     identifier = "it-devices"
     name = "IT기기"
-    url = "/blogauto/posts/it-devices/"
+    url = "/posts/it-devices/"
     weight = 70
   [[menu.main]]
     identifier = "kr-realestate"
     name = "부동산"
-    url = "/blogauto/posts/kr-realestate/"
+    url = "/posts/kr-realestate/"
     weight = 80
   [[menu.main]]
     identifier = "world-travel"
     name = "세계여행"
-    url = "/blogauto/posts/world-travel/"
+    url = "/posts/world-travel/"
     weight = 90
   [[menu.main]]
     identifier = "sports"
     name = "스포츠"
-    url = "/blogauto/posts/sports/"
+    url = "/posts/sports/"
     weight = 100
   [[menu.main]]
     identifier = "japan-trends"
     name = "🇯🇵 日本"
-    url = "/blogauto/posts/japan-trends/"
+    url = "/posts/japan-trends/"
     weight = 105
   [[menu.main]]
     identifier = "us-trends"
     name = "🌐 Global"
-    url = "/blogauto/posts/us-trends/"
+    url = "/posts/us-trends/"
     weight = 106
   [[menu.main]]
     identifier = "trending-picks"
     name = "🛍️ 트렌드상품"
-    url = "/blogauto/posts/trending-picks/"
+    url = "/posts/trending-picks/"
     weight = 110
 
 [taxonomies]

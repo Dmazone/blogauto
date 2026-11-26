@@ -43,7 +43,7 @@ jobs:
       - name: Build
         env:
           HUGO_ENVIRONMENT: production
-        run: hugo --minify --baseURL "https://dmazone.github.io/blogauto/"
+        run: hugo --minify --baseURL "https://bimil.site/"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
