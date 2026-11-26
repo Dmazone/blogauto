@@ -9,7 +9,7 @@ description: "2026년 10월 23일 국회 국토교통위원회 국정감사에�
 draft: false
 cover:
   image: "kr-realestate-issue-20261024-thumb.webp"
-  alt: "국감서 터진 국토부 장관의 "서울 집값 상승폭 둔화 썸네일"
+  alt: "국감서 터진 국토부 장관의 서울 집값 상승폭 둔화 썸네일"
   hiddenInSingle: true
 ---
 
