@@ -244,11 +244,6 @@ async function main() {
       }
       try {
         await session.newConversation();
-        session._turnCount = 1;
-        let resp = '';
-        try { resp = await session.send('안녕', { timeout: 25000 }); } catch {}
-        if (!resp?.length) await new Promise(r => setTimeout(r, 5000));
-        session._turnCount = 0;
 
         await session.useImageMaker(prompt);
         const buffers = await session.extractImagesFromLastResponse(1, 25000);

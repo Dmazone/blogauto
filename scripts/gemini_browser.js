@@ -15,11 +15,15 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 import { sendTelegram } from './telegram.js';
 
 const __dirname    = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 const SESSION_DIR  = path.join(os.homedir(), '.gemini-blog-session');
-const GEMINI_HOME  = 'https://gemini.google.com/app';
+// GEMINI_GEM_URL에서 /u/N/ 계정 번호 추출 → 로그인 세션 유지되는 계정 홈으로 폴백
+const _gemUrlAcct  = (process.env.GEMINI_GEM_URL || '').match(/\/u\/(\d+)\//);
+const GEMINI_HOME  = _gemUrlAcct ? `https://gemini.google.com/u/${_gemUrlAcct[1]}/app` : 'https://gemini.google.com/app';
 const LOCK_FILE    = path.join(__dirname, '..', '.gemini-browser.lock');
 
 const log  = (e, m) => console.log(`${e}  ${m}`);
@@ -133,25 +137,8 @@ export class GeminiSession {
     // 로그인 상태 간단 확인 (계정 인덱스 추출용)
     await this._ensureLoggedIn();
 
-    // 로그인 후 현재 URL에서 계정 인덱스 추출 → Gem/Notebook URL 재구성
+    // gemUrl 원본의 계정 인덱스 유지 (현재 URL 기반으로 덮어쓰지 않음)
     if (this.gemUrl) {
-      const currentUrl = this.page.url();
-      const accountMatch    = currentUrl.match(/\/u\/(\d+)\//);
-      const gemIdMatch      = this.gemUrl.match(/\/gem\/([a-z0-9]+)/i);
-      const notebookIdMatch = this.gemUrl.match(/\/notebook\/([a-z0-9-]+)/i);
-      if (accountMatch && gemIdMatch) {
-        const newUrl = `https://gemini.google.com/u/${accountMatch[1]}/gem/${gemIdMatch[1]}`;
-        if (newUrl !== this.gemUrl) {
-          log('🔄', `Gem URL 재구성: ${newUrl}`);
-          this.gemUrl = newUrl;
-        }
-      } else if (accountMatch && notebookIdMatch) {
-        const newUrl = `https://gemini.google.com/u/${accountMatch[1]}/notebook/${notebookIdMatch[1]}`;
-        if (newUrl !== this.gemUrl) {
-          log('🔄', `Notebook URL 재구성: ${newUrl}`);
-          this.gemUrl = newUrl;
-        }
-      }
       await this.page.goto(this.gemUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
     }
 
@@ -234,9 +221,23 @@ export class GeminiSession {
 
   // ── 새 대화 시작 ─────────────────────────────────────────────────────────────
   async newConversation() {
-    // ── Gem 모드: init()과 동일하게 홈 → Gem 경유 (가장 신뢰도 높은 새 대화 보장)
-    // 직접 Gem URL 재진입 시 Gemini가 이전 대화를 재개해 컨텍스트 누적되는 현상 차단
-    if (this.gemUrl) {
+    const isNotebook = !!this.gemUrl?.includes('/notebook/');
+
+    // ── 노트북 모드: GEMINI_HOME 경유 절대 금지 — 노트북 URL로 직접 이동
+    if (isNotebook) {
+      log('📓', `노트북 직접 진입 (GEMINI_HOME 우회 금지): ${this.gemUrl}`);
+      await this.page.goto(this.gemUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      await wait(2500);
+
+      // 실제로 노트북 URL에 도달했는지 검증 — 아니면 즉시 에러
+      const currentUrl = this.page.url();
+      if (!currentUrl.includes('/notebook/')) {
+        throw new Error(`노트북 URL 진입 실패 — 현재 URL: ${currentUrl}\n일반 채팅 사용 절대 금지. 노트북: ${this.gemUrl}`);
+      }
+      log('✅', `노트북 URL 확인: ${currentUrl}`);
+
+    // ── Gem 모드: 홈 → Gem 경유 (기존 대화 재개 방지)
+    } else if (this.gemUrl) {
       if (!(await this.isSessionAlive())) {
         log('⚠️', 'Gem 세션 만료 감지 → 재로그인 시도');
         await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
@@ -249,7 +250,6 @@ export class GeminiSession {
         await this.page.goto(this.gemUrl, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
       }
       await wait(2500);
-      // Gem URL 도착 후에도 기존 대화가 재개된 경우를 대비해 새 채팅 버튼 클릭 시도
       try {
         const newChatEl = await this._tryFind(SEL.newChat);
         if (newChatEl) {
@@ -258,9 +258,8 @@ export class GeminiSession {
           log('💬', 'Gem 새 채팅 버튼 클릭 (기존 대화 재개 방지)');
         }
       } catch { /* 버튼 없으면 URL 이동만으로 초기화 */ }
-
-    // ── 일반 채팅 모드: 새 채팅 버튼 클릭
     } else {
+      // ── 일반 채팅 모드 (gemUrl 없음)
       if (!(await this.isSessionAlive())) {
         log('⚠️', '세션 만료 감지 → 재이동 시도');
         await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
@@ -295,6 +294,10 @@ export class GeminiSession {
     }
 
     if (!inputReady) {
+      // 노트북 모드: 일반 채팅(GEMINI_HOME) 폴백 절대 금지 — 에러 throw
+      if (this.gemUrl?.includes('/notebook/')) {
+        throw new Error(`노트북 입력창 로드 실패 — 일반 채팅 폴백 금지 (URL: ${this.page.url()})\n→ 노트북 URL: ${this.gemUrl}\n→ 수동 조치: Gemini 노트북 접속 후 paydma 계정 확인`);
+      }
       // Gem 홈페이지에는 입력창이 없음 → GEMINI_HOME 폴백 후 재대기
       log('⚠️', `입력창 미로드 → GEMINI_HOME 폴백 (현재: ${this.page.url()})`);
       await this.page.goto(GEMINI_HOME, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
@@ -622,88 +625,77 @@ export class GeminiSession {
     this.page.on('response', handler);
     this._imageInterceptHandler = handler;
 
-    log('🎨', '이미지 만들기 버튼 클릭 시도...');
+    // 노트북 모드에서는 "이미지 만들기" 버튼 없음 → 직접 프롬프트 입력
+    const isNotebook = !!this.gemUrl?.includes('/notebook/');
+    if (!isNotebook) {
+      log('🎨', '이미지 만들기 버튼 클릭 시도...');
 
-    // ① "+" 또는 도구 버튼 클릭 → 메뉴 열기
-    const toolsOpened = await this.page.evaluate(() => {
-      // aria-label 또는 텍스트 기반으로 도구 버튼 탐색
-      const candidates = [...document.querySelectorAll('button')];
-      const target = candidates.find((btn) => {
-        const label = (btn.getAttribute('aria-label') || btn.title || '').toLowerCase();
-        const text  = (btn.textContent || '').trim();
-        return (
-          label.includes('도구') || label.includes('tool') ||
-          label.includes('attach') || label.includes('더 많은') ||
-          label.includes('more') || text === '+'
-        );
-      });
-      if (target) { target.click(); return true; }
-      return false;
-    }).catch(() => false);
+      // ① "+" 또는 도구 버튼 클릭 → 메뉴 열기
+      const toolsOpened = await this.page.evaluate(() => {
+        const candidates = [...document.querySelectorAll('button')];
+        const target = candidates.find((btn) => {
+          const label = (btn.getAttribute('aria-label') || btn.title || '').toLowerCase();
+          const text  = (btn.textContent || '').trim();
+          return (
+            label.includes('도구') || label.includes('tool') ||
+            label.includes('attach') || label.includes('더 많은') ||
+            label.includes('more') || text === '+'
+          );
+        });
+        if (target) { target.click(); return true; }
+        return false;
+      }).catch(() => false);
 
-    if (!toolsOpened) {
-      // 폴백: 입력창 왼쪽 버튼들 중 가시적인 것 클릭
-      try {
-        const plusBtn = this.page.locator('button').filter({ hasText: '+' }).first();
-        if (await plusBtn.isVisible({ timeout: 2000 })) {
-          await plusBtn.click();
-        }
-      } catch {}
-    }
-
-    await wait(800);
-
-    // ② 메뉴에서 "이미지 만들기" 클릭 (disabled 감지 포함)
-    let imgBtnClicked = false;
-    try {
-      const imgBtn = this.page.getByText('이미지 만들기', { exact: true }).first();
-      if (await imgBtn.isVisible({ timeout: 3000 })) {
-        // disabled 여부 확인 (세션 만료 시 버튼이 보이지만 클릭 불가)
-        const isDisabled = await imgBtn.evaluate((el) => {
-          const parent = el.closest('button, [role="menuitem"], .gem-menu-item');
-          if (!parent) return false;
-          return parent.disabled || parent.getAttribute('aria-disabled') === 'true'
-            || parent.classList.contains('disabled')
-            || getComputedStyle(parent).pointerEvents === 'none';
-        }).catch(() => false);
-
-        if (isDisabled) {
-          log('❌', '"이미지 만들기" 버튼 비활성화 — Gemini 세션 만료. 수동 재로그인 필요');
-          // 텔레그램 알림 (모듈 동적 로드)
-          try {
-            const { sendTelegram } = await import('./telegram.js');
-            await sendTelegram('⚠️ Gemini 이미지 생성 불가\n"이미지 만들기" 버튼 비활성화 감지\nChrome에서 paydma 계정 재로그인 후 fix_missing_images.mjs 실행 필요');
-          } catch {}
-          return; // 이미지 없이 진행
-        }
-
-        await imgBtn.click({ timeout: 5000 });
-        imgBtnClicked = true;
-        log('✅', '"이미지 만들기" 버튼 클릭 성공');
-      }
-    } catch (e) {
-      if (e.message && e.message.includes('not enabled')) {
-        log('❌', '"이미지 만들기" 버튼 not enabled — 세션 만료 가능성');
+      if (!toolsOpened) {
         try {
-          const { sendTelegram } = await import('./telegram.js');
-          await sendTelegram('⚠️ Gemini 이미지 생성 불가\n버튼 not enabled\nChrome에서 paydma 계정 재로그인 필요');
+          const plusBtn = this.page.locator('button').filter({ hasText: '+' }).first();
+          if (await plusBtn.isVisible({ timeout: 2000 })) await plusBtn.click();
         } catch {}
-        return;
       }
-    }
 
-    if (!imgBtnClicked) {
-      // 폴백: JS 텍스트 탐색
-      await this.page.evaluate(() => {
-        const all = [...document.querySelectorAll('button, [role="menuitem"], li')];
-        const t = all.find((el) => (el.textContent || '').includes('이미지 만들기'));
-        if (t) t.click();
-      }).catch(() => {});
-      await wait(500);
-      log('⚠️', '"이미지 만들기" 버튼 — JS 폴백 클릭');
-    }
+      await wait(800);
 
-    await wait(1000);
+      // ② 메뉴에서 "이미지 만들기" 클릭
+      let imgBtnClicked = false;
+      try {
+        const imgBtn = this.page.getByText('이미지 만들기', { exact: true }).first();
+        if (await imgBtn.isVisible({ timeout: 3000 })) {
+          const isDisabled = await imgBtn.evaluate((el) => {
+            const parent = el.closest('button, [role="menuitem"], .gem-menu-item');
+            if (!parent) return false;
+            return parent.disabled || parent.getAttribute('aria-disabled') === 'true'
+              || parent.classList.contains('disabled')
+              || getComputedStyle(parent).pointerEvents === 'none';
+          }).catch(() => false);
+
+          if (isDisabled) {
+            log('❌', '"이미지 만들기" 버튼 비활성화 — 세션 만료');
+            try { const { sendTelegram } = await import('./telegram.js'); await sendTelegram('⚠️ Gemini 이미지 생성 불가\n"이미지 만들기" 버튼 비활성화'); } catch {}
+            return;
+          }
+          await imgBtn.click({ timeout: 5000 });
+          imgBtnClicked = true;
+          log('✅', '"이미지 만들기" 버튼 클릭 성공');
+        }
+      } catch (e) {
+        if (e.message?.includes('not enabled')) {
+          log('❌', '"이미지 만들기" not enabled');
+          return;
+        }
+      }
+
+      if (!imgBtnClicked) {
+        await this.page.evaluate(() => {
+          const t = [...document.querySelectorAll('button, [role="menuitem"], li')].find(el => el.textContent.includes('이미지 만들기'));
+          if (t) t.click();
+        }).catch(() => {});
+        await wait(500);
+        log('⚠️', '"이미지 만들기" 버튼 — JS 폴백 클릭');
+      }
+      await wait(1000);
+    } else {
+      log('📓', '노트북 모드 — 직접 프롬프트 입력 (이미지 만들기 버튼 없음)');
+    }
 
     // ③ 프롬프트 입력 (기존 send()와 동일한 입력 로직)
     const inputEl = await this._findEl(SEL.input, '이미지 입력창');

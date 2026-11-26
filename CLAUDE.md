@@ -22,7 +22,7 @@
 
 | 항목 | 값 |
 |---|---|
-| Gemini Gem URL | `https://gemini.google.com/u/1/gem/cca9fca55f60` |
+| Gemini 노트북 URL | `https://gemini.google.com/u/0/notebook/d0d4e0b6-e8b4-4dcb-ade1-58b28438cc4e` (blogauto, paydma u/0) |
 | Google 계정 | `paydma` (DmA 01, Gemini Pro 구독) |
 | YouTube 계정 | `ekaledma@gmail.com` |
 | YouTube 채널 | **@dmalog** (DMAZON) — @DmALOQ와 다름, 절대 혼동 금지 |
@@ -308,15 +308,17 @@ docs/                        # 운영 문서 (CONTENTS_PLAN 등)
 > 글 작성 · 이미지 생성 모두 **Gemini Pro 단독** 처리.  
 > Claude는 품질 검수·코드 수정만 담당. Pollinations 등 외부 이미지 API 일절 사용 금지.
 
-### ⚠️ 이미지 생성 전용 Gem — 절대 규칙 ★★★★★
+### ⚠️ 이미지 생성 전용 노트북 — 절대 규칙 ★★★★★
 
 > **모든 이미지 생성(글 이미지, 썸네일, fix_bad_thumbs, fix_missing 등)은 반드시**  
-> **등록된 Gem `블로그포스팅-트렌드줌 한국어 블로그 전담 작가`에서 실행해야 한다.**
+> **Gemini 노트북 `blogauto`에서 실행해야 한다. 일반 채팅창 사용 절대 금지.**
 
-- **Gem URL**: `https://gemini.google.com/u/2/gem/cca9fca55f60`  
+- **노트북 URL**: `https://gemini.google.com/u/0/notebook/d0d4e0b6-e8b4-4dcb-ade1-58b28438cc4e`
+- **계정**: `paydma@gmail.com` (u/0) — 절대 변경 금지
 - **환경변수**: `.env`의 `GEMINI_GEM_URL` 값 사용 — 하드코딩 금지
 - `GeminiSession` 생성 시 반드시 `gemUrl: process.env.GEMINI_GEM_URL` 전달
 - `GEMINI_GEM_URL`이 비어 있으면 즉시 에러 throw — 일반 채팅 절대 사용 불가
+- **노트북 로드 실패 시 → GEMINI_HOME 폴백 절대 금지 → 에러 throw**
 - 이 규칙을 어기면 이미지 품질이 저하되거나 별 아이콘 폴백 이미지가 생성됨
 
 ```js
