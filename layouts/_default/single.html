@@ -63,7 +63,8 @@
   <div class="post-content md-content">
 
     {{- /* 섹션별 쿠팡 CTA 박스 — trending-picks 제외 전 섹션 */ -}}
-    {{- $sec := .Section -}}
+    {{- $parts := split .RelPermalink "/" -}}
+    {{- $sec := "" -}}{{- if gt (len $parts) 2 -}}{{- $sec = index $parts 2 -}}{{- end -}}
     {{- $coupangKw := index (dict
       "health"        "건강기기 마사지기 헬스케어"
       "it-devices"    "노트북 태블릿 스마트기기"
