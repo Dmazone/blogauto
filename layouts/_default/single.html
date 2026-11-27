@@ -56,36 +56,8 @@
   {{- partial "toc.html" . }}
   {{- end }}
 
-  {{- /* 쿠팡 슬롯 — TOC 직후, 본문 읽기 전 노출 (클릭률 최고 위치) */ -}}
-  <div class="post-coupang-slot-top" style="margin:14px auto 18px;max-width:680px;overflow:hidden;min-height:60px;"></div>
-
   {{- if .Content }}
   <div class="post-content md-content">
-
-    {{- /* 섹션별 쿠팡 CTA 박스 — trending-picks 제외 전 섹션 */ -}}
-    {{- $parts := split .RelPermalink "/" -}}
-    {{- $sec := "" -}}{{- if gt (len $parts) 2 -}}{{- $sec = index $parts 2 -}}{{- end -}}
-    {{- $coupangKw := index (dict
-      "health"        "건강기기 마사지기 헬스케어"
-      "it-devices"    "노트북 태블릿 스마트기기"
-      "economy"       "재테크 ETF 금융 투자"
-      "sports"        "스포츠용품 운동기구 헬스용품"
-      "world-travel"  "여행용품 캐리어 여행가방"
-      "kr-realestate" "인테리어 홈가구 생활가전"
-      "entertainment" "생활가전 취미용품"
-      "society"       "생필품 생활용품"
-      "latest-tech"   "최신 스마트기기 AI기기"
-      "humanities"    "도서 전자책 문구용품"
-      "japan-trends"  "일본직구 인기상품"
-      "us-trends"     "해외직구 인기상품"
-    ) $sec -}}
-    {{- if $coupangKw }}
-    <div class="coupang-section-cta">
-      <span class="coupang-cta-label">📦 이 글과 관련된 상품 최저가</span>
-      <a href="https://www.coupang.com/np/search?q={{ $coupangKw | urlize }}&sourceType=affiliate&trackingCode=AF8691300"
-         target="_blank" rel="noopener sponsored" class="coupang-cta-btn">{{ $coupangKw }} 쿠팡 최저가 →</a>
-    </div>
-    {{- end }}
 
     {{- /* H2 섹션마다 텐핑 광고 삽입 (이미지 여부 무관하게 삽입) */ -}}
     {{- $c := .Content -}}
@@ -138,9 +110,6 @@
   {{- end }}
 
   {{- partial "ads-inject.html" . }}
-
-  {{- /* 쿠팡 슬롯 — 본문 하단 (두 번째 노출 기회) */ -}}
-  <div class="post-coupang-slot" style="margin:20px auto 24px;max-width:680px;overflow:hidden;min-height:60px;"></div>
 
   {{- partial "aliexpress-banner.html" . }}
 

@@ -92,12 +92,6 @@
   {{- end }}
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>
-{{- if eq (mod (add $index 1) 4) 0 }}
-<div class="list-ad-strip">
-  <small class="ad-label">광고</small>
-  <div class="lad-unit lad-coupang"></div>
-</div>
-{{- end }}
 {{- end }}
 </div>{{/* end .post-list-grid */}}
 
