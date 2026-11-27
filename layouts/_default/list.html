@@ -93,7 +93,7 @@
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>
 {{- if eq (mod (add $index 1) 4) 0 }}
-{{- /* 4포스트마다 광고 1개 (2열 그리드 짝수 유지), 텐핑→쿠팡→카카오 순환 */}}
+{{- /* 4포스트마다 프로모 카드 1개 순환 */}}
 {{- $slot := mod (div (add $index 1) 4) 3 }}
 {{- if eq $slot 1 }}
 <div class="hpb-mobile-insert">

@@ -3,6 +3,7 @@ title: "문의하기"
 description: "트렌드줌에 대한 문의, 제안, 광고 협의 등을 보내주세요."
 date: 2026-07-06
 layout: page
+hideMeta: true
 sitemap:
   changefreq: yearly
   priority: 0.4
@@ -12,7 +13,7 @@ sitemap:
 
 트렌드줌 관련 문의는 아래 이메일로 연락해 주세요.
 
-**이메일**: ekaledma@gmail.com
+**이메일**: paydma@gmail.com
 
 ### 문의 가능 항목
 

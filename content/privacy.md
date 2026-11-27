@@ -3,6 +3,7 @@ title: "개인정보처리방침"
 description: "트렌드줌 개인정보처리방침 — 쿠팡 파트너스, Google Analytics 등 외부 서비스 제공자의 쿠키 및 접속 정보 처리에 관한 안내"
 date: 2026-07-06
 layout: page
+hideMeta: true
 sitemap:
   changefreq: yearly
   priority: 0.3

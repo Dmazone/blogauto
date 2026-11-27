@@ -3,6 +3,7 @@ title: "트렌드줌 소개"
 description: "트렌드줌은 국내외 최신 트렌드를 한 곳에서 빠르게 확인할 수 있는 미디어 블로그입니다."
 date: 2026-07-06
 layout: page
+hideMeta: true
 sitemap:
   changefreq: yearly
   priority: 0.4
