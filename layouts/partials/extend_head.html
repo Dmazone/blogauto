@@ -172,12 +172,14 @@ img, video, iframe { max-width: 100%; height: auto; }
 /* ══ 네비게이션 — 데스크탑: 가로 스크롤 / 모바일: 그리드 ══ */
 .header-nav {
   padding: 0 clamp(8px, 2vw, 20px) 2px;
-  transition: max-height 0.22s ease, opacity 0.22s ease, padding 0.22s ease;
-  overflow: hidden;
-  max-height: 200px;
-  opacity: 1;
 }
 @media (max-width: 768px) {
+  .header-nav {
+    overflow: hidden;
+    max-height: 200px;
+    opacity: 1;
+    transition: max-height 0.25s ease, opacity 0.25s ease, padding 0.25s ease;
+  }
   .header-nav.tz-nav-hidden {
     max-height: 0 !important;
     opacity: 0 !important;
@@ -1254,20 +1256,10 @@ input, button, select, textarea {
   }, { passive: true });
 })();
 
-/* 페이지당 건수 선택기 초기화 — 모바일 첫 방문 시 15건 기본 */
-(function() {
-  var isMobile = window.innerWidth <= 768;
-  var stored = localStorage.getItem('tz-pagesize');
-  var defaultSize = (isMobile && !stored) ? 15 : 10;
-  _tzPageSize = stored ? parseInt(stored, 10) : defaultSize;
-  if (_tzPageSize !== 10) {
-    document.addEventListener('DOMContentLoaded', function() {
-      var sel = document.getElementById('pageSizeSelect');
-      if (sel) { sel.value = _tzPageSize; }
-      _tzRender();
-    });
-  }
-})();
+/* ── 페이지당 건수 전역 변수 ── */
+var _tzAllPosts = null;
+var _tzCurrentPage = 1;
+var _tzPageSize = 10;
 
 /* 헤더 fixed 보정: 헤더 높이만큼 body padding-top 자동 설정 */
 var _tzApplyHeaderOffset;
@@ -1286,14 +1278,25 @@ var _tzApplyHeaderOffset;
   window.addEventListener('resize', _tzApplyHeaderOffset);
 })();
 
-/* 모바일 스크롤 다운 → 메뉴 숨김 / 스크롤 업 → 메뉴 표시 */
-(function() {
-  if (window.innerWidth > 768) return;
+/* 모바일 15건 기본값 + 스크롤 메뉴 숨김 — DOMContentLoaded 후 matchMedia로 판별 */
+document.addEventListener('DOMContentLoaded', function() {
+  var isMobile = window.matchMedia('(max-width: 768px)').matches;
+  var stored = localStorage.getItem('tz-pagesize');
+  if (isMobile && !stored) {
+    _tzPageSize = 15;
+  } else if (stored) {
+    _tzPageSize = parseInt(stored, 10);
+  }
+  if (_tzPageSize !== 10) {
+    var sel = document.getElementById('pageSizeSelect');
+    if (sel) sel.value = _tzPageSize;
+    _tzRender();
+  }
+  if (!isMobile) return;
   var lastY = 0;
-  var nav = null;
+  var nav = document.querySelector('.header-nav');
+  if (!nav) return;
   window.addEventListener('scroll', function() {
-    if (!nav) nav = document.querySelector('.header-nav');
-    if (!nav) return;
     var y = window.scrollY || window.pageYOffset;
     if (y > lastY && y > 80) {
       nav.classList.add('tz-nav-hidden');
@@ -1303,12 +1306,7 @@ var _tzApplyHeaderOffset;
     lastY = y;
     if (_tzApplyHeaderOffset) _tzApplyHeaderOffset();
   }, { passive: true });
-})();
-
-/* ── 페이지당 건수 선택 ── */
-var _tzAllPosts = null;
-var _tzCurrentPage = 1;
-var _tzPageSize = 10;
+});
 
 function changePageSize(val) {
   var n = parseInt(val, 10);
