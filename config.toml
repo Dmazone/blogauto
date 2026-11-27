@@ -126,16 +126,6 @@ enableGitInfo = true
     url = "/posts/sports/"
     weight = 100
   [[menu.main]]
-    identifier = "japan-trends"
-    name = "🇯🇵 日本"
-    url = "/posts/japan-trends/"
-    weight = 105
-  [[menu.main]]
-    identifier = "us-trends"
-    name = "🌐 Global"
-    url = "/posts/us-trends/"
-    weight = 106
-  [[menu.main]]
     identifier = "trending-picks"
     name = "🛍️ 트렌드상품"
     url = "/posts/trending-picks/"

@@ -95,7 +95,6 @@
           <button class="gsb-btn" type="submit">🔍</button>
         </form>
         <div class="gtrans-btns">
-          {{- range site.Menus.main -}}{{- if eq .Identifier "japan-trends" -}}<a class="gtrans-btn" href="{{ .URL | absLangURL }}" title="日本語コンテンツ">JP</a>{{- end -}}{{- if eq .Identifier "us-trends" -}}<a class="gtrans-btn" href="{{ .URL | absLangURL }}" title="English Content">🌐</a>{{- end -}}{{- end }}
           {{- if not site.Params.disableThemeToggle }}
           <button id="theme-toggle" class="gtrans-btn theme-toggle" accesskey="t" title="테마 전환 (Alt + T)" aria-label="Toggle theme">
             <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
