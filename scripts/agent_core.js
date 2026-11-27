@@ -694,6 +694,7 @@ function gitPush(title) {
   // git add . 대신 content/ 만 스테이징 (스크린샷·temp 파일 실수 커밋 방지)
   execSync('git add content/', { cwd: ROOT, stdio: 'inherit' });
   execSync(`git commit -m "post: ${title}"`, { cwd: ROOT, stdio: 'inherit' });
+  execSync('git pull --rebase origin main', { cwd: ROOT, stdio: 'inherit' });
   execSync('git push', { cwd: ROOT, stdio: 'inherit' });
   log('✅', '푸시 완료');
 }
