@@ -206,7 +206,7 @@
       const items = Object.values(data).sort((a, b) => b.ts - a.ts).slice(0, 100);
       render(items);
     } catch (e) {
-      $('tz-list').innerHTML = '<p class="tz-empty" style="color:#e05;">댓글을 불러오지 못했습니다. 새로고침해 보세요.</p>';
+      render([]);
     }
   }
 
