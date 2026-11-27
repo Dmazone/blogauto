@@ -93,44 +93,13 @@
   <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>
 {{- if eq (mod (add $index 1) 4) 0 }}
-{{- /* 4포스트마다 프로모 카드 1개 순환 */}}
-{{- $slot := mod (div (add $index 1) 4) 3 }}
-{{- if eq $slot 1 }}
-<div class="hpb-mobile-insert">
-  <a href="https://dmazone.github.io/obabwan" class="hpb-card hpb-c1" target="_blank" rel="noopener noreferrer">
-    <div class="hpb-roulette"><span class="hpb-roulette-pin"></span></div>
-    <div class="hpb-text"><strong>오늘 점심 뭐 먹지?</strong><span>고민 끝! 메뉴 룰렛으로 결정</span></div>
-  </a>
-</div>
-{{- else if eq $slot 2 }}
-<div class="hpb-mobile-insert">
-  <a href="https://dmazone.github.io/readream" class="hpb-card hpb-c2" target="_blank" rel="noopener noreferrer">
-    <div class="hpb-emoji">🌙</div>
-    <div class="hpb-text"><strong>어젯밤 그 꿈, 무슨 의미?</strong><span>AI 꿈 해몽 + 달빛 운세 — 리드림</span></div>
-  </a>
-</div>
 <div class="list-ad-strip">
   <small class="ad-label">광고</small>
   <div class="lad-unit lad-coupang"></div>
 </div>
-{{- else }}
-<div class="hpb-mobile-insert">
-  <a href="https://dmazone.github.io/needon" class="hpb-card hpb-c3" target="_blank" rel="noopener noreferrer">
-    <div class="hpb-emoji">💰</div>
-    <div class="hpb-text"><strong>니돈, 제대로 굴리고 싶다면?</strong><span>너의 돈을 키우는 법 — 니돈</span></div>
-  </a>
-</div>
-{{- end }}
 {{- end }}
 {{- end }}
 </div>{{/* end .post-list-grid */}}
-{{- /* 모바일 전용: 니돈 고정 노출 (PC는 좌측 사이드바에 있음) */}}
-<div class="hpb-mobile-insert" style="margin-top:4px;">
-  <a href="https://dmazone.github.io/needon" class="hpb-card hpb-c3" target="_blank" rel="noopener noreferrer">
-    <div class="hpb-emoji">💰</div>
-    <div class="hpb-text"><strong>니돈, 제대로 굴리고 싶다면?</strong><span>너의 돈을 키우는 법 — 니돈</span></div>
-  </a>
-</div>
 
 {{- if gt $paginator.TotalPages 1 }}
 <footer class="page-footer">
