@@ -101,7 +101,8 @@
     <div class="page-size-selector">
       <label for="pageSizeSelect">페이지당</label>
       <select id="pageSizeSelect" onchange="changePageSize(this.value)">
-        <option value="10" {{if eq (site.Params.pagination.pagerSize | default 10) 10}}selected{{end}}>10건</option>
+        <option value="10">10건</option>
+        <option value="15">15건</option>
         <option value="25">25건</option>
         <option value="50">50건</option>
         <option value="100">100건</option>

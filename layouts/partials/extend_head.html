@@ -172,6 +172,18 @@ img, video, iframe { max-width: 100%; height: auto; }
 /* ══ 네비게이션 — 데스크탑: 가로 스크롤 / 모바일: 그리드 ══ */
 .header-nav {
   padding: 0 clamp(8px, 2vw, 20px) 2px;
+  transition: max-height 0.22s ease, opacity 0.22s ease, padding 0.22s ease;
+  overflow: hidden;
+  max-height: 200px;
+  opacity: 1;
+}
+@media (max-width: 768px) {
+  .header-nav.tz-nav-hidden {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
 }
 ul#menu {
   overflow-x: auto !important;
@@ -1242,32 +1254,55 @@ input, button, select, textarea {
   }, { passive: true });
 })();
 
-/* 페이지당 건수 선택기 초기화 */
+/* 페이지당 건수 선택기 초기화 — 모바일 첫 방문 시 15건 기본 */
 (function() {
-  var stored = parseInt(localStorage.getItem('tz-pagesize') || '10', 10);
-  _tzPageSize = stored;
-  if (stored !== 10) {
+  var isMobile = window.innerWidth <= 768;
+  var stored = localStorage.getItem('tz-pagesize');
+  var defaultSize = (isMobile && !stored) ? 15 : 10;
+  _tzPageSize = stored ? parseInt(stored, 10) : defaultSize;
+  if (_tzPageSize !== 10) {
     document.addEventListener('DOMContentLoaded', function() {
       var sel = document.getElementById('pageSizeSelect');
-      if (sel) { sel.value = stored; _tzRender(); }
+      if (sel) { sel.value = _tzPageSize; }
+      _tzRender();
     });
   }
 })();
 
 /* 헤더 fixed 보정: 헤더 높이만큼 body padding-top 자동 설정 */
+var _tzApplyHeaderOffset;
 (function() {
-  function applyHeaderOffset() {
+  _tzApplyHeaderOffset = function() {
     var h = document.querySelector('.header');
     if (!h) return;
     var height = h.getBoundingClientRect().height;
     document.body.style.paddingTop = height + 'px';
-  }
+  };
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyHeaderOffset);
+    document.addEventListener('DOMContentLoaded', _tzApplyHeaderOffset);
   } else {
-    applyHeaderOffset();
+    _tzApplyHeaderOffset();
   }
-  window.addEventListener('resize', applyHeaderOffset);
+  window.addEventListener('resize', _tzApplyHeaderOffset);
+})();
+
+/* 모바일 스크롤 다운 → 메뉴 숨김 / 스크롤 업 → 메뉴 표시 */
+(function() {
+  if (window.innerWidth > 768) return;
+  var lastY = 0;
+  var nav = null;
+  window.addEventListener('scroll', function() {
+    if (!nav) nav = document.querySelector('.header-nav');
+    if (!nav) return;
+    var y = window.scrollY || window.pageYOffset;
+    if (y > lastY && y > 80) {
+      nav.classList.add('tz-nav-hidden');
+    } else {
+      nav.classList.remove('tz-nav-hidden');
+    }
+    lastY = y;
+    if (_tzApplyHeaderOffset) _tzApplyHeaderOffset();
+  }, { passive: true });
 })();
 
 /* ── 페이지당 건수 선택 ── */
@@ -1369,6 +1404,7 @@ function _tzPaginationHtml(totalPages) {
     '<div class="page-size-selector"><label for="pageSizeSelect">페이지당</label>' +
     '<select id="pageSizeSelect" onchange="changePageSize(this.value)">' +
     '<option value="10"' + (_tzPageSize===10?' selected':'') + '>10건</option>' +
+    '<option value="15"' + (_tzPageSize===15?' selected':'') + '>15건</option>' +
     '<option value="25"' + (_tzPageSize===25?' selected':'') + '>25건</option>' +
     '<option value="50"' + (_tzPageSize===50?' selected':'') + '>50건</option>' +
     '<option value="100"' + (_tzPageSize===100?' selected':'') + '>100건</option>' +
