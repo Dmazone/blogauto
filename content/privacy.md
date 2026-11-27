@@ -22,9 +22,11 @@ sitemap:
 | 서비스 | 용도 | 운영사 |
 |---|---|---|
 | 쿠팡 파트너스 | 제휴마케팅 광고 | 쿠팡 주식회사 |
+| Google AdSense | 맞춤형 광고 | Google LLC |
 | Google Analytics | 방문자 통계 분석 | Google LLC |
 
 - **쿠팡 파트너스**: [https://partners.coupang.com](https://partners.coupang.com)
+- **Google AdSense 개인정보처리방침**: [https://policies.google.com/technologies/ads](https://policies.google.com/technologies/ads)
 - **Google 개인정보처리방침**: [https://policies.google.com/privacy](https://policies.google.com/privacy)
 
 ## 3. 쿠키(Cookie) 사용
@@ -37,6 +39,6 @@ sitemap:
 
 ## 5. 문의
 
-개인정보 관련 문의: **ekaledma@gmail.com**
+개인정보 관련 문의: **paydma@gmail.com**
 
 시행일: 2026년 7월 6일
