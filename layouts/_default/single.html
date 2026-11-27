@@ -76,8 +76,8 @@
     {{- if not (.Param "disableAnchoredHeadings") -}}
       {{- $c = $c | replaceRE `(<h[1-6] id="([^"]+)".+)(</h[1-6]+>)` `${1}<a hidden class="anchor" aria-hidden="true" href="#${2}">#</a>${3}` -}}
     {{- end -}}
-    {{- $AD1 := `<div class="ad-unit ad-tenping" style="margin:28px auto;max-width:768px;text-align:center;"><tenping class="adsbytenping" style="width:100%;max-width:768px;margin:0px auto;display:block;" tenping-ad-display-type="1LawCE8FqKOhetXZhMopsQ%3d%3d" tenping-ad-client="BdnhcMfPBvtcqWy4TeF3452t47SWFwraO4StFWXx1U%2fSBFm9k9OQo1uJHpkxwqxi"></tenping></div>` -}}
-    {{- $AD2 := `<div class="ad-unit ad-tenping" style="margin:28px auto;max-width:768px;text-align:center;"><tenping class="adsbytenping" style="width:100%;max-width:768px;margin:0px auto;display:block;" tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d" tenping-ad-client="BdnhcMfPBvtcqWy4TeF3452t47SWFwraO4StFWXx1U%2fSBFm9k9OQo1uJHpkxwqxi"></tenping></div>` -}}
+    {{- $AD1 := `` -}}
+    {{- $AD2 := `` -}}
     {{- $parts := split $c "<h2" -}}
     {{- if gt (len $parts) 1 -}}
       {{- $adIdx := 0 -}}

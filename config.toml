@@ -45,7 +45,7 @@ enableGitInfo = true
   aliexpressAffId = ""
 
   [params.footer]
-    text = "[개인정보처리방침](/privacy/)"
+    text = "[소개](/about/) · [문의](/contact/) · [개인정보처리방침](/privacy/)"
 
   [params.homeInfoParams]
     Title = "오늘의 트렌드, 여기서 다 본다"

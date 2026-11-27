@@ -1,6 +1,6 @@
 ---
 title: "개인정보처리방침"
-description: "트렌드줌 개인정보처리방침 — 카카오 애드핏, 쿠팡 파트너스, 텐핑 등 광고 서비스 제공자의 쿠키 및 접속 정보 처리에 관한 안내"
+description: "트렌드줌 개인정보처리방침 — 쿠팡 파트너스, Google Analytics 등 외부 서비스 제공자의 쿠키 및 접속 정보 처리에 관한 안내"
 date: 2026-07-06
 layout: page
 sitemap:
@@ -20,12 +20,10 @@ sitemap:
 
 | 서비스 | 용도 | 운영사 |
 |---|---|---|
-| 카카오 애드핏 | 광고 게재 | 카카오 주식회사 |
 | 쿠팡 파트너스 | 제휴마케팅 광고 | 쿠팡 주식회사 |
-| 텐핑 | 광고 게재 | (주)네이블커뮤니케이션즈 |
 | Google Analytics | 방문자 통계 분석 | Google LLC |
 
-- **카카오 애드핏**: [https://adfit.kakao.com](https://adfit.kakao.com)
+- **쿠팡 파트너스**: [https://partners.coupang.com](https://partners.coupang.com)
 - **Google 개인정보처리방침**: [https://policies.google.com/privacy](https://policies.google.com/privacy)
 
 ## 3. 쿠키(Cookie) 사용
