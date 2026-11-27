@@ -1,0 +1,22 @@
+{{- $pages := .RegularPages -}}
+{{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" -}}
+{{- $result := slice -}}
+{{- range $pages -}}
+  {{- $cover := "" -}}
+  {{- with .Params.cover -}}{{- with .image -}}{{- $cover = printf "%s%s" $.Permalink . -}}{{- end -}}{{- end -}}
+  {{- if not $cover -}}
+    {{- with .File -}}
+      {{- $thumbFile := printf "%s-thumb.webp" .ContentBaseName -}}
+      {{- with $.Resources.GetMatch $thumbFile -}}{{- $cover = .Permalink -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $result = $result | append (dict
+    "title" .Title
+    "permalink" .Permalink
+    "summary" (.Summary | plainify | truncate 120)
+    "date" (.Date.Format "2006-01-02")
+    "cover" $cover
+    "section" .Section
+  ) -}}
+{{- end -}}
+{{- $result | jsonify -}}

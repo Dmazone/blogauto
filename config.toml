@@ -73,6 +73,7 @@ enableGitInfo = true
 
 [outputs]
   home = ["HTML", "RSS", "JSON", "NewsSitemap"]
+  section = ["HTML", "JSON"]
 
 [menu]
   [[menu.main]]

@@ -553,9 +553,88 @@ a.post-cat:hover {
 }
 
 /* ══ 페이지네이션 ══ */
+.pagination-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 8px;
+}
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--secondary);
+}
+.page-size-selector label { opacity: 0.75; }
+.page-size-selector select {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--entry);
+  color: var(--primary);
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  font-family: var(--font-sans);
+}
+.page-size-selector select:focus { border-color: var(--primary); }
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none !important;
+  color: var(--primary) !important;
+  background: var(--entry);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.page-btn:hover:not(.disabled):not(.current) {
+  background: var(--code-bg);
+  border-color: var(--primary);
+}
+.page-btn.current {
+  background: var(--primary);
+  color: var(--theme) !important;
+  border-color: var(--primary);
+  font-weight: 700;
+  cursor: default;
+}
+.page-btn.disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+.page-btn.first-btn, .page-btn.last-btn {
+  font-size: 12px;
+  padding: 0 12px;
+}
+.page-ellipsis {
+  font-size: 13px;
+  color: var(--secondary);
+  padding: 0 4px;
+  opacity: 0.6;
+  user-select: none;
+}
 @media (max-width: 480px) {
-  .pagination { flex-wrap: wrap; gap: 8px; justify-content: center; }
-  .pagination a { font-size: 13px; padding: 8px 12px; }
+  .page-btn { min-width: 32px; height: 32px; font-size: 12px; padding: 0 8px; }
+  .page-btn.first-btn, .page-btn.last-btn { padding: 0 10px; }
 }
 
 /* ══ 공유 / 태그 영역 ══ */
@@ -1159,6 +1238,18 @@ input, button, select, textarea {
   }, { passive: true });
 })();
 
+/* 페이지당 건수 선택기 초기화 */
+(function() {
+  var stored = parseInt(localStorage.getItem('tz-pagesize') || '10', 10);
+  _tzPageSize = stored;
+  if (stored !== 10) {
+    document.addEventListener('DOMContentLoaded', function() {
+      var sel = document.getElementById('pageSizeSelect');
+      if (sel) { sel.value = stored; _tzRender(); }
+    });
+  }
+})();
+
 /* 헤더 fixed 보정: 헤더 높이만큼 body padding-top 자동 설정 */
 (function() {
   function applyHeaderOffset() {
@@ -1174,6 +1265,135 @@ input, button, select, textarea {
   }
   window.addEventListener('resize', applyHeaderOffset);
 })();
+
+/* ── 페이지당 건수 선택 ── */
+var _tzAllPosts = null;
+var _tzCurrentPage = 1;
+var _tzPageSize = 10;
+
+function changePageSize(val) {
+  var n = parseInt(val, 10);
+  _tzPageSize = n;
+  _tzCurrentPage = 1;
+  localStorage.setItem('tz-pagesize', n);
+  _tzRender();
+}
+
+function _tzSectionJsonUrl() {
+  /* /posts/economy/ → /posts/economy/index.json  |  / → /index.json */
+  var p = window.location.pathname.replace(/\/page\/\d+\/?$/, '');
+  if (!p.endsWith('/')) p += '/';
+  return p + 'index.json';
+}
+
+function _tzRender() {
+  if (!_tzAllPosts) {
+    fetch(_tzSectionJsonUrl())
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        _tzAllPosts = data;
+        _tzRenderPosts();
+      })
+      .catch(function() { /* 섹션 JSON 없으면 현재 페이지 항목만 표시 */ });
+  } else {
+    _tzRenderPosts();
+  }
+}
+
+function _tzRenderPosts() {
+  var posts = _tzAllPosts;
+  if (!posts || !posts.length) return;
+
+  var n = _tzPageSize;
+  var total = posts.length;
+  var totalPages = Math.ceil(total / n);
+  var start = (_tzCurrentPage - 1) * n;
+  var slice = posts.slice(start, start + n);
+
+  var grid = document.querySelector('.post-list-grid');
+  if (!grid) return;
+
+  /* 기존 Hugo 렌더 항목 제거 */
+  grid.innerHTML = '';
+
+  /* 항목 생성 */
+  slice.forEach(function(p, i) {
+    var article = document.createElement('article');
+    article.className = (i === 0 && _tzCurrentPage === 1) ? 'first-entry' : 'post-entry';
+    var coverHtml = p.cover
+      ? '<div class="entry-cover"><img src="' + p.cover + '" alt="' + _tzEsc(p.title) + '" loading="lazy"></div>'
+      : '';
+    article.innerHTML =
+      coverHtml +
+      '<header class="entry-header"><h2>' + _tzEsc(p.title) + '</h2></header>' +
+      '<div class="entry-content"><p>' + _tzEsc(p.summary) + '</p></div>' +
+      '<footer class="entry-footer"><span class="post-meta">' + p.date + '</span></footer>' +
+      '<a class="entry-link" href="' + p.permalink + '" aria-label="' + _tzEsc(p.title) + '"></a>';
+    grid.appendChild(article);
+  });
+
+  /* JS 페이지네이션 재구성 */
+  var footer = document.querySelector('.page-footer');
+  if (footer) {
+    footer.innerHTML = _tzPaginationHtml(totalPages);
+  }
+
+  /* select 값 맞춤 */
+  var sel = document.getElementById('pageSizeSelect');
+  if (sel) sel.value = n;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function _tzEsc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _tzGotoPage(pg) {
+  _tzCurrentPage = pg;
+  _tzRenderPosts();
+}
+
+function _tzPaginationHtml(totalPages) {
+  if (totalPages <= 1) return '';
+  var cur = _tzCurrentPage;
+  var start = Math.max(1, cur - 2);
+  var end = Math.min(totalPages, start + 4);
+  if (end - start < 4) start = Math.max(1, end - 4);
+
+  var html = '<div class="pagination-controls">' +
+    '<div class="page-size-selector"><label for="pageSizeSelect">페이지당</label>' +
+    '<select id="pageSizeSelect" onchange="changePageSize(this.value)">' +
+    '<option value="10"' + (_tzPageSize===10?' selected':'') + '>10건</option>' +
+    '<option value="25"' + (_tzPageSize===25?' selected':'') + '>25건</option>' +
+    '<option value="50"' + (_tzPageSize===50?' selected':'') + '>50건</option>' +
+    '<option value="100"' + (_tzPageSize===100?' selected':'') + '>100건</option>' +
+    '</select></div>' +
+    '<nav class="pagination" aria-label="페이지 탐색">';
+
+  html += cur > 1
+    ? '<span class="page-btn first-btn" onclick="_tzGotoPage(1)">처음</span>'
+    : '<span class="page-btn first-btn disabled">처음</span>';
+
+  if (start > 1) html += '<span class="page-ellipsis">···</span>';
+
+  for (var i = start; i <= end; i++) {
+    if (i === cur) {
+      html += '<span class="page-btn current">' + i + '</span>';
+    } else {
+      html += '<span class="page-btn" onclick="_tzGotoPage(' + i + ')">' + i + '</span>';
+    }
+  }
+
+  if (end < totalPages) html += '<span class="page-ellipsis">···</span>';
+
+  html += cur < totalPages
+    ? '<span class="page-btn last-btn" onclick="_tzGotoPage(' + totalPages + ')">마지막</span>'
+    : '<span class="page-btn last-btn disabled">마지막</span>';
+
+  html += '</nav></div>';
+  return html;
+}
 
 /* 검색 페이지: URL ?q= 자동 검색 — fuse.js XHR 완료 후 재시도 */
 (function() {

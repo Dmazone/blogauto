@@ -97,24 +97,65 @@
 
 {{- if gt $paginator.TotalPages 1 }}
 <footer class="page-footer">
-  <nav class="pagination">
-    {{- if $paginator.HasPrev }}
-    <a class="prev" href="{{ print site.BaseURL ($paginator.Prev.URL | strings.TrimPrefix "/") }}">
-      «&nbsp;{{ i18n "prev_page" }}&nbsp;
-      {{- if (.Param "ShowPageNums") }}
-      {{- sub $paginator.PageNumber 1 }}/{{ $paginator.TotalPages }}
+  <div class="pagination-controls">
+    <div class="page-size-selector">
+      <label for="pageSizeSelect">페이지당</label>
+      <select id="pageSizeSelect" onchange="changePageSize(this.value)">
+        <option value="10" {{if eq (site.Params.pagination.pagerSize | default 10) 10}}selected{{end}}>10건</option>
+        <option value="25">25건</option>
+        <option value="50">50건</option>
+        <option value="100">100건</option>
+      </select>
+    </div>
+    <nav class="pagination" aria-label="페이지 탐색">
+      {{- $cur := $paginator.PageNumber }}
+      {{- $total := $paginator.TotalPages }}
+      {{- $baseURL := .Paginator.URL }}
+
+      {{/* 처음 */}}
+      {{- if gt $cur 1 }}
+      <a class="page-btn first-btn" href="{{ print site.BaseURL ($paginator.First.URL | strings.TrimPrefix "/") }}" aria-label="첫 페이지">처음</a>
+      {{- else }}
+      <span class="page-btn first-btn disabled">처음</span>
       {{- end }}
-    </a>
-    {{- end }}
-    {{- if $paginator.HasNext }}
-    <a class="next" href="{{ print site.BaseURL ($paginator.Next.URL | strings.TrimPrefix "/") }}">
-      {{- i18n "next_page" }}&nbsp;
-      {{- if (.Param "ShowPageNums") }}
-      {{- add 1 $paginator.PageNumber }}/{{ $paginator.TotalPages }}
-      {{- end }}&nbsp;»
-    </a>
-    {{- end }}
-  </nav>
+
+      {{/* 번호 — 현재 기준 앞뒤 2페이지씩 최대 5개 표시 */}}
+      {{- $start := sub $cur 2 }}
+      {{- if lt $start 1 }}{{- $start = 1 }}{{- end }}
+      {{- $end := add $start 4 }}
+      {{- if gt $end $total }}{{- $end = $total }}{{- end }}
+      {{- if lt (sub $end $start) 4 }}
+        {{- $start = sub $end 4 }}
+        {{- if lt $start 1 }}{{- $start = 1 }}{{- end }}
+      {{- end }}
+
+      {{- if gt $start 1 }}
+      <span class="page-ellipsis">···</span>
+      {{- end }}
+
+      {{- range seq $start $end }}
+        {{- $n := . }}
+        {{- if eq $n $cur }}
+        <span class="page-btn current" aria-current="page">{{ $n }}</span>
+        {{- else }}
+          {{- with index $paginator.Pagers (sub $n 1) }}
+          <a class="page-btn" href="{{ print site.BaseURL (.URL | strings.TrimPrefix "/") }}">{{ $n }}</a>
+          {{- end }}
+        {{- end }}
+      {{- end }}
+
+      {{- if lt $end $total }}
+      <span class="page-ellipsis">···</span>
+      {{- end }}
+
+      {{/* 마지막 */}}
+      {{- if lt $cur $total }}
+      <a class="page-btn last-btn" href="{{ print site.BaseURL ($paginator.Last.URL | strings.TrimPrefix "/") }}" aria-label="마지막 페이지">마지막</a>
+      {{- else }}
+      <span class="page-btn last-btn disabled">마지막</span>
+      {{- end }}
+    </nav>
+  </div>
 </footer>
 {{- end }}
 
