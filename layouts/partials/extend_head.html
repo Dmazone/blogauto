@@ -1278,18 +1278,12 @@ var _tzApplyHeaderOffset;
   window.addEventListener('resize', _tzApplyHeaderOffset);
 })();
 
-/* 모바일 15건 기본값 + 스크롤 메뉴 숨김 — DOMContentLoaded 후 matchMedia로 판별 */
+/* 15건 기본값 + 모바일 스크롤 메뉴 숨김 */
 document.addEventListener('DOMContentLoaded', function() {
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
-  if (isMobile) {
-    var mobileStored = localStorage.getItem('tz-pagesize-mobile');
-    _tzPageSize = mobileStored ? parseInt(mobileStored, 10) : 15;
-  } else {
-    var stored = localStorage.getItem('tz-pagesize');
-    if (stored) _tzPageSize = parseInt(stored, 10);
-  }
+  _tzPageSize = 15;
   var sel = document.getElementById('pageSizeSelect');
-  if (sel) sel.value = _tzPageSize;
+  if (sel) sel.value = 15;
   _tzRender();
   if (!isMobile) return;
   var lastY = 0;
@@ -1308,14 +1302,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function changePageSize(val) {
-  var n = parseInt(val, 10);
-  _tzPageSize = n;
+  _tzPageSize = parseInt(val, 10);
   _tzCurrentPage = 1;
-  if (window.matchMedia('(max-width: 768px)').matches) {
-    localStorage.setItem('tz-pagesize-mobile', n);
-  } else {
-    localStorage.setItem('tz-pagesize', n);
-  }
   _tzRender();
 }
 
