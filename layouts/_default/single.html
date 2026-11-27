@@ -25,7 +25,29 @@
       {{- partial "translation_list.html" . -}}
       {{- partial "edit_post.html" . -}}
       {{- partial "post_canonical.html" . -}}
+      {{- if site.Params.firebaseDbUrl }}
+      &nbsp;·&nbsp;<span class="post-views">👁 <span class="vc-num" data-slug="{{ .Slug }}" data-db="{{ site.Params.firebaseDbUrl }}">-</span></span>
+      {{- end }}
     </div>
+    {{- end }}
+    {{- if site.Params.firebaseDbUrl }}
+    <script>
+    (function(){
+      var el = document.querySelector(".vc-num");
+      if (!el) return;
+      var slug = el.getAttribute("data-slug");
+      var db   = el.getAttribute("data-db").replace(/\/$/, "");
+      var url  = db + "/views/" + slug + ".json";
+      fetch(url)
+        .then(function(r){ return r.json(); })
+        .then(function(n){
+          n = (typeof n === "number" ? n : 0) + 1;
+          fetch(url, { method: "PUT", body: JSON.stringify(n) });
+          el.textContent = n.toLocaleString("ko-KR");
+        })
+        .catch(function(){ el.textContent = ""; });
+    })();
+    </script>
     {{- end }}
   </header>
   {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
@@ -63,13 +85,6 @@
          target="_blank" rel="noopener sponsored" class="coupang-cta-btn">{{ $coupangKw }} 쿠팡 최저가 →</a>
     </div>
     {{- end }}
-
-    <div class="ad-unit ad-adfit" style="margin:0 auto 20px;max-width:768px;text-align:center;">
-      <ins class="kakao_ad_area" style="display:block;"
-        data-ad-unit="DAN-rQKAp2HPhLvIgyeA"
-        data-ad-width="320"
-        data-ad-height="100"></ins>
-    </div>
 
     {{- /* H2 섹션마다 텐핑 광고 삽입 (이미지 여부 무관하게 삽입) */ -}}
     {{- $c := .Content -}}
@@ -122,14 +137,6 @@
   {{- end }}
 
   {{- partial "ads-inject.html" . }}
-
-  {{- /* 애드핏 — 본문 하단, 320×100으로 업사이즈 */ -}}
-  <div class="ad-unit ad-adfit-bottom" style="margin:32px auto 16px;max-width:768px;text-align:center;">
-    <ins class="kakao_ad_area" style="display:block;"
-      data-ad-unit="DAN-jzmk9rPd9goT1dXv"
-      data-ad-width="320"
-      data-ad-height="100"></ins>
-  </div>
 
   {{- /* 쿠팡 슬롯 — 본문 하단 (두 번째 노출 기회) */ -}}
   <div class="post-coupang-slot" style="margin:20px auto 24px;max-width:680px;overflow:hidden;min-height:60px;"></div>
