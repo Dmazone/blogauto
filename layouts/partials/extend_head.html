@@ -897,6 +897,10 @@ input, button, select, textarea {
 
 /* ── 모바일 (≤640px): 피처도 세로 스택 ── */
 @media (max-width: 640px) {
+  /* 홈 인트로 텍스트(오늘의 트렌드, 여기서 다 본다) 모바일 숨김 */
+  .home-info.first-entry {
+    display: none !important;
+  }
   .post-list-grid .first-entry {
     grid-template-columns: 1fr;
     grid-template-areas:
