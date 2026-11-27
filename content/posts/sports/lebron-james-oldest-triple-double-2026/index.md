@@ -7,10 +7,6 @@ categories: ["스포츠"]
 series: ["스포츠"]
 description: "2026년 11월 26일 NBA 최고령 트리플더블 기록을 다시 쓴 르브론 제임스의 활약과 40대 베테랑 퍼포먼스 의미를 살펴봅니다."
 draft: false
-cover:
-  image: "lebron-james-oldest-triple-double-2026-thumb.webp"
-  alt: "르브론 최고령 트리플더블, 진짜 대단할까? 썸네일"
-  hiddenInSingle: true
 ---
 
 40대 베테랑 **르브론 트리플더블** 소식이 전해지면서 NBA 코트 위의 시간 감각이 다시 흔들리고 있다. 노장이라는 꼬리표가 무색하게 득점과 리바운드, 어시스트를 동시에 쌓아 올린 이번 장면은 경험과 체력 관리가 맞물릴 때 어떤 결과물이 나오는지 선명하게 보여준다.

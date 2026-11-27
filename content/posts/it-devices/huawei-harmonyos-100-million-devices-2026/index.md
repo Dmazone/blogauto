@@ -7,10 +7,6 @@ categories: ["IT기기"]
 series: ["IT기기"]
 description: "2026년 11월 26일 화웨이 하모니OS 탑재 기기 1억 대 돌파 소식과 탈안드로이드 생태계 경쟁력을 정리했습니다."
 draft: false
-cover:
-  image: "huawei-harmonyos-100-million-devices-2026-thumb.webp"
-  alt: "하모니OS 기기 1억 대 돌파, 진짜 독립할까? 썸네일"
-  hiddenInSingle: true
 ---
 
 화웨이 **하모니OS** 탑재 기기가 1억 대를 넘어서면서 모바일 운영체제(OS) 판도와 스마트폰 생태계 전반에 파장이 일고 있다. 독자적인 커널과 크로스 디바이스 연결성을 앞세운 행보가 안드로이드·iOS 양강 구도를 흔들 수 있을지, 또 실사용자의 일상 속 기기 경험에 어떤 변화를 남길지 시선이 쏠린다.
