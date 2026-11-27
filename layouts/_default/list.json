@@ -2,12 +2,13 @@
 {{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" -}}
 {{- $result := slice -}}
 {{- range $pages -}}
+  {{- $pg := . -}}
   {{- $cover := "" -}}
-  {{- with .Params.cover -}}{{- with .image -}}{{- $cover = printf "%s%s" $.Permalink . -}}{{- end -}}{{- end -}}
+  {{- with .Params.cover -}}{{- with .image -}}{{- $cover = printf "%s%s" $pg.Permalink . -}}{{- end -}}{{- end -}}
   {{- if not $cover -}}
     {{- with .File -}}
       {{- $thumbFile := printf "%s-thumb.webp" .ContentBaseName -}}
-      {{- with $.Resources.GetMatch $thumbFile -}}{{- $cover = .Permalink -}}{{- end -}}
+      {{- with $pg.Resources.GetMatch $thumbFile -}}{{- $cover = .Permalink -}}{{- end -}}
     {{- end -}}
   {{- end -}}
   {{- $result = $result | append (dict

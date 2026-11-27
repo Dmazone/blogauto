@@ -1,7 +1,16 @@
-{{- $.Scratch.Add "index" slice -}}
+{{- $index := slice -}}
 {{- range site.RegularPages -}}
     {{- if and (not .Params.searchHidden) (ne .Layout `archives`) (ne .Layout `search`) (ne .Layout `page`) }}
-    {{- $.Scratch.Add "index" (dict "title" .Title "permalink" .Permalink "summary" .Summary) -}}
+    {{- $pg := . -}}
+    {{- $cover := "" -}}
+    {{- with .Params.cover -}}{{- with .image -}}{{- $cover = printf "%s%s" $pg.Permalink . -}}{{- end -}}{{- end -}}
+    {{- $index = $index | append (dict
+      "title" $pg.Title
+      "permalink" $pg.Permalink
+      "summary" ($pg.Summary | plainify | truncate 120)
+      "date" ($pg.Date.Format "2006-01-02")
+      "cover" $cover
+    ) -}}
     {{- end }}
 {{- end -}}
-{{- $.Scratch.Get "index" | jsonify -}}
+{{- $index | jsonify -}}
