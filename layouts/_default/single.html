@@ -26,7 +26,7 @@
       {{- partial "edit_post.html" . -}}
       {{- partial "post_canonical.html" . -}}
       {{- if site.Params.firebaseDbUrl }}
-      &nbsp;·&nbsp;<span class="post-views">👁 <span class="vc-num" data-slug="{{ .Slug }}" data-db="{{ site.Params.firebaseDbUrl }}">-</span></span>
+      &nbsp;·&nbsp;<span class="post-views">👁 <span class="vc-num" data-slug="{{ .File.ContentBaseName }}" data-db="{{ site.Params.firebaseDbUrl }}">-</span></span>
       {{- end }}
     </div>
     {{- end }}
