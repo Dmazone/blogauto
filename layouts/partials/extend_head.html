@@ -1259,7 +1259,7 @@ input, button, select, textarea {
 /* ── 페이지당 건수 전역 변수 ── */
 var _tzAllPosts = null;
 var _tzCurrentPage = 1;
-var _tzPageSize = 10;
+var _tzPageSize = 15;
 
 /* 헤더 fixed 보정: 헤더 높이만큼 body padding-top 자동 설정 */
 var _tzApplyHeaderOffset;
@@ -1281,17 +1281,16 @@ var _tzApplyHeaderOffset;
 /* 모바일 15건 기본값 + 스크롤 메뉴 숨김 — DOMContentLoaded 후 matchMedia로 판별 */
 document.addEventListener('DOMContentLoaded', function() {
   var isMobile = window.matchMedia('(max-width: 768px)').matches;
-  var stored = localStorage.getItem('tz-pagesize');
-  if (isMobile && !stored) {
-    _tzPageSize = 15;
-  } else if (stored) {
-    _tzPageSize = parseInt(stored, 10);
+  if (isMobile) {
+    var mobileStored = localStorage.getItem('tz-pagesize-mobile');
+    _tzPageSize = mobileStored ? parseInt(mobileStored, 10) : 15;
+  } else {
+    var stored = localStorage.getItem('tz-pagesize');
+    if (stored) _tzPageSize = parseInt(stored, 10);
   }
-  if (_tzPageSize !== 10) {
-    var sel = document.getElementById('pageSizeSelect');
-    if (sel) sel.value = _tzPageSize;
-    _tzRender();
-  }
+  var sel = document.getElementById('pageSizeSelect');
+  if (sel) sel.value = _tzPageSize;
+  _tzRender();
   if (!isMobile) return;
   var lastY = 0;
   var nav = document.querySelector('.header-nav');
@@ -1312,7 +1311,11 @@ function changePageSize(val) {
   var n = parseInt(val, 10);
   _tzPageSize = n;
   _tzCurrentPage = 1;
-  localStorage.setItem('tz-pagesize', n);
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    localStorage.setItem('tz-pagesize-mobile', n);
+  } else {
+    localStorage.setItem('tz-pagesize', n);
+  }
   _tzRender();
 }
 
@@ -1401,7 +1404,6 @@ function _tzPaginationHtml(totalPages) {
   var html = '<div class="pagination-controls">' +
     '<div class="page-size-selector"><label for="pageSizeSelect">페이지당</label>' +
     '<select id="pageSizeSelect" onchange="changePageSize(this.value)">' +
-    '<option value="10"' + (_tzPageSize===10?' selected':'') + '>10건</option>' +
     '<option value="15"' + (_tzPageSize===15?' selected':'') + '>15건</option>' +
     '<option value="25"' + (_tzPageSize===25?' selected':'') + '>25건</option>' +
     '<option value="50"' + (_tzPageSize===50?' selected':'') + '>50건</option>' +
