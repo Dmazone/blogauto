@@ -12,20 +12,22 @@
 <!-- RSS 피드 자동발견 -->
 <link rel="alternate" type="application/rss+xml" title="트렌드줌 RSS 피드" href="{{ .Site.BaseURL }}index.xml">
 <!-- WebSite 구조화 데이터 + 검색창 액션 -->
+{{- $siteURL := printf "%s" .Site.BaseURL -}}
+{{- $siteDesc := .Site.Params.description -}}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "트렌드줌",
   "alternateName": "TrendZoom",
-  "url": {{ .Site.BaseURL | jsonify }},
-  "description": {{ .Site.Params.description | jsonify }},
+  "url": {{ $siteURL | jsonify }},
+  "description": {{ $siteDesc | jsonify }},
   "inLanguage": "ko-KR",
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": {{ (printf "%ssearch/?q={search_term_string}" .Site.BaseURL) | jsonify }}
+      "urlTemplate": {{ (printf "%ssearch/?q={search_term_string}" $siteURL) | jsonify }}
     },
     "query-input": "required name=search_term_string"
   }
